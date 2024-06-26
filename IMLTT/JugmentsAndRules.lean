@@ -1,84 +1,69 @@
 import IMLTT.AbstractSyntax
+import IMLTT.Substitution
 
 /- # Rules - judgments implicitly in rules -/
 -- 5 judgments:
 -- - Γ ctx
 -- - Γ ⊢ A type
--- - Γ ⊢ A = A' type
 -- - Γ ⊢ a : A
+-- - Γ ⊢ A = A' type
 -- - Γ ⊢ a = a' : A
 
--- FIXME: is it not importatnt that ⊢ (Γ, σ) ctx is checked in terms of context formation?
--- Type formers
-inductive Form : Ctx → Tm → Prop where
-  | unit : Form Γ ⊤
-  | pi   : Form Γ σ → Form (Γ; σ) τ → Form Γ (Πσ, τ)
-  | sum  : Form Γ σ → Form (Γ; σ) τ → Form Γ (Σσ, τ)
-  | iden : Form Γ σ → Form (Γ; σ) τ → Form Γ (Tm.iden σ x y)
-  | univ : Form Γ univ
+class Judgment (a : Type)
 
-notation : 10 Γ " ⊢ " T  " type" => Form Γ T
+mutual
+  -- Γ ⊢ A type
+  inductive IsType : Ctx → Tm → Prop where 
+    -- form
+    | unit : IsType Γ ⊤
+    | pi   : IsType Γ A → IsType (Γ ⬝ A) B → IsType Γ (Tm.pi A B)
+    | sum  : IsType Γ A → IsType (Γ ⬝ A) B → IsType Γ (Tm.sum A B)
+    | iden : IsType Γ A → IsType (Γ ⬝ A) B → IsType Γ (Tm.iden A x y)
+    | univ : IsType Γ univ -- FIXME: hierarchy?
 
--- contexts formation
-inductive CtxForm : Ctx → Prop where
-  | nil : CtxForm nil
-  | cons : CtxForm Γ → (Γ ⊢ A type) → CtxForm (Γ; A)
+  -- Γ ⊢ a : A
+  inductive HasType : Ctx → Tm → Tm → Prop where
+    -- intro
+    | tt   : HasType Γ tt ⊤
+    | lam  : HasType (Γ ⬝ A) t B → HasType Γ (Tm.lam A t) (Tm.pi A B)
+    | pair : HasType Γ s A → HasType Γ t B → HasType Γ (Tm.pair s t) (Tm.sum A B)
+    | refl : HasType Γ t A → HasType Γ (Tm.refl A t) (Tm.iden A t t)
+    -- elim
+    -- structural
+    | var  : IsType Γ A → HasType (Γ ⬝ A) 0 A
+    | weak : IsType Γ A → HasType Γ (Tm.var n) γ → HasType (Γ ⬝ A) (Tm.var (n + 1)) γ
+      -- FIXME: not in correct form?
 
-notation Γ " ctx" => CtxForm Γ
+    inductive IsEqualType : Ctx → Tm → Tm → Prop where
+      -- definitonal equality
+      | rfl : IsType Γ A → IsEqualType Γ A A
+      | sym : IsEqualType Γ A B → IsEqualType Γ B A
+      | trns : IsEqualType Γ A B → IsEqualType Γ B C → IsEqualType Γ A C
+      | subs : IsType Γ A → IsEqualTerm Γ a b A → IsType ((Γ ⬝ A), Δ) B
+                → IsEqualType (Γ, (substitute_ctx  Δ b x))
+                  (substitute B a x) (substitute B b x)
+                -- FIXME: what's correct x?
 
--- structural - var
-inductive VarRule : Ctx → Tm → Prop where
-  | var : Γ ⊢ T type → VarRule (Γ; T) T
+    inductive IsEqualTerm : Ctx → Tm → Tm → Tm → Prop where
+      -- definitonal equality
+      | rfl : IsType Γ A → HasType Γ a A → IsEqualTerm Γ a a A
+      | sym : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A
+      | trns : IsEqualTerm Γ a b A → IsEqualTerm Γ b c A → IsEqualTerm Γ a c A
+      | subs : IsType Γ A → IsEqualTerm Γ a b A → HasType ((Γ ⬝ A), Δ) c B
+                → IsEqualTerm (Γ, (substitute_ctx  Δ b x))
+                  (substitute c a x) (substitute c b x) (substitute B b x)
+                -- FIXME: what's correct x?
+      -- comp
+end
 
--- TODO: is this weakening, var?
-inductive VarHasType : Ctx → Nat → Tm → Prop where
-  | zero : VarHasType (T :: Γ) 0 T
-  | succ : VarHasType Γ n T → VarHasType (U :: Γ) (n + 1) T
+notation Γ " ⊢ " A  " type" => IsType Γ A
+notation Γ " ⊢ " s " ∶ " A => HasType Γ s A
+notation Γ " ⊢ " A " ≡ " B => IsEqualType Γ A B
+notation Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
 
-notation : 10 Γ " ⊢ᵥ " n " ∶ " T => VarHasType Γ n T
+-- Γ ctx
+inductive IsCtx : Ctx → Prop where
+  | empty : IsCtx nil
+  | extend : IsCtx Γ → IsType Γ A → IsCtx (Γ ⬝ A)
 
--- definitional equality
--- - refl
--- - symm
--- - trans
--- - subs
--- - var conv
-
--- term formers
-inductive Intro : Ctx → Tm → Tm → Prop where
-  | var  : (Γ ⊢ᵥ n ∶ T) → Intro Γ (.var n) T
-  | tt   : Intro Γ tt ⊤
-  | lam  : Intro (σ :: Γ) t τ → Intro Γ (λ σ, t) (Πσ, τ)
-  | pair : Intro Γ m σ → Intro Γ n τ → Intro Γ ⟨m, n⟩ (Σσ, τ) 
-                         -- FIXME: add substitution to tau or add to context
-  | refl : Intro Γ t σ → Intro Γ refl(t) (Tm.iden σ t t)
-  -- FIXME: univ
-
-notation : 10 Γ " ⊢ " t " ∶ " T => Intro Γ t T
-
-inductive Weakening : Ctx → Tm → Tm → Prop where
-  | weak : Intro (Δ ++ Γ) j J → (Γ ⊢ A type) → Weakening (Δ ++ (Γ; A)) j J
-
-inductive Substitution : Ctx → Tm where
-  | subst : Form (Γ; A) P → Intro Γ t A → Substitution Γ (sub P t n)
-
-
-def type_check (Γ : Ctx) : (T : Tm) → Option (PLift (Γ ⊢ T type))
-  | .unit => do sorry -- return ⟨Γ ⊢ ⊤ type⟩ -- TODO: needs to be proof
-  | .pi σ τ => do sorry
-  | .sum σ τ => do sorry
-  | .iden σ m n => do sorry
-  | .univ => do sorry
-  | _  => do failure
-
-def term_check (Γ : Ctx) : (t : Tm) → (T : Tm) → Option (PLift (Γ ⊢ t ∶ T)) :=
-  sorry
-
-
-
-
-
-
-
-
-
+postfix : max " ctx" => IsCtx

@@ -3,9 +3,9 @@ import IMLTT.AbstractSyntax
 -- lift term to avoid capturing free variables during substitution
 def lift (l : Nat) : Tm → Tm
   | .unit => .unit
-  | .pi σ τ  => .pi (lift l σ) (lift (l + 1) τ)
-  | .sum σ τ => .sum (lift l σ) (lift (l + 1) τ)
-  | .iden σ s t => .iden (lift l σ) (lift l s) (lift l t)
+  | .pi A B  => .pi (lift l A) (lift (l + 1) B)
+  | .sum A B => .sum (lift l A) (lift (l + 1) B)
+  | .iden A s t => .iden (lift l A) (lift l s) (lift l t)
   | .univ => .univ
   | .var i =>
       if i < l
@@ -17,14 +17,14 @@ def lift (l : Nat) : Tm → Tm
   | .pair s t => .pair (lift l s) (lift (l + 1) t)
   | .prj₁ s => .prj₁ (lift l s)
   | .prj₂ s => .prj₂ (lift l s)
-  | .refl σ t => .refl (lift l σ) (lift l t)
+  | .refl A t => .refl (lift l A) (lift l t)
 
 def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   match s with
   | .unit => .unit
-  | .pi σ τ  => .pi (substitute σ t j) (substitute τ (lift 0 t) (j + 1))
-  | .sum σ τ => .sum (substitute σ t j) (substitute τ (lift 0 t) (j + 1))
-  | .iden σ m n => .iden σ (substitute m t j) (substitute n t j)
+  | .pi A B  => .pi (substitute A t j) (substitute B (lift 0 t) (j + 1))
+  | .sum A B => .sum (substitute A t j) (substitute B (lift 0 t) (j + 1))
+  | .iden A m n => .iden A (substitute m t j) (substitute n t j)
   | .univ => .univ
   | .var i =>
       if i < j
@@ -38,4 +38,9 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   | .pair m n => .pair (substitute m t j) (substitute n (lift 0 t) (j + 1))
   | .prj₁ m => .prj₁ (substitute m t j)
   | .prj₂ m => .prj₂ (substitute m t j)
-  | .refl σ m => .refl (substitute σ t j) (substitute m t j)
+  | .refl A m => .refl (substitute A t j) (substitute m t j)
+
+def substitute_ctx (Γ : Ctx) (t : Tm) (j : Nat) : Ctx :=
+  match Γ with
+  | .empty => .empty
+  | .extend Γ' A => (substitute_ctx Γ' t j) ⬝ (substitute A t j)

@@ -1,0 +1,10 @@
+-- def type_check (Γ : Ctx) : (T : Tm) → Option (PLift (Γ ⊢ T type))
+--   | .unit => do sorry -- return ⟨Γ ⊢ ⊤ type⟩ -- TODO: needs to be proof
+--   | .pi σ τ => do sorry
+--   | .sum σ τ => do sorry
+--   | .iden σ m n => do sorry
+--   | .univ => do sorry
+--   | _  => do failure
+-- 
+-- def term_check (Γ : Ctx) : (t : Tm) → (T : Tm) → Option (PLift (Γ ⊢ t ∶ T)) :=
+--   sorry
