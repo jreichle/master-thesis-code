@@ -1,19 +1,28 @@
 inductive Tm where
   -- 'types'
   | unit : Tm
-  | pi   : Tm → Tm → Tm
-  | sum  : Tm → Tm → Tm
+  | empty : Tm
+  | pi : Tm → Tm → Tm
+  | sigma : Tm → Tm → Tm
   | iden : Tm → Tm → Tm → Tm
-  | univ : Tm -- add nat universe hierarchy
+  | univ : Tm
   -- 'terms'
-  | var  : Nat → Tm -- !!!de Bruijn!!!
-  | tt   : Tm
-  | lam  : Tm → Tm → Tm
-  | app  : Tm → Tm → Tm
+  | var : Nat → Tm
+  | tt : Tm
+  | ind_tt : Tm → Tm → Tm
+  | ind_empty : Tm → Tm
+  | lam : Tm → Tm → Tm
+  | app : Tm → Tm → Tm
   | pair : Tm → Tm → Tm
   | prj₁ : Tm → Tm
   | prj₂ : Tm → Tm
   | refl : Tm → Tm → Tm
+  | j : Tm → Tm → Tm → Tm → Tm
+
+instance : Coe Nat Tm where
+  coe := .var
+instance : OfNat Tm n where
+  ofNat := n
 
 inductive Ctx where
   | empty : Ctx
@@ -34,16 +43,13 @@ infixl:65 ", " => concat_ctx
 
 -- types
 notation "⊤" => Tm.unit
+notation "⊥" => Tm.empty
 notation "Π" A ", " B => Tm.pi A B
-notation "Σ" A ", " B => Tm.sum A B
+notation "Σ" A ", " B => Tm.sigma A B
 notation "Id " A " (" s ", " t")" => Tm.iden A s t
+notation "U" => Tm.univ
 -- terms
 notation "()" => Tm.tt
 notation "λ " A ", " s => Tm.lam A s
 notation "<" A ", " s ">" => Tm.pair A s
 notation "refl " A " (" s ")" => Tm.refl A s
-
-instance : Coe Nat Tm where
-  coe := .var
-instance : OfNat Tm n where
-  ofNat := n
