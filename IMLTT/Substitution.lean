@@ -57,9 +57,3 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   | .prjSigma₂ m => .prjSigma₂ (substitute m t j)
   | .refl m => .refl (substitute m t j)
   | .j u a b p => .j (substitute u t j) (substitute a t j) (substitute b t j) (substitute p t j)
-
--- TODO: probably not needed?
-def substitute_ctx (Γ : Ctx) (t : Tm) (j : Nat) : Ctx :=
-  match Γ with
-  | .empty => .empty
-  | .extend Γ' A => (substitute_ctx Γ' t j) ⬝ (substitute A t j)
