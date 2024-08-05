@@ -9,14 +9,14 @@ inductive Tm where
   -- 'terms'
   | var : Nat → Tm
   | tt : Tm
-  | ind_tt : Tm → Tm → Tm
-  | ind_empty : Tm → Tm
-  | lam : Tm → Tm → Tm
+  | indUnit : Tm → Tm → Tm
+  | indEmpty : Tm → Tm
+  | lam : Tm → Tm
   | app : Tm → Tm → Tm
-  | pair : Tm → Tm → Tm
-  | prj₁ : Tm → Tm
-  | prj₂ : Tm → Tm
-  | refl : Tm → Tm → Tm
+  | pairSigma : Tm → Tm → Tm
+  | prjSigma₁ : Tm → Tm
+  | prjSigma₂ : Tm → Tm
+  | refl : Tm → Tm
   | j : Tm → Tm → Tm → Tm → Tm
 
 instance : Coe Nat Tm where
@@ -50,6 +50,8 @@ notation "Id " A " (" s ", " t")" => Tm.iden A s t
 notation "U" => Tm.univ
 -- terms
 notation "()" => Tm.tt
-notation "λ " A ", " s => Tm.lam A s
+notation "λ" s => Tm.lam s
 notation "<" A ", " s ">" => Tm.pair A s
 notation "refl " A " (" s ")" => Tm.refl A s
+prefix:max "π₁^Σ" => Tm.prjSigma₁
+prefix:max "π₂^Σ" => Tm.prjSigma₂

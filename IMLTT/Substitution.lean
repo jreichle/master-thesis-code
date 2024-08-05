@@ -15,14 +15,14 @@ def lift (l : Nat) : Tm → Tm
         then .var i
         else .var (i + 1)
   | .tt => .tt
-  | .ind_tt s t => .ind_tt (lift l s) (lift l t)
-  | .ind_empty s => .ind_empty (lift l s)
-  | .lam s t => .lam (lift l s) (lift (l + 1) t)
+  | .indUnit s t => .indUnit (lift l s) (lift l t)
+  | .indEmpty s => .indEmpty (lift l s)
+  | .lam t => .lam (lift (l + 1) t)
   | .app s t => .app (lift l s) (lift l t)
-  | .pair s t => .pair (lift l s) (lift (l + 1) t)
-  | .prj₁ s => .prj₁ (lift l s)
-  | .prj₂ s => .prj₂ (lift l s)
-  | .refl A t => .refl (lift l A) (lift l t)
+  | .pairSigma s t => .pairSigma (lift l s) (lift (l + 1) t)
+  | .prjSigma₁ s => .prjSigma₁ (lift l s)
+  | .prjSigma₂ s => .prjSigma₂ (lift l s)
+  | .refl t => .refl (lift l t)
   | .j t a b p => .j (lift l t) (lift l a) (lift l b) (lift l p)
 
 def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
@@ -40,14 +40,14 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
           then t
           else .var (i - 1)
   | .tt => .tt
-  | .ind_tt m n => .ind_tt (substitute m t j) (substitute n t j)
-  | .ind_empty m => .ind_empty (substitute m t j)
-  | .lam m n => .lam (substitute m t j) (substitute n (lift 0 t) (j + 1))
+  | .indUnit m n => .indUnit (substitute m t j) (substitute n t j)
+  | .indEmpty m => .indEmpty (substitute m t j)
+  | .lam n => .lam (substitute n (lift 0 t) (j + 1))
   | .app m n => .app (substitute m t j) (substitute n t j)
-  | .pair m n => .pair (substitute m t j) (substitute n (lift 0 t) (j + 1))
-  | .prj₁ m => .prj₁ (substitute m t j)
-  | .prj₂ m => .prj₂ (substitute m t j)
-  | .refl A m => .refl (substitute A t j) (substitute m t j)
+  | .pairSigma m n => .pairSigma (substitute m t j) (substitute n (lift 0 t) (j + 1))
+  | .prjSigma₁ m => .prjSigma₁ (substitute m t j)
+  | .prjSigma₂ m => .prjSigma₂ (substitute m t j)
+  | .refl m => .refl (substitute m t j)
   | .j u a b p => .j (substitute u t j) (substitute a t j) (substitute b t j) (substitute p t j)
 
 def substitute_ctx (Γ : Ctx) (t : Tm) (j : Nat) : Ctx :=
