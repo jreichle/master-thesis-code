@@ -33,9 +33,10 @@ mutual
 
   -- Γ ⊢ a : A
   inductive HasType : Ctx → Tm → Tm → Prop where
-    -- structural rules -- make sure v_0 of A doesn't refer to A itself
+    -- structural rules
+    -- make sure variables of A refer to to same variables of Γ as before with lifting
     | var  : IsType Γ A
-             → HasType (Γ ⬝ A) 0 (lift 0 1 A) 
+             → HasType (Γ ⬝ A) 0 (lift 0 1 A)
     | weak : HasType Γ (Tm.var i) A → IsType Γ B
              → HasType (Γ ⬝ B) (Tm.var (i + 1)) (lift 0 1 A)
     -- intro rules

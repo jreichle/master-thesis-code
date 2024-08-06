@@ -1,10 +1,6 @@
 import IMLTT.AbstractSyntax
 
--- TODO: use more efficient lifting
--- - on LC lecture only apply lifting when really substituted
-
 /- # Lifting -/
--- applied to substituted term
 -- needed to preserver `original depth` of variables
 -- -> free variables need to refer to same context entry or constant
 -- currently according to Abel and colleagues (2007)
@@ -29,6 +25,9 @@ def lift (l j : Nat) : Tm -> Tm
   | .prjSigma₂ s => .prjSigma₂ (lift l j s)
   | .refl t => .refl (lift l j t)
   | .j t a b p => .j (lift l j t) (lift l j a) (lift l j b) (lift l j p)
+
+-- TODO: use more efficient lifting
+-- - on λ-calculus (ex3) lecture only apply lifting when really substituted
 
 /- # Substitution -/
 -- lifting used
