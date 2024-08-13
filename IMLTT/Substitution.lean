@@ -18,11 +18,10 @@ def lift (l j : Nat) : Tm -> Tm
   | .tt => .tt
   | .indUnit s t => .indUnit (lift l j s) (lift l j t)
   | .indEmpty s => .indEmpty (lift l j s)
-  | .lam t => .lam (lift (l + 1) j t)
+  | .lam s t => .lam (lift l j s) (lift (l + 1) j t)
   | .app s t => .app (lift l j s) (lift l j t)
   | .pairSigma s t => .pairSigma (lift l j s) (lift (l + 1) j t)
-  | .prjSigma₁ s => .prjSigma₁ (lift l j s)
-  | .prjSigma₂ s => .prjSigma₂ (lift l j s)
+  | .indSigma s => .indSigma (lift l j s)
   | .refl t => .refl (lift l j t)
   | .j t a b p => .j (lift l j t) (lift l j a) (lift l j b) (lift l j p)
 
@@ -49,10 +48,9 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   | .tt => .tt
   | .indUnit m n => .indUnit (substitute m t j) (substitute n t j)
   | .indEmpty m => .indEmpty (substitute m t j)
-  | .lam n => .lam (substitute n (lift 0 1 t) (j + 1))
+  | .lam m n => .lam (substitute m t j) (substitute n (lift 0 1 t) (j + 1))
   | .app m n => .app (substitute m t j) (substitute n t j)
   | .pairSigma m n => .pairSigma (substitute m t j) (substitute n (lift 0 1 t) (j + 1))
-  | .prjSigma₁ m => .prjSigma₁ (substitute m t j)
-  | .prjSigma₂ m => .prjSigma₂ (substitute m t j)
+  | .indSigma m => .indSigma (substitute m t j)
   | .refl m => .refl (substitute m t j)
   | .j u a b p => .j (substitute u t j) (substitute a t j) (substitute b t j) (substitute p t j)
