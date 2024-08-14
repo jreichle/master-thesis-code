@@ -21,7 +21,7 @@ def lift (l j : Nat) : Tm -> Tm
   | .lam s t => .lam (lift l j s) (lift (l + 1) j t)
   | .app s t => .app (lift l j s) (lift l j t)
   | .pairSigma s t => .pairSigma (lift l j s) (lift (l + 1) j t)
-  | .indSigma s => .indSigma (lift l j s)
+  | .indSigma s t => .indSigma (lift l j s) (lift l j t)
   | .refl t => .refl (lift l j t)
   | .j t a b p => .j (lift l j t) (lift l j a) (lift l j b) (lift l j p)
 
@@ -51,6 +51,6 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   | .lam m n => .lam (substitute m t j) (substitute n (lift 0 1 t) (j + 1))
   | .app m n => .app (substitute m t j) (substitute n t j)
   | .pairSigma m n => .pairSigma (substitute m t j) (substitute n (lift 0 1 t) (j + 1))
-  | .indSigma m => .indSigma (substitute m t j)
+  | .indSigma m n => .indSigma (substitute m t j) (substitute n t j)
   | .refl m => .refl (substitute m t j)
   | .j u a b p => .j (substitute u t j) (substitute a t j) (substitute b t j) (substitute p t j)

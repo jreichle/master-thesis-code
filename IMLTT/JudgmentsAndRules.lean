@@ -68,7 +68,7 @@ mutual
                 → HasType Γ (Tm.app f a) (substitute B A 0)
     | sigma_elim : HasType Γ p (Tm.sigma A B) → IsType (Γ ⬝ (Tm.sigma A B)) C
                    → HasType (Γ ⬝ A ⬝ B) c (substitute C (Tm.pairSigma 1 0) 0)
-                   → HasType Γ (Tm.indSigma c) (substitute C p 0)
+                   → HasType Γ (Tm.indSigma c p) (substitute C p 0)
     | iden_elim : IsType (((Γ ⬝ A) ⬝ A) ⬝ (Tm.iden A a b)) C
                   → HasType (Γ ⬝ A) t
                       (substitute (substitute (substitute C 0 2) 0 1) (Tm.refl 0) 0)
@@ -85,13 +85,12 @@ mutual
     | pi_comp : HasType (Γ ⬝ A) b B → HasType Γ a A
                 → IsEqualTerm Γ (Tm.app (Tm.lam A b) a) (substitute b a 0) (substitute B a 0)
     | sigma_comp : HasType Γ a A → HasType (Γ ⬝ A) b (substitute B a 0)
-                   → IsType (Γ ⬝ (Tm.sigma A B)) C 
+                   → IsType (Γ ⬝ (Tm.sigma A B)) C
                    → HasType (Γ ⬝ A ⬝ B) c (substitute C (Tm.pairSigma 1 0) 0)
-                   → IsEqualTerm Γ (Tm.indSigma c) (substitute (substitute c a 0) b 0)
+                   → IsEqualTerm Γ (Tm.indSigma c (Tm.pairSigma a b)) (substitute (substitute c a 0) b 0)
                      (substitute C (Tm.pairSigma a b) 0)
     | iden_comp : IsType (((Γ ⬝ A) ⬝ A) ⬝ (Tm.iden A a b)) C
-                  → HasType (Γ ⬝ A) t (substitute (substitute (substitute C 0 2) 0 1)
-                      (Tm.refl 0) 0)
+                  → HasType (Γ ⬝ A) t (substitute (substitute (substitute C 0 2) 0 1) (Tm.refl 0) 0)
                   → IsEqualTerm (Γ ⬝ A) (Tm.j t 0 0 (Tm.refl 0)) t
                       (substitute (substitute (substitute C 0 2) 0 1) (Tm.refl 0) 0)
 end

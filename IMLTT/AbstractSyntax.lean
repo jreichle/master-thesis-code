@@ -14,7 +14,7 @@ inductive Tm where
   | lam : Tm → Tm → Tm
   | app : Tm → Tm → Tm
   | pairSigma : Tm → Tm → Tm
-  | indSigma: Tm → Tm
+  | indSigma: Tm → Tm → Tm
   | refl : Tm → Tm
   | j : Tm → Tm → Tm → Tm → Tm
 
