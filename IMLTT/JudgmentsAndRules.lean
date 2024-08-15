@@ -76,6 +76,16 @@ mutual
 
   -- Γ ⊢ A ≡ B type
   inductive IsEqualType : Ctx → Tm → Tm → Prop where
+    -- congruence rules (formation)
+    | unit_form_eq : IsCtx Γ → IsEqualType Γ Tm.unit Tm.unit
+    | empty_form_eq : IsCtx Γ → IsEqualType Γ Tm.empty Tm.empty
+    | pi_form_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B'
+                   → IsEqualType Γ (Tm.pi A B) (Tm.pi A' B')
+    | sigma_form_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B'
+                      → IsEqualType Γ (Tm.sigma A B) (Tm.sigma A' B')
+    | iden_form_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A ⬝ A) (Tm.iden A 1 0) (Tm.iden A 1 0)
+    | univ_form_eq : IsCtx Γ → IsEqualType Γ Tm.univ Tm.univ
+    | univ_elim_eq : IsEqualTerm Γ A A' Tm.univ → IsEqualType Γ A A'
 
   -- Γ ⊢ a ≡ b : A
   inductive IsEqualTerm : Ctx → Tm → Tm → Tm → Prop where
@@ -93,6 +103,29 @@ mutual
                   → HasType (Γ ⬝ A) t (substitute (substitute (substitute C 0 2) 0 1) (Tm.refl 0) 0)
                   → IsEqualTerm (Γ ⬝ A) (Tm.j t 0 0 (Tm.refl 0)) t
                       (substitute (substitute (substitute C 0 2) 0 1) (Tm.refl 0) 0)
+    -- congruence rules (introduction and elimination)
+    | unit_intro_eq : IsCtx Γ → IsEqualTerm Γ Tm.tt Tm.tt Tm.unit
+    | unit_elim_eq : IsEqualType (Γ ⬝ 𝟙) A A' → IsEqualTerm Γ a a' (substitute A Tm.tt 0)
+                     → IsEqualTerm Γ b b' Tm.unit
+                     → IsEqualTerm Γ (Tm.indUnit b a) (Tm.indUnit b' a') (substitute A b 0)
+    | empty_elim_eq : IsEqualType (Γ ⬝ Tm.empty) A A' → IsEqualTerm Γ b b' Tm.empty
+                      → IsEqualTerm Γ (Tm.indEmpty b) (Tm.indEmpty b') (substitute A b 0)
+    | pi_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm (Γ ⬝ A) b b' B
+                    → IsEqualTerm Γ (Tm.lam A b) (Tm.lam A' b') (Tm.pi A B)
+    | pi_elim_eq : IsEqualType Γ (Tm.pi A B) (Tm.pi A' B') → IsEqualTerm Γ a a' A
+                   → IsEqualTerm Γ f f' (Tm.pi A B)
+                   → IsEqualTerm Γ (Tm.app f a) (Tm.app f' a') (substitute B A 0)
+    | sigma_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ a a' A
+                       → IsEqualTerm (Γ ⬝ A) b b' (substitute B a 0)
+    | sigma_elim_eq : IsEqualType Γ (Tm.sigma A B) (Tm.sigma A' B')
+                      → IsEqualTerm Γ p p' (Tm.sigma A B) → IsEqualType (Γ ⬝ (Tm.sigma A B)) C C'
+                      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (substitute C (Tm.pairSigma 1 0) 0)
+                      → IsEqualTerm Γ (Tm.indSigma c p) (Tm.indSigma c' p') (substitute C p 0)
+    | iden_intro_eq : IsEqualType Γ A A' → IsEqualTerm (Γ ⬝ A) (Tm.refl 0) (Tm.refl 0) (Tm.iden A 0 0)
+    | iden_elim_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A ⬝ A ⬝ (Tm.iden A 1 0)) B B'
+                     → IsEqualTerm (Γ ⬝ A) b b'
+                       (substitute (substitute (substitute B 0 1) 0 2) (Tm.refl 0) 0)
+                     → IsEqualTerm (Γ ⬝ A ⬝ A ⬝ (Tm.iden A 1 0)) (Tm.j b 2 1 0) (Tm.j b 2 1 0) B
 end
 
 postfix : max " ctx" => IsCtx
