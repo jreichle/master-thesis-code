@@ -16,14 +16,15 @@ def lift (l j : Nat) : Tm -> Tm
         then .var i
         else .var (i + j)
   | .tt => .tt
-  | .indUnit s t => .indUnit (lift l j s) (lift l j t)
-  | .indEmpty s => .indEmpty (lift l j s)
+  | .indUnit A s t => .indUnit (lift l j A) (lift l j s) (lift l j t)
+  | .indEmpty A s => .indEmpty (lift l j A) (lift l j s)
   | .lam s t => .lam (lift l j s) (lift (l + 1) j t)
   | .app s t => .app (lift l j s) (lift l j t)
   | .pairSigma s t => .pairSigma (lift l j s) (lift (l + 1) j t)
-  | .indSigma s t => .indSigma (lift l j s) (lift l j t)
-  | .refl t => .refl (lift l j t)
-  | .j t a b p => .j (lift l j t) (lift l j a) (lift l j b) (lift l j p)
+  | .indSigma A B C s t => .indSigma (lift l j A) (lift l j B) (lift l j C) 
+                            (lift l j s) (lift l j t)
+  | .refl A t => .refl (lift l j A) (lift l j t)
+  | .j A t a b p => .j (lift l j A) (lift l j t) (lift l j a) (lift l j b) (lift l j p)
 
 -- TODO: use more efficient lifting
 -- - on λ-calculus (ex3) lecture only apply lifting when really substituted
@@ -46,11 +47,13 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
           then t
           else .var (i - 1)
   | .tt => .tt
-  | .indUnit m n => .indUnit (substitute m t j) (substitute n t j)
-  | .indEmpty m => .indEmpty (substitute m t j)
+  | .indUnit A m n => .indUnit (substitute A t j) (substitute m t j) (substitute n t j)
+  | .indEmpty A m => .indEmpty (substitute A t j) (substitute m t j)
   | .lam m n => .lam (substitute m t j) (substitute n (lift 0 1 t) (j + 1))
   | .app m n => .app (substitute m t j) (substitute n t j)
   | .pairSigma m n => .pairSigma (substitute m t j) (substitute n (lift 0 1 t) (j + 1))
-  | .indSigma m n => .indSigma (substitute m t j) (substitute n t j)
-  | .refl m => .refl (substitute m t j)
-  | .j u a b p => .j (substitute u t j) (substitute a t j) (substitute b t j) (substitute p t j)
+  | .indSigma A B C m n => .indSigma (substitute A t j) (substitute B t j) (substitute C t j) 
+                            (substitute m t j) (substitute n t j)
+  | .refl A m => .refl (substitute A t j) (substitute m t j)
+  | .j A u a b p => .j (substitute A t j) (substitute u t j) (substitute a t j) (substitute b t j)
+                     (substitute p t j)

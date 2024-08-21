@@ -9,14 +9,14 @@ inductive Tm where
   -- 'terms'
   | var : Nat → Tm
   | tt : Tm
-  | indUnit : Tm → Tm → Tm
-  | indEmpty : Tm → Tm
+  | indUnit : Tm → Tm → Tm → Tm
+  | indEmpty : Tm → Tm → Tm
   | lam : Tm → Tm → Tm
   | app : Tm → Tm → Tm
   | pairSigma : Tm → Tm → Tm
-  | indSigma: Tm → Tm → Tm
-  | refl : Tm → Tm
-  | j : Tm → Tm → Tm → Tm → Tm
+  | indSigma: Tm → Tm → Tm → Tm → Tm → Tm
+  | refl : Tm → Tm → Tm
+  | j : Tm → Tm → Tm → Tm → Tm → Tm
 
 instance : Coe Nat Tm where
   coe := .var
