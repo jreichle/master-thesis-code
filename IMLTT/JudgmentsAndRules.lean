@@ -77,7 +77,7 @@ mutual
                     (substitute (substitute (substitute C 0 2) 0 1) (Tm.refl A 0) 0)
                   → HasType (((Γ ⬝ A) ⬝ (lift 0 1 A)) ⬝ (Tm.iden A 2 1)) (Tm.j A t 2 1 0) C
     -- conversion
-    | ty_conv : IsType Γ A → IsType Γ B → HasType Γ a A → IsEqualType Γ A B
+    | ty_conv : HasType Γ a A → IsEqualType Γ A B
                 → HasType Γ a B
 
   -- Γ ⊢ A ≡ B type
@@ -139,8 +139,7 @@ mutual
                        (substitute (substitute (substitute B 0 1) 0 2) (Tm.refl A 0) 0)
                      → IsEqualTerm (Γ ⬝ A ⬝ A ⬝ (Tm.iden A 1 0)) (Tm.j A b 2 1 0) (Tm.j A b 2 1 0) B
     -- conversion
-    | ty_conv_eq : IsType Γ A → IsType Γ B → HasType Γ a A → HasType Γ b B 
-                   → IsEqualTerm Γ a b A → IsEqualType Γ A B
+    | ty_conv_eq : IsEqualTerm Γ a b A → IsEqualType Γ A B
                    → IsEqualTerm Γ a b B
 end
 
@@ -151,9 +150,10 @@ notation Γ " ⊢ " A " ≡ " B => IsEqualType Γ A B
 notation Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
 
 
-axiom eq : substitute (Tm.pi 2 1) 1 0 = Tm.pi 2 1
 
 -- testing
+axiom eq : substitute (Tm.pi 2 1) 1 0 = Tm.pi 2 1
+
 example (hA : IsType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘 ⬝ 𝟙) (Tm.pi 2 1))
         (haA : HasType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘) a (Tm.pi 2 1))
         (hbU : HasType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘) Tm.tt Tm.unit):
