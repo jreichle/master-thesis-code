@@ -129,8 +129,10 @@ mutual
                    → IsEqualTerm Γ (Tm.app f a) (Tm.app f' a') (substitute B a 0)
     | sigma_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ a a' A
                        → IsEqualTerm (Γ ⬝ A) b b' (substitute B a 0)
+                       → IsEqualTerm Γ (Tm.pairSigma a b) (Tm.pairSigma a' b') (Tm.sigma A B)
     | sigma_elim_eq : IsEqualType Γ (Tm.sigma A B) (Tm.sigma A' B')
-                      → IsEqualTerm Γ p p' (Tm.sigma A B) → IsEqualType (Γ ⬝ (Tm.sigma A B)) C C'
+                      → IsEqualTerm Γ p p' (Tm.sigma A B) 
+                      → IsEqualType (Γ ⬝ (Tm.sigma A B)) C C'
                       → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (substitute C (Tm.pairSigma 1 0) 0)
                       → IsEqualTerm Γ (Tm.indSigma A B C c p) (Tm.indSigma A B C c' p') (substitute C p 0)
     | iden_intro_eq : IsEqualType Γ A A' → IsEqualTerm (Γ ⬝ A) (Tm.refl A 0) (Tm.refl A 0) (Tm.iden A 0 0)
@@ -146,18 +148,5 @@ end
 postfix : max " ctx" => IsCtx
 notation Γ " ⊢ " A  " type" => IsType Γ A
 notation Γ " ⊢ " s " ∶ " A => HasType Γ s A
-notation Γ " ⊢ " A " ≡ " B => IsEqualType Γ A B
+notation Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
 notation Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
-
-
-
--- testing
-axiom eq : substitute (Tm.pi 2 1) 1 0 = Tm.pi 2 1
-
-example (hA : IsType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘 ⬝ 𝟙) (Tm.pi 2 1))
-        (haA : HasType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘) a (Tm.pi 2 1))
-        (hbU : HasType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘) Tm.tt Tm.unit):
-  HasType (Ctx.empty ⬝ 𝟙 ⬝ 𝟘) (Tm.indUnit A Tm.tt a) (Tm.pi 2 1) :=
-    by
-      apply HasType.unit_elim hA haA hbU
-      rw [eq]
