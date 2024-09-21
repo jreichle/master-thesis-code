@@ -4,7 +4,11 @@ import IMLTT.JudgmentsAndRules
 
 /- # Weakening -/
 
-/- # Definitional Equality -/
+-- TODO: formulate theorems for all forms of judgment
+-- TODO: substitution property in Harpter and Pfenning
+
+
+/- # Definitional Equality - Inverse of Reflexivity -/
 
 #print IsEqualTerm
 
@@ -20,112 +24,133 @@ theorem defeq_is_term' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
 
 theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
   fun hAA : IsEqualType Γ A A' ↦
-  match hAA with
-  | .unit_form_eq hiC =>
     by
-      apply IsType.unit_form hiC
-  | .empty_form_eq hiC =>
-    by
-      apply IsType.empty_form hiC
-  | .pi_form_eq hAA hBB =>
-    by
-      apply IsType.pi_form
-      · apply defeq_is_type hAA
-      · apply defeq_is_type hBB
-  | .sigma_form_eq hAA hBB =>
-    by
-      apply IsType.sigma_form
-      · apply defeq_is_type hAA
-      · apply defeq_is_type hBB
-    | .iden_form_eq hAA =>
-      by
-        apply IsType.iden_form
-        apply defeq_is_type hAA
-    | .univ_form_eq hiC => 
-      by
-        apply IsType.univ_form
-        apply hiC
-    | .univ_elim_eq hAAU =>
-      by
-        apply IsType.univ_elim
-        apply defeq_is_term hAAU
+      match hAA with
+      | .unit_form_eq hiC =>
+          apply IsType.unit_form hiC
+      | .empty_form_eq hiC =>
+          apply IsType.empty_form hiC
+      | .pi_form_eq hAA hBB =>
+          apply IsType.pi_form
+          · apply defeq_is_type hAA
+          · apply defeq_is_type hBB
+      | .sigma_form_eq hAA hBB =>
+          apply IsType.sigma_form
+          · apply defeq_is_type hAA
+          · apply defeq_is_type hBB
+      | .iden_form_eq hAA =>
+          apply IsType.iden_form
+          apply defeq_is_type hAA
+      | .univ_form_eq hiC => 
+          apply IsType.univ_form
+          apply hiC
+      | .univ_elim_eq hAAU =>
+          apply IsType.univ_elim
+          apply defeq_is_term hAAU
 
 theorem defeq_is_type' : IsEqualType Γ A A' → IsType Γ A' :=
   fun hAA : IsEqualType Γ A A' ↦
-  match hAA with
-  | .unit_form_eq hiC =>
     by
-      apply IsType.unit_form hiC
-  | .empty_form_eq hiC =>
-    by
-      apply IsType.empty_form hiC
-  | .pi_form_eq hAA hBB =>
-    by
-      apply IsType.pi_form
-      · apply defeq_is_type' hAA
-      · match hBB with
-        | .unit_form_eq hiC => 
-          apply IsType.unit_form
-          apply IsCtx.extend
-          · cases hiC with
-            | extend hiC hA =>
-              apply hiC
-          · apply defeq_is_type' hAA
-        | .empty_form_eq hiC =>
-          apply IsType.empty_form
-          apply IsCtx.extend
-          · cases hiC with
-            | extend hiC hA =>
-              apply hiC
-          · apply defeq_is_type' hAA
-        | .pi_form_eq hAA' hBB' =>
+      match hAA with
+      | .unit_form_eq hiC =>
+          apply IsType.unit_form hiC
+      | .empty_form_eq hiC =>
+          apply IsType.empty_form hiC
+      | .pi_form_eq hAA hBB =>
           apply IsType.pi_form
-          · apply defeq_is_type'
-            · sorry
-            · sorry
-          · sorry
-        | _ => sorry
-  | .sigma_form_eq hAA hBB =>
-    by
-      apply IsType.sigma_form
-      · apply defeq_is_type' hAA
-      · apply sorry
-    | .iden_form_eq hAA =>
-      by
-        apply IsType.iden_form
-        apply defeq_is_type hAA
-    | .univ_form_eq hiC => 
-      by
-        apply IsType.univ_form
-        apply hiC
-    | .univ_elim_eq hAAU =>
-      by
-        apply IsType.univ_elim
-        apply defeq_is_term' hAAU
+          · apply defeq_is_type' hAA
+          · have hA := defeq_is_type' hAA
+            have hB := defeq_is_type' hBB
+            apply defeq_is_type'
+      | .sigma_form_eq hAA hBB =>
+          apply IsType.sigma_form
+          · apply defeq_is_type' hAA
+          · apply sorry
+      | .iden_form_eq hAA =>
+          apply IsType.iden_form
+          apply defeq_is_type hAA
+      | .univ_form_eq hiC => 
+          apply IsType.univ_form
+          apply hiC
+      | .univ_elim_eq hAAU =>
+          apply IsType.univ_elim
+          apply defeq_is_term' hAAU
 
-theorem defeq_context_conv : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
+/- # Definitional Equality -  Context Conversion -/
+
+theorem context_conv_is_ctx : IsCtx (Γ ⬝ A) → IsEqualType Γ A A'
+                              → IsCtx (Γ ⬝ A') :=
+  fun hiCA : IsCtx (Γ ⬝ A) ↦
+    fun hAA : IsEqualType Γ A A' ↦
+      match hiCA with
+      | .extend hiC _ =>
+        by
+          apply IsCtx.extend
+          · apply hiC
+          · apply defeq_is_type' hAA
+
+-- TODO: recursion on IsEqualType
+theorem context_conv_is_type : IsType (Γ ⬝ A) B → IsEqualType Γ A A'
+                               → IsType (Γ ⬝ A') B :=
+  fun hB : IsType (Γ ⬝ A) B ↦
+    fun hAA : IsEqualType Γ A A' ↦
+    match hB with
+    | .unit_form hiC =>
+      by 
+        have hiCA' := context_conv_is_ctx hiC hAA
+        apply IsType.unit_form hiCA'
+    | .empty_form hiC  =>
+      by 
+        have hiCA' := context_conv_is_ctx hiC hAA
+        apply IsType.empty_form hiCA'
+    | .pi_form hA hB =>
+      by 
+        apply IsType.pi_form
+        · have hA' := context_conv_is_type hA hAA
+          apply hA'
+        · sorry -- change with first rfl in first spot and then use correct in second spot
+    | IsType.sigma_form hA hB =>
+      by 
+        sorry
+    | IsType.iden_form hA =>
+      by 
+        sorry
+    | IsType.univ_form hiC =>
+      by
+        sorry
+    | IsType.univ_elim hAU =>
+      by
+        sorry
+
+theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
+                                → HasType (Γ ⬝ A') b B :=
+  sorry
+
+theorem context_conv_is_equal_type : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
                              → IsEqualType (Γ ⬝ A') B B' :=
   fun hBB : IsEqualType (Γ ⬝ A) B B' ↦
     fun hAA : IsEqualType Γ A A' ↦
-    match hBB with
-    | .unit_form_eq hiC =>
       by
-        apply IsEqualType.unit_form_eq
-        apply IsCtx.extend
-        · cases hiC with
-          | extend hiC hA => apply hiC
-        · apply defeq_is_type' (hAA)
-    | .empty_form_eq hiC =>
-      by
-        apply IsEqualType.empty_form_eq
-        apply IsCtx.extend
-        · cases hiC with
-          | extend hiC hA => apply hiC
-        · apply defeq_is_type' (hAA)
-    | .pi_form_eq hAA hBB =>
-      by
-        sorry
-    | _ => sorry
+        match hBB with
+        | .unit_form_eq hiC =>
+            apply IsEqualType.unit_form_eq
+            apply IsCtx.extend
+            · cases hiC with
+              | extend hiC hA => apply hiC
+            · apply defeq_is_type' (hAA)
+        | .empty_form_eq hiC =>
+            apply IsEqualType.empty_form_eq
+            apply IsCtx.extend
+            · cases hiC with
+              | extend hiC hA => apply hiC
+            · apply defeq_is_type' (hAA)
+        | .pi_form_eq hAA hBB =>
+            sorry
+        | _ => sorry
+
+theorem context_conv_is_equal_term : IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ A A'
+                             → IsEqualTerm (Γ ⬝ A') b b' B :=
+  sorry
 
 /- # Definitional Equality is Equivalence Relation -/
 
@@ -139,8 +164,11 @@ theorem defeq_term_refl : HasType Γ a A → IsEqualTerm Γ a a A :=
     | .var hA => sorry
     | .weak hvA hB => sorry
     | .unit_intro hiC =>
-      by 
-        
+      by
+        cases a with
+        | tt =>
+          apply IsEqualTerm.unit_intro_eq hiC
+        | _ => sorry
     | .pi_intro hB => sorry
     | .sigma_intro hA hB => sorry
     | .iden_intro hA => sorry
@@ -244,18 +272,18 @@ theorem defeq_type_symm : IsEqualType Γ A B → IsEqualType Γ B A :=
       by
         apply IsEqualType.pi_form_eq
         · apply defeq_type_symm hAA
-        · have hBB' := by apply defeq_context_conv hBB hAA
+        · have hBB' := by apply context_conv_is_equal_type hBB hAA
           apply defeq_type_symm hBB'
     | .sigma_form_eq hAA hBB =>
       by
         apply IsEqualType.sigma_form_eq
         · apply defeq_type_symm hAA
-        · have hBB' := by apply defeq_context_conv hBB hAA
+        · have hBB' := by apply context_conv_is_equal_type hBB hAA
           apply defeq_type_symm hBB'
     | .iden_form_eq hAA =>
       by
         apply IsEqualType.iden_form_eq hAA
-    | .univ_form_eq hic => 
+    | .univ_form_eq hic =>
       by
         apply IsEqualType.univ_form_eq hic
     | .univ_elim_eq hAAU =>
@@ -280,9 +308,12 @@ theorem defeq_type_trans : IsEqualType Γ A B → IsEqualType Γ B C → IsEqual
         | pi_form_eq hAAc hBBc =>
           apply IsEqualType.pi_form_eq
           · apply defeq_type_trans hAA hAAc
-          · have hBBs := defeq_context_conv hBBc (defeq_type_symm hAA)
+          · have hBBs := context_conv_is_equal_type hBBc (defeq_type_symm hAA)
             apply defeq_type_trans hBB hBBs
-        | univ_elim_eq hPIc => sorry
+        | univ_elim_eq hPiC =>
+          apply IsEqualType.univ_elim_eq
+          have hPiPi := (IsEqualType.pi_form_eq hAA hBB)
+          apply defeq_term_trans hPiPi hPiC 
        --  sorry -- TODO: stuck? looping here -> use term transitivity
        --                                     -> inversions lemma (C gleich Pi), dann rausziehen
     | .sigma_form_eq hAA hBB =>
