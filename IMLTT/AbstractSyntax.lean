@@ -38,8 +38,8 @@ def length_ctx (Γ : Ctx) : Nat :=
   | Ctx.extend Γ' _ => 1 + (length_ctx Γ')
 
 notation "ε" => Ctx.empty
-infixl:65 " ⬝ " => Ctx.extend
-infixl:65 ", " => concat_ctx
+infixr:66 " ⬝ " => Ctx.extend
+infixr:65 ", " => concat_ctx
 
 -- types
 notation "𝟙" => Tm.unit
