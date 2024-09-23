@@ -99,6 +99,7 @@ mutual
 
   -- Γ ⊢ a ≡ b : A
   inductive IsEqualTerm : Ctx → Tm → Tm → Tm → Prop where
+    | var_eq : IsType Γ A → IsEqualTerm (Γ ⬝ A) 0 0 (lift 0 1 A)
     -- computation rules
     | unit_comp : IsType (Γ ⬝ 𝟙) C → HasType Γ c (substitute C Tm.tt 0)
                   → IsEqualTerm Γ (Tm.indUnit A Tm.tt c) Tm.tt (substitute C Tm.tt 0)
