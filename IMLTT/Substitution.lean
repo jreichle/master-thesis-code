@@ -57,3 +57,9 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   | .refl A m => .refl (substitute A t j) (substitute m t j)
   | .j A u a b p => .j (substitute A t j) (substitute u t j) (substitute a t j) (substitute b t j)
                      (substitute p t j)
+
+notation A "[" t  "/" j"]" => substitute A t j
+
+def lift_ctx (l j : Nat) : Ctx -> Ctx
+  | .empty => .empty
+  | .extend Γ A => .extend (lift_ctx l j Γ) (lift l j A)

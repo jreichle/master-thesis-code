@@ -1,7 +1,26 @@
 import IMLTT.AbstractSyntax
 import IMLTT.Substitution
 import IMLTT.JudgmentsAndRules
+import IMLTT.proofs.BoundaryConditions
+import IMLTT.proofs.admissable.Lifting
 import IMLTT.proofs.admissable.AdmissableRules
+import IMLTT.proofs.admissable.Weakening
+import IMLTT.proofs.admissable.Substitution
+
+theorem context_extend_eq_type : Γ ⬝ A = Γ, (Ctx.empty ⬝ A) :=
+  sorry
+
+theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
+                                → HasType (Γ ⬝ A') b B :=
+  sorry
+
+theorem context_conv_has_type' : HasType (Γ ⬝ A') b B → IsEqualType Γ A A'
+                                → HasType (Γ ⬝ A) b B :=
+  sorry
+
+theorem context_conv_is_equal_term : IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ A A'
+                             → IsEqualTerm (Γ ⬝ A') b b' B :=
+  sorry
 
 /- # Definitional Equality - Inverse of Reflexivity -/
 
@@ -74,7 +93,6 @@ mutual
           apply IsType.univ_elim
           apply defeq_is_term' hAAU
 
-  -- TODO: generalize to any spot in context
   theorem context_conv_is_equal_type : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
                                        → IsEqualType (Γ ⬝ A') B B' :=
     by
@@ -92,15 +110,39 @@ mutual
         · apply context_conv_is_equal_type hAA' hAA
         · sorry
       | _ => sorry
+
+  theorem context_conv_is_equal_type_TEST : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
+                                            → IsEqualType (Γ ⬝ A') B B' :=
+    by
+      intro hBB hAA
+      rw [substitute_type_eq_inverse]
+      apply substitution_type_eq
+      · apply context_conv_has_type -- FIXME: sorry dependency
+        · have hA := defeq_is_type hAA
+          apply HasType.var hA
+        · apply hAA
+      · rw [←substitution_type_eq_id] -- FIXME: is substitution_type_eq_id correct?
+        rw [lifting_ctx_one_term]
+        apply weakening_type_eq
+        · rw [context_extend_eq_type] at hBB
+          apply hBB
+        · apply defeq_is_type' hAA
 end
 
-theorem context_conv_is_equal_type_gen : IsEqualType (concat_ctx (Γ ⬝ A) Δ) B B' → IsEqualType Γ A A'
-                                      → IsEqualType (concat_ctx (Γ ⬝ A') Δ) B B' :=
+theorem context_conv_is_equal_type_gen : IsEqualType (concat_ctx (Γ ⬝ A) Δ) B B' 
+                                         → IsEqualType Γ A A'
+                                         → IsEqualType (concat_ctx (Γ ⬝ A') Δ) B B' :=
   by
     intro hBB
     intro hAA
     match hAA with
-    | .unit_form_eq hiC => sorry
+    | .unit_form_eq hiC =>
+      apply hBB
+    | .pi_form_eq hAA' hBB' =>
+      -- apply IsEqualType.pi_form_eq
+      -- · sorry
+      -- · sorry
+      sorry
     | _ => sorry
 
 theorem context_conv_is_ctx : IsCtx (Γ ⬝ A) → IsEqualType Γ A A'
@@ -146,11 +188,3 @@ theorem context_conv_is_type : IsType (Γ ⬝ A) B → IsEqualType Γ A A'
     | IsType.univ_elim hAU =>
       by
         sorry
-
-theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
-                                → HasType (Γ ⬝ A') b B :=
-  sorry
-
-theorem context_conv_is_equal_term : IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ A A'
-                             → IsEqualTerm (Γ ⬝ A') b b' B :=
-  sorry

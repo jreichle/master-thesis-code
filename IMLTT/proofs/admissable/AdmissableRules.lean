@@ -14,4 +14,3 @@ theorem pi_univ_backwards_snd : IsEqualTerm Γ (Tm.pi A B) (Tm.pi A' B') U → I
   fun hPiPiU : IsEqualTerm Γ (Tm.pi A B) (Tm.pi A' B') U ↦
     by
       sorry
-
