@@ -1,4 +1,6 @@
-import IMLTT.AbstractSyntax
+import IMLTT.AbstractSyntax 
+
+-- FIXME: subsitute, lift in type annotations? e.g. in j
 
 /- # Lifting -/
 -- needed to preserver `original depth` of variables
@@ -24,7 +26,7 @@ def lift (l j : Nat) : Tm -> Tm
   | .indSigma A B C s t => .indSigma (lift l j A) (lift l j B) (lift l j C) 
                             (lift l j s) (lift l j t)
   | .refl A t => .refl (lift l j A) (lift l j t)
-  | .j A t a b p => .j (lift l j A) (lift l j t) (lift l j a) (lift l j b) (lift l j p)
+  | .j A B t a b p => .j (lift l j A) (lift l j B) (lift l j t) (lift l j a) (lift l j b) (lift l j p)
 
 -- TODO: use more efficient lifting
 -- - on λ-calculus (ex3) lecture only apply lifting when really substituted
@@ -55,8 +57,8 @@ def substitute (s : Tm) (t : Tm) (j : Nat) : Tm :=
   | .indSigma A B C m n => .indSigma (substitute A t j) (substitute B t j) (substitute C t j) 
                             (substitute m t j) (substitute n t j)
   | .refl A m => .refl (substitute A t j) (substitute m t j)
-  | .j A u a b p => .j (substitute A t j) (substitute u t j) (substitute a t j) (substitute b t j)
-                     (substitute p t j)
+  | .j A B u a b p => .j (substitute A t j) (substitute B t j) (substitute u t j) (substitute a t j) 
+                      (substitute b t j) (substitute p t j)
 
 notation A "[" t  "/" j"]" => substitute A t j
 

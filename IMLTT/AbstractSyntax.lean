@@ -16,7 +16,7 @@ inductive Tm where
   | pairSigma : Tm → Tm → Tm
   | indSigma: Tm → Tm → Tm → Tm → Tm → Tm
   | refl : Tm → Tm → Tm
-  | j : Tm → Tm → Tm → Tm → Tm → Tm
+  | j : Tm → Tm → Tm → Tm → Tm → Tm → Tm
 
 instance : Coe Nat Tm where
   coe := .var
