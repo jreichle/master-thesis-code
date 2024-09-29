@@ -2,7 +2,7 @@ import IMLTT.AbstractSyntax
 import IMLTT.Substitution
 import IMLTT.JudgmentsAndRules
 import IMLTT.proofs.admissable.DefeqTerms
-import IMLTT.proofs.admissable.ContextConversion
+import IMLTT.proofs.admissable.Contexts
 
 /- # Definitional Equality is Equivalence Relation -/
 
@@ -25,10 +25,11 @@ theorem defeq_type_refl : IsType Γ A → IsEqualType Γ A A :=
         apply IsEqualType.sigma_form_eq
         · apply defeq_type_refl hA
         · apply defeq_type_refl hB
-    | IsType.iden_form hA =>
+    | IsType.iden_form haA haA' =>
       by 
         apply IsEqualType.iden_form_eq
-        apply defeq_type_refl hA
+        · apply defeq_term_refl haA
+        · apply defeq_term_refl haA'
     | IsType.univ_form hiC =>
       by
         apply IsEqualType.univ_form_eq hiC
@@ -58,9 +59,11 @@ theorem defeq_type_symm : IsEqualType Γ A B → IsEqualType Γ B A :=
         · apply defeq_type_symm hAA
         · have hBB' := by apply context_conv_is_equal_type hBB hAA
           apply defeq_type_symm hBB'
-    | .iden_form_eq hAA =>
+    | .iden_form_eq haaA haaA' =>
       by
-        apply IsEqualType.iden_form_eq hAA
+        apply IsEqualType.iden_form_eq
+        · apply defeq_term_symm haaA
+        · apply defeq_term_symm haaA'
     | .univ_form_eq hic =>
       by
         apply IsEqualType.univ_form_eq hic
@@ -97,9 +100,9 @@ theorem defeq_type_trans : IsEqualType Γ A B → IsEqualType Γ B C → IsEqual
     | .sigma_form_eq hAA hBB =>
       by 
         sorry    
-    | .iden_form_eq hAA =>
+    | .iden_form_eq haaA haaA' =>
       by 
-        apply hBC
+        sorry
     | .univ_form_eq hic => 
       by 
         apply hBC

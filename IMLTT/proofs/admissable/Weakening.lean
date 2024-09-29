@@ -19,8 +19,10 @@ theorem weakening_term : HasType Γ a A → IsType Γ B
   by
     sorry
 
+-- FIXME: others like this?
 theorem weakening_type_eq : IsEqualType (Γ, Δ) A A' → IsType Γ B
-                            → IsEqualType (Γ ⬝ B, (lift_ctx 0 1 Δ)) (lift 0 1 A) (lift 0 1 A') :=
+                            → IsEqualType (Γ ⬝ B, (lift_ctx 0 1 Δ)) 
+                                (lift 0 (length_ctx Δ) A) (lift 0 (length_ctx Δ) A') :=
   by
     sorry
 

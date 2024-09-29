@@ -46,7 +46,7 @@ notation "𝟙" => Tm.unit
 notation "𝟘" => Tm.empty
 notation "Π" A ", " B => Tm.pi A B
 notation "Σ" A ", " B => Tm.sigma A B
-notation "Id " A " (" s ", " t")" => Tm.iden A s t
+notation "Id_" A " (" s ", " t")" => Tm.iden A s t
 notation "U" => Tm.univ
 -- terms
 notation "()" => Tm.tt

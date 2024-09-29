@@ -3,29 +3,32 @@ import IMLTT.Substitution
 import IMLTT.JudgmentsAndRules
 
 theorem defeq_term_refl : HasType Γ a A → IsEqualTerm Γ a a A :=
-  fun haA : HasType Γ a A ↦
+  by
+    intro haA
     match haA with
-    | .var hA => sorry
+    | .var hA =>
+      apply IsEqualTerm.var_eq
+      apply hA
     | .weak hvA hB => sorry
     | .unit_intro hiC =>
-      by
-        cases a with
-        | tt =>
-          apply IsEqualTerm.unit_intro_eq hiC
-        | _ => sorry
-    | .pi_intro hB => sorry
+      cases a with
+      | tt =>
+        apply IsEqualTerm.unit_intro_eq hiC
+      | _ => sorry -- FIXME: how?
+    | .pi_intro hB =>
+      sorry
     | .sigma_intro hA hB => sorry
     | .iden_intro hA => sorry
     | .univ_unit hiC => sorry
     | .univ_empty hiC => sorry
     | .univ_pi hAU hBU => sorry
     | .univ_sigma hAU hBU => sorry
-    | .univ_iden hAU => sorry
+    | .univ_iden hAU haA haA' => sorry
     | .unit_elim hA haA hbUn => sorry
     | .empty_elim hA hbEm => sorry
     | .pi_elim hfPi haA => sorry
     | .sigma_elim hpSi hC hcC => sorry
-    | .iden_elim hB hbB => sorry
+    | .iden_elim hB hbB hpI => sorry
     | .ty_conv haA hAB => sorry
 
 theorem defeq_term_symm : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
@@ -35,7 +38,7 @@ theorem defeq_term_symm : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .unit_comp hC hcC => sorry
     | .pi_comp hbB haA => sorry
     | .sigma_comp haA hbB hC hcC => sorry
-    | .iden_comp hB hbB => sorry
+    | .iden_comp hB hbB haA  => sorry
     | .unit_intro_eq hiC => sorry
     | .unit_elim_eq hAA haaA hbbUn => sorry
     | .empty_elim_eq hAA hbbEm => sorry
@@ -54,7 +57,7 @@ theorem defeq_term_trans : IsEqualTerm Γ a b A → IsEqualTerm Γ b c A → IsE
     | .unit_comp hC hcC => sorry
     | .pi_comp hbB haA => sorry
     | .sigma_comp haA hbB hC hcC => sorry
-    | .iden_comp hB hbB => sorry
+    | .iden_comp hB hbB haA => sorry
     | .unit_intro_eq hiC => sorry
     | .unit_elim_eq hAA haaA hbbUn => sorry
     | .empty_elim_eq hAA hbbEm => sorry
