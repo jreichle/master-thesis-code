@@ -18,29 +18,6 @@ inductive Tm where
   | refl : Tm → Tm → Tm
   | j : Tm → Tm → Tm → Tm → Tm → Tm → Tm
 
-instance : Coe Nat Tm where
-  coe := .var
-instance : OfNat Tm n where
-  ofNat := n
-
-inductive Ctx where
-  | empty : Ctx
-  | extend : Ctx → Tm → Ctx
-
-def concat_ctx (Γ : Ctx) (Δ : Ctx) : Ctx :=
-  match Δ with
-  | Ctx.empty => Γ
-  | Ctx.extend Δ' A => Ctx.extend (concat_ctx Γ Δ') A
-
-def length_ctx (Γ : Ctx) : Nat :=
-  match Γ with
-  | Ctx.empty => 0
-  | Ctx.extend Γ' _ => 1 + (length_ctx Γ')
-
-notation "ε" => Ctx.empty
-infixl:66 " ⬝ " => Ctx.extend
-infixl:65 ", " => concat_ctx
-
 -- types
 notation "𝟙" => Tm.unit
 notation "𝟘" => Tm.empty
@@ -53,3 +30,26 @@ notation "()" => Tm.tt
 notation "λ" s ", " t => Tm.lam s t
 notation "<" A ", " s ">" => Tm.pair A s
 notation "refl " A " (" s ")" => Tm.refl A s
+
+instance : Coe Nat Tm where
+  coe := .var
+instance : OfNat Tm n where
+  ofNat := n
+
+inductive Ctx where
+  | empty : Ctx
+  | extend : Ctx → Tm → Ctx
+
+def concat_ctx (Γ : Ctx) (Δ : Ctx) : Ctx :=
+  match Δ with
+  | .empty => Γ
+  | .extend Δ' A => .extend (concat_ctx Γ Δ') A
+
+def length_ctx (Γ : Ctx) : Nat :=
+  match Γ with
+  | .empty => 0
+  | .extend Γ' _ => 1 + (length_ctx Γ')
+
+notation "ε" => Ctx.empty
+infixl:66 " ⬝ " => Ctx.extend
+infixl:65 ", " => concat_ctx

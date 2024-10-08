@@ -1,5 +1,6 @@
 import IMLTT.AbstractSyntax
-import IMLTT.Substitution
+-- import IMLTT.Substitution
+import IMLTT.SubstitutionSep
 
 /- # Rules -/
 -- 5 judgments:
@@ -38,15 +39,15 @@ mutual
     -- structural rules
     -- make sure variables of A refer to to same variables of Γ as before with lifting
     | var  : IsType Γ A
-             → HasType (Γ ⬝ A) 0 (lift 0 1 A)
+             → HasType (Γ ⬝ A) 0 (shift_tm A)
     | weak : HasType Γ (Tm.var i) A → IsType Γ B
-             → HasType (Γ ⬝ B) (Tm.var (i + 1)) (lift 0 1 A)
+             → HasType (Γ ⬝ B) (Tm.var (i + 1)) (shift_tm A)
     -- intro rules
     | unit_intro : IsCtx Γ
                    → HasType Γ tt 𝟙
     | pi_intro : HasType (Γ ⬝ A) b B
                  → HasType Γ (Tm.lam A b) (Tm.pi A B)
-    | sigma_intro : HasType Γ a A → HasType Γ b (substitute B a 0)
+    | sigma_intro : HasType Γ a A → HasType Γ b (substitute_zero B a)
                     → HasType Γ (Tm.pairSigma a b) (Tm.sigma A B)
     | iden_intro : HasType Γ a A
                    → HasType Γ (Tm.refl A a) (Tm.iden A a a)
@@ -62,17 +63,17 @@ mutual
     | univ_iden : HasType Γ A U → HasType Γ a A → HasType Γ a' A
                   → HasType Γ (Tm.iden A a a') U
     -- elimination rules (except univ)
-    | unit_elim : IsType (Γ ⬝ Tm.unit) C → HasType Γ c (substitute C Tm.unit 0)
+    | unit_elim : IsType (Γ ⬝ Tm.unit) C → HasType Γ c (substitute_zero C Tm.unit)
                   → HasType Γ p Tm.unit
-                  → HasType Γ (Tm.indUnit C p c) (substitute C p 0)
+                  → HasType Γ (Tm.indUnit C p c) (substitute_zero C p)
     | empty_elim : IsType (Γ ⬝ 𝟘) C → HasType Γ p 𝟘
-                   → HasType Γ (Tm.indEmpty C p) (substitute C p 0)
+                   → HasType Γ (Tm.indEmpty C p) (substitute_zero C p)
     | pi_elim : HasType Γ f (Tm.pi A B) → HasType Γ a A
-                → HasType Γ (Tm.app f a) (substitute B a 0)
+                → HasType Γ (Tm.app f a) (substitute_zero B a)
     | sigma_elim : HasType Γ p (Tm.sigma A B) → IsType (Γ ⬝ (Tm.sigma A B)) C
-                   → HasType (Γ ⬝ A ⬝ B) c (substitute C (Tm.pairSigma 1 0) 0)
-                   → HasType Γ (Tm.indSigma A B C c p) (substitute C p 0)
-    | iden_elim : IsType (((Γ ⬝ A) ⬝ (lift 0 1 A)) ⬝ (Tm.iden A 1 0)) B
+                   → HasType (Γ ⬝ A ⬝ B) c (substitute_zero C (Tm.pairSigma 1 0))
+                   → HasType Γ (Tm.indSigma A B C c p) (substitute_zero C p)
+    | iden_elim : IsType (((Γ ⬝ A) ⬝ (shift_tm A)) ⬝ (Tm.iden A 1 0)) B
                   → HasType (Γ ⬝ A) b
                     (substitute (substitute (substitute B 0 2) 0 1) (Tm.refl A 0) 0)
                   → HasType Γ p (Tm.iden A a a')
@@ -102,18 +103,18 @@ mutual
 
   -- Γ ⊢ a ≡ b : A
   inductive IsEqualTerm : Ctx → Tm → Tm → Tm → Prop where
-    | var_eq : IsType Γ A → IsEqualTerm (Γ ⬝ A) 0 0 (lift 0 1 A)
+    | var_eq : IsType Γ A → IsEqualTerm (Γ ⬝ A) 0 0 (shift_tm A)
     -- computation rules
-    | unit_comp : IsType (Γ ⬝ 𝟙) C → HasType Γ c (substitute C Tm.tt 0)
-                  → IsEqualTerm Γ (Tm.indUnit A Tm.tt c) Tm.tt (substitute C Tm.tt 0)
+    | unit_comp : IsType (Γ ⬝ 𝟙) C → HasType Γ c (substitute_zero C Tm.tt)
+                  → IsEqualTerm Γ (Tm.indUnit A Tm.tt c) Tm.tt (substitute_zero C Tm.tt)
     | pi_comp : HasType (Γ ⬝ A) b B → HasType Γ a A
-                → IsEqualTerm Γ (Tm.app (Tm.lam A b) a) (substitute b a 0) (substitute B a 0)
-    | sigma_comp : HasType Γ a A → HasType (Γ ⬝ A) b (substitute B a 0)
+                → IsEqualTerm Γ (Tm.app (Tm.lam A b) a) (substitute_zero b a) (substitute_zero B a)
+    | sigma_comp : HasType Γ a A → HasType (Γ ⬝ A) b (substitute_zero B a)
                    → IsType (Γ ⬝ (Tm.sigma A B)) C
-                   → HasType (Γ ⬝ A ⬝ B) c (substitute C (Tm.pairSigma 1 0) 0)
+                   → HasType (Γ ⬝ A ⬝ B) c (substitute_zero C (Tm.pairSigma 1 0))
                    → IsEqualTerm Γ (Tm.indSigma A B C c (Tm.pairSigma a b))
-                     (substitute (substitute c a 0) b 0) (substitute C (Tm.pairSigma a b) 0)
-    | iden_comp : IsType (((Γ ⬝ A) ⬝ (lift 0 1 A)) ⬝ (Tm.iden A 1 0)) B
+                     (substitute (substitute c a 0) b 0) (substitute_zero C (Tm.pairSigma a b))
+    | iden_comp : IsType (((Γ ⬝ A) ⬝ (shift_tm A)) ⬝ (Tm.iden A 1 0)) B
                   → HasType (Γ ⬝ A) b
                     (substitute (substitute (substitute B 0 2) 0 1) (Tm.refl A 0) 0)
                   → HasType Γ a A
@@ -123,28 +124,28 @@ mutual
     -- congruence rules (introduction and elimination)
     | unit_intro_eq : IsCtx Γ
                       → IsEqualTerm Γ Tm.tt Tm.tt Tm.unit
-    | unit_elim_eq : IsEqualType (Γ ⬝ 𝟙) A A' → IsEqualTerm Γ a a' (substitute A Tm.tt 0)
+    | unit_elim_eq : IsEqualType (Γ ⬝ 𝟙) A A' → IsEqualTerm Γ a a' (substitute_zero A Tm.tt)
                      → IsEqualTerm Γ b b' Tm.unit
-                     → IsEqualTerm Γ (Tm.indUnit A b a) (Tm.indUnit A' b' a') (substitute A b 0)
+                     → IsEqualTerm Γ (Tm.indUnit A b a) (Tm.indUnit A' b' a') (substitute_zero A b)
     | empty_elim_eq : IsEqualType (Γ ⬝ Tm.empty) A A' → IsEqualTerm Γ b b' Tm.empty
-                      → IsEqualTerm Γ (Tm.indEmpty A b) (Tm.indEmpty A' b') (substitute A b 0)
+                      → IsEqualTerm Γ (Tm.indEmpty A b) (Tm.indEmpty A' b') (substitute_zero A b)
     | pi_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm (Γ ⬝ A) b b' B
                     → IsEqualTerm Γ (Tm.lam A b) (Tm.lam A' b') (Tm.pi A B)
     | pi_elim_eq : IsEqualType Γ (Tm.pi A B) (Tm.pi A' B') → IsEqualTerm Γ a a' A
                    → IsEqualTerm Γ f f' (Tm.pi A B)
-                   → IsEqualTerm Γ (Tm.app f a) (Tm.app f' a') (substitute B a 0)
+                   → IsEqualTerm Γ (Tm.app f a) (Tm.app f' a') (substitute_zero B a)
     | sigma_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ a a' A
-                       → IsEqualTerm (Γ ⬝ A) b b' (substitute B a 0)
+                       → IsEqualTerm (Γ ⬝ A) b b' (substitute_zero B a)
                        → IsEqualTerm Γ (Tm.pairSigma a b) (Tm.pairSigma a' b') (Tm.sigma A B)
     | sigma_elim_eq : IsEqualType Γ (Tm.sigma A B) (Tm.sigma A' B')
                       → IsEqualTerm Γ p p' (Tm.sigma A B) 
                       → IsEqualType (Γ ⬝ (Tm.sigma A B)) C C'
-                      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (substitute C (Tm.pairSigma 1 0) 0)
+                      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (substitute_zero C (Tm.pairSigma 1 0))
                       → IsEqualTerm Γ (Tm.indSigma A B C c p) (Tm.indSigma A B C c' p') 
-                        (substitute C p 0)
+                        (substitute_zero C p)
     | iden_intro_eq : IsEqualTerm Γ a a' A
                       → IsEqualTerm Γ (Tm.refl A a) (Tm.refl A a') (Tm.iden A a a)
-    | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (lift 0 1 A)) ⬝ (Tm.iden A 1 0)) B B'
+    | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (shift_tm A)) ⬝ (Tm.iden A 1 0)) B B'
                      → IsEqualTerm (Γ ⬝ A) b b'
                        (substitute (substitute (substitute B 0 2) 0 1) (Tm.refl A 0) 0)
                      → IsEqualTerm Γ p p' (Tm.iden A a a')
