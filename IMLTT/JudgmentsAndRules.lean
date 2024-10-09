@@ -1,6 +1,5 @@
 import IMLTT.AbstractSyntax
--- import IMLTT.Substitution
-import IMLTT.SubstitutionSep
+import IMLTT.Substitution
 
 /- # Rules -/
 -- 5 judgments:
@@ -75,10 +74,10 @@ mutual
                    → HasType Γ (Tm.indSigma A B C c p) (substitute_zero C p)
     | iden_elim : IsType (((Γ ⬝ A) ⬝ (shift_tm A)) ⬝ (Tm.iden A 1 0)) B
                   → HasType (Γ ⬝ A) b
-                    (substitute (substitute (substitute B 0 2) 0 1) (Tm.refl A 0) 0)
+                    (substitute B (subst_from_list ((Tm.refl A 0) :: (Tm.var 0) :: (Tm.var 0) :: [])))
                   → HasType Γ p (Tm.iden A a a')
                   → HasType Γ (Tm.j A B b a a' p)
-                    (substitute (substitute (substitute B a 2) a' 1) p 0)
+                    (substitute B (subst_from_list (p :: a' :: a :: [])))
 
     -- conversion
     | ty_conv : HasType Γ a A → IsEqualType Γ A B
@@ -113,13 +112,14 @@ mutual
                    → IsType (Γ ⬝ (Tm.sigma A B)) C
                    → HasType (Γ ⬝ A ⬝ B) c (substitute_zero C (Tm.pairSigma 1 0))
                    → IsEqualTerm Γ (Tm.indSigma A B C c (Tm.pairSigma a b))
-                     (substitute (substitute c a 0) b 0) (substitute_zero C (Tm.pairSigma a b))
+                     (substitute c (subst_from_list (b :: a :: [])))
+                     (substitute_zero C (Tm.pairSigma a b))
     | iden_comp : IsType (((Γ ⬝ A) ⬝ (shift_tm A)) ⬝ (Tm.iden A 1 0)) B
                   → HasType (Γ ⬝ A) b
-                    (substitute (substitute (substitute B 0 2) 0 1) (Tm.refl A 0) 0)
+                    (substitute B (subst_from_list ((Tm.refl A 0) :: 0 :: 0 :: [])))
                   → HasType Γ a A
-                  → IsEqualTerm Γ (Tm.j A B b a a' (Tm.refl A a)) (substitute b a 0)
-                    (substitute (substitute (substitute B a 2) a' 1) (Tm.refl A a) 0)
+                  → IsEqualTerm Γ (Tm.j A B b a a' (Tm.refl A a)) (substitute_zero b a)
+                    (substitute B (subst_from_list ((Tm.refl A a) :: a' :: a :: [])))
 
     -- congruence rules (introduction and elimination)
     | unit_intro_eq : IsCtx Γ
@@ -147,10 +147,10 @@ mutual
                       → IsEqualTerm Γ (Tm.refl A a) (Tm.refl A a') (Tm.iden A a a)
     | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (shift_tm A)) ⬝ (Tm.iden A 1 0)) B B'
                      → IsEqualTerm (Γ ⬝ A) b b'
-                       (substitute (substitute (substitute B 0 2) 0 1) (Tm.refl A 0) 0)
+                       (substitute B (subst_from_list ((Tm.refl A 0) :: 0 :: 0 :: [])))
                      → IsEqualTerm Γ p p' (Tm.iden A a a')
                      → IsEqualTerm Γ (Tm.j A B b a a' p) (Tm.j A B b' a a' p')
-                       (substitute (substitute (substitute B a 2) a' 1) p 0)
+                       (substitute B (subst_from_list (p :: a' :: a :: [])))
 
     -- conversion
     | ty_conv_eq : IsEqualTerm Γ a b A → IsEqualType Γ A B

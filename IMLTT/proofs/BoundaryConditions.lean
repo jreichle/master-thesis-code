@@ -38,3 +38,8 @@ theorem boundary_term_type : HasType Γ a A → IsType Γ A :=
 
 theorem boundary_equal_term_type : IsEqualTerm Γ a a' A → IsType Γ A :=
   sorry
+
+/- # Closed term check -/
+
+theorem closed_lift_eq : lift l j tm = tm :=
+  sorry
