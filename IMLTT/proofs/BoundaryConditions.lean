@@ -1,6 +1,7 @@
-import IMLTT.AbstractSyntax
-import IMLTT.Substitution
-import IMLTT.JudgmentsAndRules
+import IMLTT.untyped.AbstractSyntax
+import IMLTT.untyped.Weakening
+import IMLTT.untyped.Substitution
+import IMLTT.typed.JudgmentsAndRules
 import IMLTT.proofs.admissable.Weakening
 
 /- # Boundary conditions -/

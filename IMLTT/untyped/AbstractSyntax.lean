@@ -31,8 +31,9 @@ notation "Id_" A " (" s ", " t")" => Tm.iden A s t
 notation "U" => Tm.univ
 -- terms
 notation "()" => Tm.tt
-notation "λ" s ", " t => Tm.lam s t
-notation "<" A ", " s ">" => Tm.pair A s
+notation "v(" x ")" => Tm.var x
+notation "λ" A ", " b => Tm.lam A b
+notation "<" a ", " b ">" => Tm.pairSigma a b
 notation "refl " A " (" s ")" => Tm.refl A s
 
 instance : Coe (Fin n) (Tm n) where

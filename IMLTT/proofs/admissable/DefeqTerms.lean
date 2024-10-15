@@ -1,6 +1,7 @@
-import IMLTT.AbstractSyntax
-import IMLTT.Substitution
-import IMLTT.JudgmentsAndRules
+import IMLTT.untyped.AbstractSyntax
+import IMLTT.untyped.Weakening
+import IMLTT.untyped.Substitution
+import IMLTT.typed.JudgmentsAndRules
 
 theorem defeq_term_refl : HasType Γ a A → IsEqualTerm Γ a a A :=
   by
