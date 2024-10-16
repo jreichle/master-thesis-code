@@ -20,7 +20,7 @@
 
   inductive Ctx : Nat → Type where
     | empty : Ctx 0
-    | extend : Ctx n → Tm n → Ctx (n + 1)
+    | extend : Ctx n → Tm n → Ctx (n + 1) -- TODO: Tm m and m ≤ n?
 
 -- types
 notation "𝟙" => Tm.unit
@@ -41,11 +41,29 @@ instance : Coe (Fin n) (Tm n) where
 -- instance : OfNat (Tm n) m where
 --   ofNat := .var m
 
--- def concat_ctx (Γ : Ctx n) (Δ : Ctx m) : Ctx (n + m) :=
---   match Δ with
---   | .empty => Γ
---   | .extend Δ' A => .extend (concat_ctx Γ Δ') A
--- infixl:65 ", " => concat_ctx
+def convert_tm_higher (t : Tm m) (hleq : m ≤ n) : Tm n :=
+  sorry
+
+theorem leq_add (m n : Nat) : m ≤ m + n :=
+  by
+    induction m with
+    | zero => simp []
+    | succ m' ih =>
+      rw [Nat.add_comm _ n]
+      rw [←Nat.add_assoc]
+      apply Nat.succ_le_succ
+      rw [Nat.add_comm]
+      apply ih
+
+def concat_ctx (Γ : Ctx n) (Δ : Ctx m) : Ctx (n + m) :=
+  match Δ with
+  | .empty => Γ
+  | .extend Δ' A => .extend (concat_ctx Γ Δ') (convert_tm_higher A (by
+      simp []
+      rw [Nat.add_comm]
+      simp [leq_add])
+    )
 
 notation "ε" => Ctx.empty
 infixl:66 " ⬝ " => Ctx.extend
+infixl:65 "; " => concat_ctx

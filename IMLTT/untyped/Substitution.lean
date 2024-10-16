@@ -62,13 +62,6 @@ def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
 def substitute_zero (t : Tm (n + 1)) (a : Tm n) : Tm n :=
   substitute t (.extend (.weak .id) a)
 
-notation "id" => Weak.id
-notation "↑" => Weak.shift
-notation "⇑" => Weak.lift
-notation "⇑_" i => lift_weak_n i
-notation ρ "∘" ρ' => comp_weaken ρ ρ'
-notation A "[" ρ "]" => weaken A ρ
-
 notation "↑" => Subst.shift
 notation "⇑" => Subst.lift
 infixl:66 "∘" => Subst.comp

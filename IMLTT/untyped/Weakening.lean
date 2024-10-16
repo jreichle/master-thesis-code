@@ -24,7 +24,7 @@ def weak_var (x : Fin n) (ρ : Weak m n) : Fin m :=
   match ρ with
   | .id => x
   | .shift ρ => .succ (weak_var x ρ)
-  | .lift ρ => 
+  | .lift ρ =>
     match x with
     | ⟨0, _⟩ => 0
     | ⟨x' + 1, h⟩ => .succ (weak_var (Fin.mk x' (Nat.lt_of_succ_lt_succ h)) ρ)
@@ -52,3 +52,10 @@ def weaken (t : Tm n) (ρ : Weak m n) : Tm m :=
 
 def shift_tm : Tm n → Tm (n + 1)
   | t => weaken t (.shift .id)
+
+notation "id" => Weak.id
+notation "↑" => Weak.shift
+notation "⇑" => Weak.lift
+notation "⇑_" i => lift_weak_n i
+notation ρ "∘" ρ' => comp_weaken ρ ρ'
+notation A "[" ρ "]" => weaken A ρ
