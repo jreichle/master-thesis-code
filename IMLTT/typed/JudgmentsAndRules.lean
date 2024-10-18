@@ -40,11 +40,11 @@ mutual
     -- make sure variables of A refer to to same variables of Γ as before with lifting
     | var  : IsType Γ A
              → HasType (Γ ⬝ A) (.var 0) (weaken A (.shift .id))
-    | weak : HasType Γ (.var i) A → IsType Γ B
-             → HasType (Γ ⬝ B) (.var (.succ i)) (weaken A (.shift .id))
+    -- | weak : HasType Γ (.var i) A → IsType Γ B
+    --          → HasType (Γ ⬝ B) (.var (.succ i)) (weaken A (.shift .id))
     -- intro rules
     | unit_intro : IsCtx Γ
-                   → HasType Γ tt 𝟙
+                   → HasType Γ .tt 𝟙
     | pi_intro : HasType (Γ ⬝ A) b B
                  → HasType Γ (.lam A b) (.pi A B)
     | sigma_intro : HasType Γ a A → HasType Γ b (substitute_zero B a)
@@ -109,7 +109,8 @@ mutual
 
   -- Γ ⊢ a ≡ b : A
   inductive IsEqualTerm : Ctx n → Tm n → Tm n → Tm n → Prop where
-    | var_eq : IsType Γ A → IsEqualTerm (Γ ⬝ A) (.var 0) (.var 0) (weaken A (.shift .id))
+    | var_eq : IsType Γ A
+               → IsEqualTerm (Γ ⬝ A) (.var 0) (.var 0) (weaken A (.shift .id))
     -- computation rules
     | unit_comp : IsType (Γ ⬝ 𝟙) A → HasType Γ a (substitute_zero A .tt)
                   → IsEqualTerm Γ (.indUnit A .tt a) a (substitute_zero A .tt)
@@ -170,7 +171,16 @@ mutual
                      → IsEqualTerm Γ p p' (.iden A a a')
                      → IsEqualTerm Γ (.j A B b a a' p) (.j A B b' a a' p')
                        (substitute B (.weak .id, a, a', p))
-
+    | univ_unit_eq : IsCtx Γ
+                     → IsEqualTerm Γ 𝟙 𝟙 .univ
+    | univ_empty_eq : IsCtx Γ
+                     → IsEqualTerm Γ 𝟘 𝟘 .univ
+    | univ_pi_eq : IsEqualTerm Γ A A' .univ → IsEqualTerm (Γ ⬝ A) B B' .univ
+                   → IsEqualTerm Γ (.pi A B) (.pi A' B') .univ
+    | univ_sigma_eq : IsEqualTerm Γ A A' .univ → IsEqualTerm (Γ ⬝ A) B B' .univ
+                   → IsEqualTerm Γ (.sigma A B) (.sigma A' B') .univ
+    | univ_iden_eq : IsEqualTerm Γ A A' .univ → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
+                     → IsEqualTerm Γ (.iden A a₁ a₃) (.iden A' a₂ a₄) .univ
     -- conversion
     | ty_conv_eq : IsEqualTerm Γ a b A → IsEqualType Γ A B
                    → IsEqualTerm Γ a b B

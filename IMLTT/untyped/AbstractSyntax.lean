@@ -30,8 +30,8 @@ notation "Σ" A ", " B => Tm.sigma A B
 notation "Id_" A " (" s ", " t")" => Tm.iden A s t
 notation "U" => Tm.univ
 -- terms
-notation "()" => Tm.tt
 notation "v(" x ")" => Tm.var x
+notation "⋆" => Tm.tt
 notation "λ" A ", " b => Tm.lam A b
 notation "<" a ", " b ">" => Tm.pairSigma a b
 notation "refl " A " (" s ")" => Tm.refl A s

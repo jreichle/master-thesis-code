@@ -3,7 +3,6 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.proofs.BoundaryConditions
-import IMLTT.proofs.admissable.Lifting
 import IMLTT.proofs.admissable.Weakening
 import IMLTT.proofs.admissable.Substitution
 
@@ -11,7 +10,26 @@ theorem defeq_is_term : IsEqualTerm Γ a a' A → HasType Γ a A :=
   by 
     intro haaA
     match haaA with
-    | _ => sorry
+    | .var_eq hA => sorry
+    | .unit_comp hC hcC => sorry
+    | .pi_comp hbB haA => sorry
+    | .sigma_comp haA hbB hC hcC => sorry
+    | .iden_comp hB hbB haA  => sorry
+    | .unit_intro_eq hiC => sorry
+    | .unit_elim_eq hAA haaA hbbUn => sorry
+    | .empty_elim_eq hAA hbbEm => sorry
+    | .pi_intro_eq hAA hBB hbbB => sorry
+    | .pi_elim_eq hPiPi haaA hffPi => sorry
+    | .sigma_intro_eq hAA hBB haaA hbbB => sorry
+    | .sigma_elim_eq hSiSi hppSi hCC hccC => sorry
+    | .iden_intro_eq hAA  => sorry
+    | .iden_elim_eq hAA hBB hbbB => sorry
+    | .univ_unit_eq hiC => sorry
+    | .univ_empty_eq hiC => sorry
+    | .univ_pi_eq hAAU hBBU => sorry
+    | .univ_sigma_eq hAAU hBBU => sorry
+    | .univ_iden_eq hAAU haaA haaA' => sorry
+    | .ty_conv_eq habA hAB => sorry
 
 theorem defeq_is_term' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
   by
@@ -20,7 +38,7 @@ theorem defeq_is_term' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
     | _ => sorry
 
 
-theorem context_extend_conv : Γ ⬝ A = Γ, (Ctx.empty ⬝ A) :=
+theorem context_extend_conv : Γ ⬝ A = Γ; (Ctx.empty ⬝ A) :=
   sorry
 
 theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
@@ -128,9 +146,9 @@ mutual
 end
 
 theorem context_conv_is_equal_type_gen :
-    IsEqualType ((Γ ⬝ A), Δ) B B'
+    IsEqualType ((Γ ⬝ A); Δ) B B'
     → IsEqualType Γ A A'
-    → IsEqualType ((Γ ⬝ A'), Δ) B B' :=
+    → IsEqualType ((Γ ⬝ A'); Δ) B B' :=
   by
     intro hBB
     intro hAA
