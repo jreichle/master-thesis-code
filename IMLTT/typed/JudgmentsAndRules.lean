@@ -143,13 +143,11 @@ mutual
                      → IsEqualTerm Γ (.indUnit A b a) (.indUnit A' b' a') (substitute_zero A b)
     | empty_elim_eq : IsEqualType (Γ ⬝ 𝟘) A A' → IsEqualTerm Γ b b' 𝟘
                       → IsEqualTerm Γ (.indEmpty A b) (.indEmpty A' b') (substitute_zero A b)
-    | pi_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm (Γ ⬝ A) b b' B
+    | pi_intro_eq : IsEqualTerm (Γ ⬝ A) b b' B
                     → IsEqualTerm Γ (.lam A b) (.lam A' b') (.pi A B)
-    | pi_elim_eq : IsEqualType Γ (.pi A B) (.pi A' B') → IsEqualTerm Γ a a' A
-                   → IsEqualTerm Γ f f' (.pi A B)
+    | pi_elim_eq : IsEqualTerm Γ a a' A → IsEqualTerm Γ f f' (.pi A B)
                    → IsEqualTerm Γ (.app f a) (.app f' a') (substitute_zero B a)
-    | sigma_intro_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ a a' A
-                       → IsEqualTerm Γ b b' (substitute_zero B a)
+    | sigma_intro_eq : IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (substitute_zero B a)
                        → IsEqualTerm Γ (.pairSigma a b) (.pairSigma a' b') (.sigma A B)
     | sigma_elim_eq : IsEqualType Γ (.sigma A B) (.sigma A' B')
                       → IsEqualTerm Γ p p' (.sigma A B) 
@@ -161,7 +159,7 @@ mutual
                       → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A B C c' p')
                         (substitute_zero C p)
     | iden_intro_eq : IsEqualTerm Γ a a' A
-                      → IsEqualTerm Γ (.refl A a) (.refl A a') (.iden A a a)
+                      → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
     | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (weaken A (.shift .id))) ⬝ (
                           .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0)
                         )) B B'
@@ -169,7 +167,7 @@ mutual
                        (substitute B (.weak (.shift .id), (.var 0), (.var 0), (.refl (weaken A (.shift .id))
                           (.var 0))))
                      → IsEqualTerm Γ p p' (.iden A a a')
-                     → IsEqualTerm Γ (.j A B b a a' p) (.j A B b' a a' p')
+                     → IsEqualTerm Γ (.j A B b a a' p) (.j A' B' b' a a' p')
                        (substitute B (.weak .id, a, a', p))
     | univ_unit_eq : IsCtx Γ
                      → IsEqualTerm Γ 𝟙 𝟙 .univ
