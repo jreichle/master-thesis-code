@@ -25,6 +25,15 @@ theorem substitution_term_eq : HasType Γ a A → IsEqualTerm (Γ ⬝ A) b b' B
                                  (substitute_zero B a) :=
   sorry
 
+theorem substitution_inv_type : B' = (substitute_zero B a) → IsType Γ B'
+                                → HasType Γ a A
+                                → IsType (Γ ⬝ A) B :=
+  by
+    intro hBeqB' hBs haA
+    match hBs with
+    | .unit_form hiC => sorry
+    | _ => sorry
+
 /- # Substitution inverse -/
 
 theorem nat_not_less_than_zero : ¬ (i < 0) :=

@@ -38,8 +38,8 @@ mutual
   inductive HasType : Ctx n → Tm n → Tm n → Prop where
     -- structural rules
     -- make sure variables of A refer to to same variables of Γ as before with lifting
-    | var  : IsType Γ A
-             → HasType (Γ ⬝ A) (.var 0) (weaken A (.shift .id))
+    | var : IsType Γ A
+            → HasType (Γ ⬝ A) (.var 0) (weaken A (.shift .id))
     -- | weak : HasType Γ (.var i) A → IsType Γ B
     --          → HasType (Γ ⬝ B) (.var (.succ i)) (weaken A (.shift .id))
     -- intro rules
@@ -145,7 +145,7 @@ mutual
                       → IsEqualTerm Γ (.indEmpty A b) (.indEmpty A' b') (substitute_zero A b)
     | pi_intro_eq : IsEqualTerm (Γ ⬝ A) b b' B
                     → IsEqualTerm Γ (.lam A b) (.lam A' b') (.pi A B)
-    | pi_elim_eq : IsEqualTerm Γ a a' A → IsEqualTerm Γ f f' (.pi A B)
+    | pi_elim_eq : IsEqualTerm Γ f f' (.pi A B) → IsEqualTerm Γ a a' A
                    → IsEqualTerm Γ (.app f a) (.app f' a') (substitute_zero B a)
     | sigma_intro_eq : IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (substitute_zero B a)
                        → IsEqualTerm Γ (.pairSigma a b) (.pairSigma a' b') (.sigma A B)

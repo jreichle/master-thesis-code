@@ -7,7 +7,7 @@ import IMLTT.proofs.admissable.Weakening
 import IMLTT.proofs.admissable.Substitution
 
 theorem defeq_is_term : IsEqualTerm Γ a a' A → HasType Γ a A :=
-  by 
+  by
     intro haaA
     match haaA with
     | .var_eq hA => sorry
@@ -18,9 +18,9 @@ theorem defeq_is_term : IsEqualTerm Γ a a' A → HasType Γ a A :=
     | .unit_intro_eq hiC => sorry
     | .unit_elim_eq hAA haaA hbbUn => sorry
     | .empty_elim_eq hAA hbbEm => sorry
-    | .pi_intro_eq hAA hBB hbbB => sorry
-    | .pi_elim_eq hPiPi haaA hffPi => sorry
-    | .sigma_intro_eq hAA hBB haaA hbbB => sorry
+    | .pi_intro_eq hbbB => sorry
+    | .pi_elim_eq haaA hffPi => sorry
+    | .sigma_intro_eq haaA hbbB => sorry
     | .sigma_elim_eq hSiSi hppSi hCC hccC => sorry
     | .iden_intro_eq hAA  => sorry
     | .iden_elim_eq hAA hBB hbbB => sorry
@@ -48,6 +48,7 @@ theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
 theorem context_conv_is_equal_term : IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ A A'
                              → IsEqualTerm (Γ ⬝ A') b b' B :=
   sorry
+
 
 theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
   by
@@ -173,7 +174,6 @@ theorem context_conv_is_ctx : IsCtx (Γ ⬝ A) → IsEqualType Γ A A'
           · apply hiC
           · apply defeq_is_type' hAA
 
--- TODO: recursion on IsEqualType
 theorem context_conv_is_type : IsType (Γ ⬝ A) B → IsEqualType Γ A A'
                                → IsType (Γ ⬝ A') B :=
   fun hB : IsType (Γ ⬝ A) B ↦
