@@ -119,8 +119,7 @@ mutual
     | sigma_comp : HasType Γ a A → HasType Γ b (substitute_zero B a)
                    → IsType (Γ ⬝ (.sigma A B)) C
                    → HasType (Γ ⬝ A ⬝ B) c (
-                       substitute C ((.weak (.shift (.shift .id))),
-                                      .pairSigma (.var 1) (.var 0))
+                       substitute C ((.weak (.shift (.shift .id))), .pairSigma (.var 1) (.var 0))
                      )
                    → IsEqualTerm Γ (.indSigma A B C c (.pairSigma a b))
                      (substitute c (.weak .id, a, b))
@@ -149,16 +148,15 @@ mutual
                    → IsEqualTerm Γ (.app f a) (.app f' a') (substitute_zero B a)
     | sigma_intro_eq : IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (substitute_zero B a)
                        → IsEqualTerm Γ (.pairSigma a b) (.pairSigma a' b') (.sigma A B)
-    | sigma_elim_eq : IsEqualType Γ (.sigma A B) (.sigma A' B')
-                      → IsEqualTerm Γ p p' (.sigma A B) 
+    | sigma_elim_eq : IsEqualTerm Γ p p' (.sigma A B) 
                       → IsEqualType (Γ ⬝ (.sigma A B)) C C'
                       → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (
                           substitute C ((.weak (.shift (.shift .id))),
                                           .pairSigma (.var 1) (.var 0))
                         )
-                      → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A B C c' p')
+                      → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A B C' c' p')
                         (substitute_zero C p)
-    | iden_intro_eq : IsEqualTerm Γ a a' A
+    | iden_intro_eq : IsEqualType Γ A A' → IsEqualTerm Γ a a' A
                       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
     | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (weaken A (.shift .id))) ⬝ (
                           .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0)
@@ -166,9 +164,10 @@ mutual
                      → IsEqualTerm (Γ ⬝ A) b b'
                        (substitute B (.weak (.shift .id), (.var 0), (.var 0), (.refl (weaken A (.shift .id))
                           (.var 0))))
-                     → IsEqualTerm Γ p p' (.iden A a a')
-                     → IsEqualTerm Γ (.j A B b a a' p) (.j A' B' b' a a' p')
-                       (substitute B (.weak .id, a, a', p))
+                     → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
+                     → IsEqualTerm Γ p p' (.iden A a₁ a₃)
+                     → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p')
+                       (substitute B (.weak .id, a₁, a₃, p))
     | univ_unit_eq : IsCtx Γ
                      → IsEqualTerm Γ 𝟙 𝟙 .univ
     | univ_empty_eq : IsCtx Γ
@@ -189,3 +188,6 @@ notation Γ " ⊢ " A  " type" => IsType Γ A
 notation Γ " ⊢ " s " ∶ " A => HasType Γ s A
 notation Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
 notation Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
+
+
+#check HasType.recOn
