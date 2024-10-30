@@ -188,6 +188,3 @@ notation Γ " ⊢ " A  " type" => IsType Γ A
 notation Γ " ⊢ " s " ∶ " A => HasType Γ s A
 notation Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
 notation Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
-
-
-#check HasType.recOn
