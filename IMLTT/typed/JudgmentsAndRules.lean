@@ -2,6 +2,8 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Substitution
 import IMLTT.untyped.Weakening
 
+import aesop
+
 /- # Rules -/
 -- 5 judgments:
 -- - Γ ctx
@@ -12,11 +14,13 @@ import IMLTT.untyped.Weakening
 
 mutual
   -- Γ ctx
+  @[aesop unsafe [constructors]]
   inductive IsCtx : Ctx n → Prop where
     | empty : IsCtx .empty
     | extend : IsCtx Γ → IsType Γ A → IsCtx (Γ ⬝ A)
 
   -- Γ ⊢ A type
+  @[aesop unsafe [constructors]]
   inductive IsType : Ctx n → Tm n → Prop where
     -- formation rules
     | unit_form : IsCtx Γ
@@ -35,6 +39,7 @@ mutual
                   → IsType Γ A
 
   -- Γ ⊢ a : A
+  @[aesop unsafe [constructors]]
   inductive HasType : Ctx n → Tm n → Tm n → Prop where
     -- structural rules
     -- make sure variables of A refer to to same variables of Γ as before with lifting
@@ -49,7 +54,7 @@ mutual
                  → HasType Γ (.lam A b) (.pi A B)
     | sigma_intro : HasType Γ a A → HasType Γ b (substitute_zero B a)
                     → HasType Γ (.pairSigma a b) (.sigma A B)
-    | iden_intro : HasType Γ a A
+    | iden_intro : IsType Γ A → HasType Γ a A
                    → HasType Γ (.refl A a) (.iden A a a)
     -- universe intro
     | univ_unit : IsCtx Γ
@@ -70,20 +75,19 @@ mutual
                    → HasType Γ (.indEmpty A b) (substitute_zero A b)
     | pi_elim : HasType Γ f (.pi A B) → HasType Γ a A
                 → HasType Γ (.app f a) (substitute_zero B a)
-    | sigma_elim : HasType Γ p (.sigma A B) → IsType (Γ ⬝ (.sigma A B)) C
-                   → HasType (Γ ⬝ A ⬝ B) c (
-                       substitute C ((.weak (.shift (.shift .id))),
-                                      .pairSigma (.var 1) (.var 0))
-                     )
+    | sigma_elim : IsType Γ (.sigma A B)
+                   → HasType Γ p (.sigma A B) → IsType (Γ ⬝ (.sigma A B)) C
+                   → HasType (Γ ⬝ A ⬝ B) c
+                     (substitute C ((.weak (.shift (.shift .id))), .pairSigma (.var 1) (.var 0)))
                    → HasType Γ (.indSigma A B C c p) (substitute_zero C p)
-    | iden_elim : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id))) ⬝ (
-                      .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))
-                    ) B
-                  → HasType (Γ ⬝ A) b (
-                      substitute B (
-                        .weak (.shift .id), (.var 0), (.var 0), (.refl (weaken A (.shift .id)) (.var 0))
-                      )
-                    )
+    | iden_elim : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id)))
+                    ⬝ ( .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))) B
+                  → HasType (Γ ⬝ A) b
+                    (substitute B (
+                        .weak (.shift .id), (.var 0), (.var 0),
+                        (.refl (weaken A (.shift .id)) (.var 0))
+                    ))
+                  → IsType Γ (.iden A a a')
                   → HasType Γ p (.iden A a a')
                   → HasType Γ (.j A B b a a' p) (substitute B (.weak .id, a, a', p))
     -- conversion
@@ -91,6 +95,7 @@ mutual
                 → HasType Γ a B
 
   -- Γ ⊢ A ≡ B type
+  @[aesop unsafe [constructors]]
   inductive IsEqualType : Ctx n → Tm n → Tm n → Prop where
     -- congruence rules (formation)
     | unit_form_eq : IsCtx Γ
@@ -108,9 +113,10 @@ mutual
     | univ_elim_eq : IsEqualTerm Γ A A' .univ → IsEqualType Γ A A'
 
   -- Γ ⊢ a ≡ b : A
+  @[aesop unsafe [constructors]]
   inductive IsEqualTerm : Ctx n → Tm n → Tm n → Tm n → Prop where
     | var_eq : IsType Γ A
-               → IsEqualTerm (Γ ⬝ A) (.var 0) (.var 0) (weaken A (.shift .id))
+                → IsEqualTerm (Γ ⬝ A) (.var 0) (.var 0) (weaken A (.shift .id))
     -- computation rules
     | unit_comp : IsType (Γ ⬝ 𝟙) A → HasType Γ a (substitute_zero A .tt)
                   → IsEqualTerm Γ (.indUnit A .tt a) a (substitute_zero A .tt)
@@ -148,13 +154,14 @@ mutual
                    → IsEqualTerm Γ (.app f a) (.app f' a') (substitute_zero B a)
     | sigma_intro_eq : IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (substitute_zero B a)
                        → IsEqualTerm Γ (.pairSigma a b) (.pairSigma a' b') (.sigma A B)
-    | sigma_elim_eq : IsEqualTerm Γ p p' (.sigma A B) 
+    | sigma_elim_eq : IsEqualType Γ (.sigma A B) (.sigma A' B') 
+                      → IsEqualTerm Γ p p' (.sigma A B)
                       → IsEqualType (Γ ⬝ (.sigma A B)) C C'
                       → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (
                           substitute C ((.weak (.shift (.shift .id))),
                                           .pairSigma (.var 1) (.var 0))
                         )
-                      → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A B C' c' p')
+                      → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A' B' C' c' p')
                         (substitute_zero C p)
     | iden_intro_eq : IsEqualType Γ A A' → IsEqualTerm Γ a a' A
                       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
