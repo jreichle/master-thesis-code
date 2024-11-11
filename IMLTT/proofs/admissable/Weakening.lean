@@ -41,9 +41,6 @@ theorem weakening_term : HasType Γ a A → IsType Γ B
   by
     intro haA hB
     sorry
-    -- match haA with
-    -- | .var hA => sorry
-    -- | _ => sorry
 
 theorem weakening_type_eq : IsEqualType Γ A A' → IsType Γ B
                             → IsEqualType (Γ ⬝ B) (weaken A (.shift .id)) 
