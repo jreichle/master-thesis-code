@@ -48,7 +48,7 @@ def substitute (t : Tm n) (σ : Subst m n) : Tm m :=
                         (substitute b (lift_subst_n σ 1)) (substitute a σ) (substitute a' σ)
                         (substitute p σ)
 
-def subst_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
+def comp_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
   substitute (substitute t σ') σ
 
 def weak_subst (t : Tm n) (ρ : Weak l m) (σ : Subst m n) : Tm l :=
@@ -62,8 +62,10 @@ def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
 def substitute_zero (t : Tm (n + 1)) (a : Tm n) : Tm n :=
   substitute t (.extend (.weak .id) a)
 
-notation "↑" => Subst.shift
-notation "⇑" => Subst.lift
-infixl:66 "∘" => Subst.comp
-infixl:66 ", " => Subst.extend
-notation A "[" σ "]" => substitute A σ
+-- prefix : 80 "ρ" => Subst.weak
+prefix:90 "↑" => Subst.shift
+prefix:90 "⇑" => Subst.lift
+infixl:70 "∘ₛ" => comp_subst -- problems from here
+infixl:70 ", " => Subst.extend
+notation:60 A "⌈" σ "⌉" => substitute A σ
+

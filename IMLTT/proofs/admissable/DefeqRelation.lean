@@ -2,48 +2,48 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
-import IMLTT.proofs.BoundaryConditions
+import IMLTT.proofs.boundary.BoundaryIsCtx
 import IMLTT.proofs.admissable.Contexts
+
+import IMLTT.proofs.Recursor
 
 import aesop
 
 /- # Definitional Equality is Equivalence Relation -/
 
-#check HasType.recOn
+theorem defeq_refl :
+    (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
+    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A ≡ A type) ∧
+    (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ a ≡ a ∶ A) ∧
+    (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
+    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ≡ a' ∶ A)
+  :=
+  by
+    apply judgment_recursor
+      (motive_1 := fun Γ _hiC => IsCtx Γ)
+      (motive_2 := fun Γ A _hA => IsEqualType Γ A A)
+      (motive_3 := fun Γ a A _haA => IsEqualTerm Γ a a A)
+      (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
+      (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
+    any_goals
+      solve
+      | repeat'
+        first
+        | intro a
+        | aesop
 
 theorem defeq_term_refl : HasType Γ a A → IsEqualTerm Γ a a A :=
   by
     intro haA
-    apply HasType.recOn
-      (motive_1 := fun Γ _hiC => IsCtx Γ)
-      (motive_2 := fun Γ A _hA => IsEqualType Γ A A)
-      (motive_3 := fun Γ a A _haA => IsEqualTerm Γ a a A)
-      (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
-      (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
-      haA
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    apply (And.left (And.right (And.right defeq_refl)))
+    apply haA
+
 
 theorem defeq_type_refl : IsType Γ A → IsEqualType Γ A A :=
   by
     intro hA
-    apply IsType.recOn
-      (motive_1 := fun Γ _hiC => IsCtx Γ)
-      (motive_2 := fun Γ A _hA => IsEqualType Γ A A)
-      (motive_3 := fun Γ a A _haA => IsEqualTerm Γ a a A)
-      (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
-      (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
-      hA
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    apply (And.left (And.right defeq_refl))
+    apply hA
 
 theorem defeq_term_symm : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
   by
@@ -60,7 +60,7 @@ theorem defeq_term_symm : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .pi_intro_eq hbbB => sorry
     | .pi_elim_eq haaA hffPi => sorry
     | .sigma_intro_eq haaA hbbB => sorry
-    | .sigma_elim_eq hppSi hCC hccC => sorry
+    | .sigma_elim_eq hSiSi hppSi hCC hccC => sorry
     | .iden_intro_eq hAA haaA  => sorry
     | .iden_elim_eq hBB hbbB hIdId hppId => sorry
     | .univ_unit_eq hiC => sorry

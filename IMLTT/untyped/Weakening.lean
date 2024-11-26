@@ -54,8 +54,7 @@ def shift_tm : Tm n → Tm (n + 1)
   | t => weaken t (.shift .id)
 
 notation "id" => Weak.id
-notation "↑" => Weak.shift
-notation "⇑" => Weak.lift
-notation "⇑_" i => lift_weak_n i
-notation ρ "∘" ρ' => comp_weaken ρ ρ'
-notation A "[" ρ "]" => weaken A ρ
+prefix : 90 "↑" => Weak.shift
+prefix : 90 "⇑" => Weak.lift
+infixl:70 "∘" => comp_weaken
+notation:60 A "⌊" ρ "⌋" => weaken A ρ

@@ -169,8 +169,8 @@ mutual
                           .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0)
                         )) B B'
                      → IsEqualTerm (Γ ⬝ A) b b'
-                       (substitute B (.weak (.shift .id), (.var 0), (.var 0), (.refl (weaken A (.shift .id))
-                          (.var 0))))
+                       (substitute B (.weak (.shift .id), (.var 0), (.var 0), 
+                        (.refl (weaken A (.shift .id)) (.var 0))))
                      → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
                      → IsEqualTerm Γ p p' (.iden A a₁ a₃)
                      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p')
@@ -190,8 +190,8 @@ mutual
                    → IsEqualTerm Γ a b B
 end
 
-postfix : max " ctx" => IsCtx
-notation Γ " ⊢ " A  " type" => IsType Γ A
-notation Γ " ⊢ " s " ∶ " A => HasType Γ s A
-notation Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
-notation Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
+postfix : 55 " ctx" => IsCtx
+notation : 55 Γ " ⊢ " A  " type" => IsType Γ A
+notation : 55 Γ " ⊢ " s " ∶ " A => HasType Γ s A
+notation : 55 Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
+notation : 55 Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A

@@ -5,96 +5,11 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.proofs.boundary.BoundaryIsCtx
 import IMLTT.proofs.admissable.Weakening
 import IMLTT.proofs.admissable.Substitution
-import IMLTT.proofs.admissable.TermStructure
+-- import IMLTT.proofs.admissable.TermStructure
 
 import aesop
 
-set_option diagnostics true
-set_option maxHeartbeats 1000000
-
--- TODO: add first few proofs to boundary is type
-
-theorem test : IsEqualTerm Γ a a' A → HasType Γ a A :=
-  by
-    intro haaA
-    apply IsEqualTerm.recOn
-      (motive_1 := fun Γ _hiC => IsCtx Γ)
-      (motive_2 := fun Γ A _hA => IsType Γ A)
-      (motive_3 := fun Γ a A _haA => IsType Γ A)
-      (motive_4 := fun Γ A A' _hAA => IsType Γ A)
-      (motive_5 := fun Γ a a' A _haaA => HasType Γ a A)
-      haaA
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
-    · intro n Γ A hA ihA
-      apply weakening_type hA hA
-    · intro n Γ A b B hbB hB
-      apply IsType.pi_form
-      · have hiCA := boundary_ctx_type hB
-        apply ctx_extr hiCA
-      · apply hB
-    · intro n Γ a A b B haA hbB ihaA ihbB
-      apply IsType.sigma_form
-      · apply ihaA
-      · apply substitution_inv_type
-        · rfl
-        · apply ihbB
-        · apply haA
-    · intro n Γ A a b hA haA hb1 ihA ihaA ihb1
-      apply substitution_type hb1 ihA
-    · intro n Γ A b hA hb0 ihA ihb0
-      apply substitution_type hb0 ihA
-    · intro n Γ f A B a hfPi haA ihfPi ihaA
-      sorry
-      -- TODO: need pi can/inj proof
-    · intro n Γ A B p C c hPi hpPi hC hcC ihPi ihpPi ihC ihcC
-      sorry
-    · intro n Γ A B b a a' p hB hbB hId hpId ihB ihbB ihId ihpId
-      sorry
-    · intro n Γ a A B haA hAB ihaA ihAB
-      sorry -- FIXME: trouble!!!
-    · intro n Γ A a hA haA _ _
-      apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA))
-    · intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC
-      apply HasType.sigma_elim
-      · have hiCPi := boundary_ctx_type hC
-        match hiCPi with
-        | .extend hiC hPi => apply hPi
-      · apply HasType.sigma_intro haA hbB
-      · apply ihC
-      · apply hcC
-
-theorem defeq_is_term : IsEqualTerm Γ a a' A → HasType Γ a A :=
-  by
-    intro haaA
-    apply IsEqualTerm.recOn
-      (motive_1 := fun Γ _hiC => IsCtx Γ)
-      (motive_2 := fun Γ A _hA => IsType Γ A)
-      (motive_3 := fun Γ a A _haA => HasType Γ a A)
-      (motive_4 := fun Γ A A' _hAA => IsType Γ A)
-      (motive_5 := fun Γ a a' A _haaA => HasType Γ a A)
-      haaA
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
-    · intro n Γ A a hA haA _ _
-      apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA))
-    · intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC
-      apply HasType.sigma_elim
-      · sorry
-      · apply HasType.sigma_intro haA hbB
-      · apply ihC
-      · apply hcC
-    · intro n Γ A B b a hB hbB haA ihB ihbB ihaA
-      apply HasType.iden_elim hB hbB sorry sorry
-
+-- TODO: into boundary condition
 theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
   by
     intro hAA
@@ -105,26 +20,41 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
       (motive_4 := fun Γ A A' _hAA => IsType Γ A)
       (motive_5 := fun Γ a a' A _haaA => HasType Γ a A)
       hAA
+    case unit_comp =>
+      intro n Γ A a hA haA _ _
+      apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA))
+    case sigma_comp =>
+      intro n Γ a A b B C c haA hbB hC hcC _ _ ihC _
+      apply HasType.sigma_elim
+      · have hiCSi := boundary_ctx_type hC
+        match hiCSi with
+        | .extend hiC hSi => apply hSi
+      · apply HasType.sigma_intro haA hbB
+      · apply ihC
+      · apply hcC
+    case iden_comp => 
+      intro n Γ A B b a hB hbB haA ihB ihbB ihaA
+      apply HasType.iden_elim 
+      · apply hB
+      · apply hbB
+      · apply IsType.iden_form ihaA ihaA
+      · apply HasType.iden_intro
+        · have hiCA := boundary_ctx_term hbB
+          match hiCA with
+          | .extend hiC hA => apply hA
+        · apply ihaA
     any_goals
       solve
       | repeat'
         first
         | intro a
         | aesop
-    · intro n Γ A a hA haA _ _
-      apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA))
-    · sorry
-    · intro n Γ A B b a hB hbB haA ihB ihbB ihaA
-      apply HasType.iden_elim hB hbB sorry sorry
 
 theorem defeq_is_term' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
   by
     intro haaA
     match haaA with
     | _ => sorry
-
-theorem context_extend_conv : Γ ⬝ A = Γ; (Ctx.empty ⬝ A) :=
-  sorry
 
 theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
                                 → HasType (Γ ⬝ A') b B :=
@@ -184,6 +114,8 @@ mutual
         · sorry
       | _ => sorry
 
+
+
 --   theorem context_conv_is_equal_type_TEST : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
 --                                             → IsEqualType (Γ ⬝ A') B B' :=
 --     by
@@ -203,22 +135,22 @@ mutual
 --         · apply defeq_is_type' hAA
 end
 
-theorem context_conv_is_equal_type_gen :
-    IsEqualType ((Γ ⬝ A); Δ) B B'
-    → IsEqualType Γ A A'
-    → IsEqualType ((Γ ⬝ A'); Δ) B B' :=
-  by
-    intro hBB
-    intro hAA
-    match hBB with
-    | .unit_form_eq hiC =>
-      apply IsEqualType.unit_form_eq
-      sorry
-    | .pi_form_eq hAA' hBB' =>
-      apply IsEqualType.pi_form_eq
-      · apply context_conv_is_equal_type_gen hAA' hAA
-      · sorry -- apply context_conv_is_equal_type_gen hBB' hAA
-    | _ => sorry
+-- theorem context_conv_is_equal_type_gen :
+--     IsEqualType ((Γ ⬝ A); Δ) B B'
+--     → IsEqualType Γ A A'
+--     → IsEqualType ((Γ ⬝ A'); Δ) B B' :=
+--   by
+--     intro hBB
+--     intro hAA
+--     match hBB with
+--     | .unit_form_eq hiC =>
+--       apply IsEqualType.unit_form_eq
+--       sorry
+--     | .pi_form_eq hAA' hBB' =>
+--       apply IsEqualType.pi_form_eq
+--       · apply context_conv_is_equal_type_gen hAA' hAA
+--       · sorry -- apply context_conv_is_equal_type_gen hBB' hAA
+--     | _ => sorry
 
 theorem context_conv_is_ctx : IsCtx (Γ ⬝ A) → IsEqualType Γ A A'
                               → IsCtx (Γ ⬝ A') :=
