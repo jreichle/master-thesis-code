@@ -1,7 +1,7 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 
-inductive Subst : Nat → Nat → Type where -- TODO: n → Tm m here?
+inductive Subst : Nat → Nat → Type where
   | weak : Weak m n → Subst m n
   | shift : Subst m n → Subst (m + 1) n
   | lift : Subst m n → Subst (m + 1) (n + 1)
@@ -62,10 +62,15 @@ def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
 def substitute_zero (t : Tm (n + 1)) (a : Tm n) : Tm n :=
   substitute t (.extend (.weak .id) a)
 
--- prefix : 80 "ρ" => Subst.weak
-prefix:90 "↑" => Subst.shift
-prefix:90 "⇑" => Subst.lift
+def length_subst : Subst m n →  Nat -- FIXME: better m - n?
+  | .weak ρ => 0
+  | .shift σ => length_subst σ
+  | .lift σ => length_subst σ
+  | .extend σ s => length_subst σ + 1
+
+prefix : 80 "ₛ" => Subst.weak
+prefix:90 "↑ₛ" => Subst.shift
+prefix:90 "⇑ₛ" => Subst.lift
 infixl:70 "∘ₛ" => comp_subst -- problems from here
 infixl:70 ", " => Subst.extend
 notation:60 A "⌈" σ "⌉" => substitute A σ
-

@@ -20,14 +20,14 @@ inductive Tm : Nat → Type where
 
 inductive Ctx : Nat → Type where
   | empty : Ctx 0
-  | extend : Ctx n → Tm n → Ctx (n + 1) -- TODO: Tm m and m ≤ n?
+  | extend : Ctx n → Tm n → Ctx (n + 1)
 
 -- types
 notation "𝟙" => Tm.unit
 notation "𝟘" => Tm.empty
 notation:70 "Π" A ";" B => Tm.pi A B
 notation:70 "Σ" A ";" B => Tm.sigma A B
-notation:70 A "ℑ" s " ≃ " t => Tm.iden A s t
+notation:70 A "ℑ" s " ≃ " t => Tm.iden A s t -- FIXME:  do s =[A] t
 notation "U" => Tm.univ
 -- terms
 notation:max "v(" x ")" => Tm.var x
@@ -35,7 +35,6 @@ notation "⋆" => Tm.tt
 notation:70 "λ" A "; " b => Tm.lam A b
 infixl : 70 "◃" => Tm.app
 notation:70 a "&" b => Tm.pairSigma a b
-notation:70 A " ℑ " s => Tm.refl A s
 
 instance : Coe (Fin n) (Tm n) where
   coe n := .var n
