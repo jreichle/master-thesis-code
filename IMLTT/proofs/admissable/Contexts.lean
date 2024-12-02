@@ -5,11 +5,9 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.proofs.boundary.BoundaryIsCtx
 import IMLTT.proofs.admissable.Weakening
 import IMLTT.proofs.admissable.Substitution
--- import IMLTT.proofs.admissable.TermStructure
 
 import aesop
 
--- TODO: into boundary condition
 theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
   by
     intro hAA
@@ -28,20 +26,19 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
       apply HasType.sigma_elim
       · have hiCSi := boundary_ctx_type hC
         match hiCSi with
-        | .extend hiC hSi => apply hSi
+        | .extend _hiC hSi => apply hSi
       · apply HasType.sigma_intro haA hbB
       · apply ihC
       · apply hcC
-    case iden_comp => 
-      intro n Γ A B b a hB hbB haA ihB ihbB ihaA
-      apply HasType.iden_elim 
+    case iden_comp =>
+      intro n Γ A B b a hB hbB _haA _ihB _ihbB ihaA
+      apply HasType.iden_elim
       · apply hB
       · apply hbB
       · apply IsType.iden_form ihaA ihaA
       · apply HasType.iden_intro
-        · have hiCA := boundary_ctx_term hbB
-          match hiCA with
-          | .extend hiC hA => apply hA
+        · have hiCAAId := boundary_ctx_type hB
+          apply ctx_extr (ctx_decr (ctx_decr hiCAAId))
         · apply ihaA
     any_goals
       solve

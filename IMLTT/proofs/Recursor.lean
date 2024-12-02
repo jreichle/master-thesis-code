@@ -79,15 +79,13 @@ theorem judgment_recursor :
     → motive_3 (Γ ⬝ A ⬝ B) c
       (substitute C (Subst.weak (.shift (.shift .id)), (.pairSigma v(1) v(0)))) a_3
     → motive_3 Γ (.indSigma A B C c p) (substitute_zero C p) (HasType.sigma_elim a a_1 a_2 a_3) )
-  → (HasTypeIdenElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} 
+  → (HasTypeIdenElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm n} 
     {a a' p : Tm n}
     (a_1 : (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) ⊢ B type)
-    (a_2 : (Γ ⬝ A) ⊢ b ∶ substitute B
-      (Subst.weak Weak.id.shift, v(0), v(0), (weaken A Weak.id.shift).refl v(0)))
+    (a_2 : Γ ⊢ b ∶ substitute B (Subst.weak .id, a, a', p))
     (a_3 : Γ ⊢ A.iden a a' type) (a_4 : Γ ⊢ p ∶ A.iden a a'),
     motive_2 (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) B a_1 
-    → motive_3 (Γ ⬝ A) b 
-      (substitute B (Subst.weak Weak.id.shift, v(0), v(0), (weaken A Weak.id.shift).refl v(0))) a_2 
+    → motive_3 Γ b (substitute B (Subst.weak .id, a, a', p)) a_2
     → motive_2 Γ (A.iden a a') a_3 → motive_3 Γ p (A.iden a a') a_4 
     → motive_3 Γ (A.j B b a a' p) (substitute B (Subst.weak Weak.id, a, a', p)) 
       (HasType.iden_elim a_1 a_2 a_3 a_4))
@@ -135,16 +133,17 @@ theorem judgment_recursor :
     → motive_5 Γ (A.indSigma B C c (a.pairSigma b)) (substitute c (Subst.weak Weak.id, a, b))
       (substitute_zero C (a.pairSigma b)) (IsEqualTerm.sigma_comp a_1 a_2 a_3 a_4))
   → (IsEqualTermIdenComp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} 
-    {b : Tm (n + 1)} {a : Tm n}
+    {b : Tm n} {a : Tm n}
     (a_1 : (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) ⊢ B type)
-    (a_2 : (Γ ⬝ A) ⊢ b ∶ substitute B (Subst.weak Weak.id.shift, v(0), v(0), 
-      (weaken A Weak.id.shift).refl v(0)))
+    (a_2 : Γ ⊢ b ∶ substitute B (Subst.weak Weak.id, a, a, .refl A a))
     (a_3 : Γ ⊢ a ∶ A),
     motive_2 (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) B a_1 
-    → motive_3 (Γ ⬝ A) b 
-      (substitute B (Subst.weak Weak.id.shift, v(0), v(0), (weaken A Weak.id.shift).refl v(0))) a_2 
+  -- → HasType Γ b
+  --   (substitute B (.weak .id, a, a, (.refl A a)))
+    → motive_3 Γ b
+      (substitute B (Subst.weak Weak.id, a, a, .refl A a)) a_2 
     → motive_3 Γ a A a_3 
-    → motive_5 Γ (A.j B b a a (A.refl a)) (substitute_zero b a) 
+    → motive_5 Γ (A.j B b a a (A.refl a)) b
       (substitute B (Subst.weak Weak.id, a, a, A.refl a)) (IsEqualTerm.iden_comp a_1 a_2 a_3))
   → (IsEqualTermUnitIntroEq : ∀ {n : Nat} {Γ : Ctx n} 
     (a : Γ ctx), motive_1 Γ a → motive_5 Γ ⋆ ⋆ 𝟙 (IsEqualTerm.unit_intro_eq a))
@@ -181,14 +180,14 @@ theorem judgment_recursor :
     (a_1 : Γ ⊢ A ≡ A' type) (a_2 : Γ ⊢ a ≡ a' ∶ A), motive_4 Γ A A' a_1 → motive_5 Γ a a' A a_2 
     → motive_5 Γ (A.refl a) (A'.refl a') (A.iden a a) (IsEqualTerm.iden_intro_eq a_1 a_2))
   → (IsEqualTermIdenElimEq : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B B' : Tm (n + 1 + 1 + 1)} 
-    {b b' : Tm (n + 1)} {a₁ a₃ A' a₂ a₄ p p' : Tm n}
+    {b b' : Tm n} {a₁ a₃ A' a₂ a₄ p p' : Tm n}
     (a : (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) ⊢ B ≡ B' type)
-    (a_1 : (Γ ⬝ A) ⊢ b ≡ b' ∶
-      substitute B (Subst.weak Weak.id.shift, v(0), v(0), (weaken A Weak.id.shift).refl v(0)))
+  -- → IsEqualTerm Γ b b' (substitute B (.weak .id, a₁, a₃, p))
+    (a_1 : Γ ⊢ b ≡ b' ∶ substitute B (Subst.weak Weak.id, a₁, a₃, p))
     (a_2 : Γ ⊢ A.iden a₁ a₃ ≡ A'.iden a₂ a₄ type) (a_3 : Γ ⊢ p ≡ p' ∶ A.iden a₁ a₃),
     motive_4 (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) B B' a 
-    → motive_5 (Γ ⬝ A) b b' 
-      (substitute B (Subst.weak Weak.id.shift, v(0), v(0), (weaken A Weak.id.shift).refl v(0))) a_1 
+    → motive_5 Γ b b' 
+      (substitute B (Subst.weak Weak.id, a₁, a₃, p)) a_1
     → motive_4 Γ (A.iden a₁ a₃) (A'.iden a₂ a₄) a_2 → motive_5 Γ p p' (A.iden a₁ a₃) a_3 
     → motive_5 Γ (A.j B b a₁ a₃ p) (A'.j B' b' a₂ a₄ p') (substitute B (Subst.weak Weak.id, a₁, a₃, p))
       (IsEqualTerm.iden_elim_eq a a_1 a_2 a_3))

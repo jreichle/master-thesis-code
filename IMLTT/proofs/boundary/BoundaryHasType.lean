@@ -33,9 +33,8 @@ theorem boundary_has_type : IsEqualTerm Γ a a' A → HasType Γ a A :=
       · apply hbB
       · apply IsType.iden_form ihaA ihaA
       · apply HasType.iden_intro
-        · have hiCA := boundary_ctx_term hbB
-          match hiCA with
-          | .extend _ hA => apply hA
+        · have hiCAAId := boundary_ctx_type hB
+          apply ctx_extr (ctx_decr (ctx_decr hiCAAId))
         · apply ihaA
     any_goals
       solve

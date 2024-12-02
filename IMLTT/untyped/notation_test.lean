@@ -24,3 +24,7 @@ theorem id_id {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} :
     intro hPi
     sorry
 
+theorem help_match {A : Prop} : A = A' ∧ A → A' :=
+  by
+    sorry
+

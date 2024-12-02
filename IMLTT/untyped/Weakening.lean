@@ -52,7 +52,7 @@ def weaken (t : Tm n) (ρ : Weak m n) : Tm m :=
   | .indSigma A B C c p => .indSigma (weaken A ρ) (weaken B (lift_weak_n 1 ρ)) 
                             (weaken C (lift_weak_n 1 ρ)) (weaken c (lift_weak_n 2 ρ)) (weaken p ρ)
   | .refl A a => .refl (weaken A ρ) (weaken a ρ)
-  | .j A B b a a' p => .j (weaken A ρ) (weaken B (lift_weak_n 3 ρ)) (weaken b (lift_weak_n 1 ρ))
+  | .j A B b a a' p => .j (weaken A ρ) (weaken B (lift_weak_n 3 ρ)) (weaken b ρ)
                         (weaken a ρ) (weaken a' ρ) (weaken p ρ)
 
 def shift_tm : Tm n → Tm (n + 1)

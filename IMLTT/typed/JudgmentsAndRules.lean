@@ -82,11 +82,7 @@ mutual
                    → HasType Γ (.indSigma A B C c p) (substitute_zero C p)
     | iden_elim : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id)))
                     ⬝ ( .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))) B
-                  → HasType (Γ ⬝ A) b
-                    (substitute B (
-                        .weak (.shift .id), (.var 0), (.var 0),
-                        (.refl (weaken A (.shift .id)) (.var 0))
-                    ))
+                  → HasType Γ b (substitute B ( .weak .id, a, a', p))
                   → IsType Γ (.iden A a a')
                   → HasType Γ p (.iden A a a')
                   → HasType Γ (.j A B b a a' p) (substitute B (.weak .id, a, a', p))
@@ -130,15 +126,12 @@ mutual
                    → IsEqualTerm Γ (.indSigma A B C c (.pairSigma a b))
                      (substitute c (.weak .id, a, b))
                      (substitute_zero C (.pairSigma a b))
-    | iden_comp : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id))) ⬝ (
-                      .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))
-                    ) B
-                  → HasType (Γ ⬝ A) b
-                    (substitute B (.weak (.shift .id), (.var 0), (.var 0),
-                      (.refl (weaken A (.shift .id)) (.var 0))
-                    ))
+    | iden_comp : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id)))
+                    ⬝ ( .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))) B
+                  → HasType Γ b
+                    (substitute B (.weak .id, a, a, (.refl A a)))
                   → HasType Γ a A
-                  → IsEqualTerm Γ (.j A B b a a (.refl A a)) (substitute_zero b a)
+                  → IsEqualTerm Γ (.j A B b a a (.refl A a)) b
                     (substitute B (.weak .id, a, a, (.refl A a)))
     -- congruence rules (introduction and elimination)
     | unit_intro_eq : IsCtx Γ
@@ -168,9 +161,7 @@ mutual
     | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (weaken A (.shift .id))) ⬝ (
                           .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0)
                         )) B B'
-                     → IsEqualTerm (Γ ⬝ A) b b'
-                       (substitute B (.weak (.shift .id), (.var 0), (.var 0), 
-                        (.refl (weaken A (.shift .id)) (.var 0))))
+                     → IsEqualTerm Γ b b' (substitute B (.weak .id, a₁, a₃, p))
                      → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
                      → IsEqualTerm Γ p p' (.iden A a₁ a₃)
                      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p')

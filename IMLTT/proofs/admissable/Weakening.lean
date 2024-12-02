@@ -41,7 +41,7 @@ theorem weakening :
       (motive_5 := fun Γ a a' A _haaA =>
         ∀B, Γ ⊢ B type
         → Γ ⬝ B ⊢ (weaken a (.shift .id)) ≡ (weaken a' (.shift .id)) ∶ (weaken A (.shift .id)))
-    any_goals sorry
+    sorry
 
 theorem weakening_ctx : IsCtx (Γ ⬝ A) → IsType Γ B
                         → IsCtx (Γ ⬝ B ⬝ (weaken A (.shift .id))) :=
@@ -88,3 +88,150 @@ theorem weakening_term_eq : IsEqualTerm Γ a a' A → IsType Γ B
     apply And.right (And.right (And.right (And.right weakening)))
     · apply haaA
     · apply hB
+
+-- algebra?
+
+
+#reduce ((Tm.pi : Tm 1 → Tm 2 → Tm 1) v(0) v(1))⌊.shift .id⌋
+#reduce ((Tm.pi : Tm 1 → Tm 2 → Tm 1) v(0) v(1))⌊.shift (.shift .id)⌋
+#reduce ((Tm.pi : Tm 1 → Tm 2 → Tm 1) v(0) v(1))⌊(.shift .id)⌋⌊.shift .id⌋
+#reduce ((Tm.refl : Tm 1 → Tm 1 → Tm 1) v(0) v(1))⌊.shift .id⌋
+#reduce ((Tm.refl : Tm 1 → Tm 1 → Tm 1) v(0) v(1))⌊.shift (.shift .id)⌋
+#reduce ((Tm.refl : Tm 1 → Tm 1 → Tm 1) v(0) v(1))⌊.shift .id⌋⌊.shift .id⌋
+
+-- | .shift γ => .shift (comp_weaken γ ρ')
+
+theorem weakening_shift_test {ρ : Weak m n} :
+  .shift ρ = .shift .id ∘ ρ :=
+  by
+    simp [comp_weaken]
+
+-- B⌊⇑↑ρ⌋ = B⌊⇑ρ⌋⌊⇑↑id⌋
+theorem weakening_lift_shift {S : Tm (n + 1)} {ρ : Weak m n} :
+    S⌊.lift (.shift ρ)⌋ = S⌊.lift ρ⌋⌊.lift (.shift .id)⌋ :=
+  by
+    match S with
+    | .unit => 
+      simp [weaken]
+    | .empty => 
+      simp [weaken]
+    | .pi A B => 
+      simp [weaken]
+      apply And.intro
+      · apply weakening_lift_shift
+      · simp [lift_weak_n]
+        sorry
+    | .sigma A B =>
+      simp [weaken]
+      apply And.intro
+      · apply weakening_lift_shift
+      · sorry
+    | .iden A a a' =>
+      simp [weaken]
+      apply And.intro
+      · apply weakening_lift_shift
+      · apply And.intro
+        · apply weakening_lift_shift
+        · apply weakening_lift_shift
+    | .univ =>
+      simp [weaken]
+    | .var i =>
+      simp [weaken]
+      simp [weaken_var]
+      sorry
+      -- match i with
+      -- | ⟨0, _⟩ => sorry
+      -- | ⟨x' + 1, h⟩ => sorry
+    | .tt =>
+      simp [weaken]
+    | .indUnit A b a =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .indEmpty A b =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .lam A b =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .app f a => sorry
+    | .pairSigma a b => sorry
+    | .indSigma A B C c p =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .refl A a => sorry
+    | .j A B b a a' p =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+
+theorem weakening_shift {S : Tm n} {ρ : Weak m n} : 
+    S⌊.shift ρ⌋ = S⌊ρ⌋⌊.shift .id⌋ :=
+  by
+    match S with
+    | .unit => 
+      simp [weaken]
+    | .empty => 
+      simp [weaken]
+    | .pi A B => 
+      simp [weaken]
+      apply And.intro
+      · apply weakening_shift
+      · simp [lift_weak_n]
+        sorry
+    | .sigma A B =>
+      simp [weaken]
+      apply And.intro
+      · apply weakening_shift
+      · sorry
+    | .iden A a a' =>
+      simp [weaken]
+      apply And.intro
+      · apply weakening_shift
+      · apply And.intro
+        · apply weakening_shift
+        · apply weakening_shift
+    | .univ =>
+      simp [weaken]
+    | .var i =>
+      simp [weaken]
+      simp [weaken_var]
+    | .tt =>
+      simp [weaken]
+    | .indUnit A b a =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .indEmpty A b =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .lam A b =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .app f a => sorry
+    | .pairSigma a b => sorry
+    | .indSigma A B C c p =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+    | .refl A a => sorry
+    | .j A B b a a' p =>
+      simp [weaken]
+      simp [lift_weak_n]
+      sorry
+
+theorem weakening_shift_double {S : Tm n} {ρ : Weak m n} : 
+    S⌊.shift (.shift ρ)⌋ = S⌊.shift ρ⌋⌊.shift .id⌋ :=
+  by
+    rw [weakening_shift]
+
+theorem weakening_comp_shift {S : Tm n} {ρ : Weak m n} :
+    S⌊.shift .id ∘ ρ⌋ = S⌊ρ⌋⌊.shift .id⌋ :=
+  by
+    simp [comp_weaken]
+    apply weakening_shift

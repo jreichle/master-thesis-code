@@ -45,7 +45,7 @@ def substitute (t : Tm n) (σ : Subst m n) : Tm m :=
                             (substitute p σ)
   | .refl A a => .refl (substitute A σ) (substitute a σ)
   | .j A B b a a' p => .j (substitute A σ) (substitute B (lift_subst_n σ 3))
-                        (substitute b (lift_subst_n σ 1)) (substitute a σ) (substitute a' σ)
+                        (substitute b σ) (substitute a σ) (substitute a' σ)
                         (substitute p σ)
 
 def comp_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=

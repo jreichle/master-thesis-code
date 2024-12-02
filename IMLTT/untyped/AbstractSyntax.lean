@@ -16,7 +16,7 @@ inductive Tm : Nat → Type where
   | pairSigma : Tm n → Tm n → Tm n
   | indSigma: Tm n → Tm (n + 1) → Tm (n + 1) → Tm (n + 2) → Tm n → Tm n
   | refl : Tm n → Tm n → Tm n
-  | j : Tm n → Tm (n + 3) → Tm (n + 1) → Tm n → Tm n → Tm n → Tm n
+  | j : Tm n → Tm (n + 3) → Tm n → Tm n → Tm n → Tm n → Tm n
 
 inductive Ctx : Nat → Type where
   | empty : Ctx 0
