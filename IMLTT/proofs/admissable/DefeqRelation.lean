@@ -25,12 +25,13 @@ theorem defeq_refl :
       (motive_3 := fun Γ a A _haA => IsEqualTerm Γ a a A)
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    case IsTypeIdenForm =>
+      intro n Γ a A a' hA haA haA' ihA haaA haaA'
+      apply IsEqualType.iden_form_eq
+      · apply ihA
+      · apply haaA
+      · apply haaA'
+    any_goals aesop
 
 theorem defeq_term_refl : HasType Γ a A → IsEqualTerm Γ a a A :=
   by
@@ -91,11 +92,12 @@ theorem defeq_type_symm : IsEqualType Γ A B → IsEqualType Γ B A :=
         · apply defeq_type_symm hAA
         · have hBB' := by apply context_conv_is_equal_type hBB hAA
           apply defeq_type_symm hBB'
-    | .iden_form_eq haaA haaA' =>
+    | .iden_form_eq hAA haaA haaA' =>
       by
         apply IsEqualType.iden_form_eq
-        · apply defeq_term_symm haaA
-        · apply defeq_term_symm haaA'
+        · apply defeq_type_symm hAA
+        · apply IsEqualTerm.ty_conv_eq (defeq_term_symm haaA) hAA
+        · apply IsEqualTerm.ty_conv_eq (defeq_term_symm haaA') (defeq_type_symm hAA)
     | .univ_form_eq hic =>
       by
         apply IsEqualType.univ_form_eq hic
@@ -155,7 +157,7 @@ theorem defeq_type_trans : IsEqualType Γ A B → IsEqualType Γ B C → IsEqual
     | .sigma_form_eq hAA hBB =>
       by
         sorry
-    | .iden_form_eq haaA haaA' =>
+    | .iden_form_eq hAA haaA haaA' =>
       by
         sorry
     | .univ_form_eq hic =>

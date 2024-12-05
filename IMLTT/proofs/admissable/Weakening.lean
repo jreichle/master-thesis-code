@@ -41,7 +41,15 @@ theorem weakening :
       (motive_5 := fun Γ a a' A _haaA =>
         ∀B, Γ ⊢ B type
         → Γ ⬝ B ⊢ (weaken a (.shift .id)) ≡ (weaken a' (.shift .id)) ∶ (weaken A (.shift .id)))
-    sorry
+    case IsCtxEmpty =>
+      -- ⊢ ∀ (B A : Tm 0), ε ⬝ A ctx → ε ⊢ B type → ε ⬝ B ⬝ (A⌊↑id⌋) ctx
+      intro B A hiA hB
+      apply IsCtx.extend
+      have hiB := IsCtx.extend IsCtx.empty hB
+      have hA := ctx_extr hiA
+      · apply hiB
+      · sorry
+    any_goals sorry
 
 theorem weakening_ctx : IsCtx (Γ ⬝ A) → IsType Γ B
                         → IsCtx (Γ ⬝ B ⬝ (weaken A (.shift .id))) :=

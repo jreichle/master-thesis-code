@@ -7,7 +7,7 @@ import IMLTT.proofs.Recursor
 
 import aesop
 
-/- # Γ ⊢ J → Γ ctx -/
+/- # helper -/
 
 theorem ctx_decr : IsCtx (Γ ⬝ A) → IsCtx Γ :=
   by
@@ -15,11 +15,25 @@ theorem ctx_decr : IsCtx (Γ ⬝ A) → IsCtx Γ :=
     match hiCA with
     | .extend hiC _ => apply hiC
 
+theorem ctx_decr_eq : Γ ⬝ A = Γ' ⬝ A' ↔ Γ = Γ' ∧ A = A' :=
+  by
+    apply Iff.intro
+    · intro hiCeq
+      cases hiCeq with
+      | refl => 
+        apply And.intro
+        · rfl
+        · rfl
+    · intro h
+      simp [h]
+
 theorem ctx_extr : IsCtx (Γ ⬝ A) → IsType Γ A :=
   by
     intro hiCA
     match hiCA with
     | .extend _ hA => apply hA
+
+/- # Γ ⊢ J → Γ ctx -/
 
 theorem boundary_ctx :
   (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧

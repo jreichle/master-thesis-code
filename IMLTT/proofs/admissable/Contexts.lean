@@ -1,8 +1,11 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+
 import IMLTT.typed.JudgmentsAndRules
+
 import IMLTT.proofs.boundary.BoundaryIsCtx
+
 import IMLTT.proofs.admissable.Weakening
 import IMLTT.proofs.admissable.Substitution
 
@@ -16,7 +19,7 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
       (motive_2 := fun Γ A _hA => IsType Γ A)
       (motive_3 := fun Γ a A _haA => HasType Γ a A)
       (motive_4 := fun Γ A A' _hAA => IsType Γ A)
-      (motive_5 := fun Γ a a' A _haaA => HasType Γ a A)
+      (motive_5 := fun Γ a a' A _haaA => HasType Γ a A) -- use boundary_has_type instead?
       hAA
     case unit_comp =>
       intro n Γ A a hA haA _ _
@@ -35,17 +38,27 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
       apply HasType.iden_elim
       · apply hB
       · apply hbB
-      · apply IsType.iden_form ihaA ihaA
+      · apply IsType.iden_form
+        · apply (ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB))))
+        · apply ihaA
+        · apply ihaA
       · apply HasType.iden_intro
         · have hiCAAId := boundary_ctx_type hB
           apply ctx_extr (ctx_decr (ctx_decr hiCAAId))
         · apply ihaA
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    case iden_form_eq =>
+      intro n Γ A A' a₁ a₂ a₃ a₄ hAA haaA haaA' ihAA ihaaA ihaaA'
+      apply IsType.iden_form
+      · apply ihAA
+      · apply ihaaA
+      · apply HasType.ty_conv ihaaA' sorry
+    -- any_goals
+    --   solve
+    --   | repeat'
+    --     first
+    --     | intro a
+    --     | aesop
+    any_goals sorry
 
 theorem defeq_is_term' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
   by
@@ -61,6 +74,7 @@ theorem context_conv_is_equal_term : IsEqualTerm (Γ ⬝ A) b b' B → IsEqualTy
                              → IsEqualTerm (Γ ⬝ A') b b' B :=
   sorry
 
+-- TODO: try mutual: symm and context conv
 mutual
   theorem defeq_is_type' : IsEqualType Γ A A' → IsType Γ A' :=
     by
@@ -82,9 +96,10 @@ mutual
           · have hBB' :=
               context_conv_is_equal_type hBB hAA
             apply defeq_is_type' hBB'
-      | .iden_form_eq haA haA' =>
+      | .iden_form_eq hAA haA haA' =>
         apply IsType.iden_form
-        · apply defeq_is_term' haA
+        · apply defeq_is_type' hAA
+        · apply defeq_is_term' (IsEqualTerm.ty_conv_eq haA hAA)
         · apply defeq_is_term' haA'
       | .univ_form_eq hiC =>
           apply IsType.univ_form
@@ -110,7 +125,6 @@ mutual
         · apply context_conv_is_equal_type hAA' hAA
         · sorry
       | _ => sorry
-
 
 
 --   theorem context_conv_is_equal_type_TEST : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
@@ -182,7 +196,7 @@ theorem context_conv_is_type : IsType (Γ ⬝ A) B → IsEqualType Γ A A'
     | IsType.sigma_form hA hB =>
       by
         sorry
-    | IsType.iden_form haA haA' =>
+    | IsType.iden_form hA haA haA' =>
       by
         sorry
     | IsType.univ_form hiC =>

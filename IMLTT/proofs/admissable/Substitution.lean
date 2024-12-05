@@ -2,11 +2,25 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
+import IMLTT.proofs.boundary.BoundaryIsCtx
+
 import IMLTT.proofs.Recursor
 
 import aesop
 
 /- # Substitution Property -/
+
+theorem nat_decr_eq {m n l : Nat} : 
+    m + l = n + l → m = n :=
+  by
+    intro h
+    match l with
+    | 0 => 
+      simp [] at *
+      apply h
+    | i + 1 =>
+      simp [←Nat.add_assoc] at *
+      apply nat_decr_eq h
 
 theorem substitution :
   (∀ {n : Nat} {Γ' : Ctx (n + 2)} (isCtx : Γ' ctx)
@@ -52,7 +66,7 @@ theorem substitution :
         ∀ (m : Nat) (Γ : Ctx m) (eqM : n = m + 1) (b B : Tm m) (a a' A : Tm (m + 1)),
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ c = a → eqM ▸ c' = a' → eqM ▸ C = A → (Γ ⊢ b ∶ B)
         → Γ ⊢ substitute_zero a b ≡ substitute_zero a' b ∶ substitute_zero A b)
-      from by
+      by
         any_goals
           repeat' (apply And.intro)
         · intro n Γ' hIsCtx Γ b B A hΓeq hbB
@@ -120,23 +134,25 @@ theorem substitution :
     case IsCtxExtend =>
       intro n Γ' A' hIsCtx hA' ihIsCtx ihIsType m Γ heqM b B A hCtxEq hbB
       apply IsCtx.extend
-      -- for info on ▸: https://lean-lang.org/theorem_proving_in_lean4/quantifiers_and_equality.html#equality
-      -- example (α : Type) (a b : α) (p : α → Prop)
-      --     (h1 : a = b) (h2 : p a) : p b :=
-      --   h1 ▸ h2
-      --   macro of Eq.symm and Eq.subst
-      · sorry
-      · apply ihIsType
-        · sorry
-        · sorry
-        · sorry
-        · sorry
-        · sorry
+      · apply boundary_ctx_term hbB
+      · cases heqM
+        cases hCtxEq
+        apply ihIsType
+        · rfl
+        · rfl
+        · apply hbB
+        · omega
     case IsTypeEmptyForm =>
-      intro n Γ' hIsCtx ihIsCtx m Γ  heqM b B A hCtxEq h0Eq hbB
+      intro n Γ' hIsCtx ihIsCtx m Γ heqM b B A hCtxEq h0Eq hbB
+      apply ctx_extr -- TODO: use fact that A = empty and substitution doesn't change empty
+      cases heqM
+      rw [substitute_zero] at *
+      rw [←h0Eq] at *
+      rw [substitute] at *
       sorry
     any_goals sorry
 
+#check Eq.symm
 #check cast
 #check congrArg
 

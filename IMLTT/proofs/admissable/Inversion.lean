@@ -15,12 +15,7 @@ theorem pi_has_type_inversion : HasType Γ (.pi A B) V → HasType Γ A U ∧ Ha
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
       hPiV
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    any_goals aesop
 
 theorem pi_is_type_inversion : IsType Γ (.pi A B) → IsType Γ A ∧ IsType (Γ ⬝ A) B :=
   by
@@ -46,18 +41,13 @@ theorem sigma_has_type_inversion : HasType Γ (.sigma A B) V → HasType Γ A U 
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
       hSiV
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    any_goals aesop
 
 theorem sigma_is_type_inversion : IsType Γ (.sigma A B) → IsType Γ A ∧ IsType (Γ ⬝ A) B :=
   by
     intro hSi
     match hSi with
-    | .sigma_form hA hB => 
+    | .sigma_form hA hB =>
       apply And.intro hA hB
     | .univ_elim hSiU =>
       have hAUBU := sigma_has_type_inversion hSiU
@@ -87,19 +77,14 @@ theorem iden_has_type_inversion : HasType Γ (.iden A a a') V
       apply And.intro
       · apply (And.left h1)
       · rfl
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+    any_goals aesop
 
 theorem iden_is_type_inversion : IsType Γ (.iden A a a') 
                                  → HasType Γ a A ∧ HasType Γ a' A :=
   by
     intro hId
     match hId with
-    | .iden_form haA haA' => apply And.intro haA haA'
+    | .iden_form _hA haA haA' => apply And.intro haA haA'
     | .univ_elim hIdU => 
       have h1 := iden_has_type_inversion hIdU
       apply And.right h1

@@ -1,13 +1,16 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+
 import IMLTT.typed.JudgmentsAndRules
+
 import IMLTT.proofs.admissable.Inversion
 import IMLTT.proofs.admissable.Weakening
 import IMLTT.proofs.admissable.Substitution
+import IMLTT.proofs.admissable.Contexts
+
 import IMLTT.proofs.boundary.BoundaryIsCtx
 import IMLTT.proofs.boundary.BoundaryHasType
-import IMLTT.proofs.admissable.Contexts
 
 set_option diagnostics true
 set_option maxHeartbeats 1000000
@@ -17,7 +20,7 @@ theorem boundary_type :
   (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A type) ∧
   (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ A type) ∧
   (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A type) ∧
-  (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ A type) 
+  (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ A type)
   :=
   by
     apply judgment_recursor
@@ -64,16 +67,38 @@ theorem boundary_type :
       · apply hpSi
       · apply ihC
     case HasTypeIdenElim =>
-      intro n Γ A B b a a' p _hB _hbB _hIden _hpIden _ihB ihbB _ihIden _ihpIden
-      apply ihbB
+      intro n Γ A B b a a' p hB _hbB _hId hpId _ihB ihbB ihId _ihpId
+      rw [substitution_separate_degeneralized]
+      have h := iden_is_type_inversion ihId
+      apply substitution_type
+      · apply And.left h
+      · apply substitution_type
+        · apply weakening_term
+          · apply And.right h
+          · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+        · apply substitution_type
+          · rw [weakening_shift_double]
+            apply weakening_term
+            · apply weakening_term
+              · apply hpId
+              · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+            · apply weakening_type
+              · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+              · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+          · sorry
+            -- FIXME: maybe use use identity elim principle somehow?
+            -- subgoal:  Γ ⬝ A ⬝ (A⌊↑id⌋) ⬝ ((A ℑ a ≃ a')⌊↑id⌋⌊↑id⌋) ⊢ B type
     case HasTypeTyConv =>
       intro n Γ a A B _haA hAB _ihaA _ihAB
       apply defeq_is_type' hAB
     case IsEqualTypeIdenFormEq =>
-      intro n Γ a₁ a₂ A a₃ a₄ haaA haaA' _ihaaA _ihaaA'
+      intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA'
       have haA := boundary_has_type haaA
       have haA' := boundary_has_type haaA'
-      apply IsType.iden_form haA haA'
+      apply IsType.iden_form 
+      · apply ihAA
+      · apply haA
+      · apply HasType.ty_conv haA' (defeq_type_symm hAA)
     case IsEqualTypeUnivElimEq =>
       intro n Γ A A' hAAU _hU
       have hAU := boundary_has_type hAAU
@@ -129,12 +154,12 @@ theorem boundary_type :
       · apply boundary_has_type hppSi
       · apply ihCC
     case IsEqualTermIdenIntroEq =>
-      intro n Γ A A' a a' _hAA haaA _ihAA _ihaA
+      intro n Γ A A' a a' _hAA haaA ihAA _ihaA
       have haA := boundary_has_type haaA
-      apply IsType.iden_form haA haA
+      apply IsType.iden_form ihAA haA haA
     case IsEqualTermIdenElimEq =>
       intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' _hBB _hbbB _hIdId _hppId _ihBB ihbbB _ihIdId _ihppId
-      apply ihbbB
+      sorry -- apply ihbbB
     case IsEqualTermTyConvEq =>
       intro n Γ a b A B habA hAB ihabA ihA
       apply defeq_is_type' hAB

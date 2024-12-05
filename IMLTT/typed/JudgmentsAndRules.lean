@@ -31,7 +31,7 @@ mutual
                 → IsType Γ (.pi A B)
     | sigma_form : IsType Γ A → IsType (Γ ⬝ A) B
                    → IsType Γ (.sigma A B)
-    | iden_form : HasType Γ a A → HasType Γ a' A
+    | iden_form : IsType Γ A → HasType Γ a A → HasType Γ a' A
                   → IsType Γ (.iden A a a')
     | univ_form : IsCtx Γ
                   → IsType Γ U
@@ -82,7 +82,7 @@ mutual
                    → HasType Γ (.indSigma A B C c p) (substitute_zero C p)
     | iden_elim : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id)))
                     ⬝ ( .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))) B
-                  → HasType Γ b (substitute B ( .weak .id, a, a', p))
+                  → HasType Γ b (substitute B ( .weak .id, a, a, .refl A a))
                   → IsType Γ (.iden A a a')
                   → HasType Γ p (.iden A a a')
                   → HasType Γ (.j A B b a a' p) (substitute B (.weak .id, a, a', p))
@@ -102,8 +102,8 @@ mutual
                    → IsEqualType Γ (.pi A B) (.pi A' B')
     | sigma_form_eq : IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B'
                       → IsEqualType Γ (.sigma A B) (.sigma A' B')
-    | iden_form_eq : IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A
-                     → IsEqualType Γ (.iden A a₁ a₃) (.iden A a₂ a₄)
+    | iden_form_eq : IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
+                     → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
     | univ_form_eq : IsCtx Γ
                      → IsEqualType Γ .univ .univ
     | univ_elim_eq : IsEqualTerm Γ A A' .univ → IsEqualType Γ A A'
@@ -161,7 +161,7 @@ mutual
     | iden_elim_eq : IsEqualType (((Γ ⬝ A) ⬝ (weaken A (.shift .id))) ⬝ (
                           .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0)
                         )) B B'
-                     → IsEqualTerm Γ b b' (substitute B (.weak .id, a₁, a₃, p))
+                     → IsEqualTerm Γ b b' (substitute B (.weak .id, a₁, a₁, .refl A a₁))
                      → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
                      → IsEqualTerm Γ p p' (.iden A a₁ a₃)
                      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p')
