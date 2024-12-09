@@ -3,7 +3,7 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
-import IMLTT.proofs.Recursor
+import IMLTT.typed.proofs.Recursor
 
 import aesop
 

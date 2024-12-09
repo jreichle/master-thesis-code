@@ -2,10 +2,10 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
-import IMLTT.proofs.boundary.BoundaryIsCtx
-import IMLTT.proofs.admissable.Contexts
+import IMLTT.typed.proofs.Recursor
+import IMLTT.typed.proofs.admissable.Contexts
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
-import IMLTT.proofs.Recursor
 
 import aesop
 

@@ -2,25 +2,18 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
-import IMLTT.proofs.boundary.BoundaryIsCtx
-
-import IMLTT.proofs.Recursor
+import IMLTT.typed.proofs.Recursor
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 import aesop
 
-/- # Substitution Property -/
-
-theorem nat_decr_eq {m n l : Nat} : 
-    m + l = n + l → m = n :=
+theorem substitution_univ_id : 
+    .univ = substitute_zero .univ σ :=
   by
-    intro h
-    match l with
-    | 0 => 
-      simp [] at *
-      apply h
-    | i + 1 =>
-      simp [←Nat.add_assoc] at *
-      apply nat_decr_eq h
+    rw [substitute_zero]
+    rw [substitute]
+
+/- # Substitution Property -/
 
 theorem substitution :
   (∀ {n : Nat} {Γ' : Ctx (n + 2)} (isCtx : Γ' ctx)
@@ -142,14 +135,115 @@ theorem substitution :
         · rfl
         · apply hbB
         · omega
-    case IsTypeEmptyForm =>
-      intro n Γ' hIsCtx ihIsCtx m Γ heqM b B A hCtxEq h0Eq hbB
-      apply ctx_extr -- TODO: use fact that A = empty and substitution doesn't change empty
+    case IsTypeUnitForm =>
+      intro n Γ' hIsCtx ihIsCtx
+      intro m Γ heqM b B A hCtxEq h1Eq hbB
+      apply ctx_extr
       cases heqM
+      cases hCtxEq
+      rw [substitute_zero] at *
+      rw [←h1Eq] at *
+      rw [substitute] at *
+      apply IsCtx.extend
+      · apply ctx_decr hIsCtx
+      · apply IsType.unit_form (ctx_decr hIsCtx)
+    case IsTypeEmptyForm =>
+      intro n Γ' hIsCtx ihIsCtx
+      intro m Γ heqM b B A hCtxEq h0Eq hbB
+      apply ctx_extr
+      cases heqM
+      cases hCtxEq
       rw [substitute_zero] at *
       rw [←h0Eq] at *
       rw [substitute] at *
+      apply IsCtx.extend
+      · apply ctx_decr hIsCtx
+      · apply IsType.empty_form (ctx_decr hIsCtx)
+    case IsTypePiForm =>
+      intro n Γ' A' B' hA hB ihA ihB
+      intro m Γ heqM s S T hCtxEq hPieq hsS
+      cases heqM
+      rw [←hPieq]
+      apply IsType.pi_form
+      · apply ihA
+        · apply hCtxEq
+        · rfl
+        · apply hsS
+        · rfl
+      · simp [lift_subst_n]
+        have h := ihA m Γ rfl s S A' hCtxEq rfl hsS
+        match B' with
+        | .unit =>
+          simp [substitute]
+          apply IsType.unit_form
+          apply IsCtx.extend
+          · apply boundary_ctx_type h
+          · apply h
+        | .pi A B =>
+          simp [substitute]
+          sorry
+        | _ => sorry
+    case IsTypeSigmaForm =>
+      intro n Γ' A' B' hA hB ihA ihB
+      intro m Γ heqM s S T hCtxEq hSigmaEq hsS
+      cases heqM
+      rw [←hSigmaEq]
+      apply IsType.sigma_form
+      · apply ihA
+        · apply hCtxEq
+        · rfl
+        · apply hsS
+        · rfl
+      · simp [lift_subst_n]
+        sorry
+    case IsTypeIdenForm =>
+      intro n Γ' c C c' hC hcC hcC' ihC ihcC ihcC'
+      intro m Γ heqM b B A hCtxEq hIdEq hbB
+      cases heqM
+      rw [←hIdEq]
+      apply IsType.iden_form
+      · apply ihC
+        · apply hCtxEq
+        · rfl
+        · apply hbB
+        · rfl
+      · apply ihcC
+        · apply hCtxEq
+        · rfl
+        · rfl
+        · apply hbB
+        · rfl
+      · apply ihcC'
+        · apply hCtxEq
+        · rfl
+        · rfl
+        · apply hbB
+        · rfl
+    case IsTypeUnivForm =>
+      intro n Γ' m hiC
+      intro m Γ heqM b B A hCtxEq hUeq hbB
+      apply ctx_extr
+      cases heqM
       sorry
+      -- rw [←hUEq] at *
+      -- rw [substitute_zero] at *
+      -- rw [substitute] at *
+      -- -- have hiC := ctx_decr Γ ⬝ B
+      -- apply IsCtx.extend
+      -- · sorry
+      -- · sorry
+    case IsTypeUnivElim =>
+      intro n Γ' A' hAU ihAU
+      intro m Γ heqM b B A hCtxEq hAEq hbB
+      cases heqM
+      apply IsType.univ_elim
+      rw [substitution_univ_id]
+      apply ihAU
+      · apply hCtxEq
+      · apply hAEq
+      · rfl
+      · apply hbB
+      · rfl
     any_goals sorry
 
 #check Eq.symm

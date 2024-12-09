@@ -3,9 +3,8 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
-import IMLTT.proofs.admissable.DefeqRelation
-
-import IMLTT.proofs.boundary.BoundaryIsCtx
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+import IMLTT.typed.proofs.admissable.DefeqRelation
 
 theorem boundary_has_type : IsEqualTerm Γ a a' A → HasType Γ a A :=
   by

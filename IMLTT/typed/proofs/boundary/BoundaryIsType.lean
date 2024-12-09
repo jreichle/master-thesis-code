@@ -1,16 +1,15 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+import IMLTT.untyped.proofs.Weakening
 
 import IMLTT.typed.JudgmentsAndRules
-
-import IMLTT.proofs.admissable.Inversion
-import IMLTT.proofs.admissable.Weakening
-import IMLTT.proofs.admissable.Substitution
-import IMLTT.proofs.admissable.Contexts
-
-import IMLTT.proofs.boundary.BoundaryIsCtx
-import IMLTT.proofs.boundary.BoundaryHasType
+import IMLTT.typed.proofs.admissable.Inversion
+import IMLTT.typed.proofs.admissable.Weakening
+import IMLTT.typed.proofs.admissable.Substitution
+import IMLTT.typed.proofs.admissable.Contexts
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+import IMLTT.typed.proofs.boundary.BoundaryHasType
 
 set_option diagnostics true
 set_option maxHeartbeats 1000000

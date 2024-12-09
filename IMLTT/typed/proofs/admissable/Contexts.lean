@@ -4,10 +4,9 @@ import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
 
-import IMLTT.proofs.boundary.BoundaryIsCtx
-
-import IMLTT.proofs.admissable.Weakening
-import IMLTT.proofs.admissable.Substitution
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+import IMLTT.typed.proofs.admissable.Weakening
+import IMLTT.typed.proofs.admissable.Substitution
 
 import aesop
 
@@ -51,7 +50,7 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
       apply IsType.iden_form
       · apply ihAA
       · apply ihaaA
-      · apply HasType.ty_conv ihaaA' sorry
+      · apply HasType.ty_conv ihaaA' sorry -- FIXME: needs symmetry :(
     -- any_goals
     --   solve
     --   | repeat'
