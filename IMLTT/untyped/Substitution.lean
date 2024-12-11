@@ -97,7 +97,7 @@ def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
     | .extend ξ t => .extend (comp_substitute_substitute ξ ξ') t
   | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute t σ)
 
--- FIXME: congr to above?
+-- FIXME: delete this?
 def comp_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
   substitute (substitute t σ') σ
 

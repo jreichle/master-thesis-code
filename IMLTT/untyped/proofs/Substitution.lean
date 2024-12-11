@@ -307,14 +307,27 @@ theorem substitution_lift_id {t : Tm (n + 1)} :
     rw [←substitution_var_lift_id]
     apply substitution_conv_lift_id
 
-theorem substitution_lift_comp {t : Tm (n + 1)} :
+theorem substitution_lift_comp_ρσ {t : Tm (n + 1)} :
     (substitute t (comp_weaken_substitute (.lift ρ) (.lift σ)))
     = substitute t (.lift (comp_weaken_substitute ρ σ)) :=
   by
-    simp [comp_weaken_substitute]
+    rfl
 
+-- https://proofassistants.stackexchange.com/questions/1380/how-do-i-convince-the-lean-4-type-checker-that-addition-is-commutative
+theorem test :
+    Subst (l + n + 1) (m + n + 1) = Subst (l + 1 + n) (m + 1 + n) :=
+  by
+    sorry
 
-theorem substitution_var_lift_n_comp {n : Nat} {x : Fin (m + n + 1)} :
+--   Subst (l + n + 1) (m + n + 1) : Type
+-- but is expected to have type
+--   Subst (l + 1 + n) (m + 1 + n) : Type
+-- theorem substitution_lift_comm {n : Nat} {σ : Subst l m} :
+--     test ▸ (.lift (lift_subst_n n σ) = lift_subst_n n (.lift σ)) :=
+--   by
+--     sorry
+
+theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (m + n + 1)} :
       substitute (.var x) (comp_weaken_substitute (.lift (lift_weak_n n ρ)) (.lift (lift_subst_n n σ)))
       = substitute (.var x) (.lift (lift_subst_n n (comp_weaken_substitute ρ σ))) :=
   by
@@ -336,16 +349,17 @@ theorem substitution_var_lift_n_comp {n : Nat} {x : Fin (m + n + 1)} :
         | .zero => rfl
         | .succ i' =>
           simp [comp_weaken_substitute]
-          simp [substitute]
+          -- simp [substitute]
+          -- simp [lift_weak_n]
+          -- simp [lift_subst_n]
+          -- use shift_id and lift_shift
           sorry
- 
-      -- helper1 (1+ n) (x +1) = trans (sym (wk1-wk≡lift-wk1 _ _)) (cong wk1 (helper1 n x))
-      
--- theorem substitution_var_lift_n {σ σ' : Subst m n} :
---     (∀x, substitute (.var x) σ = substitute (.var x) σ')
---     → (∀x, substitute (.var x) (lift_subst_n l σ) = substitute (.var x) (lift_subst_n l σ')) :=
+      -- with 
+      -- - weakening_shift_id_lift: weaken (weaken t (.shift .id)) (.lift ρ) = weaken t (.shift ρ)
+      -- - weakening_shift_id: weaken (weaken t ρ) (.shift .id) = weaken t (.shift ρ)
+      -- - then recursive call?
 
-theorem substitution_lift_n_comp (l : Nat) {t : Tm (n + l)} :
+theorem substitution_lift_n_comp_ρσ (l : Nat) {t : Tm (n + l)} :
     (substitute t (comp_weaken_substitute (lift_weak_n l ρ) (lift_subst_n l σ)))
     = substitute t (lift_subst_n l (comp_weaken_substitute ρ σ)) :=
   by
@@ -357,5 +371,22 @@ theorem substitution_lift_n_comp (l : Nat) {t : Tm (n + l)} :
       simp [lift_subst_n]
       simp [lift_weak_n]
       apply substitution_var_substitute
-      apply substitution_var_lift_n_comp
+      apply substitution_var_lift_n_comp_ρσ
 
+theorem substitution_lift_comp_σρ {t : Tm (n + 1)} :
+    substitute t (comp_substitute_weaken (.lift σ) (.lift ρ))
+    = substitute t (.lift (comp_substitute_weaken σ ρ)) :=
+  by
+    rfl
+
+-- theorem substitution_lift_n_comp_σρ {l : Nat} {t : Tm (n + l)} :
+--     substitute t (comp_substitute_weaken (lift_subst_n l σ) (lift_weak_n l ρ))
+--     = substitute t (lift_subst_n l (comp_substitute_weaken σ ρ)) :=
+--   by
+--     match l with
+--     | .zero => rfl
+--     | .succ l' =>
+--       apply substitution_var_substitute
+--       intro x
+--       -- have h := substitution_var_lift_n_comp_σρ {l := l'} {t := t}
+--       sorry
