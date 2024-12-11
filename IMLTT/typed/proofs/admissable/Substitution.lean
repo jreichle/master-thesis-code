@@ -172,17 +172,7 @@ theorem substitution :
         · rfl
       · simp [lift_subst_n]
         have h := ihA m Γ rfl s S A' hCtxEq rfl hsS
-        match B' with
-        | .unit =>
-          simp [substitute]
-          apply IsType.unit_form
-          apply IsCtx.extend
-          · apply boundary_ctx_type h
-          · apply h
-        | .pi A B =>
-          simp [substitute]
-          sorry
-        | _ => sorry
+        sorry
     case IsTypeSigmaForm =>
       intro n Γ' A' B' hA hB ihA ihB
       intro m Γ heqM s S T hCtxEq hSigmaEq hsS
@@ -197,16 +187,11 @@ theorem substitution :
       · simp [lift_subst_n]
         sorry
     case IsTypeIdenForm =>
-      intro n Γ' c C c' hC hcC hcC' ihC ihcC ihcC'
+      intro n Γ' c C c' hcC hcC' ihcC ihcC'
       intro m Γ heqM b B A hCtxEq hIdEq hbB
       cases heqM
       rw [←hIdEq]
       apply IsType.iden_form
-      · apply ihC
-        · apply hCtxEq
-        · rfl
-        · apply hbB
-        · rfl
       · apply ihcC
         · apply hCtxEq
         · rfl
@@ -220,18 +205,17 @@ theorem substitution :
         · apply hbB
         · rfl
     case IsTypeUnivForm =>
-      intro n Γ' m hiC
-      intro m Γ heqM b B A hCtxEq hUeq hbB
+      intro n Γ' hIsCtx ihIsCtx
+      intro m Γ heqM b B A hCtxEq h0Eq hbB
       apply ctx_extr
       cases heqM
-      sorry
-      -- rw [←hUEq] at *
-      -- rw [substitute_zero] at *
-      -- rw [substitute] at *
-      -- -- have hiC := ctx_decr Γ ⬝ B
-      -- apply IsCtx.extend
-      -- · sorry
-      -- · sorry
+      cases hCtxEq
+      rw [substitute_zero] at *
+      rw [←h0Eq] at *
+      rw [substitute] at *
+      apply IsCtx.extend
+      · apply ctx_decr hIsCtx
+      · apply IsType.univ_form (ctx_decr hIsCtx)
     case IsTypeUnivElim =>
       intro n Γ' A' hAU ihAU
       intro m Γ heqM b B A hCtxEq hAEq hbB
@@ -245,10 +229,6 @@ theorem substitution :
       · apply hbB
       · rfl
     any_goals sorry
-
-#check Eq.symm
-#check cast
-#check congrArg
 
 theorem substitution_ctx : HasType Γ b B → IsCtx (Γ ⬝ B ⬝ A)
                            → IsCtx (Γ ⬝ (substitute_zero A b)) :=
@@ -307,6 +287,13 @@ theorem substitution_inv_type : B' = (substitute_zero B a) → IsType Γ B'
     match hBs with
     | .unit_form hiC => sorry
     | _ => sorry
+
+theorem substitution_inv_type_eq : B' = (substitute_zero B a) → C' = (substitute_zero C a) 
+                                → IsEqualType Γ B' C'
+                                → HasType Γ a A
+                                → IsEqualType (Γ ⬝ A) B C :=
+  by
+    sorry
 
 -- B⌈Subst.weak id, a, a', p⌉ type
 theorem substitution_separate_test :

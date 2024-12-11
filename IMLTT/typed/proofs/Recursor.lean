@@ -25,9 +25,9 @@ theorem judgment_recursor :
     (a : Γ ⊢ A type) (a_1 : (Γ ⬝ A) ⊢ B type),
     motive_2 Γ A a → motive_2 (Γ ⬝ A) B a_1 → motive_2 Γ (.sigma A B) (IsType.sigma_form a a_1))
   → (IsTypeIdenForm : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n}
-    (aa : Γ ⊢ A type) (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ a' ∶ A),
-    motive_2 Γ A aa → motive_3 Γ a A a_1 → motive_3 Γ a' A a_2 
-    → motive_2 Γ (.iden A a a') (IsType.iden_form aa a_1 a_2))
+    (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ a' ∶ A),
+    motive_3 Γ a A a_1 → motive_3 Γ a' A a_2 
+    → motive_2 Γ (.iden A a a') (IsType.iden_form a_1 a_2))
   → (IsTypeUnivForm : ∀ {n : Nat} {Γ : Ctx n}
     (a : Γ ctx), motive_1 Γ a → motive_2 Γ U (IsType.univ_form a))
   → (IsTypeUnivElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} (a : Γ ⊢ A ∶ U),
@@ -43,9 +43,9 @@ theorem judgment_recursor :
     motive_3 Γ a A a_1 → motive_3 Γ b (substitute_zero B a) a_2
     → motive_3 Γ (.pairSigma a b) (.sigma A B) (HasType.sigma_intro a_1 a_2))
   → (HasTypeIdenIntro : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n} 
-    (a_1 : Γ ⊢ A type) (a_2 : Γ ⊢ a ∶ A),
-    motive_2 Γ A a_1 → motive_3 Γ a A a_2 
-    → motive_3 Γ (.refl A a) (.iden A a a) (HasType.iden_intro a_1 a_2))
+    (a_2 : Γ ⊢ a ∶ A),
+    motive_3 Γ a A a_2
+    → motive_3 Γ (.refl A a) (.iden A a a) (HasType.iden_intro a_2))
   → (HasTypeUnivUnit : ∀ {n : Nat} {Γ : Ctx n} 
     (a : Γ ctx), motive_1 Γ a → motive_3 Γ 𝟙 U (HasType.univ_unit a))
   → (HasTypeUnivEmpty : ∀ {n : Nat} {Γ : Ctx n} 
@@ -74,22 +74,23 @@ theorem judgment_recursor :
     → motive_3 Γ (.app f a) (substitute_zero B a) (HasType.pi_elim a_1 a_2))
   → (HasTypeSigmaElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} 
     {C : Tm (n + 1)} {c : Tm (n + 1 + 1)}
-    (a : Γ ⊢ (.sigma A B) type) (a_1 : Γ ⊢ p ∶ (.sigma A B)) (a_2 : (Γ ⬝ (.sigma A B)) ⊢ C type)
-    (a_3 : (Γ ⬝ A ⬝ B) ⊢ c ∶ (substitute C (Subst.weak (.shift (.shift .id)), (.pairSigma v(1) v(0))))),
-    motive_2 Γ (.sigma A B) a → motive_3 Γ p (.sigma A B) a_1 → motive_2 (Γ ⬝ (.sigma A B)) C a_2
+    (a_1 : Γ ⊢ p ∶ (.sigma A B)) (a_2 : (Γ ⬝ (.sigma A B)) ⊢ C type)
+    (a_3 : (Γ ⬝ A ⬝ B) ⊢ c ∶ (substitute C (Subst.weak (.shift (.shift .id)), 
+      (.pairSigma v(1) v(0))))),
+    motive_3 Γ p (.sigma A B) a_1 → motive_2 (Γ ⬝ (.sigma A B)) C a_2
     → motive_3 (Γ ⬝ A ⬝ B) c
       (substitute C (Subst.weak (.shift (.shift .id)), (.pairSigma v(1) v(0)))) a_3
-    → motive_3 Γ (.indSigma A B C c p) (substitute_zero C p) (HasType.sigma_elim a a_1 a_2 a_3) )
+    → motive_3 Γ (.indSigma A B C c p) (substitute_zero C p) (HasType.sigma_elim a_1 a_2 a_3) )
   → (HasTypeIdenElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm n} 
     {a a' p : Tm n}
     (a_1 : (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) ⊢ B type)
     (a_2 : Γ ⊢ b ∶ substitute B (Subst.weak .id, a, a, .refl A a))
-    (a_3 : Γ ⊢ A.iden a a' type) (a_4 : Γ ⊢ p ∶ A.iden a a'),
+    (a_4 : Γ ⊢ p ∶ A.iden a a'),
     motive_2 (Γ ⬝ A ⬝ weaken A Weak.id.shift ⬝ (weaken A Weak.id.shift.shift).iden v(1) v(0)) B a_1 
     → motive_3 Γ b (substitute B (Subst.weak .id, a, a, .refl A a)) a_2
-    → motive_2 Γ (A.iden a a') a_3 → motive_3 Γ p (A.iden a a') a_4 
+    → motive_3 Γ p (A.iden a a') a_4 
     → motive_3 Γ (A.j B b a a' p) (substitute B (Subst.weak Weak.id, a, a', p)) 
-      (HasType.iden_elim a_1 a_2 a_3 a_4))
+      (HasType.iden_elim a_1 a_2 a_4))
   → (HasTypeTyConv : ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n}
     (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ A ≡ B type), 
     motive_3 Γ a A a_1 → motive_4 Γ A B a_2 

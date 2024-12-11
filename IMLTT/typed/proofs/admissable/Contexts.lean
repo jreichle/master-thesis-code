@@ -26,9 +26,6 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
     case sigma_comp =>
       intro n Γ a A b B C c haA hbB hC hcC _ _ ihC _
       apply HasType.sigma_elim
-      · have hiCSi := boundary_ctx_type hC
-        match hiCSi with
-        | .extend _hiC hSi => apply hSi
       · apply HasType.sigma_intro haA hbB
       · apply ihC
       · apply hcC
@@ -37,18 +34,11 @@ theorem defeq_is_type : IsEqualType Γ A A' → IsType Γ A :=
       apply HasType.iden_elim
       · apply hB
       · apply hbB
-      · apply IsType.iden_form
-        · apply (ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB))))
-        · apply ihaA
-        · apply ihaA
-      · apply HasType.iden_intro
-        · have hiCAAId := boundary_ctx_type hB
-          apply ctx_extr (ctx_decr (ctx_decr hiCAAId))
-        · apply ihaA
+      · apply HasType.iden_intro 
+        apply ihaA
     case iden_form_eq =>
       intro n Γ A A' a₁ a₂ a₃ a₄ hAA haaA haaA' ihAA ihaaA ihaaA'
       apply IsType.iden_form
-      · apply ihAA
       · apply ihaaA
       · apply HasType.ty_conv ihaaA' sorry -- FIXME: needs symmetry :(
     -- any_goals
@@ -97,7 +87,6 @@ mutual
             apply defeq_is_type' hBB'
       | .iden_form_eq hAA haA haA' =>
         apply IsType.iden_form
-        · apply defeq_is_type' hAA
         · apply defeq_is_term' (IsEqualTerm.ty_conv_eq haA hAA)
         · apply defeq_is_term' haA'
       | .univ_form_eq hiC =>
@@ -195,7 +184,7 @@ theorem context_conv_is_type : IsType (Γ ⬝ A) B → IsEqualType Γ A A'
     | IsType.sigma_form hA hB =>
       by
         sorry
-    | IsType.iden_form hA haA haA' =>
+    | IsType.iden_form haA haA' =>
       by
         sorry
     | IsType.univ_form hiC =>

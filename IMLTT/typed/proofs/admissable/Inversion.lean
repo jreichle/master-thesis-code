@@ -84,7 +84,7 @@ theorem iden_is_type_inversion : IsType Γ (.iden A a a')
   by
     intro hId
     match hId with
-    | .iden_form _hA haA haA' => apply And.intro haA haA'
+    | .iden_form haA haA' => apply And.intro haA haA'
     | .univ_elim hIdU => 
       have h1 := iden_has_type_inversion hIdU
       apply And.right h1

@@ -61,32 +61,48 @@ theorem boundary_type :
       · apply haA
       · apply And.right (pi_is_type_inversion ihfPi)
     case HasTypeSigmaElim =>
-      intro n Γ A B p C c _hSi hpSi _hC _hcC _ihSi _ihpSi ihC _ihcC
+      intro n Γ A B p C c hpSi _hC _hcC _ihpSi ihC _ihcC
       apply substitution_type
       · apply hpSi
       · apply ihC
     case HasTypeIdenElim =>
-      intro n Γ A B b a a' p hB _hbB _hId hpId _ihB ihbB ihId _ihpId
+      intro n Γ A B b a a' p hB _hbB hpId _ihB ihbB ihpId
       rw [substitution_separate_degeneralized]
-      have h := iden_is_type_inversion ihId
+      have h := iden_is_type_inversion ihpId
       apply substitution_type
       · apply And.left h
       · apply substitution_type
         · apply weakening_term
           · apply And.right h
           · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
-        · apply substitution_type
-          · rw [weakening_shift_double]
-            apply weakening_term
-            · apply weakening_term
-              · apply hpId
-              · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
-            · apply weakening_type
-              · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
-              · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+        · apply substitution_type -- (B := weaken (weaken (A ℑ a ≃ a') (.shift .id)) (.shift .id))
+          on_goal 2 => apply hB
           · sorry
-            -- FIXME: maybe use use identity elim principle somehow?
-            -- subgoal:  Γ ⬝ A ⬝ (A⌊↑id⌋) ⬝ ((A ℑ a ≃ a')⌊↑id⌋⌊↑id⌋) ⊢ B type
+            -- rw [weakening_shift_double]
+            -- apply weakening_term
+            -- · apply weakening_term
+            --   · sorry -- apply hpId
+            --   · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+            -- · apply weakening_type
+            --   · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+            --   · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+      -- apply substitution_type
+      -- · apply And.left h
+      -- · apply substitution_type
+      --   · apply weakening_term
+      --     · apply And.right h
+      --     · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+      --   · apply substitution_type
+      --     · rw [weakening_shift_double]
+      --       apply weakening_term
+      --       · apply weakening_term
+      --         · apply hpId
+      --         · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+      --       · apply weakening_type
+      --         · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+      --         · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+      --     · apply _ihB -- Id A a a
+      --       -- subgoal:  Γ ⬝ A ⬝ (A⌊↑id⌋) ⬝ ((A ℑ a ≃ a')⌊↑id⌋⌊↑id⌋) ⊢ B type
     case HasTypeTyConv =>
       intro n Γ a A B _haA hAB _ihaA _ihAB
       apply defeq_is_type' hAB
@@ -95,7 +111,6 @@ theorem boundary_type :
       have haA := boundary_has_type haaA
       have haA' := boundary_has_type haaA'
       apply IsType.iden_form 
-      · apply ihAA
       · apply haA
       · apply HasType.ty_conv haA' (defeq_type_symm hAA)
     case IsEqualTypeUnivElimEq =>
@@ -155,7 +170,7 @@ theorem boundary_type :
     case IsEqualTermIdenIntroEq =>
       intro n Γ A A' a a' _hAA haaA ihAA _ihaA
       have haA := boundary_has_type haaA
-      apply IsType.iden_form ihAA haA haA
+      apply IsType.iden_form haA haA
     case IsEqualTermIdenElimEq =>
       intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' _hBB _hbbB _hIdId _hppId _ihBB ihbbB _ihIdId _ihppId
       sorry -- apply ihbbB

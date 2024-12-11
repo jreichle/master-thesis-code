@@ -31,7 +31,7 @@ mutual
                 → IsType Γ (.pi A B)
     | sigma_form : IsType Γ A → IsType (Γ ⬝ A) B
                    → IsType Γ (.sigma A B)
-    | iden_form : IsType Γ A → HasType Γ a A → HasType Γ a' A
+    | iden_form : HasType Γ a A → HasType Γ a' A
                   → IsType Γ (.iden A a a')
     | univ_form : IsCtx Γ
                   → IsType Γ U
@@ -54,7 +54,7 @@ mutual
                  → HasType Γ (.lam A b) (.pi A B)
     | sigma_intro : HasType Γ a A → HasType Γ b (substitute_zero B a)
                     → HasType Γ (.pairSigma a b) (.sigma A B)
-    | iden_intro : IsType Γ A → HasType Γ a A
+    | iden_intro : HasType Γ a A
                    → HasType Γ (.refl A a) (.iden A a a)
     -- universe intro
     | univ_unit : IsCtx Γ
@@ -75,15 +75,13 @@ mutual
                    → HasType Γ (.indEmpty A b) (substitute_zero A b)
     | pi_elim : HasType Γ f (.pi A B) → HasType Γ a A
                 → HasType Γ (.app f a) (substitute_zero B a)
-    | sigma_elim : IsType Γ (.sigma A B)
-                   → HasType Γ p (.sigma A B) → IsType (Γ ⬝ (.sigma A B)) C
+    | sigma_elim : HasType Γ p (.sigma A B) → IsType (Γ ⬝ (.sigma A B)) C
                    → HasType (Γ ⬝ A ⬝ B) c
                      (substitute C ((.weak (.shift (.shift .id))), .pairSigma (.var 1) (.var 0)))
                    → HasType Γ (.indSigma A B C c p) (substitute_zero C p)
     | iden_elim : IsType (((Γ ⬝ A) ⬝ (weaken A (.shift .id)))
                     ⬝ ( .iden (weaken A (.shift (.shift .id))) (.var 1) (.var 0))) B
                   → HasType Γ b (substitute B ( .weak .id, a, a, .refl A a))
-                  → IsType Γ (.iden A a a')
                   → HasType Γ p (.iden A a a')
                   → HasType Γ (.j A B b a a' p) (substitute B (.weak .id, a, a', p))
     -- conversion

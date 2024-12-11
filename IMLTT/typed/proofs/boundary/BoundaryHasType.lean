@@ -20,11 +20,8 @@ theorem boundary_has_type : IsEqualTerm Γ a a' A → HasType Γ a A :=
       intro n Γ A a hA haA _ _
       apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA))
     case sigma_comp =>
-      intro n Γ a A b B C c haA hbB hC hcC _ _ ihC _
+      intro n Γ a A b B C c haA hbB _hC hcC _ _ ihC _
       apply HasType.sigma_elim
-      · have hiCSi := boundary_ctx_type hC
-        match hiCSi with
-        | .extend _ hSi => apply hSi
       · apply HasType.sigma_intro haA hbB
       · apply ihC
       · apply hcC
@@ -33,19 +30,11 @@ theorem boundary_has_type : IsEqualTerm Γ a a' A → HasType Γ a A :=
       apply HasType.iden_elim
       · apply hB
       · apply hbB
-      · apply IsType.iden_form
-        · apply (ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB))))
-        · apply ihaA
-        · apply ihaA
-      · apply HasType.iden_intro
-        · have hiCAAId := boundary_ctx_type hB
-          apply ctx_extr (ctx_decr (ctx_decr hiCAAId))
-        · apply ihaA
+      · apply HasType.iden_intro ihaA
     case iden_form_eq =>
       intro n Γ A A' a₁ a₂ a₃ a₄
-      intro hAA _haaA _haaA' ihAA ihaaA ihaaA'
+      intro hAA _haaA _haaA' _ihAA ihaaA ihaaA'
       apply IsType.iden_form
-      · apply ihAA
       · apply ihaaA
       · apply HasType.ty_conv ihaaA' (defeq_type_symm hAA)
     any_goals
