@@ -297,8 +297,8 @@ theorem substitution_inv_type_eq : B' = (substitute_zero B a) → C' = (substitu
 
 -- B⌈Subst.weak id, a, a', p⌉ type
 theorem substitution_separate_test :
-  (substitute A (.weak .id, s1, s2, s3))
-  = (substitute (substitute_zero A (weaken s3 (.shift (.shift .id)))) (.weak .id, s1, s2)) :=
+  (substitute (.weak .id, s1, s2, s3) A)
+  = (substitute (.weak .id, s1, s2) (substitute_zero A (weaken (.shift (.shift .id)) s3))) :=
   by
     simp [substitute_zero]
     sorry
@@ -306,11 +306,11 @@ theorem substitution_separate_test :
 -- FIXME: try to find generalized form, think substitution algebra
 
 theorem substitution_separate_degeneralized : -- TODO: is this provable?
-  (substitute A (.weak .id, s1, s2, s3))
+  (substitute (.weak .id, s1, s2, s3) A)
   = substitute_zero
       (substitute_zero
-        (substitute_zero A (weaken s3 (.shift (.shift .id))))
-      (weaken s2 (.shift .id)))
+        (substitute_zero A (weaken (.shift (.shift .id)) s3))
+      (weaken (.shift .id) s2))
     s1 :=
   by
     simp [substitute_zero]

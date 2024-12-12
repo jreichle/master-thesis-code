@@ -63,5 +63,5 @@ instance : Coe (Fin n) (Tm n) where
 --     )
 -- infixl:65 "; " => concat_ctx
 
-notation "ε" => Ctx.empty
-infixl:66 " ⬝ " => Ctx.extend
+notation:max "ε" => Ctx.empty
+infixl:95 " ⬝ " => Ctx.extend

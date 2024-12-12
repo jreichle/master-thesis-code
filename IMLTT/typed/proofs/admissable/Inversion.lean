@@ -3,7 +3,7 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
-theorem pi_has_type_inversion : HasType Γ (.pi A B) V → HasType Γ A U ∧ HasType (Γ ⬝ A) B U :=
+theorem pi_has_type_inversion : HasType Γ (.pi A B) V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰 :=
   by
     intro hPiV
     apply HasType.recOn
@@ -11,7 +11,7 @@ theorem pi_has_type_inversion : HasType Γ (.pi A B) V → HasType Γ A U ∧ Ha
       (motive_2 := fun Γ A _hA => IsType Γ A)
       (motive_3 := fun Γ x X _haA =>
          ∀ A, ∀ B, ∀ V,
-         x = (.pi A B) ∧ X = V → HasType Γ A U ∧ HasType (Γ ⬝ A) B U)
+         x = (.pi A B) ∧ X = V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰)
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
       hPiV
@@ -29,7 +29,7 @@ theorem pi_is_type_inversion : IsType Γ (.pi A B) → IsType Γ A ∧ IsType (�
       · apply IsType.univ_elim (And.left hAUBU)
       · apply IsType.univ_elim (And.right hAUBU)
 
-theorem sigma_has_type_inversion : HasType Γ (.sigma A B) V → HasType Γ A U ∧ HasType (Γ ⬝ A) B U :=
+theorem sigma_has_type_inversion : HasType Γ (.sigma A B) V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰 :=
   by
     intro hSiV
     apply HasType.recOn
@@ -37,7 +37,7 @@ theorem sigma_has_type_inversion : HasType Γ (.sigma A B) V → HasType Γ A U 
       (motive_2 := fun Γ A _hA => IsType Γ A)
       (motive_3 := fun Γ x X _haA =>
          ∀ A, ∀ B, ∀ V,
-         x = (.sigma A B) ∧ X = V → HasType Γ A U ∧ HasType (Γ ⬝ A) B U)
+         x = (.sigma A B) ∧ X = V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰)
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
       hSiV
@@ -58,7 +58,7 @@ theorem sigma_is_type_inversion : IsType Γ (.sigma A B) → IsType Γ A ∧ IsT
 set_option maxHeartbeats 1000000
 
 theorem iden_has_type_inversion : HasType Γ (.iden A a a') V 
-                                  → HasType Γ A U ∧ HasType Γ a A ∧ HasType Γ a' A :=
+                                  → HasType Γ A 𝒰 ∧ HasType Γ a A ∧ HasType Γ a' A :=
   by
     intro hIdV
     apply HasType.recOn
@@ -66,7 +66,7 @@ theorem iden_has_type_inversion : HasType Γ (.iden A a a') V
       (motive_2 := fun Γ A _hA => IsType Γ A)
       (motive_3 := fun Γ x X _haA =>
          ∀ A, ∀ a, ∀ a', ∀ V,
-         x = (.iden A a a') ∧ X = V → HasType Γ A U ∧ HasType Γ a A ∧ HasType Γ a' A)
+         x = (.iden A a a') ∧ X = V → HasType Γ A 𝒰 ∧ HasType Γ a A ∧ HasType Γ a' A)
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
       hIdV

@@ -7,46 +7,46 @@ inductive Subst : Nat → Nat → Type where
   | lift : Subst m n → Subst (m + 1) (n + 1)
   | extend : Subst m n → Tm m → Subst m (n + 1)
 
-def substitute_var (x : Fin n) (σ : Subst m n) : Tm m :=
+def substitute_var (σ : Subst m n) (x : Fin n) : Tm m :=
   match σ with
-  | .weak ρ => weaken x ρ
-  | .shift σ' => shift_tm (substitute_var x σ')
+  | .weak ρ => weaken ρ x
+  | .shift σ' => shift_tm (substitute_var σ' x)
   | .lift σ' =>
     match x with
     | ⟨0, _⟩ => .var (.mk 0 (by simp []))
-    | ⟨x' + 1, h⟩ => shift_tm (substitute_var (.mk x' (by simp [Nat.lt_of_succ_lt_succ h])) σ')
+    | ⟨x' + 1, h⟩ => shift_tm (substitute_var σ' (.mk x' (by simp [Nat.lt_of_succ_lt_succ h])))
   | .extend σ' t =>
     match x with
     | ⟨0, _⟩ => t
-    | ⟨x' + 1, h⟩ => substitute_var (.mk x' (Nat.lt_of_succ_lt_succ h)) σ'
+    | ⟨x' + 1, h⟩ => substitute_var σ' (.mk x' (Nat.lt_of_succ_lt_succ h))
 
 def lift_subst_n (i : Nat) (σ : Subst m n) : Subst (m + i) (n + i) :=
   match i with
   | 0 => σ
   | i' + 1 => .lift (lift_subst_n i' σ)
 
-def substitute (t : Tm n) (σ : Subst m n) : Tm m :=
+def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
   match t with
   | .unit => .unit
   | .empty => .empty
-  | .pi A B => .pi (substitute A σ) (substitute B (lift_subst_n 1 σ))
-  | .sigma A B => .sigma (substitute A σ) (substitute B (lift_subst_n 1 σ))
-  | .iden A a a' => .iden (substitute A σ) (substitute a σ) (substitute a' σ)
+  | .pi A B => .pi (substitute σ A) (substitute (lift_subst_n 1 σ) B)
+  | .sigma A B => .sigma (substitute σ A) (substitute (lift_subst_n 1 σ) B)
+  | .iden A a a' => .iden (substitute σ A) (substitute σ a) (substitute σ a')
   | .univ => .univ
-  | .var i => substitute_var i σ
+  | .var i => substitute_var σ i
   | .tt => .tt
-  | .indUnit A b a => .indUnit (substitute A (lift_subst_n 1 σ)) (substitute b σ) (substitute a σ)
-  | .indEmpty A b => .indEmpty (substitute A (lift_subst_n 1 σ)) (substitute b σ)
-  | .lam A b => .lam (substitute A σ) (substitute b (lift_subst_n 1 σ))
-  | .app f a => .app (substitute f σ) (substitute a σ)
-  | .pairSigma a b => .pairSigma (substitute a σ) (substitute b σ)
-  | .indSigma A B C c p => .indSigma (substitute A σ) (substitute B (lift_subst_n 1 σ)) 
-                            (substitute C (lift_subst_n 1 σ)) (substitute c (lift_subst_n 2 σ))
-                            (substitute p σ)
-  | .refl A a => .refl (substitute A σ) (substitute a σ)
-  | .j A B b a a' p => .j (substitute A σ) (substitute B (lift_subst_n 3 σ))
-                        (substitute b σ) (substitute a σ) (substitute a' σ)
-                        (substitute p σ)
+  | .indUnit A b a => .indUnit (substitute (lift_subst_n 1 σ) A) (substitute σ b) (substitute σ a)
+  | .indEmpty A b => .indEmpty (substitute (lift_subst_n 1 σ) A) (substitute σ b)
+  | .lam A b => .lam (substitute σ A) (substitute (lift_subst_n 1 σ) b)
+  | .app f a => .app (substitute σ f) (substitute σ a)
+  | .pairSigma a b => .pairSigma (substitute σ a) (substitute σ b)
+  | .indSigma A B C c p => .indSigma (substitute σ A) (substitute (lift_subst_n 1 σ) B)
+                            (substitute (lift_subst_n 1 σ) C) (substitute (lift_subst_n 2 σ) c)
+                            (substitute σ p)
+  | .refl A a => .refl (substitute σ A) (substitute σ a)
+  | .j A B b a a' p => .j (substitute σ A) (substitute (lift_subst_n 3 σ) B)
+                        (substitute σ b) (substitute σ a) (substitute σ a')
+                        (substitute σ p)
 
 def comp_substitute_weaken (σ : Subst l m) (ρ : Weak m n) : Subst l n :=
   match ρ with
@@ -72,13 +72,13 @@ def comp_weaken_substitute (ρ : Weak l m) (σ : Subst m n) : Subst l n :=
     | .weak ξ => .weak (comp_weaken (.shift ρ') ξ)
     | .shift σ' => .shift (comp_weaken_substitute ρ' (.shift σ'))
     | .lift σ' => .shift (comp_weaken_substitute ρ' (.lift σ'))
-    | .extend σ' t => .shift (.extend (comp_weaken_substitute ρ' σ') (weaken t ρ'))
+    | .extend σ' t => .shift (.extend (comp_weaken_substitute ρ' σ') (weaken ρ' t))
   | .lift ρ' =>
     match σ with
     | .weak ξ => .weak (comp_weaken (.lift ρ') ξ)
     | .shift σ' => .shift (comp_weaken_substitute ρ' σ')
     | .lift σ' => .lift (comp_weaken_substitute ρ' σ')
-    | .extend σ' t => .extend (comp_weaken_substitute (.lift ρ') σ') (weaken t (.lift ρ'))
+    | .extend σ' t => .extend (comp_weaken_substitute (.lift ρ') σ') (weaken (.lift ρ') t)
 
 def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
   match σ' with
@@ -95,26 +95,26 @@ def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
     | .shift ξ => .shift (comp_substitute_substitute ξ (.lift ξ'))
     | .lift ξ => .lift (comp_substitute_substitute ξ ξ')
     | .extend ξ t => .extend (comp_substitute_substitute ξ ξ') t
-  | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute t σ)
+  | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute σ t)
 
 -- FIXME: delete this?
 def comp_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
-  substitute (substitute t σ') σ
+  substitute σ (substitute σ' t)
 
 def weak_subst (t : Tm n) (ρ : Weak l m) (σ : Subst m n) : Tm l :=
-  weaken (substitute t σ) ρ
+  weaken ρ (substitute σ t)
 
 def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
-  substitute (weaken t ρ) σ
+  substitute σ (weaken ρ t)
 
 -- helpers:
 
 def substitute_zero (t : Tm (n + 1)) (a : Tm n) : Tm n :=
-  substitute t (.extend (.weak .id) a)
+  substitute (.extend (.weak .id) a) t
 
 prefix:96 "ₛ" => Subst.weak
 prefix:97 "↑ₛ" => Subst.shift
 prefix:97 "⇑ₛ" => Subst.lift
 infixl:97 ", " => Subst.extend
 infixl:96 "∘ₛ" => comp_subst
-notation:95 A "⌈" σ "⌉" => substitute A σ
+notation:95 A "⌈" σ "⌉" => substitute σ A
