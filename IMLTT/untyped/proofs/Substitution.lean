@@ -1,6 +1,5 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Substitution
-import IMLTT.typed.JudgmentsAndRules
 
 theorem substitution_var_lift {σ σ' : Subst m n} :
     (∀x, substitute (.var x) σ = substitute (.var x) σ')
@@ -311,7 +310,7 @@ theorem substitution_lift_comp_ρσ {t : Tm (n + 1)} :
     (substitute t (comp_weaken_substitute (.lift ρ) (.lift σ)))
     = substitute t (.lift (comp_weaken_substitute ρ σ)) :=
   by
-    rfl
+    simp [comp_weaken_substitute]
 
 -- https://proofassistants.stackexchange.com/questions/1380/how-do-i-convince-the-lean-4-type-checker-that-addition-is-commutative
 theorem test :
@@ -336,7 +335,9 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (m + n + 1)} :
       match x with
       | .mk i hFin =>
         match i with
-        | .zero => rfl
+        | .zero => 
+          simp [comp_weaken_substitute]
+          rfl
         | .succ i' =>
           simp [substitute]
           simp [comp_weaken_substitute]
@@ -346,7 +347,9 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (m + n + 1)} :
       match x with
       | .mk i hFin =>
         match i with
-        | .zero => rfl
+        | .zero =>
+          simp [comp_weaken_substitute]
+          rfl
         | .succ i' =>
           simp [comp_weaken_substitute]
           -- simp [substitute]
