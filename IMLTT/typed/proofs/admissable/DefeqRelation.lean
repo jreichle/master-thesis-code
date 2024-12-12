@@ -6,7 +6,6 @@ import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.admissable.Contexts
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
-
 import aesop
 
 /- # Definitional Equality is Equivalence Relation -/
