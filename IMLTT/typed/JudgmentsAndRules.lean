@@ -34,8 +34,8 @@ mutual
     | iden_form : HasType Γ a A → HasType Γ a' A
                   → IsType Γ (.iden A a a')
     | univ_form : IsCtx Γ
-                  → IsType Γ U
-    | univ_elim : HasType Γ A U
+                  → IsType Γ 𝒰
+    | univ_elim : HasType Γ A 𝒰
                   → IsType Γ A
 
   -- Γ ⊢ a : A
@@ -58,15 +58,15 @@ mutual
                    → HasType Γ (.refl A a) (.iden A a a)
     -- universe intro
     | univ_unit : IsCtx Γ
-                  → HasType Γ 𝟙 U
+                  → HasType Γ 𝟙 𝒰
     | univ_empty : IsCtx Γ
-                   → HasType Γ 𝟘 U
-    | univ_pi : HasType Γ A U → HasType (Γ ⬝ A) B U
-                → HasType Γ (.pi A B) U
-    | univ_sigma : HasType Γ A U → HasType (Γ ⬝ A) B U
-                   → HasType Γ (.sigma A B) U
-    | univ_iden : HasType Γ A U → HasType Γ a A → HasType Γ a' A
-                  → HasType Γ (.iden A a a') U
+                   → HasType Γ 𝟘 𝒰
+    | univ_pi : HasType Γ A 𝒰 → HasType (Γ ⬝ A) B 𝒰
+                → HasType Γ (.pi A B) 𝒰
+    | univ_sigma : HasType Γ A 𝒰 → HasType (Γ ⬝ A) B 𝒰
+                   → HasType Γ (.sigma A B) 𝒰
+    | univ_iden : HasType Γ A 𝒰 → HasType Γ a A → HasType Γ a' A
+                  → HasType Γ (.iden A a a') 𝒰
     -- elimination rules (except univ)
     | unit_elim : IsType (Γ ⬝ 𝟙) A → HasType Γ a (substitute_zero A .tt)
                   → HasType Γ b 𝟙
@@ -103,8 +103,8 @@ mutual
     | iden_form_eq : IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
                      → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
     | univ_form_eq : IsCtx Γ
-                     → IsEqualType Γ .univ .univ
-    | univ_elim_eq : IsEqualTerm Γ A A' .univ → IsEqualType Γ A A'
+                     → IsEqualType Γ 𝒰 𝒰
+    | univ_elim_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualType Γ A A'
 
   -- Γ ⊢ a ≡ b : A
   @[aesop unsafe [constructors]]
@@ -165,22 +165,22 @@ mutual
                      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p')
                        (substitute B (.weak .id, a₁, a₃, p))
     | univ_unit_eq : IsCtx Γ
-                     → IsEqualTerm Γ 𝟙 𝟙 .univ
+                     → IsEqualTerm Γ 𝟙 𝟙 𝒰
     | univ_empty_eq : IsCtx Γ
-                     → IsEqualTerm Γ 𝟘 𝟘 .univ
-    | univ_pi_eq : IsEqualTerm Γ A A' .univ → IsEqualTerm (Γ ⬝ A) B B' .univ
-                   → IsEqualTerm Γ (.pi A B) (.pi A' B') .univ
-    | univ_sigma_eq : IsEqualTerm Γ A A' .univ → IsEqualTerm (Γ ⬝ A) B B' .univ
-                   → IsEqualTerm Γ (.sigma A B) (.sigma A' B') .univ
-    | univ_iden_eq : IsEqualTerm Γ A A' .univ → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
-                     → IsEqualTerm Γ (.iden A a₁ a₃) (.iden A' a₂ a₄) .univ
+                     → IsEqualTerm Γ 𝟘 𝟘 𝒰
+    | univ_pi_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualTerm (Γ ⬝ A) B B' 𝒰
+                   → IsEqualTerm Γ (.pi A B) (.pi A' B') 𝒰
+    | univ_sigma_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualTerm (Γ ⬝ A) B B' 𝒰
+                   → IsEqualTerm Γ (.sigma A B) (.sigma A' B') 𝒰
+    | univ_iden_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
+                     → IsEqualTerm Γ (.iden A a₁ a₃) (.iden A' a₂ a₄) 𝒰
     -- conversion
     | ty_conv_eq : IsEqualTerm Γ a b A → IsEqualType Γ A B
                    → IsEqualTerm Γ a b B
 end
 
-postfix : 55 " ctx" => IsCtx
-notation : 55 Γ " ⊢ " A  " type" => IsType Γ A
-notation : 55 Γ " ⊢ " s " ∶ " A => HasType Γ s A
-notation : 55 Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
-notation : 55 Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
+postfix:90 " ctx" => IsCtx
+notation:90 Γ " ⊢ " A  " type" => IsType Γ A
+notation:90 Γ " ⊢ " s " ∶ " A => HasType Γ s A
+notation:90 Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
+notation:90 Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A

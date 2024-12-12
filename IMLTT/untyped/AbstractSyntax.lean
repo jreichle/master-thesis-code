@@ -23,18 +23,18 @@ inductive Ctx : Nat → Type where
   | extend : Ctx n → Tm n → Ctx (n + 1)
 
 -- types
-notation "𝟙" => Tm.unit
-notation "𝟘" => Tm.empty
-notation:70 "Π" A ";" B => Tm.pi A B
-notation:70 "Σ" A ";" B => Tm.sigma A B
-notation:70 A "ℑ" s " ≃ " t => Tm.iden A s t -- FIXME:  do s =[A] t
-notation "U" => Tm.univ
+notation:max "𝟙" => Tm.unit
+notation:max "𝟘" => Tm.empty
+notation:96 "Π" A ";" B => Tm.pi A B
+notation:96 "Σ" A ";" B => Tm.sigma A B
+notation:96 s " ≃" "[" A "] " t => Tm.iden A s t
+notation:max "𝒰" => Tm.univ
 -- terms
 notation:max "v(" x ")" => Tm.var x
-notation "⋆" => Tm.tt
-notation:70 "λ" A "; " b => Tm.lam A b
-infixl : 70 "◃" => Tm.app
-notation:70 a "&" b => Tm.pairSigma a b
+notation:max "⋆" => Tm.tt
+notation:96 "λ" A "; " b => Tm.lam A b
+infixl:96 "◃" => Tm.app
+infixl:96 "&" => Tm.pairSigma
 
 instance : Coe (Fin n) (Tm n) where
   coe n := .var n

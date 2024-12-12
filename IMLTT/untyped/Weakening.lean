@@ -58,8 +58,8 @@ def weaken (t : Tm n) (ρ : Weak m n) : Tm m :=
 def shift_tm : Tm n → Tm (n + 1)
   | t => weaken t (.shift .id)
 
-notation : max "id_" => Weak.id
-prefix : 90 "↑" => Weak.shift -- TODO: change 'associativity' to prevent having to use parenthesis?
-prefix : 90 "⇑" => Weak.lift
-infixl:70 "∘" => comp_weaken
-notation:60 A "⌊" ρ "⌋" => weaken A ρ
+notation:max "id_" => Weak.id
+prefix:97 "↑" => Weak.shift -- TODO: change 'associativity' to prevent having to use parenthesis?
+prefix:97 "⇑" => Weak.lift
+infixl:96 "∘" => comp_weaken
+notation:95 A "⌊" ρ "⌋" => weaken A ρ

@@ -112,9 +112,9 @@ def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
 def substitute_zero (t : Tm (n + 1)) (a : Tm n) : Tm n :=
   substitute t (.extend (.weak .id) a)
 
-prefix : 80 "ₛ" => Subst.weak
-prefix:90 "↑ₛ" => Subst.shift
-prefix:90 "⇑ₛ" => Subst.lift
-infixl:70 "∘ₛ" => comp_subst -- problems from here
-infixl:70 ", " => Subst.extend
-notation:60 A "⌈" σ "⌉" => substitute A σ
+prefix:96 "ₛ" => Subst.weak
+prefix:97 "↑ₛ" => Subst.shift
+prefix:97 "⇑ₛ" => Subst.lift
+infixl:97 ", " => Subst.extend
+infixl:96 "∘ₛ" => comp_subst
+notation:95 A "⌈" σ "⌉" => substitute A σ
