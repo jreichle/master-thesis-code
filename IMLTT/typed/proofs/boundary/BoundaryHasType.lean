@@ -4,7 +4,7 @@ import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.DefeqRelation
+import IMLTT.typed.proofs.admissable.DefeqSymm
 
 theorem boundary_has_type : IsEqualTerm Γ a a' A → HasType Γ a A :=
   by
@@ -36,7 +36,7 @@ theorem boundary_has_type : IsEqualTerm Γ a a' A → HasType Γ a A :=
       intro hAA _haaA _haaA' _ihAA ihaaA ihaaA'
       apply IsType.iden_form
       · apply ihaaA
-      · apply HasType.ty_conv ihaaA' (defeq_type_symm hAA)
+      · apply HasType.ty_conv ihaaA' (defeq_symm_type hAA)
     any_goals
       solve
       | repeat'

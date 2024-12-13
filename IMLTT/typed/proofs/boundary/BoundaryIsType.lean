@@ -7,7 +7,6 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
-import IMLTT.typed.proofs.admissable.Contexts
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.boundary.BoundaryHasType
 
@@ -112,7 +111,7 @@ theorem boundary_type :
       have haA' := boundary_has_type haaA'
       apply IsType.iden_form 
       · apply haA
-      · apply HasType.ty_conv haA' (defeq_type_symm hAA)
+      · apply HasType.ty_conv haA' (defeq_symm_type hAA)
     case IsEqualTypeUnivElimEq =>
       intro n Γ A A' hAAU _hU
       have hAU := boundary_has_type hAAU
