@@ -97,7 +97,9 @@ def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
     | .extend ξ t => .extend (comp_substitute_substitute ξ ξ') t
   | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute σ t)
 
--- FIXME: delete this?
+-- def comp (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
+--   substitute (comp_substitute_substitute σ σ') t
+
 def comp_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
   substitute σ (substitute σ' t)
 
@@ -117,4 +119,7 @@ prefix:97 "↑ₛ" => Subst.shift
 prefix:97 "⇑ₛ" => Subst.lift
 infixl:97 ", " => Subst.extend
 infixl:96 "∘ₛ" => comp_subst
+infixl:96 "ₚ∘ₛ" => comp_weaken_substitute
+infixl:96 "ₛ∘ₚ" => comp_substitute_weaken
+infixl:96 "ₛ∘ₛ" => comp_substitute_substitute
 notation:95 A "⌈" σ "⌉" => substitute σ A

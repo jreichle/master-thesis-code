@@ -1,5 +1,7 @@
 import IMLTT.untyped.AbstractSyntax
+import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+import IMLTT.untyped.proofs.Weakening
 
 theorem substitution_var_lift {σ σ' : Subst m n} :
     (∀x, substitute σ (.var x) = substitute σ' (.var x))
@@ -13,6 +15,7 @@ theorem substitution_var_lift {σ σ' : Subst m n} :
         rfl
       | succ i' =>
         apply congrArg shift_tm (h (.mk i' (Nat.lt_of_succ_lt_succ hFin)))
+
 
 theorem substitution_var_lift_n {σ σ' : Subst m n} :
     (∀x, substitute σ (.var x) = substitute σ' (.var x))
@@ -312,23 +315,11 @@ theorem substitution_lift_comp_ρσ {t : Tm (n + 1)} :
   by
     simp [comp_weaken_substitute]
 
--- https://proofassistants.stackexchange.com/questions/1380/how-do-i-convince-the-lean-4-type-checker-that-addition-is-commutative
-theorem test :
-    Subst (l + n + 1) (m + n + 1) = Subst (l + 1 + n) (m + 1 + n) :=
-  by
-    sorry
-
---   Subst (l + n + 1) (m + n + 1) : Type
--- but is expected to have type
---   Subst (l + 1 + n) (m + 1 + n) : Type
--- theorem substitution_lift_comm {n : Nat} {σ : Subst l m} :
---     test ▸ (.lift (lift_subst_n n σ) = lift_subst_n n (.lift σ)) :=
---   by
---     sorry
-
-theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (m + n + 1)} :
-      substitute (comp_weaken_substitute (.lift (lift_weak_n n ρ)) (.lift (lift_subst_n n σ))) (.var x)
-      = substitute (.lift (lift_subst_n n (comp_weaken_substitute ρ σ))) (.var x) :=
+theorem substitution_var_lift_n_comp_ρσ
+    {n : Nat} {x : Fin (z + n + 1)} :
+    substitute (comp_weaken_substitute (.lift (lift_weak_n n ρ)) (.lift (lift_subst_n n σ))) 
+                (.var x)
+    = substitute (.lift (lift_subst_n n (comp_weaken_substitute ρ σ))) (.var x) :=
   by
     match n with
     | .zero =>
@@ -352,15 +343,10 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (m + n + 1)} :
           rfl
         | .succ i' =>
           simp [comp_weaken_substitute]
-          -- simp [substitute]
-          -- simp [lift_weak_n]
-          -- simp [lift_subst_n]
-          -- use shift_id and lift_shift
-          sorry
-      -- with 
-      -- - weakening_shift_id_lift: weaken (weaken t (.shift .id)) (.lift ρ) = weaken t (.shift ρ)
-      -- - weakening_shift_id: weaken (weaken t ρ) (.shift .id) = weaken t (.shift ρ)
-      -- - then recursive call?
+          apply substitution_var_lift
+          simp [lift_weak_n]
+          simp [lift_subst_n]
+          apply substitution_var_lift_n_comp_ρσ
 
 theorem substitution_lift_n_comp_ρσ (l : Nat) {t : Tm (n + l)} :
     (substitute (comp_weaken_substitute (lift_weak_n l ρ) (lift_subst_n l σ)) t)
@@ -382,14 +368,259 @@ theorem substitution_lift_comp_σρ {t : Tm (n + 1)} :
   by
     rfl
 
--- theorem substitution_lift_n_comp_σρ {l : Nat} {t : Tm (n + l)} :
---     substitute t (comp_substitute_weaken (lift_subst_n l σ) (lift_weak_n l ρ))
---     = substitute t (lift_subst_n l (comp_substitute_weaken σ ρ)) :=
---   by
---     match l with
---     | .zero => rfl
---     | .succ l' =>
---       apply substitution_var_substitute
---       intro x
---       -- have h := substitution_var_lift_n_comp_σρ {l := l'} {t := t}
---       sorry
+theorem substitution_var_lift_n_comp_σρ {l : Nat} {x : Fin (n + l + 1)} :
+    substitute (comp_substitute_weaken (.lift (lift_subst_n l σ)) (.lift (lift_weak_n l ρ))) (.var x)
+    = substitute (.lift (lift_subst_n l (comp_substitute_weaken σ ρ))) (.var x) :=
+  by
+    match l with
+    | .zero =>
+      match x with
+      | .mk i hFin =>
+        match i with
+        | .zero => 
+          rfl
+        | .succ i' =>
+          simp [comp_substitute_weaken]
+          simp [lift_subst_n]
+          simp [lift_weak_n]
+    | .succ n' =>
+      match x with
+      | .mk i hFin =>
+        match i with
+        | .zero =>
+          rfl
+        | .succ i' =>
+          simp [comp_weaken_substitute]
+          apply substitution_var_lift
+          simp [lift_weak_n]
+          simp [lift_subst_n]
+          apply substitution_var_lift_n_comp_σρ
+
+theorem substitution_lift_n_comp_σρ {l : Nat} {t : Tm (n + l)} :
+    substitute (comp_substitute_weaken (lift_subst_n l σ) (lift_weak_n l ρ)) t
+    = substitute (lift_subst_n l (comp_substitute_weaken σ ρ)) t :=
+  by
+    match l with
+    | .zero => rfl
+    | .succ l' =>
+      simp [lift_subst_n]
+      simp [lift_weak_n]
+      apply substitution_var_substitute
+      apply substitution_var_lift_n_comp_σρ
+
+#check substitution_var_lift
+#check substitution_var_substitute
+
+
+-- ⊢ B⌈⇑ₛσ⌉⌊⇑ₚρ⌋ = B⌈⇑ₚρ ₚ∘ₛ⇑ₛσ⌉
+theorem test {σ σ' : Subst m n} {ρ ρ' : Weak l m} :
+    (∀(x : Fin n), v(x)⌈σ⌉ = v(x)⌈σ'⌉) → ∀ (x : Fin (n + 1)), v(x)⌈⇑ₛσ⌉ = v(x)⌈⇑ₛσ'⌉ :=
+  by
+    sorry
+
+
+theorem substitution_comp_weaken_subst {t : Tm n} :
+    weaken ρ (substitute σ t)
+    = substitute (comp_weaken_substitute ρ σ) t :=
+  by
+    match t with
+    | .unit => 
+      rfl
+    | .empty =>
+      rfl
+    | .pi A B =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · simp [lift_weak_n]
+        simp [lift_subst_n]
+        rw [←substitution_lift_comp_ρσ]
+        sorry
+    | .sigma A B =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · simp [lift_weak_n]
+        simp [lift_subst_n]
+        rw [←substitution_lift_comp_ρσ]
+        sorry
+    | .iden A a a' =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · apply And.intro
+        · apply substitution_comp_weaken_subst
+        · apply substitution_comp_weaken_subst
+    | .univ =>
+      rfl
+    | .var x =>
+      sorry
+    | .tt =>
+      rfl
+    | .indUnit A b a =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · sorry
+      · apply And.intro
+        · apply substitution_comp_weaken_subst
+        · apply substitution_comp_weaken_subst
+    | .indEmpty A b =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · sorry
+      · apply substitution_comp_weaken_subst
+    | .lam A b =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · simp [lift_weak_n]
+        simp [lift_subst_n]
+        sorry
+    | .app f a =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · apply substitution_comp_weaken_subst
+    | .pairSigma a b =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · apply substitution_comp_weaken_subst
+    | .indSigma A B C c p =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · apply And.intro
+        · sorry
+        · apply And.intro
+          · sorry
+          · apply And.intro
+            · sorry
+            · apply substitution_comp_weaken_subst
+    | .refl A a =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · apply substitution_comp_weaken_subst
+    | .j A B b a a' p =>
+      simp [substitute]
+      simp [weaken]
+      apply And.intro
+      · apply substitution_comp_weaken_subst
+      · apply And.intro
+        · sorry
+        · apply And.intro
+          · apply substitution_comp_weaken_subst
+          · apply And.intro
+            · apply substitution_comp_weaken_subst
+            · apply And.intro
+              · apply substitution_comp_weaken_subst
+              · apply substitution_comp_weaken_subst
+
+theorem substitution_comp_subst_weaken {t : Tm n} :
+    substitute σ (weaken ρ t) = substitute (comp_substitute_weaken σ ρ) t :=
+  by
+    match t with
+    | .unit =>
+      rfl
+    | .empty =>
+      rfl
+    | .pi A B =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · simp [lift_weak_n]
+        simp [lift_subst_n]
+        sorry
+    | .sigma A B => sorry
+    | .iden A a a' =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · apply And.intro
+        · apply substitution_comp_subst_weaken
+        · apply substitution_comp_subst_weaken
+    | .univ =>
+      rfl
+    | .var x =>
+      sorry
+    | .tt =>
+      rfl
+    | .indUnit A b a =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · sorry
+      · apply And.intro
+        · apply substitution_comp_subst_weaken
+        · apply substitution_comp_subst_weaken
+    | .indEmpty A b =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · sorry
+      · apply substitution_comp_subst_weaken
+    | .lam A b =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · simp [lift_weak_n]
+        simp [lift_subst_n]
+        sorry
+    | .app f a =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · apply substitution_comp_subst_weaken
+    | .pairSigma a b =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · apply substitution_comp_subst_weaken
+    | .indSigma A B C c p =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · apply And.intro
+        · sorry
+        · apply And.intro
+          · sorry
+          · apply And.intro
+            · sorry
+            · apply substitution_comp_subst_weaken
+    | .refl A a =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · apply substitution_comp_subst_weaken
+    | .j A B b a a' p =>
+      simp [weaken]
+      simp [substitute]
+      apply And.intro
+      · apply substitution_comp_subst_weaken
+      · apply And.intro
+        · sorry
+        · apply And.intro
+          · apply substitution_comp_subst_weaken
+          · apply And.intro
+            · apply substitution_comp_subst_weaken
+            · apply And.intro
+              · apply substitution_comp_subst_weaken
+              · apply substitution_comp_subst_weaken

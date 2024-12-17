@@ -61,5 +61,5 @@ def shift_tm : Tm n → Tm (n + 1)
 notation:max "idₚ" => Weak.id
 prefix:97 "↑ₚ" => Weak.shift -- TODO: change 'associativity' to prevent having to use parenthesis?
 prefix:97 "⇑ₚ" => Weak.lift
-infixl:96 "∘" => comp_weaken
+infixl:96 "ₚ∘ₚ" => comp_weaken
 notation:95 A "⌊" ρ "⌋" => weaken ρ A

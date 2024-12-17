@@ -450,98 +450,13 @@ theorem weakening_shift_id_outside {ρ : Weak m n} {t : Tm n} :
 
 -- other (lemmatas needed in some proof)
 
-#reduce ((Tm.pi : Tm 1 → Tm 2 → Tm 1) v(0) v(1))⌊.shift .id⌋
-#reduce ((Tm.pi : Tm 1 → Tm 2 → Tm 1) v(0) v(1))⌊.shift (.shift .id)⌋
-#reduce ((Tm.pi : Tm 1 → Tm 2 → Tm 1) v(0) v(1))⌊(.shift .id)⌋⌊.shift .id⌋
-#reduce ((Tm.refl : Tm 1 → Tm 1 → Tm 1) v(0) v(1))⌊.shift .id⌋
-#reduce ((Tm.refl : Tm 1 → Tm 1 → Tm 1) v(0) v(1))⌊.shift (.shift .id)⌋
-#reduce ((Tm.refl : Tm 1 → Tm 1 → Tm 1) v(0) v(1))⌊.shift .id⌋⌊.shift .id⌋
-
--- FIXME: lemma is wrong! see .var case
-
--- theorem weakening_lift_shift {S : Tm (n + 1)} {ρ : Weak m n} :
---     S⌊.lift (.shift ρ)⌋ = S⌊.lift ρ⌋⌊.lift (.shift .id)⌋ :=
---   by
---     match S with
---     | .unit => 
---       simp [weaken]
---     | .empty => 
---       simp [weaken]
---     | .pi A B => 
---       simp [weaken]
---       apply And.intro
---       · apply weakening_lift_shift
---       · simp [lift_weak_n]
---         rw [weakening_comp]
---         apply weakening_var_weaken
---         simp [weaken_var]
---         intro i
---         rfl
---     | .sigma A B =>
---       simp [weaken]
---       apply And.intro
---       · apply weakening_lift_shift
---       · simp [lift_weak_n]
---         rw [weakening_comp]
---         apply weakening_var_weaken
---         simp [weaken_var]
---         intro i
---         rfl
---     | .iden A a a' =>
---       simp [weaken]
---       apply And.intro
---       · apply weakening_lift_shift
---       · apply And.intro
---         · apply weakening_lift_shift
---         · apply weakening_lift_shift
---     | .univ =>
---       simp [weaken]
---     | .var i =>
---       simp [weaken]
---       simp [weaken_var]
---       match i with
---       | .mk i' hFin =>
---         match i' with
---         | .zero => rfl
---         | .succ j =>
---           simp []
---           sorry
---       -- match i with
---       -- | ⟨0, _⟩ => sorry
---       -- | ⟨x' + 1, h⟩ => sorry
---     | .tt =>
---       simp [weaken]
---     | .indUnit A b a =>
---       simp [weaken]
---       simp [lift_weak_n]
---       sorry
---     | .indEmpty A b =>
---       simp [weaken]
---       simp [lift_weak_n]
---       sorry
---     | .lam A b =>
---       simp [weaken]
---       simp [lift_weak_n]
---       sorry
---     | .app f a => sorry
---     | .pairSigma a b => sorry
---     | .indSigma A B C c p =>
---       simp [weaken]
---       simp [lift_weak_n]
---       sorry
---     | .refl A a => sorry
---     | .j A B b a a' p =>
---       simp [weaken]
---       simp [lift_weak_n]
---       sorry
-
 theorem weakening_shift_double {S : Tm n} {ρ : Weak m n} : 
     S⌊.shift (.shift ρ)⌋ = S⌊.shift ρ⌋⌊.shift .id⌋ :=
   by
     rw [←weakening_shift_id]
 
 theorem weakening_comp_shift {S : Tm n} {ρ : Weak m n} :
-    S⌊.shift .id ∘ ρ⌋ = S⌊ρ⌋⌊.shift .id⌋ :=
+    S⌊.shift .id ₚ∘ₚ ρ⌋ = S⌊ρ⌋⌊.shift .id⌋ :=
   by
     simp [comp_weaken]
     apply (Eq.symm weakening_shift_id)
