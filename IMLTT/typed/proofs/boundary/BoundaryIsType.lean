@@ -13,6 +13,36 @@ import IMLTT.typed.proofs.boundary.BoundaryHasType
 set_option diagnostics true
 set_option maxHeartbeats 1000000
 
+theorem boundary_is_type {n : Nat} {Γ : Ctx n} {S S' : Tm n} :
+    IsEqualType Γ S S' → IsType Γ S := 
+  by
+    intro hSS
+    cases S
+    case unit =>
+      cases hSS with
+      | unit_form_eq h =>
+        constructor
+        exact h
+      | univ_elim_eq h =>
+        constructor
+        sorry
+    case pi A B =>
+      cases hSS with
+      | pi_form_eq hAA' hBB' =>
+        constructor
+        · exact boundary_is_type hAA'
+        · exact boundary_is_type hBB'
+      | univ_elim_eq h =>
+        sorry
+    any_goals sorry
+
+theorem test {n : Nat} {Γ : Ctx n} {s S : Tm n} :
+    HasType Γ s S → IsType Γ S := 
+  by
+    intro hsS
+    cases hsS
+    any_goals sorry
+
 theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
     HasType Γ s S → IsType Γ S := 
   by
@@ -24,17 +54,21 @@ theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
     case empty =>
       constructor
       apply boundary_ctx_term hsS
+    -- error with normal .var x: dependent elimination failed, failed to solve equation (ΠA;B) = A✝⌊↑ₚidₚ⌋
+    -- error with A'=... : dependent elimination failed, failed to solve equation (ΠA;B) = A✝⌈(ₛidₚ), b✝⌉
+    -- case pi A B =>
+    --   cases hsS
+    --   sorry
     case pi A B =>
-      constructor
-      · sorry
-      · sorry
+      cases hsS
     case sigma A B =>
       sorry
     case iden A a a' =>
       sorry
     case univ =>
-      sorry
-    case var x =>
+      constructor
+      apply boundary_ctx_term hsS
+    case var x => -- TODO: would need proof that terms cannot be types by themselves
       sorry
     case tt =>
       sorry

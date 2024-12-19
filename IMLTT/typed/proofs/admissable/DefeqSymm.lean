@@ -11,20 +11,20 @@ theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
   by
     intro habA
     match habA with
-    | .var_eq hA => sorry
-    | .unit_comp hC hcC => sorry
-    | .pi_comp hbB haA => sorry
-    | .sigma_comp haA hbB hC hcC => sorry
-    | .iden_comp hB hbB haA  => sorry
+    | .var_eq hA hEq => sorry
+    | .unit_comp hC hcC hEq => sorry
+    | .pi_comp hbB haA hEqs hEqS => sorry
+    | .sigma_comp haA hbB hC hcC hEqs hEqS => sorry
+    | .iden_comp hB hbB haA hEq => sorry
     | .unit_intro_eq hiC => sorry
-    | .unit_elim_eq hAA haaA hbbUn => sorry
-    | .empty_elim_eq hAA hbbEm => sorry
+    | .unit_elim_eq hAA haaA hbbUn hEq => sorry
+    | .empty_elim_eq hAA hbbEm hEq => sorry
     | .pi_intro_eq hbbB => sorry
-    | .pi_elim_eq haaA hffPi => sorry
+    | .pi_elim_eq haaA hffPi hEq => sorry
     | .sigma_intro_eq haaA hbbB => sorry
-    | .sigma_elim_eq hSiSi hppSi hCC hccC => sorry
+    | .sigma_elim_eq hSiSi hppSi hCC hccC hEq => sorry
     | .iden_intro_eq hAA haaA  => sorry
-    | .iden_elim_eq hBB hbbB hIdId hppId => sorry
+    | .iden_elim_eq hBB hbbB hIdId hppId hEq => sorry
     | .univ_unit_eq hiC => sorry
     | .univ_empty_eq hiC => sorry
     | .univ_pi_eq hAAU hBBU => sorry

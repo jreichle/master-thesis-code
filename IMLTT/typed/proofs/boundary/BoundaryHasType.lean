@@ -20,20 +20,22 @@ theorem boundary_has_type :
       (motive_4 := fun Γ A A' _hAA => IsType Γ A)
       (motive_5 := fun Γ a a' A _haaA => HasType Γ a A)
     case IsEqualTermUnitComp =>
-      intro n Γ A a hA haA _ _
-      apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA))
+      intro n Γ A a S hA haA hEq _ _
+      apply HasType.unit_elim hA haA (HasType.unit_intro (boundary_ctx_term haA)) hEq
     case IsEqualTermSigmaComp =>
-      intro n Γ a A b B C c haA hbB _hC hcC _ _ ihC _
+      intro n Γ a A b B C s S c haA hbB hC hcC hEqs hEqS ihaA ihbB ihC ihcC
       apply HasType.sigma_elim
       · apply HasType.sigma_intro haA hbB
       · apply ihC
       · apply hcC
+      · apply hEqS
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a hB hbB _ _ _ ihaA
+      intro n Γ A B b a S hB hbB haA hEq ihB ihbB ihaA
       apply HasType.iden_elim
       · apply hB
       · apply hbB
       · apply HasType.iden_intro ihaA
+      · apply hEq
     case IsEqualTypeIdenFormEq =>
       intro n Γ A A' a₁ a₂ a₃ a₄
       intro hAA _haaA _haaA' _ihAA ihaaA ihaaA'
