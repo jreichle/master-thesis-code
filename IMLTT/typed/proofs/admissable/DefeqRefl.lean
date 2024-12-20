@@ -132,7 +132,7 @@ theorem defeq_refl :
         · apply ihA
         · apply And.left ihaA
         · apply And.left ihb1
-      · sorry
+      · sorry -- just use subst lemma
     case HasTypeEmptyElim =>
       intro n Γ A b hA hb0 ihA ihb0
       apply And.intro
@@ -171,7 +171,7 @@ theorem defeq_refl :
       · apply IsEqualTerm.ty_conv_eq
         · apply And.left ihaA
         · apply hAB
-      · sorry -- FIXME: won't work
+      · sorry -- FIXME: use symm, trans
     case IsEqualTermPiComp =>
       intro n Γ A b B a hbB haA ihbB ihaA
       apply IsEqualTerm.pi_comp
