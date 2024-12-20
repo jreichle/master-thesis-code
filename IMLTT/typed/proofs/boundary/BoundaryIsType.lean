@@ -54,24 +54,21 @@ theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
     case empty =>
       constructor
       apply boundary_ctx_term hsS
-    -- error with normal .var x: dependent elimination failed, failed to solve equation (ΠA;B) = A✝⌊↑ₚidₚ⌋
-    -- error with A'=... : dependent elimination failed, failed to solve equation (ΠA;B) = A✝⌈(ₛidₚ), b✝⌉
-    -- case pi A B =>
-    --   cases hsS
-    --   sorry
     case pi A B =>
       cases hsS
+      any_goals sorry
     case sigma A B =>
       sorry
     case iden A a a' =>
-      sorry
+      cases hsS
+      any_goals sorry
     case univ =>
       constructor
       apply boundary_ctx_term hsS
     case var x => -- TODO: would need proof that terms cannot be types by themselves
       sorry
     case tt =>
-      sorry
+      sorry -- inversion lemma s ∶ ⋆ → false
     any_goals sorry
 
 theorem boundary_is_type_term_eq {n : Nat} {Γ : Ctx n} {s s' S : Tm n} :
