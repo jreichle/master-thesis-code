@@ -111,7 +111,7 @@ def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
 
 -- helpers:
 
-def substitute_zero (t : Tm (n + 1)) (a : Tm n) : Tm n :=
+def substitute_zero (a : Tm n) (t : Tm (n + 1)) : Tm n :=
   substitute (.extend (.weak .id) a) t
 
 prefix:96 "ₛ" => Subst.weak

@@ -8,7 +8,7 @@ import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import aesop
 
 theorem substitution_univ_id : 
-    .univ = substitute_zero .univ σ :=
+    .univ = substitute_zero σ 𝒰 :=
   by
     rw [substitute_zero]
     rw [substitute]
@@ -19,46 +19,46 @@ theorem substitution :
   (∀ {n : Nat} {Γ' : Ctx (n + 2)} (isCtx : Γ' ctx)
     (Γ : Ctx n) (b B : Tm n) (A : Tm (n + 1)),
     Γ' = Γ ⬝ B ⬝ A → (Γ ⊢ b ∶ B)
-    → Γ ⬝ substitute_zero A b ctx) ∧
+    → Γ ⬝ substitute_zero b A ctx) ∧
   (∀ {n : Nat} {Γ' : Ctx (n + 1)} {A : Tm (n + 1)} (isType : Γ' ⊢ A type)
     (Γ : Ctx n) (b B : Tm n),
     Γ' = Γ ⬝ B → (Γ ⊢ b ∶ B)
-    → Γ ⊢ (substitute_zero A b) type) ∧
+    → Γ ⊢ (substitute_zero b A) type) ∧
   (∀ {n : Nat} {Γ' : Ctx (n + 1)} {A a : Tm (n + 1)} (hasType : Γ' ⊢ a ∶ A)
     (Γ : Ctx n) (b B : Tm n),
     Γ' = (Γ ⬝ B) → (Γ ⊢ b ∶ B)
-    → Γ ⊢ (substitute_zero a b) ∶ (substitute_zero A b)) ∧
+    → Γ ⊢ (substitute_zero b a) ∶ (substitute_zero b A)) ∧
   (∀ {n : Nat} {Γ' : Ctx (n + 1)} {A A' : Tm (n + 1)} (isEqualType : Γ' ⊢ A ≡ A' type)
     (Γ : Ctx n) (b B : Tm n),
     Γ' = (Γ ⬝ B) → (Γ ⊢ b ∶ B)
-    → Γ ⊢ (substitute_zero A b) ≡ (substitute_zero A' b) type) ∧
+    → Γ ⊢ (substitute_zero b A) ≡ (substitute_zero b A') type) ∧
   (∀ {n : Nat} {Γ' : Ctx (n + 1)} {A a a' : Tm (n + 1)} (isEqualTerm : Γ' ⊢ a ≡ a' ∶ A)
     (Γ : Ctx n) (b B : Tm n),
     Γ' = Γ ⬝ B → (Γ ⊢ b ∶ B)
-    → Γ ⊢ (substitute_zero a b) ≡ (substitute_zero a' b) ∶ (substitute_zero A b))
+    → Γ ⊢ (substitute_zero b a) ≡ (substitute_zero b a') ∶ (substitute_zero b A))
  :=
   by
     suffices h :
       (∀ {n : Nat} {Γ' : Ctx n}, Γ' ctx →
         ∀ (m : Nat) (Γ : Ctx m) (eqM : n = m + 2) (b B : Tm m) (A : Tm (m + 1)),
         eqM ▸ Γ' = Γ ⬝ B ⬝ A → (Γ ⊢ b ∶ B)
-        → Γ ⬝ substitute_zero A b ctx) ∧
+        → Γ ⬝ substitute_zero b A ctx) ∧
       (∀ {n : Nat} {Γ' : Ctx n} {A' : Tm n}, Γ' ⊢ A' type →
         ∀ (m : Nat) (Γ : Ctx m) (eqM : n = m + 1) (b B : Tm m) (A : Tm (m + 1)),
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ A' = A → (Γ ⊢ b ∶ B)
-        → Γ ⊢ substitute_zero A b type) ∧
+        → Γ ⊢ substitute_zero b A type) ∧
       (∀ {n : Nat} {Γ' : Ctx n} {A' a' : Tm n}, (Γ' ⊢ a' ∶ A') →
         ∀ (m : Nat) (Γ : Ctx m) (eqM : n = m + 1) (b B : Tm m) (a A : Tm (m + 1)),
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ a' = a → eqM ▸ A' = A → (Γ ⊢ b ∶ B)
-        → Γ ⊢ substitute_zero a b ∶ substitute_zero A b) ∧
+        → Γ ⊢ substitute_zero b a ∶ substitute_zero b A) ∧
       (∀ {n : Nat} {Γ' : Ctx n} {C C' : Tm n}, Γ' ⊢ C ≡ C' type →
         ∀ (m : Nat) (Γ : Ctx m) (eqM : n = m + 1) (b B : Tm m) (A A' : Tm (m + 1)),
           eqM ▸ Γ' = Γ ⬝ B → eqM ▸ C = A → eqM ▸ C' = A' → (Γ ⊢ b ∶ B)
-          → Γ ⊢ substitute_zero A b ≡ substitute_zero A' b type) ∧
+          → Γ ⊢ substitute_zero b A ≡ substitute_zero b A' type) ∧
       (∀ {n : Nat} {Γ' : Ctx n} {C c c' : Tm n}, (Γ' ⊢ c ≡ c' ∶ C) →
         ∀ (m : Nat) (Γ : Ctx m) (eqM : n = m + 1) (b B : Tm m) (a a' A : Tm (m + 1)),
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ c = a → eqM ▸ c' = a' → eqM ▸ C = A → (Γ ⊢ b ∶ B)
-        → Γ ⊢ substitute_zero a b ≡ substitute_zero a' b ∶ substitute_zero A b)
+        → Γ ⊢ substitute_zero b a ≡ substitute_zero b a' ∶ substitute_zero b A)
       by
         any_goals
           repeat' (apply And.intro)
@@ -104,23 +104,23 @@ theorem substitution :
       (motive_1 := fun {n} Γ' _hiC =>
         ∀ m (Γ : Ctx m) (eqM : n = m + 2) b B A,
         eqM ▸ Γ' = Γ ⬝ B ⬝ A → (Γ ⊢ b ∶ B)
-        → (Γ ⬝ (substitute_zero A b)) ctx)
+        → (Γ ⬝ (substitute_zero b A)) ctx)
       (motive_2 := fun {n} Γ' A' _hA =>
         ∀ m (Γ : Ctx m) (eqM : n = m + 1) b B A,
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ A' = A → (Γ ⊢ b ∶ B)
-        → Γ ⊢ (substitute_zero A b) type)
+        → Γ ⊢ (substitute_zero b A) type)
       (motive_3 := fun {n} Γ' a' A' haA =>
         ∀ m (Γ : Ctx m) (eqM : n = m + 1) b B a A,
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ a' = a → eqM ▸ A' = A → (Γ ⊢ b ∶ B)
-        → Γ ⊢ (substitute_zero a b) ∶ (substitute_zero A b))
+        → Γ ⊢ (substitute_zero b a) ∶ (substitute_zero b A))
       (motive_4 := fun {n} Γ' C C' _hCC =>
         ∀ m (Γ : Ctx m) (eqM : n = m + 1) b B A A',
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ C = A → eqM ▸ C' = A' → (Γ ⊢ b ∶ B)
-        → Γ ⊢ (substitute_zero A b) ≡ (substitute_zero A' b) type)
+        → Γ ⊢ (substitute_zero b A) ≡ (substitute_zero b A') type)
       (motive_5 := fun {n} Γ' c c' C _haaA => 
         ∀ m (Γ : Ctx m) (eqM : n = m + 1) b B a a' A,
         eqM ▸ Γ' = Γ ⬝ B → eqM ▸ c = a → eqM ▸ c' = a' → eqM ▸ C = A → (Γ ⊢ b ∶ B)
-        → Γ ⊢ (substitute_zero a b) ≡ (substitute_zero a' b) ∶ (substitute_zero A b))
+        → Γ ⊢ (substitute_zero b a) ≡ (substitute_zero b a') ∶ (substitute_zero b A))
     case IsCtxEmpty =>
       intro m Γ eqM b B A heqM hbB
       simp [Nat.not_eq_zero_of_lt] at eqM
@@ -231,7 +231,7 @@ theorem substitution :
     any_goals sorry
 
 theorem substitution_ctx : HasType Γ b B → IsCtx (Γ ⬝ B ⬝ A)
-                           → IsCtx (Γ ⬝ (substitute_zero A b)) :=
+                           → IsCtx (Γ ⬝ (substitute_zero b A)) :=
   by
     intro hbB hiCBA
     apply And.left substitution
@@ -240,7 +240,7 @@ theorem substitution_ctx : HasType Γ b B → IsCtx (Γ ⬝ B ⬝ A)
     · apply hbB
 
 theorem substitution_type : HasType Γ b B → IsType (Γ ⬝ B) A 
-                            → IsType Γ (substitute_zero A b) :=
+                            → IsType Γ (substitute_zero b A) :=
   by
     intro hbB hA
     apply And.left (And.right substitution)
@@ -249,7 +249,7 @@ theorem substitution_type : HasType Γ b B → IsType (Γ ⬝ B) A
     · apply hbB
 
 theorem substitution_term : HasType Γ b B → HasType (Γ ⬝ B) a A
-                            → HasType Γ (substitute_zero a b) (substitute_zero A b) :=
+                            → HasType Γ (substitute_zero b a) (substitute_zero b A) :=
   by
     intro hbB haA
     apply And.left (And.right (And.right substitution))
@@ -258,7 +258,7 @@ theorem substitution_term : HasType Γ b B → HasType (Γ ⬝ B) a A
     · apply hbB
 
 theorem substitution_type_eq : HasType Γ b B → IsEqualType (Γ ⬝ B) A A'
-                               → IsEqualType Γ (substitute_zero A b) (substitute_zero A' b) :=
+                               → IsEqualType Γ (substitute_zero b A) (substitute_zero b A') :=
   by
     intro hbB hAA
     apply And.left (And.right (And.right (And.right substitution)))
@@ -268,8 +268,8 @@ theorem substitution_type_eq : HasType Γ b B → IsEqualType (Γ ⬝ B) A A'
 
 
 theorem substitution_term_eq : HasType Γ b B → IsEqualTerm (Γ ⬝ B) a a' A
-                               → IsEqualTerm Γ (substitute_zero a b) (substitute_zero a' b) 
-                                 (substitute_zero A b) :=
+                               → IsEqualTerm Γ (substitute_zero b a) (substitute_zero b a') 
+                                 (substitute_zero b A) :=
   by
     intro hbB haaA
     apply And.right (And.right (And.right (And.right substitution)))
@@ -279,7 +279,7 @@ theorem substitution_term_eq : HasType Γ b B → IsEqualTerm (Γ ⬝ B) a a' A
 
 -- helper
 
-theorem substitution_inv_type : B' = (substitute_zero B a) → IsType Γ B'
+theorem substitution_inv_type : B' = (substitute_zero a B) → IsType Γ B'
                                 → HasType Γ a A
                                 → IsType (Γ ⬝ A) B :=
   by
@@ -288,7 +288,7 @@ theorem substitution_inv_type : B' = (substitute_zero B a) → IsType Γ B'
     | .unit_form hiC => sorry
     | _ => sorry
 
-theorem substitution_inv_type_eq : B' = (substitute_zero B a) → C' = (substitute_zero C a) 
+theorem substitution_inv_type_eq : B' = (substitute_zero a B) → C' = (substitute_zero a C) 
                                 → IsEqualType Γ B' C'
                                 → HasType Γ a A
                                 → IsEqualType (Γ ⬝ A) B C :=
@@ -298,20 +298,17 @@ theorem substitution_inv_type_eq : B' = (substitute_zero B a) → C' = (substitu
 -- B⌈Subst.weak id, a, a', p⌉ type
 theorem substitution_separate_test :
   (substitute (.weak .id, s1, s2, s3) A)
-  = (substitute (.weak .id, s1, s2) (substitute_zero A (weaken (.shift (.shift .id)) s3))) :=
+  = (substitute (.weak .id, s1, s2) (substitute_zero (weaken (.shift (.shift .id)) s3) A)) :=
   by
     simp [substitute_zero]
     sorry
 
--- FIXME: try to find generalized form, think substitution algebra
-
 theorem substitution_separate_degeneralized : -- TODO: is this provable?
   (substitute (.weak .id, s1, s2, s3) A)
-  = substitute_zero
-      (substitute_zero
-        (substitute_zero A (weaken (.shift (.shift .id)) s3))
-      (weaken (.shift .id) s2))
-    s1 :=
+  = substitute_zero s1
+      (substitute_zero (weaken (.shift .id) s2)
+        (substitute_zero (weaken (.shift (.shift .id)) s3) A))
+    :=
   by
     simp [substitute_zero]
     sorry
