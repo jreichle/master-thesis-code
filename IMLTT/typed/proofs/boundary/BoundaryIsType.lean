@@ -56,11 +56,57 @@ theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
       apply boundary_ctx_term hsS
     case pi A B =>
       cases hsS
+      case pi_intro hbB =>
+        apply IsType.pi_form
+        · apply ctx_extr (boundary_ctx_term hbB)
+        · apply boundary_is_type_term hbB
+      case var n Γ A hA hEq =>
+        rw [hEq]
+        apply weakening_type
+        · apply hA
+        · apply hA
+      case unit_elim A a b hA haA hb1 hEq =>
+        rw [hEq]
+        apply substitution_type
+        · apply hb1
+        · apply hA
+      case empty_elim A b hA hb0 hEq =>
+        rw [hEq]
+        apply substitution_type
+        · apply hb0
+        · apply hA
+      case pi_elim A B a haPi haA hEq =>
+        rw [hEq]
+        have hPi := boundary_is_type_term haPi
+        have hPiInv := pi_is_type_inversion hPi
+        apply substitution_type
+        · apply haA
+        · apply And.right hPiInv
+      case sigma_elim hpSi hC hcC hEq =>
+        rw [hEq]
+        apply substitution_type
+        · apply hpSi
+        · apply hC
+      case iden_elim hB hbB hpId hEq =>
+        rw [hEq]
+        sorry
       any_goals sorry
     case sigma A B =>
-      sorry
+      cases hsS
+      case sigma_intro haA hbB =>
+        apply IsType.sigma_form
+        · apply boundary_is_type_term haA
+        · apply substitution_inv_type
+          · rfl
+          · apply boundary_is_type_term hbB
+          · apply haA
+      any_goals sorry
     case iden A a a' =>
       cases hsS
+      case iden_intro haA =>
+        apply IsType.iden_form
+        · apply haA
+        · apply haA
       any_goals sorry
     case univ =>
       constructor
