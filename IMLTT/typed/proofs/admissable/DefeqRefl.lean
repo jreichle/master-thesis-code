@@ -12,7 +12,7 @@ theorem defeq_refl :
     (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A ≡ A type) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → (Γ ⊢ a ≡ a ∶ A) ∧ (Γ ⊢ A ≡ A type)) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A) ∧ (Γ ⊢ A ≡ A type))
+    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A))
   :=
   by
     apply judgment_recursor
@@ -20,7 +20,7 @@ theorem defeq_refl :
       (motive_2 := fun Γ A _hA => Γ ⊢ A ≡ A type)
       (motive_3 := fun Γ a A _haA => (Γ ⊢ a ≡ a ∶ A) ∧ (Γ ⊢ A ≡ A type))
       (motive_4 := fun Γ A A' _hAA => Γ ⊢ A ≡ A' type)
-      (motive_5 := fun Γ a a' A _haaA => (Γ ⊢ a ≡ a' ∶ A) ∧ (Γ ⊢ A ≡ A type))
+      (motive_5 := fun Γ a a' A _haaA => (Γ ⊢ a ≡ a' ∶ A))
     case IsCtxEmpty =>
       apply IsCtx.empty
     case IsCtxExtend =>
@@ -68,7 +68,7 @@ theorem defeq_refl :
       · apply IsEqualTerm.pi_intro_eq
         · apply And.left ihbB
       · apply IsEqualType.pi_form_eq
-        · sorry -- FIXME: won't work
+        · sorry
         · apply And.right ihbB
     case HasTypeSigmaIntro =>
       intro n Γ a A b B haA hbB ihaA ihbB
@@ -172,195 +172,11 @@ theorem defeq_refl :
         · apply And.left ihaA
         · apply hAB
       · sorry -- FIXME: won't work
-
-
--- case IsEqualTypeUnitFormEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝟙 ≡ 𝟙 type
--- 
--- case IsEqualTypeEmptyFormEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝟘 ≡ 𝟘 type
--- 
--- case IsEqualTypePiFormEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
---   Γ ⊢ A ≡ A' type → Γ ⬝ A ⊢ B ≡ B' type → Γ ⊢ A ≡ A' type → Γ ⬝ A ⊢ B ≡ B' type → Γ ⊢ ΠA;B ≡ ΠA';B' type
--- 
--- case IsEqualTypeSigmaFormEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
---   Γ ⊢ A ≡ A' type → Γ ⬝ A ⊢ B ≡ B' type → Γ ⊢ A ≡ A' type → Γ ⬝ A ⊢ B ≡ B' type → Γ ⊢ ΣA;B ≡ ΣA';B' type
--- 
--- case IsEqualTypeIdenFormEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n},
---   Γ ⊢ A ≡ A' type →
---     (Γ ⊢ a₁ ≡ a₂ ∶ A) →
---       (Γ ⊢ a₃ ≡ a₄ ∶ A') →
---         Γ ⊢ A ≡ A' type →
---           (Γ ⊢ a₁ ≡ a₂ ∶ A) ∧ Γ ⊢ A ≡ A type →
---             (Γ ⊢ a₃ ≡ a₄ ∶ A') ∧ Γ ⊢ A' ≡ A' type → Γ ⊢ A ℑ a₁ ≃ a₃ ≡ A' ℑ a₂ ≃ a₄ type
--- 
--- case IsEqualTypeUnivFormEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ U ≡ U type
--- 
--- case IsEqualTypeUnivElimEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, (Γ ⊢ A ≡ A' ∶ U) → (Γ ⊢ A ≡ A' ∶ U) ∧ Γ ⊢ U ≡ U type → Γ ⊢ A ≡ A' type
--- 
--- case IsEqualTermVarEq
--- ⊢ ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
---   Γ ⊢ A type → Γ ⊢ A ≡ A type → (Γ ⬝ A ⊢ v(0) ≡ v(0) ∶ A⌊↑id_⌋) ∧ Γ ⬝ A ⊢ A⌊↑id_⌋ ≡ A⌊↑id_⌋ type
--- 
--- case IsEqualTermUnitComp
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {a : Tm n},
---   Γ ⬝ 𝟙 ⊢ A type →
---     (Γ ⊢ a ∶ substitute_zero A ⋆) →
---       Γ ⬝ 𝟙 ⊢ A ≡ A type →
---         (Γ ⊢ a ≡ a ∶ substitute_zero A ⋆) ∧ Γ ⊢ substitute_zero A ⋆ ≡ substitute_zero A ⋆ type →
---           (Γ ⊢ A.indUnit ⋆ a ≡ a ∶ substitute_zero A ⋆) ∧ Γ ⊢ substitute_zero A ⋆ ≡ substitute_zero A ⋆ type
--- 
--- case IsEqualTermPiComp
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)} {a : Tm n},
---   (Γ ⬝ A ⊢ b ∶ B) →
---     (Γ ⊢ a ∶ A) →
---       (Γ ⬝ A ⊢ b ≡ b ∶ B) ∧ Γ ⬝ A ⊢ B ≡ B type →
---         (Γ ⊢ a ≡ a ∶ A) ∧ Γ ⊢ A ≡ A type →
---           (Γ ⊢ (λA; b)◃a ≡ substitute_zero b a ∶ substitute_zero B a) ∧
---             Γ ⊢ substitute_zero B a ≡ substitute_zero B a type
--- 
--- case IsEqualTermSigmaComp
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
---   (Γ ⊢ a ∶ A) →
---     (Γ ⊢ b ∶ substitute_zero B a) →
---       (Γ ⬝ ΣA;B) ⊢ C type →
---         (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈ₛ↑↑id_, (v(1)&v(0))⌉) →
---           (Γ ⊢ a ≡ a ∶ A) ∧ Γ ⊢ A ≡ A type →
---             (Γ ⊢ b ≡ b ∶ substitute_zero B a) ∧ Γ ⊢ substitute_zero B a ≡ substitute_zero B a type →
---               (Γ ⬝ ΣA;B) ⊢ C ≡ C type →
---                 (Γ ⬝ A ⬝ B ⊢ c ≡ c ∶ C⌈ₛ↑↑id_, (v(1)&v(0))⌉) ∧
---                     Γ ⬝ A ⬝ B ⊢ C⌈ₛ↑↑id_, (v(1)&v(0))⌉ ≡ C⌈ₛ↑↑id_, (v(1)&v(0))⌉ type →
---                   (Γ ⊢ A.indSigma B C c (a&b) ≡ c⌈ₛid_, a, b⌉ ∶ substitute_zero C (a&b)) ∧
---                     Γ ⊢ substitute_zero C (a&b) ≡ substitute_zero C (a&b) type
--- 
--- case IsEqualTermIdenComp
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a : Tm n},
---   (Γ ⬝ A ⬝ (A⌊↑id_⌋) ⬝ A⌊↑↑id_⌋ℑ v(1) ≃ v(0)) ⊢ B type →
---     (Γ ⊢ b ∶ B⌈ₛid_, a, a, A.refl a⌉) →
---       (Γ ⊢ a ∶ A) →
---         (Γ ⬝ A ⬝ (A⌊↑id_⌋) ⬝ A⌊↑↑id_⌋ℑ v(1) ≃ v(0)) ⊢ B ≡ B type →
---           (Γ ⊢ b ≡ b ∶ B⌈ₛid_, a, a, A.refl a⌉) ∧ Γ ⊢ B⌈ₛid_, a, a, A.refl a⌉ ≡ B⌈ₛid_, a, a, A.refl a⌉ type →
---             (Γ ⊢ a ≡ a ∶ A) ∧ Γ ⊢ A ≡ A type →
---               (Γ ⊢ A.j B b a a (A.refl a) ≡ b ∶ B⌈ₛid_, a, a, A.refl a⌉) ∧
---                 Γ ⊢ B⌈ₛid_, a, a, A.refl a⌉ ≡ B⌈ₛid_, a, a, A.refl a⌉ type
--- 
--- case IsEqualTermUnitIntroEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → (Γ ⊢ ⋆ ≡ ⋆ ∶ 𝟙) ∧ Γ ⊢ 𝟙 ≡ 𝟙 type
--- 
--- case IsEqualTermUnitElimEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm (n + 1)} {a a' b b' : Tm n},
---   Γ ⬝ 𝟙 ⊢ A ≡ A' type →
---     (Γ ⊢ a ≡ a' ∶ substitute_zero A ⋆) →
---       (Γ ⊢ b ≡ b' ∶ 𝟙) →
---         Γ ⬝ 𝟙 ⊢ A ≡ A' type →
---           (Γ ⊢ a ≡ a' ∶ substitute_zero A ⋆) ∧ Γ ⊢ substitute_zero A ⋆ ≡ substitute_zero A ⋆ type →
---             (Γ ⊢ b ≡ b' ∶ 𝟙) ∧ Γ ⊢ 𝟙 ≡ 𝟙 type →
---               (Γ ⊢ A.indUnit b a ≡ A'.indUnit b' a' ∶ substitute_zero A b) ∧
---                 Γ ⊢ substitute_zero A b ≡ substitute_zero A b type
--- 
--- case IsEqualTermEmptyElimEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm (n + 1)} {b b' : Tm n},
---   Γ ⬝ 𝟘 ⊢ A ≡ A' type →
---     (Γ ⊢ b ≡ b' ∶ 𝟘) →
---       Γ ⬝ 𝟘 ⊢ A ≡ A' type →
---         (Γ ⊢ b ≡ b' ∶ 𝟘) ∧ Γ ⊢ 𝟘 ≡ 𝟘 type →
---           (Γ ⊢ A.indEmpty b ≡ A'.indEmpty b' ∶ substitute_zero A b) ∧ Γ ⊢ substitute_zero A b ≡ substitute_zero A b type
--- 
--- case IsEqualTermPiIntroEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b b' B : Tm (n + 1)} {A' : Tm n},
---   (Γ ⬝ A ⊢ b ≡ b' ∶ B) → (Γ ⬝ A ⊢ b ≡ b' ∶ B) ∧ Γ ⬝ A ⊢ B ≡ B type → (Γ ⊢ λA; b ≡ λA'; b' ∶ ΠA;B) ∧ Γ ⊢ ΠA;B ≡ ΠA;B type
--- 
--- case IsEqualTermPiElimEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {f f' A : Tm n} {B : Tm (n + 1)} {a a' : Tm n},
---   (Γ ⊢ f ≡ f' ∶ ΠA;B) →
---     (Γ ⊢ a ≡ a' ∶ A) →
---       (Γ ⊢ f ≡ f' ∶ ΠA;B) ∧ Γ ⊢ ΠA;B ≡ ΠA;B type →
---         (Γ ⊢ a ≡ a' ∶ A) ∧ Γ ⊢ A ≡ A type →
---           (Γ ⊢ f◃a ≡ f'◃a' ∶ substitute_zero B a) ∧ Γ ⊢ substitute_zero B a ≡ substitute_zero B a type
--- 
--- case IsEqualTermSigmaIntroEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a a' A b b' : Tm n} {B : Tm (n + 1)},
---   (Γ ⊢ a ≡ a' ∶ A) →
---     (Γ ⊢ b ≡ b' ∶ substitute_zero B a) →
---       (Γ ⊢ a ≡ a' ∶ A) ∧ Γ ⊢ A ≡ A type →
---         (Γ ⊢ b ≡ b' ∶ substitute_zero B a) ∧ Γ ⊢ substitute_zero B a ≡ substitute_zero B a type →
---           (Γ ⊢ a&b ≡ a'&b' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B ≡ ΣA;B type
--- 
--- case IsEqualTermSigmaElimEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
---   {c c' : Tm (n + 1 + 1)},
---   Γ ⊢ ΣA;B ≡ ΣA';B' type →
---     (Γ ⊢ p ≡ p' ∶ ΣA;B) →
---       (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
---         (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈ₛ↑↑id_, (v(1)&v(0))⌉) →
---           Γ ⊢ ΣA;B ≡ ΣA';B' type →
---             (Γ ⊢ p ≡ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B ≡ ΣA;B type →
---               (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
---                 (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈ₛ↑↑id_, (v(1)&v(0))⌉) ∧
---                     Γ ⬝ A ⬝ B ⊢ C⌈ₛ↑↑id_, (v(1)&v(0))⌉ ≡ C⌈ₛ↑↑id_, (v(1)&v(0))⌉ type →
---                   (Γ ⊢ A.indSigma B C c p ≡ A'.indSigma B' C' c' p' ∶ substitute_zero C p) ∧
---                     Γ ⊢ substitute_zero C p ≡ substitute_zero C p type
--- 
--- case IsEqualTermIdenIntroEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' a a' : Tm n},
---   Γ ⊢ A ≡ A' type →
---     (Γ ⊢ a ≡ a' ∶ A) →
---       Γ ⊢ A ≡ A' type →
---         (Γ ⊢ a ≡ a' ∶ A) ∧ Γ ⊢ A ≡ A type → (Γ ⊢ A.refl a ≡ A'.refl a' ∶ A ℑ a ≃ a) ∧ Γ ⊢ A ℑ a ≃ a ≡ A ℑ a ≃ a type
--- 
--- case IsEqualTermIdenElimEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B B' : Tm (n + 1 + 1 + 1)} {b b' a₁ a₃ A' a₂ a₄ p p' : Tm n},
---   (Γ ⬝ A ⬝ (A⌊↑id_⌋) ⬝ A⌊↑↑id_⌋ℑ v(1) ≃ v(0)) ⊢ B ≡ B' type →
---     (Γ ⊢ b ≡ b' ∶ B⌈ₛid_, a₁, a₁, A.refl a₁⌉) →
---       Γ ⊢ A ℑ a₁ ≃ a₃ ≡ A' ℑ a₂ ≃ a₄ type →
---         (Γ ⊢ p ≡ p' ∶ A ℑ a₁ ≃ a₃) →
---           (Γ ⬝ A ⬝ (A⌊↑id_⌋) ⬝ A⌊↑↑id_⌋ℑ v(1) ≃ v(0)) ⊢ B ≡ B' type →
---             (Γ ⊢ b ≡ b' ∶ B⌈ₛid_, a₁, a₁, A.refl a₁⌉) ∧
---                 Γ ⊢ B⌈ₛid_, a₁, a₁, A.refl a₁⌉ ≡ B⌈ₛid_, a₁, a₁, A.refl a₁⌉ type →
---               Γ ⊢ A ℑ a₁ ≃ a₃ ≡ A' ℑ a₂ ≃ a₄ type →
---                 (Γ ⊢ p ≡ p' ∶ A ℑ a₁ ≃ a₃) ∧ Γ ⊢ A ℑ a₁ ≃ a₃ ≡ A ℑ a₁ ≃ a₃ type →
---                   (Γ ⊢ A.j B b a₁ a₃ p ≡ A'.j B' b' a₂ a₄ p' ∶ B⌈ₛid_, a₁, a₃, p⌉) ∧
---                     Γ ⊢ B⌈ₛid_, a₁, a₃, p⌉ ≡ B⌈ₛid_, a₁, a₃, p⌉ type
--- 
--- case IsEqualTermUnivUnitEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → (Γ ⊢ 𝟙 ≡ 𝟙 ∶ U) ∧ Γ ⊢ U ≡ U type
--- 
--- case IsEqualTermUnivEmptyEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → (Γ ⊢ 𝟘 ≡ 𝟘 ∶ U) ∧ Γ ⊢ U ≡ U type
--- 
--- case IsEqualTermUnivPiEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
---   (Γ ⊢ A ≡ A' ∶ U) →
---     (Γ ⬝ A ⊢ B ≡ B' ∶ U) →
---       (Γ ⊢ A ≡ A' ∶ U) ∧ Γ ⊢ U ≡ U type →
---         (Γ ⬝ A ⊢ B ≡ B' ∶ U) ∧ Γ ⬝ A ⊢ U ≡ U type → (Γ ⊢ ΠA;B ≡ ΠA';B' ∶ U) ∧ Γ ⊢ U ≡ U type
--- 
--- case IsEqualTermUnivSigmaEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
---   (Γ ⊢ A ≡ A' ∶ U) →
---     (Γ ⬝ A ⊢ B ≡ B' ∶ U) →
---       (Γ ⊢ A ≡ A' ∶ U) ∧ Γ ⊢ U ≡ U type →
---         (Γ ⬝ A ⊢ B ≡ B' ∶ U) ∧ Γ ⬝ A ⊢ U ≡ U type → (Γ ⊢ ΣA;B ≡ ΣA';B' ∶ U) ∧ Γ ⊢ U ≡ U type
--- 
--- case IsEqualTermUnivIdenEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A A' a₁ a₂ a₃ a₄ : Tm n},
---   (Γ ⊢ A ≡ A' ∶ U) →
---     (Γ ⊢ a₁ ≡ a₂ ∶ A) →
---       (Γ ⊢ a₃ ≡ a₄ ∶ A) →
---         (Γ ⊢ A ≡ A' ∶ U) ∧ Γ ⊢ U ≡ U type →
---           (Γ ⊢ a₁ ≡ a₂ ∶ A) ∧ Γ ⊢ A ≡ A type →
---             (Γ ⊢ a₃ ≡ a₄ ∶ A) ∧ Γ ⊢ A ≡ A type → (Γ ⊢ A ℑ a₁ ≃ a₃ ≡ A' ℑ a₂ ≃ a₄ ∶ U) ∧ Γ ⊢ U ≡ U type
--- 
--- case IsEqualTermTyConvEq
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a b A B : Tm n},
---   (Γ ⊢ a ≡ b ∶ A) →
---     Γ ⊢ A ≡ B type → (Γ ⊢ a ≡ b ∶ A) ∧ Γ ⊢ A ≡ A type → Γ ⊢ A ≡ B type → (Γ ⊢ a ≡ b ∶ B) ∧ Γ ⊢ B ≡ B type
---
+    case IsEqualTermPiComp =>
+      intro n Γ A b B a hbB haA ihbB ihaA
+      apply IsEqualTerm.pi_comp
+      · apply hbB
+      · apply haA
     any_goals sorry
 
 theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
@@ -376,3 +192,31 @@ theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
     -- apply haA
     sorry
 
+
+
+mutual
+  theorem defeq_refl_type_test : IsType Γ A → IsEqualType Γ A A :=
+    by
+      intro hA
+      apply IsType.recOn
+        (motive_1 := fun Γ _hiC => Γ ctx)
+        (motive_2 := fun Γ A _hA => Γ ⊢ A ≡ A type)
+        (motive_3 := fun Γ a A _haA => Γ ⊢ a ∶ A)
+        (motive_4 := fun Γ A A' _hAA => Γ ⊢ A ≡ A' type)
+        (motive_5 := fun Γ a a' A _haaA => Γ ⊢ a ≡ a' ∶ A)
+        hA
+      case iden_form =>
+        intro n Γ a A a' haA haA ihaA ihaja
+        apply IsEqualType.iden_form_eq
+        · sorry
+        · sorry
+        · sorry
+      any_goals sorry
+
+  theorem defeq_refl_term_test : HasType Γ a A → IsEqualTerm Γ a a A :=
+    by
+      intro haA
+      -- apply And.left (And.left (And.right (And.right defeq_refl)))
+      -- apply haA
+      sorry
+end
