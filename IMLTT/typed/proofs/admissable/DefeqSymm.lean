@@ -7,7 +7,8 @@ import IMLTT.typed.proofs.admissable.Contexts
 
 import aesop
 
-theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
+theorem defeq_symm_term : 
+    (Γ ⊢ a ≡ b ∶ A) → Γ ⊢ b ≡ a ∶ A :=
   by
     intro habA
     match habA with
@@ -32,7 +33,8 @@ theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .univ_iden_eq hAAU haaA haaA' => sorry
     | .ty_conv_eq habA hAB => sorry
 
-theorem defeq_symm_type : IsEqualType Γ A B → IsEqualType Γ B A :=
+theorem defeq_symm_type : 
+    Γ ⊢ A ≡ B type → Γ ⊢ B ≡ A type :=
   fun hABet : IsEqualType Γ A B ↦
     match hABet with
     | .unit_form_eq hic =>

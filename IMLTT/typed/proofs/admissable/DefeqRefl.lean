@@ -11,7 +11,8 @@ import IMLTT.typed.proofs.boundary.BoundaryIsType
 import aesop
 
 mutual
-  theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
+  theorem defeq_refl_type : 
+      Γ ⊢ A type → Γ ⊢ A ≡ A type :=
     by
       intro hA
       match A with
@@ -51,7 +52,8 @@ mutual
       | .refl A a => sorry
       | .j A B b a a' p => sorry
 
-  theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
+  theorem defeq_refl_term : 
+      (Γ ⊢ a ∶ A) → Γ ⊢ a ≡ a ∶ A :=
     by
       intro haA
       sorry
@@ -177,13 +179,13 @@ theorem defeq_refl :
       · apply And.right ihAU
     any_goals sorry
 
-theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
+theorem defeq_refl_type_old : IsType Γ A → IsEqualType Γ A A :=
   by
     intro hA
     apply (And.left (And.right defeq_refl))
     apply hA
 
-theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
+theorem defeq_refl_term_old : HasType Γ a A → IsEqualTerm Γ a a A :=
   by
     intro haA
     -- apply And.left (And.left (And.right (And.right defeq_refl)))

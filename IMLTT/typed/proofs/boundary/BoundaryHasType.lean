@@ -47,13 +47,15 @@ theorem boundary_has_type :
         | intro a
         | aesop
 
-theorem boundary_is_type_type_eq : IsEqualType Γ A A' → IsType Γ A :=
+theorem boundary_is_type_type_eq : 
+    Γ ⊢ A ≡ A' type → Γ ⊢ A type :=
   by
     intro hAA
     apply (And.left (And.right (And.right (And.right boundary_has_type))))
     apply hAA
 
-theorem boundary_has_type_term_eq : IsEqualTerm Γ a a' A → HasType Γ a A :=
+theorem boundary_has_type_term_eq : 
+    (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ∶ A :=
   by
     intro haaA
     apply (And.right (And.right (And.right (And.right boundary_has_type))))

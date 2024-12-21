@@ -7,8 +7,8 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
-theorem og_weak : HasType Γ (.var i) A → IsType Γ B
-                  → HasType (Γ ⬝ B) (.var (.succ i)) (weaken (.shift .id) A) :=
+theorem og_weak : 
+    (Γ ⊢ v(i) ∶ A) → Γ ⊢ B type → Γ ⬝ B ⊢ v(.succ i) ∶ A⌊↑ₚidₚ⌋ :=
   by
     intro hiA hB
     match hB with
@@ -52,8 +52,8 @@ theorem weakening :
       · sorry
     any_goals sorry
 
-theorem weakening_ctx : IsCtx (Γ ⬝ A) → IsType Γ B
-                        → IsCtx (Γ ⬝ B ⬝ (weaken (.shift .id) A)) :=
+theorem weakening_ctx : 
+    Γ ⬝ A ctx → Γ ⊢ B type → Γ ⬝ B ⬝ A⌊↑ₚidₚ⌋ ctx :=
   by
     intro hiCA hB
     apply And.left weakening
@@ -61,8 +61,8 @@ theorem weakening_ctx : IsCtx (Γ ⬝ A) → IsType Γ B
     · apply hiCA
     · apply hB
 
-theorem weakening_type : IsType Γ A → IsType Γ B
-                         → IsType (Γ ⬝ B) (weaken (.shift .id) A) :=
+theorem weakening_type : 
+    Γ ⊢ A type → Γ ⊢ B type → Γ ⬝ B ⊢ A⌊↑ₚidₚ⌋ type :=
   by
     intro hA hB
     apply And.left (And.right weakening)
@@ -70,28 +70,24 @@ theorem weakening_type : IsType Γ A → IsType Γ B
     · apply hB
 
 
-theorem weakening_term : HasType Γ a A → IsType Γ B
-                         → HasType (Γ ⬝ B) (weaken (.shift .id) a) 
-                           (weaken (.shift .id) A) :=
+theorem weakening_term : 
+    (Γ ⊢ a ∶ A) → Γ ⊢ B type → Γ ⬝ B ⊢ a⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋ :=
   by
     intro haA hB
     apply And.left (And.right (And.right weakening))
     · apply haA
     · apply hB
 
-theorem weakening_type_eq : IsEqualType Γ A A' → IsType Γ B
-                            → IsEqualType (Γ ⬝ B) (weaken (.shift .id) A)
-                              (weaken (.shift .id) A') :=
+theorem weakening_type_eq : 
+    Γ ⊢ A ≡ A' type → Γ ⊢ B type → Γ ⬝ B ⊢ A⌊↑ₚidₚ⌋ ≡ A'⌊↑ₚidₚ⌋ type :=
   by
     intro hAA hB
     apply And.left (And.right (And.right (And.right weakening)))
     · apply hAA
     · apply hB
 
-theorem weakening_term_eq : IsEqualTerm Γ a a' A → IsType Γ B
-                            → IsEqualTerm (Γ ⬝ B) (weaken (.shift .id) a)
-                              (weaken (.shift .id) a')
-                              (weaken (.shift .id) A) :=
+theorem weakening_term_eq : 
+    (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ B type → Γ ⬝ B ⊢ a⌊↑ₚidₚ⌋ ≡ a'⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋ :=
   by
     intro haaA hB
     apply And.right (And.right (And.right (And.right weakening)))

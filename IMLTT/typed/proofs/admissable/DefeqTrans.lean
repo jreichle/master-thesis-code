@@ -8,7 +8,8 @@ import IMLTT.typed.proofs.admissable.DefeqSymm
 
 import aesop
 
-theorem defeq_term_trans : IsEqualTerm Γ a b A → IsEqualTerm Γ b c A → IsEqualTerm Γ a c A :=
+theorem defeq_term_trans : 
+    (Γ ⊢ a ≡ b ∶ A) → (Γ ⊢ b ≡ c ∶ A) → Γ ⊢ a ≡ c ∶ A :=
   by
     intro habA hbcA
     sorry
@@ -30,7 +31,8 @@ theorem defeq_term_trans : IsEqualTerm Γ a b A → IsEqualTerm Γ b c A → IsE
     -- | .ty_conv_eq habA hAB => sorry
 
 
-theorem defeq_type_trans : IsEqualType Γ A B → IsEqualType Γ B C → IsEqualType Γ A C :=
+theorem defeq_type_trans : 
+    Γ ⊢ A ≡ B type → Γ ⊢ B ≡ C type → Γ ⊢ A ≡ C type :=
   fun hAB : IsEqualType Γ A B ↦
     fun hBC : IsEqualType Γ B C ↦
     match hAB with

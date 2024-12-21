@@ -9,13 +9,15 @@ import aesop
 
 /- # helper -/
 
-theorem ctx_decr : IsCtx (Γ ⬝ A) → IsCtx Γ :=
+theorem ctx_decr :
+    Γ ⬝ A ctx → Γ ctx :=
   by
     intro hiCA
     match hiCA with
     | .extend hiC _ => apply hiC
 
-theorem ctx_decr_eq : Γ ⬝ A = Γ' ⬝ A' ↔ Γ = Γ' ∧ A = A' :=
+theorem ctx_decr_eq :
+    Γ ⬝ A = Γ' ⬝ A' ↔ Γ = Γ' ∧ A = A' :=
   by
     apply Iff.intro
     · intro hiCeq
@@ -27,7 +29,8 @@ theorem ctx_decr_eq : Γ ⬝ A = Γ' ⬝ A' ↔ Γ = Γ' ∧ A = A' :=
     · intro h
       simp [h]
 
-theorem ctx_extr : IsCtx (Γ ⬝ A) → IsType Γ A :=
+theorem ctx_extr :
+    Γ ⬝ A ctx → Γ ⊢ A type :=
   by
     intro hiCA
     match hiCA with
@@ -57,22 +60,26 @@ theorem boundary_ctx :
       apply ctx_decr hiCA
     all_goals aesop
 
-theorem boundary_ctx_type : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ctx :=
+theorem boundary_ctx_type : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, 
+    Γ ⊢ A type → Γ ctx :=
   by
     intro n Γ A
     apply (And.left (And.right boundary_ctx))
 
-theorem boundary_ctx_term : (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → Γ ctx) :=
+theorem boundary_ctx_term : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+    (Γ ⊢ a ∶ A) → Γ ctx :=
   by
     intro n Γ A a
     apply (And.left (And.right (And.right boundary_ctx)))
 
-theorem boundary_ctx_type_eq : (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ctx) :=
+theorem boundary_ctx_type_eq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, 
+    Γ ⊢ A ≡ A' type → Γ ctx :=
   by
     intro n Γ A A'
     apply (And.left (And.right (And.right (And.right boundary_ctx))))
 
-theorem boundary_ctx_term_eq : (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ctx) :=
+theorem boundary_ctx_term_eq : ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, 
+    (Γ ⊢ a ≡ a' ∶ A) → Γ ctx :=
   by
     intro n Γ A a a'
     apply (And.right (And.right (And.right (And.right boundary_ctx))))

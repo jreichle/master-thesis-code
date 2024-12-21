@@ -14,12 +14,12 @@ set_option diagnostics true
 set_option maxHeartbeats 1000000
 
 theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
-    HasType Γ s S → IsType Γ S := 
+    (Γ ⊢ s ∶ S) → Γ ⊢ S type := 
   by
     sorry
 
 theorem boundary_is_type_term_eq {n : Nat} {Γ : Ctx n} {s s' S : Tm n} :
-    IsEqualTerm Γ s s' S → IsType Γ S :=
+    (Γ ⊢ s ≡ s' ∶ S) → Γ ⊢ S type :=
   by
     intro hssS
     have hsS := boundary_has_type_term_eq hssS

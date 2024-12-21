@@ -3,8 +3,7 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
 theorem weakening_var_lift {ρ ρ' : Weak m n} :
-    (∀x, weaken_var ρ x = weaken_var ρ' x)
-    → (∀x, weaken_var (.lift ρ) x = weaken_var (.lift ρ') x) :=
+    (∀x, x⌊ρ⌋ᵥ = x⌊ρ'⌋ᵥ) → (∀x, x⌊⇑ₚρ⌋ᵥ = x⌊⇑ₚρ'⌋ᵥ) :=
   by
     intro h x
     cases x with
@@ -16,8 +15,8 @@ theorem weakening_var_lift {ρ ρ' : Weak m n} :
         apply h
 
 theorem weakening_var_lift_n {ρ ρ' : Weak m n}:
-    (∀x, weaken_var ρ x = weaken_var ρ' x)
-    → (∀j {x: Fin (n + j)}, weaken_var (lift_weak_n j ρ) x = weaken_var (lift_weak_n j ρ') x) :=
+    (∀x, x⌊ρ⌋ᵥ = x⌊ρ'⌋ᵥ)
+    → (∀j {x: Fin (n + j)}, x⌊j ₙ⇑ₚ ρ⌋ᵥ = x⌊j ₙ⇑ₚ ρ'⌋ᵥ) :=
   by
     intro h x n
     cases x with
@@ -31,8 +30,7 @@ theorem weakening_var_lift_n {ρ ρ' : Weak m n}:
       apply h
 
 theorem weakening_var_weaken :
-    (∀ i, weaken_var ρ i = weaken_var ρ' i)
-    → (∀ t, weaken ρ t = weaken ρ' t) :=
+    (∀ x, x⌊ρ⌋ᵥ = x⌊ρ'⌋ᵥ) → (∀ t, t⌊ρ⌋ = t⌊ρ'⌋) :=
   by
     intro h t
     match t with
@@ -134,7 +132,7 @@ theorem weakening_var_weaken :
               · apply weakening_var_weaken h
 
 theorem weakening_var_lift_id {n : Nat} {x : Fin (n + 1)} :
-    weaken_var (.lift .id) x = (weaken_var .id x) :=
+    x⌊⇑ₚidₚ⌋ᵥ = x⌊idₚ⌋ᵥ :=
   by
     match x with
     | .mk i h =>
@@ -143,7 +141,7 @@ theorem weakening_var_lift_id {n : Nat} {x : Fin (n + 1)} :
       | i' + 1 => rfl
 
 theorem weakening_var_lift_n_id {n m : Nat} {x : Fin (n + m)} :
-    weaken_var (lift_weak_n m .id) x = (weaken_var .id x) :=
+    x⌊m ₙ⇑ₚidₚ⌋ᵥ = x⌊idₚ⌋ᵥ :=
   by
     match m with
     | 0 => rfl
@@ -164,7 +162,7 @@ theorem weakening_var_id :
     simp [weaken_var]
 
 theorem weakening_id :
-    ∀{t : Tm n}, weaken .id t = t :=
+    ∀ {t : Tm n}, t⌊idₚ⌋ = t :=
   by
     intro t
     match t with
@@ -290,7 +288,7 @@ theorem weakening_id :
               · apply weakening_id
 
 theorem weakening_lift_id {t : Tm (n + 1)} : 
-    weaken (.lift .id) t = t :=
+    t⌊⇑ₚidₚ⌋ = t :=
   by
     have h :=  weakening_id (t := t)
     rw (config := {occs := .pos [2]}) [←h]
@@ -299,7 +297,7 @@ theorem weakening_lift_id {t : Tm (n + 1)} :
     apply weakening_var_lift_id
 
 theorem weakening_var_comp {ρ : Weak l m} {ρ' : Weak m n} {x : Fin n} :
-    weaken_var ρ (weaken_var ρ' x) = weaken_var (comp_weaken ρ ρ') x :=
+    x⌊ρ'⌋ᵥ⌊ρ⌋ᵥ = x⌊ρ ₚ∘ₚρ'⌋ᵥ :=
   by
     induction ρ with
     | id =>
@@ -330,7 +328,7 @@ theorem weakening_var_comp {ρ : Weak l m} {ρ' : Weak m n} {x : Fin n} :
             rfl
 
 theorem weakening_comp {ρ : Weak l m} {ρ' : Weak m n} {t : Tm n} :
-    weaken ρ (weaken ρ' t) = weaken (comp_weaken ρ ρ') t :=
+    t⌊ρ'⌋⌊ρ⌋ = t⌊ρ ₚ∘ₚρ'⌋ :=
   by
     match t with
     | .unit =>
@@ -419,7 +417,7 @@ theorem weakening_comp {ρ : Weak l m} {ρ' : Weak m n} {t : Tm n} :
               · apply weakening_comp
 
 theorem weakening_lift_shift_comp {ρ : Weak m n} :
-    comp_weaken (.shift .id) ρ = comp_weaken (.lift ρ) (.shift .id) :=
+    ↑ₚidₚ ₚ∘ₚ ρ = ⇑ₚρ ₚ∘ₚ ↑ₚidₚ :=
   by
     match ρ with
     | .id =>
@@ -430,19 +428,19 @@ theorem weakening_lift_shift_comp {ρ : Weak m n} :
       rfl
 
 theorem weakening_shift_id {ρ : Weak m n} {t : Tm n} :
-    weaken (.shift .id) (weaken ρ t) = weaken (.shift ρ) t :=
+    t⌊ρ⌋⌊↑ₚidₚ⌋ = t⌊↑ₚρ⌋ :=
   by
     apply weakening_comp
 
 theorem weakening_shift_id_lift {ρ : Weak m n} {t : Tm n} :
-    weaken (.lift ρ) (weaken (.shift .id) t) = weaken (.shift ρ) t :=
+    t⌊↑ₚidₚ⌋⌊⇑ₚρ⌋ = t⌊↑ₚρ⌋ :=
   by
     rw [weakening_comp]
     rw [←weakening_lift_shift_comp]
     rfl
 
 theorem weakening_shift_id_outside {ρ : Weak m n} {t : Tm n} :
-    weaken (.shift .id) (weaken ρ t) = weaken (.lift ρ) (weaken (.shift .id) t) :=
+    t⌊ρ⌋⌊↑ₚidₚ⌋ = t⌊↑ₚidₚ⌋⌊⇑ₚρ⌋ :=
   by
     rw [weakening_shift_id_lift]
     rw [weakening_comp]
@@ -451,12 +449,12 @@ theorem weakening_shift_id_outside {ρ : Weak m n} {t : Tm n} :
 -- other (lemmatas needed in some proof)
 
 theorem weakening_shift_double {S : Tm n} {ρ : Weak m n} : 
-    S⌊.shift (.shift ρ)⌋ = S⌊.shift ρ⌋⌊.shift .id⌋ :=
+    S⌊↑ₚ↑ₚρ⌋ = S⌊↑ₚρ⌋⌊↑ₚidₚ⌋ :=
   by
     rw [←weakening_shift_id]
 
 theorem weakening_comp_shift {S : Tm n} {ρ : Weak m n} :
-    S⌊.shift .id ₚ∘ₚ ρ⌋ = S⌊ρ⌋⌊.shift .id⌋ :=
+    S⌊↑ₚidₚ ₚ∘ₚ ρ⌋ = S⌊ρ⌋⌊↑ₚidₚ⌋ :=
   by
     simp [comp_weaken]
     apply (Eq.symm weakening_shift_id)

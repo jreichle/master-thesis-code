@@ -25,16 +25,19 @@ inductive Ctx : Nat → Type where
 -- types
 notation:max "𝟙" => Tm.unit
 notation:max "𝟘" => Tm.empty
-notation:96 "Π" A ";" B => Tm.pi A B
-notation:96 "Σ" A ";" B => Tm.sigma A B
-notation:96 s " ≃" "[" A "] " t => Tm.iden A s t
+notation:98 "Π" A ";" B => Tm.pi A B
+notation:98 "Σ" A ";" B => Tm.sigma A B
+notation:98 s " ≃" "[" A "] " t => Tm.iden A s t
 notation:max "𝒰" => Tm.univ
 -- terms
 notation:max "v(" x ")" => Tm.var x
 notation:max "⋆" => Tm.tt
-notation:96 "λ" A "; " b => Tm.lam A b
-infixl:96 "◃" => Tm.app
-infixl:96 "&" => Tm.pairSigma
+notation:98 "λ" A "; " b => Tm.lam A b
+infixl:98 "◃" => Tm.app
+infixl:98 "&" => Tm.pairSigma
+
+notation:max "ε" => Ctx.empty
+infixl:94 " ⬝ " => Ctx.extend
 
 instance : Coe (Fin n) (Tm n) where
   coe n := .var n
@@ -62,6 +65,3 @@ instance : Coe (Fin n) (Tm n) where
 --       simp [leq_add])
 --     )
 -- infixl:65 "; " => concat_ctx
-
-notation:max "ε" => Ctx.empty
-infixl:95 " ⬝ " => Ctx.extend

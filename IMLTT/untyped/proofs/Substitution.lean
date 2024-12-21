@@ -4,8 +4,7 @@ import IMLTT.untyped.Substitution
 import IMLTT.untyped.proofs.Weakening
 
 theorem substitution_var_lift {σ σ' : Subst m n} :
-    (∀x, substitute σ (.var x) = substitute σ' (.var x))
-    → (∀x, substitute (.lift σ) (.var x) = substitute (.lift σ') (.var x)):=
+    (∀ (x : Fin n), v(x)⌈σ⌉ = v(x)⌈σ'⌉) → ∀ (x : Fin (n + 1)), v(x)⌈⇑ₛσ⌉ = v(x)⌈⇑ₛσ'⌉ :=
   by
     intro h x
     cases x with
@@ -18,8 +17,7 @@ theorem substitution_var_lift {σ σ' : Subst m n} :
 
 
 theorem substitution_var_lift_n {σ σ' : Subst m n} :
-    (∀x, substitute σ (.var x) = substitute σ' (.var x))
-    → (∀x, substitute (lift_subst_n l σ) (.var x) = substitute (lift_subst_n l σ') (.var x)) :=
+    (∀ (x : Fin n), v(x)⌈σ⌉ = v(x)⌈σ'⌉) → ∀ (x : Fin (n + l)), v(x)⌈l ₙ⇑ₛσ⌉ = v(x)⌈l ₙ⇑ₛσ'⌉ :=
   by
     intro h x
     cases l with
@@ -39,8 +37,7 @@ theorem substitution_var_lift_n {σ σ' : Subst m n} :
           apply h
 
 theorem substitution_var_substitute {σ σ' : Subst m n} :
-    (∀x, substitute σ (.var x) = substitute σ' (.var x))
-    → (∀t, substitute σ t = substitute σ' t) :=
+    (∀ (x : Fin n), v(x)⌈σ⌉ = v(x)⌈σ'⌉) → ∀ (t : Tm n), t⌈σ⌉ = t⌈σ'⌉ :=
   by
     intro h t
     match t with
@@ -138,7 +135,7 @@ theorem substitution_var_substitute {σ σ' : Subst m n} :
               · apply substitution_var_substitute h
 
 theorem substitution_var_lift_id {x : Fin (n + 1)} :
-    substitute (.lift (.weak .id)) (.var x) = substitute (.weak .id) (.var x) :=
+    v(x)⌈⇑ₛ(ₛidₚ)⌉ = v(x)⌈ₛidₚ⌉ :=
   by
     match x with
     | .mk i h =>
@@ -147,7 +144,7 @@ theorem substitution_var_lift_id {x : Fin (n + 1)} :
       | i' + 1 => rfl
 
 theorem substitution_var_lift_n_id {n m : Nat} {x : Fin (n + m)} :
-    substitute (lift_subst_n m (.weak .id)) (.var x) = substitute (.weak .id) (.var x) :=
+    v(x)⌈m ₙ⇑ₛ(ₛidₚ)⌉ = v(x)⌈ₛidₚ⌉ :=
   by
     match m with
     | 0 => rfl
@@ -161,7 +158,7 @@ theorem substitution_var_lift_n_id {n m : Nat} {x : Fin (n + m)} :
           apply congrArg shift_tm h
 
 theorem substitution_id {t : Tm n} :
-    substitute (.weak .id) t = t :=
+    t⌈ₛidₚ⌉ = t :=
   by
     match t with
     | .unit =>
@@ -287,15 +284,14 @@ theorem substitution_id {t : Tm n} :
 
 
 theorem substitution_weakening {ρ : Weak m n} {x : Fin n} :
-    substitute (.weak ρ) x = weaken ρ x :=
+    v(x)⌈ₛρ⌉ = v(x)⌊ρ⌋ :=
   by
     simp [weaken]
     simp [substitute]
     rfl
 
 theorem substitution_conv_lift_id :
-    ∀x, substitute (.weak (.lift (.id : Weak n n))) (.var x) 
-      = substitute (.lift (.weak .id)) (.var x) :=
+    ∀ (x : Fin (n + 1)), v(x)⌈ₛ⇑ₚidₚ⌉ = v(x)⌈⇑ₛ(ₛidₚ)⌉ :=
   by
     intro x
     simp [substitute]
@@ -308,7 +304,7 @@ theorem substitution_conv_lift_id :
         rfl
 
 theorem substitution_lift_id {t : Tm (n + 1)} :
-    substitute (.weak (.lift .id)) t = t :=
+    t⌈ₛ⇑ₚidₚ⌉ = t :=
   by
     have h := substitution_id (t := t)
     rw (config := {occs := .pos [2]}) [←h]
@@ -318,15 +314,12 @@ theorem substitution_lift_id {t : Tm (n + 1)} :
     apply substitution_conv_lift_id
 
 theorem substitution_lift_comp_ρσ {t : Tm (n + 1)} :
-    (substitute (comp_weaken_substitute (.lift ρ) (.lift σ)) t)
-    = substitute (.lift (comp_weaken_substitute ρ σ)) t :=
+    t⌈⇑ₚρ ₚ∘ₛ⇑ₛσ⌉ = t⌈⇑ₛ(ρ ₚ∘ₛσ)⌉ :=
   by
     simp [comp_weaken_substitute]
 
 theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (z + n + 1)} :
-    substitute (comp_weaken_substitute (.lift (lift_weak_n n ρ)) (.lift (lift_subst_n n σ))) 
-                (.var x)
-    = substitute (.lift (lift_subst_n n (comp_weaken_substitute ρ σ))) (.var x) :=
+    v(x)⌈⇑ₚ n ₙ⇑ₚρ ₚ∘ₛ⇑ₛ n ₙ⇑ₛσ⌉ = v(x)⌈⇑ₛ n ₙ⇑ₛ(ρ ₚ∘ₛσ)⌉ :=
   by
     match n with
     | .zero =>
@@ -356,8 +349,7 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (z + n + 1)} :
           apply substitution_var_lift_n_comp_ρσ
 
 theorem substitution_lift_n_comp_ρσ (l : Nat) {t : Tm (n + l)} :
-    (substitute (comp_weaken_substitute (lift_weak_n l ρ) (lift_subst_n l σ)) t)
-    = substitute (lift_subst_n l (comp_weaken_substitute ρ σ)) t :=
+    t⌈l ₙ⇑ₚρ ₚ∘ₛl ₙ⇑ₛσ⌉ = t⌈l ₙ⇑ₛ(ρ ₚ∘ₛσ)⌉ :=
   by
     match l with
     | 0 => 
@@ -370,14 +362,14 @@ theorem substitution_lift_n_comp_ρσ (l : Nat) {t : Tm (n + l)} :
       apply substitution_var_lift_n_comp_ρσ
 
 theorem substitution_shift_id {σ : Subst m n} {x : Fin n} :
-    weaken (.shift .id) (substitute σ x) = substitute (.shift σ) x :=
+    v(x)⌈σ⌉⌊↑ₚidₚ⌋ = v(x)⌈↑ₛσ⌉ :=
   by
     simp [substitute]
     simp [substitute_var]
     rfl
 
 theorem substitution_var_comp_ρσ {ρ : Weak l m} {σ : Subst m n} {x : Fin n} :
-    weaken ρ (substitute σ x) = substitute (comp_weaken_substitute ρ σ) x :=
+    v(x)⌈σ⌉⌊ρ⌋ = v(x)⌈ρ ₚ∘ₛσ⌉ :=
   by
     induction ρ with
     | id =>
@@ -433,8 +425,7 @@ theorem substitution_var_comp_ρσ {ρ : Weak l m} {σ : Subst m n} {x : Fin n} 
 
 
 theorem substitution_comp_ρσ {t : Tm n} :
-    weaken ρ (substitute σ t)
-    = substitute (comp_weaken_substitute ρ σ) t :=
+    t⌈σ⌉⌊ρ⌋ = t⌈ρ ₚ∘ₛσ⌉ :=
   by
     match t with
     | .unit => 
@@ -471,7 +462,8 @@ theorem substitution_comp_ρσ {t : Tm n} :
       rfl
     | .var x =>
       simp [substitute]
-      simp [substitution_var_comp]
+      sorry
+      -- simp [substitution_var_comp]
     | .tt =>
       rfl
     | .indUnit A b a =>
@@ -558,14 +550,12 @@ theorem substitution_comp_ρσ {t : Tm n} :
 
 
 theorem substitution_lift_comp_σρ {t : Tm (n + 1)} :
-    substitute (comp_substitute_weaken (.lift σ) (.lift ρ)) t
-    = substitute (.lift (comp_substitute_weaken σ ρ)) t :=
+    t⌈⇑ₛσ ₛ∘ₚ⇑ₚρ⌉ = t⌈⇑ₛ(σ ₛ∘ₚρ)⌉ :=
   by
     rfl
 
 theorem substitution_var_lift_n_comp_σρ {l : Nat} {x : Fin (n + l + 1)} :
-    substitute (comp_substitute_weaken (.lift (lift_subst_n l σ)) (.lift (lift_weak_n l ρ))) (.var x)
-    = substitute (.lift (lift_subst_n l (comp_substitute_weaken σ ρ))) (.var x) :=
+    v(x)⌈⇑ₛ l ₙ⇑ₛσ ₛ∘ₚ ⇑ₚ l ₙ⇑ₚρ⌉ = v(x)⌈⇑ₛ l ₙ⇑ₛ(σ ₛ∘ₚρ)⌉ :=
   by
     match l with
     | .zero =>
@@ -592,8 +582,7 @@ theorem substitution_var_lift_n_comp_σρ {l : Nat} {x : Fin (n + l + 1)} :
           apply substitution_var_lift_n_comp_σρ
 
 theorem substitution_lift_n_comp_σρ {l : Nat} {t : Tm (n + l)} :
-    substitute (comp_substitute_weaken (lift_subst_n l σ) (lift_weak_n l ρ)) t
-    = substitute (lift_subst_n l (comp_substitute_weaken σ ρ)) t :=
+    t⌈l ₙ⇑ₛσ ₛ∘ₚl ₙ⇑ₚρ⌉ = t⌈l ₙ⇑ₛ(σ ₛ∘ₚρ)⌉ :=
   by
     match l with
     | .zero => rfl
@@ -605,7 +594,7 @@ theorem substitution_lift_n_comp_σρ {l : Nat} {t : Tm (n + l)} :
 
 
 theorem substitution_comp_subst_weaken {t : Tm n} :
-    substitute σ (weaken ρ t) = substitute (comp_substitute_weaken σ ρ) t :=
+    t⌊ρ⌋⌈σ⌉ = t⌈σ ₛ∘ₚρ⌉ :=
   by
     match t with
     | .unit =>

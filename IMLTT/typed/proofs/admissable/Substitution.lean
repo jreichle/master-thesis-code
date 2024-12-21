@@ -7,8 +7,8 @@ import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 import aesop
 
-theorem substitution_univ_id : 
-    .univ = substitute_zero σ 𝒰 :=
+theorem substitution_univ_id :
+    𝒰 = 𝒰⌈σ⌉₁:=
   by
     rw [substitute_zero]
     rw [substitute]
@@ -230,8 +230,8 @@ theorem substitution :
       · rfl
     any_goals sorry
 
-theorem substitution_ctx : HasType Γ b B → IsCtx (Γ ⬝ B ⬝ A)
-                           → IsCtx (Γ ⬝ (substitute_zero b A)) :=
+theorem substitution_ctx : 
+    (Γ ⊢ b ∶ B) → Γ ⬝ B ⬝ A ctx → Γ ⬝ A⌈b⌉₁ ctx :=
   by
     intro hbB hiCBA
     apply And.left substitution
@@ -239,8 +239,7 @@ theorem substitution_ctx : HasType Γ b B → IsCtx (Γ ⬝ B ⬝ A)
     · rfl
     · apply hbB
 
-theorem substitution_type : HasType Γ b B → IsType (Γ ⬝ B) A 
-                            → IsType Γ (substitute_zero b A) :=
+theorem substitution_type : (Γ ⊢ b ∶ B) → Γ ⬝ B ⊢ A type → Γ ⊢ A⌈b⌉₁ type :=
   by
     intro hbB hA
     apply And.left (And.right substitution)
@@ -248,8 +247,8 @@ theorem substitution_type : HasType Γ b B → IsType (Γ ⬝ B) A
     · rfl
     · apply hbB
 
-theorem substitution_term : HasType Γ b B → HasType (Γ ⬝ B) a A
-                            → HasType Γ (substitute_zero b a) (substitute_zero b A) :=
+theorem substitution_term : 
+    (Γ ⊢ b ∶ B) → (Γ ⬝ B ⊢ a ∶ A) → Γ ⊢ a⌈b⌉₁ ∶ A⌈b⌉₁ :=
   by
     intro hbB haA
     apply And.left (And.right (And.right substitution))
@@ -257,8 +256,8 @@ theorem substitution_term : HasType Γ b B → HasType (Γ ⬝ B) a A
     · rfl
     · apply hbB
 
-theorem substitution_type_eq : HasType Γ b B → IsEqualType (Γ ⬝ B) A A'
-                               → IsEqualType Γ (substitute_zero b A) (substitute_zero b A') :=
+theorem substitution_type_eq :
+    (Γ ⊢ b ∶ B) → Γ ⬝ B ⊢ A ≡ A' type → Γ ⊢ A⌈b⌉₁ ≡ A'⌈b⌉₁ type :=
   by
     intro hbB hAA
     apply And.left (And.right (And.right (And.right substitution)))
@@ -267,9 +266,8 @@ theorem substitution_type_eq : HasType Γ b B → IsEqualType (Γ ⬝ B) A A'
     · apply hbB
 
 
-theorem substitution_term_eq : HasType Γ b B → IsEqualTerm (Γ ⬝ B) a a' A
-                               → IsEqualTerm Γ (substitute_zero b a) (substitute_zero b a') 
-                                 (substitute_zero b A) :=
+theorem substitution_term_eq : 
+    (Γ ⊢ b ∶ B) → (Γ ⬝ B ⊢ a ≡ a' ∶ A) → Γ ⊢ a⌈b⌉₁ ≡ a'⌈b⌉₁ ∶ A⌈b⌉₁ :=
   by
     intro hbB haaA
     apply And.right (And.right (And.right (And.right substitution)))
@@ -279,36 +277,28 @@ theorem substitution_term_eq : HasType Γ b B → IsEqualTerm (Γ ⬝ B) a a' A
 
 -- helper
 
-theorem substitution_inv_type : B' = (substitute_zero a B) → IsType Γ B'
-                                → HasType Γ a A
-                                → IsType (Γ ⬝ A) B :=
+theorem substitution_inv_type : 
+    B' = B⌈a⌉₁ → Γ ⊢ B' type → (Γ ⊢ a ∶ A) → Γ ⬝ A ⊢ B type :=
   by
     intro hBeqB' hBs haA
     match hBs with
     | .unit_form hiC => sorry
     | _ => sorry
 
-theorem substitution_inv_type_eq : B' = (substitute_zero a B) → C' = (substitute_zero a C) 
-                                → IsEqualType Γ B' C'
-                                → HasType Γ a A
-                                → IsEqualType (Γ ⬝ A) B C :=
+theorem substitution_inv_type_eq : 
+    B' = B⌈a⌉₁ → C' = C⌈a⌉₁ → Γ ⊢ B' ≡ C' type → (Γ ⊢ a ∶ A) → Γ ⬝ A ⊢ B ≡ C type :=
   by
     sorry
 
 -- B⌈Subst.weak id, a, a', p⌉ type
 theorem substitution_separate_test :
-  (substitute (.weak .id, s1, s2, s3) A)
-  = (substitute (.weak .id, s1, s2) (substitute_zero (weaken (.shift (.shift .id)) s3) A)) :=
+    A⌈(ₛidₚ), s1, s2, s3⌉ = A⌈s3⌊↑ₚ↑ₚidₚ⌋⌉₁⌈(ₛidₚ), s1, s2⌉ :=
   by
     simp [substitute_zero]
     sorry
 
 theorem substitution_separate_degeneralized : -- TODO: is this provable?
-  (substitute (.weak .id, s1, s2, s3) A)
-  = substitute_zero s1
-      (substitute_zero (weaken (.shift .id) s2)
-        (substitute_zero (weaken (.shift (.shift .id)) s3) A))
-    :=
+    A⌈(ₛidₚ), s1, s2, s3⌉ = A⌈s3⌊↑ₚ↑ₚidₚ⌋⌉₁⌈s2⌊↑ₚidₚ⌋⌉₁⌈s1⌉₁ :=
   by
     simp [substitute_zero]
     sorry

@@ -3,7 +3,8 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
-theorem pi_has_type_inversion : HasType Γ (.pi A B) V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰 :=
+theorem pi_has_type_inversion :
+    (Γ ⊢ ΠA;B ∶ V) → (Γ ⊢ A ∶ 𝒰) ∧ Γ ⬝ A ⊢ B ∶ 𝒰 :=
   by
     intro hPiV
     apply HasType.recOn
@@ -17,7 +18,8 @@ theorem pi_has_type_inversion : HasType Γ (.pi A B) V → HasType Γ A 𝒰 ∧
       hPiV
     any_goals aesop
 
-theorem pi_is_type_inversion : IsType Γ (.pi A B) → IsType Γ A ∧ IsType (Γ ⬝ A) B :=
+theorem pi_is_type_inversion : 
+    Γ ⊢ ΠA;B type → Γ ⊢ A type ∧ Γ ⬝ A ⊢ B type :=
   by
     intro hPi
     match hPi with
@@ -29,7 +31,8 @@ theorem pi_is_type_inversion : IsType Γ (.pi A B) → IsType Γ A ∧ IsType (�
       · apply IsType.univ_elim (And.left hAUBU)
       · apply IsType.univ_elim (And.right hAUBU)
 
-theorem sigma_has_type_inversion : HasType Γ (.sigma A B) V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰 :=
+theorem sigma_has_type_inversion : 
+    (Γ ⊢ ΣA;B ∶ V) → (Γ ⊢ A ∶ 𝒰) ∧ Γ ⬝ A ⊢ B ∶ 𝒰 :=
   by
     intro hSiV
     apply HasType.recOn
@@ -43,7 +46,8 @@ theorem sigma_has_type_inversion : HasType Γ (.sigma A B) V → HasType Γ A �
       hSiV
     any_goals aesop
 
-theorem sigma_is_type_inversion : IsType Γ (.sigma A B) → IsType Γ A ∧ IsType (Γ ⬝ A) B :=
+theorem sigma_is_type_inversion : 
+    Γ ⊢ ΣA;B type → Γ ⊢ A type ∧ Γ ⬝ A ⊢ B type :=
   by
     intro hSi
     match hSi with
@@ -57,8 +61,8 @@ theorem sigma_is_type_inversion : IsType Γ (.sigma A B) → IsType Γ A ∧ IsT
 
 set_option maxHeartbeats 1000000
 
-theorem iden_has_type_inversion : HasType Γ (.iden A a a') V 
-                                  → HasType Γ A 𝒰 ∧ HasType Γ a A ∧ HasType Γ a' A :=
+theorem iden_has_type_inversion : 
+    (Γ ⊢ a ≃[A] a' ∶ V) → (Γ ⊢ A ∶ 𝒰) ∧ (Γ ⊢ a ∶ A) ∧ Γ ⊢ a' ∶ A :=
   by
     intro hIdV
     apply HasType.recOn
@@ -79,8 +83,8 @@ theorem iden_has_type_inversion : HasType Γ (.iden A a a') V
       · rfl
     any_goals aesop
 
-theorem iden_is_type_inversion : IsType Γ (.iden A a a') 
-                                 → HasType Γ a A ∧ HasType Γ a' A :=
+theorem iden_is_type_inversion : 
+    Γ ⊢ a ≃[A] a' type → (Γ ⊢ a ∶ A) ∧ Γ ⊢ a' ∶ A :=
   by
     intro hId
     match hId with
