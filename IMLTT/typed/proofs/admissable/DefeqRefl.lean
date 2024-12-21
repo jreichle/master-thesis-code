@@ -1,18 +1,68 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
+import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.Contexts
+import IMLTT.typed.proofs.boundary.BoundaryIsType
 
 import aesop
+
+mutual
+  theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
+    by
+      intro hA
+      match A with
+      | .unit =>
+        have hiC := boundary_ctx_type hA
+        apply IsEqualType.unit_form_eq hiC
+      | .empty =>
+        have hiC := boundary_ctx_type hA
+        apply IsEqualType.empty_form_eq hiC
+      | .pi A B =>
+        have hPiInv := pi_is_type_inversion hA
+        apply IsEqualType.pi_form_eq
+        · apply defeq_refl_type (And.left hPiInv)
+        · apply defeq_refl_type (And.right hPiInv)
+      | .sigma A B =>
+        have hSiInv := sigma_is_type_inversion hA
+        apply IsEqualType.sigma_form_eq
+        · apply defeq_refl_type (And.left hSiInv)
+        · apply defeq_refl_type (And.right hSiInv)
+      | .iden A a a' =>
+        have hIdInv := iden_is_type_inversion hA
+        apply IsEqualType.iden_form_eq
+        · apply defeq_refl_type (boundary_is_type_term (And.left hIdInv))
+        · apply defeq_refl_term (And.left hIdInv)
+        · apply defeq_refl_term (And.right hIdInv)
+      | .univ =>
+        have hiC := boundary_ctx_type hA
+        apply IsEqualType.univ_form_eq hiC
+      | .var x => sorry
+      | .tt => sorry
+      | .indUnit A b a => sorry
+      | .indEmpty A b => sorry
+      | .lam A b => sorry
+      | .app f a => sorry
+      | .pairSigma a b => sorry
+      | .indSigma A B C c p => sorry
+      | .refl A a => sorry
+      | .j A B b a a' p => sorry
+
+  theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
+    by
+      intro haA
+      sorry
+end
 
 theorem defeq_refl :
     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A ≡ A type) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → (Γ ⊢ a ≡ a ∶ A) ∧ (Γ ⊢ A ≡ A type)) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A))
+    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A) ∧ (Γ ⊢ A ≡ A type))
   :=
   by
     apply judgment_recursor
@@ -20,7 +70,7 @@ theorem defeq_refl :
       (motive_2 := fun Γ A _hA => Γ ⊢ A ≡ A type)
       (motive_3 := fun Γ a A _haA => (Γ ⊢ a ≡ a ∶ A) ∧ (Γ ⊢ A ≡ A type))
       (motive_4 := fun Γ A A' _hAA => Γ ⊢ A ≡ A' type)
-      (motive_5 := fun Γ a a' A _haaA => (Γ ⊢ a ≡ a' ∶ A))
+      (motive_5 := fun Γ a a' A _haaA => (Γ ⊢ a ≡ a' ∶ A) ∧ (Γ ⊢ A ≡ A type))
     case IsCtxEmpty =>
       apply IsCtx.empty
     case IsCtxExtend =>
@@ -68,7 +118,7 @@ theorem defeq_refl :
       · apply IsEqualTerm.pi_intro_eq
         · apply And.left ihbB
       · apply IsEqualType.pi_form_eq
-        · sorry
+        · sorry -- FIXME: won't work
         · apply And.right ihbB
     case HasTypeSigmaIntro =>
       intro n Γ a A b B haA hbB ihaA ihbB
@@ -125,58 +175,6 @@ theorem defeq_refl :
         · apply And.left ihaA
         · apply And.left ihaA'
       · apply And.right ihAU
-    case HasTypeUnitElim =>
-      intro n Γ A a b hA haA hb1 ihA ihaA ihb1
-      apply And.intro
-      · apply IsEqualTerm.unit_elim_eq
-        · apply ihA
-        · apply And.left ihaA
-        · apply And.left ihb1
-      · sorry -- just use subst lemma
-    case HasTypeEmptyElim =>
-      intro n Γ A b hA hb0 ihA ihb0
-      apply And.intro
-      · apply IsEqualTerm.empty_elim_eq
-        · apply ihA
-        · apply And.left ihb0
-      · sorry
-    case HasTypePiElim =>
-      intro n Γ f A B a hfPi haA ihfPi ihaA
-      apply And.intro
-      · apply IsEqualTerm.pi_elim_eq
-        · apply And.left ihfPi
-        · apply And.left ihaA
-      · sorry
-    case HasTypeSigmaElim =>
-      intro n Γ A B p C c hpSi hC hcC ihpSi ihC ihcC
-      apply And.intro
-      · apply IsEqualTerm.sigma_elim_eq
-        · apply And.right ihpSi
-        · apply And.left ihpSi
-        · apply ihC
-        · apply And.left ihcC
-      · sorry
-    case HasTypeIdenElim =>
-      intro n Γ A B b a a' p hB hbB hpId ihB ihbB ihpId
-      apply And.intro
-      · apply IsEqualTerm.iden_elim_eq
-        · apply ihB
-        · apply And.left ihbB
-        · apply And.right ihpId
-        · apply And.left ihpId
-      · sorry
-    case HasTypeTyConv =>
-      intro n Γ a A B haA hAB ihaA ihAB
-      apply And.intro
-      · apply IsEqualTerm.ty_conv_eq
-        · apply And.left ihaA
-        · apply hAB
-      · sorry -- FIXME: use symm, trans
-    case IsEqualTermPiComp =>
-      intro n Γ A b B a hbB haA ihbB ihaA
-      apply IsEqualTerm.pi_comp
-      · apply hbB
-      · apply haA
     any_goals sorry
 
 theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
@@ -192,31 +190,3 @@ theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
     -- apply haA
     sorry
 
-
-
-mutual
-  theorem defeq_refl_type_test : IsType Γ A → IsEqualType Γ A A :=
-    by
-      intro hA
-      apply IsType.recOn
-        (motive_1 := fun Γ _hiC => Γ ctx)
-        (motive_2 := fun Γ A _hA => Γ ⊢ A ≡ A type)
-        (motive_3 := fun Γ a A _haA => Γ ⊢ a ∶ A)
-        (motive_4 := fun Γ A A' _hAA => Γ ⊢ A ≡ A' type)
-        (motive_5 := fun Γ a a' A _haaA => Γ ⊢ a ≡ a' ∶ A)
-        hA
-      case iden_form =>
-        intro n Γ a A a' haA haA ihaA ihaja
-        apply IsEqualType.iden_form_eq
-        · sorry
-        · sorry
-        · sorry
-      any_goals sorry
-
-  theorem defeq_refl_term_test : HasType Γ a A → IsEqualTerm Γ a a A :=
-    by
-      intro haA
-      -- apply And.left (And.left (And.right (And.right defeq_refl)))
-      -- apply haA
-      sorry
-end
