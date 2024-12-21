@@ -16,29 +16,7 @@ set_option maxHeartbeats 1000000
 theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
     HasType Γ s S → IsType Γ S := 
   by
-    intro hsS
-    cases S
-    case unit =>
-      constructor
-      apply boundary_ctx_term hsS
-    case empty =>
-      constructor
-      apply boundary_ctx_term hsS
-    case pi A B =>
-      constructor
-      · sorry
-      · sorry
-    case sigma A B =>
-      sorry
-    case iden A a a' =>
-      sorry
-    case univ =>
-      sorry
-    case var x =>
-      sorry
-    case tt =>
-      sorry
-    any_goals sorry
+    sorry
 
 theorem boundary_is_type_term_eq {n : Nat} {Γ : Ctx n} {s s' S : Tm n} :
     IsEqualTerm Γ s s' S → IsType Γ S :=
