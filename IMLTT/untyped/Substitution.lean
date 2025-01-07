@@ -124,5 +124,5 @@ infixl:96 "ₚ∘ₛ" => comp_weaken_substitute
 infixl:96 "ₛ∘ₚ" => comp_substitute_weaken
 infixl:96 "ₛ∘ₛ" => comp_substitute_substitute
 notation:95 A "⌈" σ "⌉" => substitute σ A
-notation:95 A "⌈" σ "⌉ₛ" => substitute_var σ A
+notation:95 A "⌈" σ "⌉ᵥ" => substitute_var σ A
 notation:95 A "⌈" σ "⌉₁" => substitute_zero σ A
