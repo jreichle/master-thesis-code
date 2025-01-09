@@ -10,9 +10,6 @@ import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.boundary.BoundaryHasType
 
-set_option diagnostics true
-set_option maxHeartbeats 1000000
-
 theorem boundary_is_type {n : Nat} {Γ : Ctx n} {S S' : Tm n} :
     IsEqualType Γ S S' → IsType Γ S := 
   by
@@ -89,7 +86,24 @@ theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
         · apply hC
       case iden_elim hB hbB hpId hEq =>
         rw [hEq]
-        sorry
+        rw [substitution_separate_degeneralized]
+        have h := iden_is_type_inversion (boundary_is_type_term hpId)
+        apply substitution_type
+        · apply And.left h
+        · apply substitution_type
+          · apply weakening_term
+            · apply And.right h
+            · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+          · apply substitution_type
+            · rw [weakening_shift_double]
+              apply weakening_term
+              · apply weakening_term
+                · apply hpId
+                · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+              · apply weakening_type
+                · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+                · apply ctx_extr (ctx_decr (ctx_decr (boundary_ctx_type hB)))
+            · sorry -- only adjust hB with a and a' in Id
       any_goals sorry
     case sigma A B =>
       cases hsS
@@ -123,7 +137,6 @@ theorem boundary_is_type_term_eq {n : Nat} {Γ : Ctx n} {s s' S : Tm n} :
     intro hssS
     have hsS := boundary_has_type_term_eq hssS
     apply boundary_is_type_term hsS
-
 
 -- theorem boundary_type :
 --   (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧

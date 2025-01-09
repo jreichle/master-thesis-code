@@ -98,6 +98,7 @@ theorem var_has_type_inversion : HasType Γ v(x) 𝒰 → False :=
     case var hA hEq =>
       sorry
     case ty_conv h1 h2 =>
+      have h := HasType.ty_conv h1 h2
       sorry
 
 theorem var_is_type_inversion : IsType Γ v(x) → False :=

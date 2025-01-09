@@ -41,7 +41,8 @@ mutual
         have hiC := boundary_ctx_type hA
         apply IsEqualType.univ_form_eq hiC
       | .var x =>
-        apply var_is_type_inversion hA
+        have h := var_is_type_inversion hA
+        apply False.elim h
       | .tt => sorry
       | .indUnit A b a => sorry
       | .indEmpty A b => sorry
@@ -102,12 +103,14 @@ theorem defeq_refl :
       intro n Γ A hAU ihAU
       apply IsEqualType.univ_elim_eq (And.left ihAU)
     case HasTypeVar =>
-      intro n Γ A hA ihA
+      intro n Γ A S hA hEq ihA
       apply And.intro
       · apply IsEqualTerm.var_eq hA
-      · apply weakening_type_eq
-        · apply ihA
-        · apply hA
+        sorry
+      · sorry
+      -- · apply weakening_type_eq
+      --   · apply ihA
+      --   · apply hA
     case HasTypeUnitIntro =>
       intro n Γ hiC _ihiC
       apply And.intro
@@ -178,16 +181,16 @@ theorem defeq_refl :
       · apply And.right ihAU
     any_goals sorry
 
-theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
-  by
-    intro hA
-    apply (And.left (And.right defeq_refl))
-    apply hA
-
-theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
-  by
-    intro haA
-    -- apply And.left (And.left (And.right (And.right defeq_refl)))
-    -- apply haA
-    sorry
+-- theorem defeq_refl_type : IsType Γ A → IsEqualType Γ A A :=
+--   by
+--     intro hA
+--     apply (And.left (And.right defeq_refl))
+--     apply hA
+-- 
+-- theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
+--   by
+--     intro haA
+--     -- apply And.left (And.left (And.right (And.right defeq_refl)))
+--     -- apply haA
+--     sorry
 
