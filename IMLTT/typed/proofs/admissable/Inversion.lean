@@ -88,23 +88,3 @@ theorem iden_is_type_inversion : IsType Γ (.iden A a a')
     | .univ_elim hIdU => 
       have h1 := iden_has_type_inversion hIdU
       apply And.right h1
-
--- show that intro and elim terms cannot be types by themselves
-
-theorem var_has_type_inversion : HasType Γ v(x) 𝒰 → False :=
-  by
-    intro h
-    cases h
-    case var hA hEq =>
-      sorry
-    case ty_conv h1 h2 =>
-      have h := HasType.ty_conv h1 h2
-      sorry
-
-theorem var_is_type_inversion : IsType Γ v(x) → False :=
-  by
-    intro h
-    cases h
-    case univ_elim h1 =>
-      apply var_has_type_inversion h1
-

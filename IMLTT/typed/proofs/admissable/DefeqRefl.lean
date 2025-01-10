@@ -41,8 +41,9 @@ mutual
         have hiC := boundary_ctx_type hA
         apply IsEqualType.univ_form_eq hiC
       | .var x =>
-        have h := var_is_type_inversion hA
-        apply False.elim h
+        -- use iden form with Γ ⊢ v(0) ∶ 𝒰
+        -- apply IsEqualType.iden_form -- wrong kind of equality??
+        sorry
       | .tt => sorry
       | .indUnit A b a => sorry
       | .indEmpty A b => sorry
