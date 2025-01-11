@@ -13,8 +13,39 @@ import aesop
 theorem defeq_is_term' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
   by
     intro haaA
-    match haaA with
-    | _ => sorry
+    cases haaA with
+    | var_eq hA hEq =>
+      rw [hEq]
+      apply HasType.var hA rfl
+    | unit_comp hC hcC hEq =>
+      rw [hEq]
+      apply hcC
+    | pi_comp hbB haA hEqs hEqS =>
+      rw [hEqs]
+      rw [hEqS]
+      apply substitution_term
+      · apply haA
+      · apply hbB
+    | sigma_comp haA hbB hC hcC hEqs hEqS =>
+      rw [hEqs]
+      rw [hEqS]
+      sorry
+    | iden_comp hB hbB haA => sorry
+    | unit_intro_eq hiC => sorry
+    | unit_elim_eq hAA haaA hbbUn => sorry
+    | empty_elim_eq hAA hbbEm => sorry
+    | pi_intro_eq hAA => sorry
+    | pi_elim_eq hPiPi haaA hffPi => sorry
+    | sigma_intro_eq hAA hbbB => sorry
+    | sigma_elim_eq hSiSi hppSi hCC hccC => sorry
+    | iden_intro_eq hAA  => sorry
+    | iden_elim_eq hAA hBB hbbB => sorry
+    | ty_conv_eq habA hAB => sorry
+    | univ_unit_eq => sorry
+    | univ_empty_eq => sorry
+    | univ_pi_eq => sorry
+    | univ_sigma_eq => sorry
+    | univ_iden_eq => sorry
 
 theorem context_conv_has_type : HasType (Γ ⬝ A) b B → IsEqualType Γ A A'
                                 → HasType (Γ ⬝ A') b B :=
@@ -75,6 +106,7 @@ mutual
         · sorry
       | _ => sorry
 
+end
 
 --   theorem context_conv_is_equal_type_TEST : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
 --                                             → IsEqualType (Γ ⬝ A') B B' :=
@@ -93,7 +125,6 @@ mutual
 --         · rw [context_extend_eq_type] at hBB
 --           apply hBB
 --         · apply defeq_is_type' hAA
-end
 
 -- theorem context_conv_is_equal_type_gen :
 --     IsEqualType ((Γ ⬝ A); Δ) B B'

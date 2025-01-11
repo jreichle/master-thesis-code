@@ -1,6 +1,7 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.admissable.Contexts
@@ -24,7 +25,7 @@ theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .sigma_intro_eq haaA hbbB => sorry
     | .sigma_elim_eq hSiSi hppSi hCC hccC hEq => sorry
     | .iden_intro_eq hAA haaA  => sorry
-    | .iden_elim_eq hBB hbbB hIdId hppId hEq => sorry
+    | .iden_elim_eq hBB hbbB hIdId hppId hBB' hEq => sorry
     | .univ_unit_eq hiC => sorry
     | .univ_empty_eq hiC => sorry
     | .univ_pi_eq hAAU hBBU => sorry
@@ -67,4 +68,3 @@ theorem defeq_symm_type : IsEqualType Γ A B → IsEqualType Γ B A :=
         apply IsEqualType.univ_elim_eq
         apply defeq_symm_term
         apply hAAU
-

@@ -85,7 +85,9 @@ mutual
     | iden_elim : IsType (((Γ ⬝ A) ⬝ (weaken (.shift .id) A))
                     ⬝ (.iden (weaken (.shift (.shift .id)) A) (.var 1) (.var 0))) B
                   → HasType Γ b (substitute ( .weak .id, a, a, .refl A a) B)
-                  → HasType Γ p (.iden A a a') → B' = substitute (.weak .id, a, a', p) B
+                  → HasType Γ p (.iden A a a')
+                  → IsType Γ (substitute (.weak .id, a, a', p) B)
+                  → B' = substitute (.weak .id, a, a', p) B
                   → HasType Γ (.j A B b a a' p) B'
     -- conversion
     | ty_conv : HasType Γ a A → IsEqualType Γ A B
@@ -167,6 +169,7 @@ mutual
                      → IsEqualTerm Γ b b' (substitute (.weak .id, a₁, a₁, .refl A a₁) B)
                      → IsEqualType Γ (.iden A a₁ a₃) (.iden A' a₂ a₄)
                      → IsEqualTerm Γ p p' (.iden A a₁ a₃)
+                     → IsEqualType Γ (substitute (.weak .id, a₁, a₃, p) B) (substitute (.weak .id, a₂, a₄, p) B')
                      → S = substitute (.weak .id, a₁, a₃, p) B
                      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') S
     | univ_unit_eq : IsCtx Γ

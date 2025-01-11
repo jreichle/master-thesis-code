@@ -90,11 +90,13 @@ theorem judgment_recursor :
     (a_1 : (Γ ⬝ A ⬝ (weaken Weak.id.shift A) ⬝ (weaken Weak.id.shift.shift A).iden v(1) v(0)) ⊢ B type)
     (a_2 : Γ ⊢ b ∶ substitute (Subst.weak .id, a, a, .refl A a) B)
     (a_4 : Γ ⊢ p ∶ A.iden a a')
+    (a_6 : Γ ⊢ (substitute (Subst.weak Weak.id, a, a', p) B) type)
     (a_5 : S = (substitute (Subst.weak Weak.id, a, a', p) B)),
     motive_2 (Γ ⬝ A ⬝ weaken Weak.id.shift A ⬝ (weaken Weak.id.shift.shift A).iden v(1) v(0)) B a_1 
     → motive_3 Γ b (substitute (Subst.weak .id, a, a, .refl A a) B) a_2
-    → motive_3 Γ p (A.iden a a') a_4 
-    → motive_3 Γ (A.j B b a a' p) S (HasType.iden_elim a_1 a_2 a_4 a_5))
+    → motive_3 Γ p (A.iden a a') a_4
+    → motive_2 Γ (substitute (Subst.weak Weak.id, a, a', p) B) a_6
+    → motive_3 Γ (A.j B b a a' p) S (HasType.iden_elim a_1 a_2 a_4 a_6 a_5))
   → (HasTypeTyConv : ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n}
     (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ A ≡ B type), 
     motive_3 Γ a A a_1 → motive_4 Γ A B a_2 
@@ -191,13 +193,15 @@ theorem judgment_recursor :
     (a : (Γ ⬝ A ⬝ weaken Weak.id.shift A ⬝ (weaken Weak.id.shift.shift A).iden v(1) v(0)) ⊢ B ≡ B' type)
     (a_1 : Γ ⊢ b ≡ b' ∶ substitute (Subst.weak Weak.id, a₁, a₁, .refl A a₁) B)
     (a_2 : Γ ⊢ A.iden a₁ a₃ ≡ A'.iden a₂ a₄ type) (a_3 : Γ ⊢ p ≡ p' ∶ A.iden a₁ a₃)
+    (a_5 : IsEqualType Γ (substitute (.weak .id, a₁, a₃, p) B) (substitute (.weak .id, a₂, a₄, p) B'))
     (a_4 : S = (substitute (Subst.weak Weak.id, a₁, a₃, p) B)),
     motive_4 (Γ ⬝ A ⬝ weaken Weak.id.shift A ⬝ (weaken Weak.id.shift.shift A).iden v(1) v(0)) B B' a 
     → motive_5 Γ b b' 
       (substitute (Subst.weak Weak.id, a₁, a₁, .refl A a₁) B) a_1
     → motive_4 Γ (A.iden a₁ a₃) (A'.iden a₂ a₄) a_2 → motive_5 Γ p p' (A.iden a₁ a₃) a_3 
+    → motive_4 Γ (substitute (.weak .id, a₁, a₃, p) B) (substitute (.weak .id, a₂, a₄, p) B') a_5
     → motive_5 Γ (A.j B b a₁ a₃ p) (A'.j B' b' a₂ a₄ p') S
-      (IsEqualTerm.iden_elim_eq a a_1 a_2 a_3 a_4))
+      (IsEqualTerm.iden_elim_eq a a_1 a_2 a_3 a_5 a_4))
   → (IsEqualTermUnivUnitEq : ∀ {n : Nat} {Γ : Ctx n} 
     (a : Γ ctx), motive_1 Γ a → motive_5 Γ 𝟙 𝟙 𝒰 (IsEqualTerm.univ_unit_eq a))
   → (IsEqualTermUnivEmptyEq : ∀ {n : Nat} {Γ : Ctx n} 

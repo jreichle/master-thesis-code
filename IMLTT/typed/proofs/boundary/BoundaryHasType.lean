@@ -35,6 +35,7 @@ theorem boundary_has_type :
       · apply hB
       · apply hbB
       · apply HasType.iden_intro ihaA
+      · sorry
       · apply hEq
     case IsEqualTypeIdenFormEq =>
       intro n Γ A A' a₁ a₂ a₃ a₄
