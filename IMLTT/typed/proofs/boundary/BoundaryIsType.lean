@@ -11,174 +11,6 @@ import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.boundary.BoundaryHasType
 import IMLTT.typed.proofs.admissable.Contexts
 
--- theorem boundary_is_type {n : Nat} {Γ : Ctx n} {S S' : Tm n} :
---     IsEqualType Γ S S' → IsType Γ S := 
---   by
---     intro hSS
---     cases S
---     case unit =>
---       cases hSS with
---       | unit_form_eq h =>
---         constructor
---         exact h
---       | univ_elim_eq h =>
---         constructor
---         sorry
---     case pi A B =>
---       cases hSS with
---       | pi_form_eq hAA' hBB' =>
---         constructor
---         · exact boundary_is_type hAA'
---         · exact boundary_is_type hBB'
---       | univ_elim_eq h =>
---         sorry
---     any_goals sorry
-
--- theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
---     HasType Γ s S → IsType Γ S := 
---   by
---     intro hsS
---     cases S
---     case unit =>
---       constructor
---       apply boundary_ctx_term hsS
---     case empty =>
---       constructor
---       apply boundary_ctx_term hsS
---     case pi A B =>
---       cases hsS
---       case pi_intro hbB =>
---         apply IsType.pi_form
---         · apply ctx_extr (boundary_ctx_term hbB)
---         · apply boundary_is_type_term hbB
---       case var n Γ A hA hEq =>
---         rw [hEq]
---         apply weakening_type
---         · apply hA
---         · apply hA
---       case unit_elim A a b hA haA hb1 hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hb1
---         · apply hA
---       case empty_elim A b hA hb0 hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hb0
---         · apply hA
---       case pi_elim A B a haPi haA hEq =>
---         rw [hEq]
---         have hPi := boundary_is_type_term haPi
---         have hPiInv := pi_is_type_inversion hPi
---         apply substitution_type
---         · apply haA
---         · apply And.right hPiInv
---       case sigma_elim hpSi hC hcC hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hpSi
---         · apply hC
---       case iden_elim hB hbB hpId hB' hEq =>
---         rw [hEq]
---         apply hB'
---       case ty_conv hsA hAPi =>
---         apply defeq_is_type' hAPi
---     case sigma A B =>
---       cases hsS
---       case sigma_intro haA hbB =>
---         apply IsType.sigma_form
---         · apply boundary_is_type_term haA
---         · apply substitution_inv_type
---           · rfl
---           · apply boundary_is_type_term hbB
---           · apply haA
---       case var n Γ A hA hEq =>
---         rw [hEq]
---         apply weakening_type
---         · apply hA
---         · apply hA
---       case unit_elim A a b hA haA hb1 hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hb1
---         · apply hA
---       case empty_elim A b hA hb0 hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hb0
---         · apply hA
---       case pi_elim A B a haPi haA hEq =>
---         rw [hEq]
---         have hPi := boundary_is_type_term haPi
---         have hPiInv := pi_is_type_inversion hPi
---         apply substitution_type
---         · apply haA
---         · apply And.right hPiInv
---       case sigma_elim hpSi hC hcC hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hpSi
---         · apply hC
---       case iden_elim hB hbB hpId hB' hEq =>
---         rw [hEq]
---         apply hB'
---       case ty_conv hsA hAPi =>
---         apply defeq_is_type' hAPi
---     case iden A a a' =>
---       cases hsS
---       case iden_intro haA =>
---         apply IsType.iden_form
---         · apply haA
---         · apply haA
---       case var n Γ A hA hEq =>
---         rw [hEq]
---         apply weakening_type
---         · apply hA
---         · apply hA
---       case unit_elim A a b hA haA hb1 hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hb1
---         · apply hA
---       case empty_elim A b hA hb0 hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hb0
---         · apply hA
---       case pi_elim A B a haPi haA hEq =>
---         rw [hEq]
---         have hPi := boundary_is_type_term haPi
---         have hPiInv := pi_is_type_inversion hPi
---         apply substitution_type
---         · apply haA
---         · apply And.right hPiInv
---       case sigma_elim hpSi hC hcC hEq =>
---         rw [hEq]
---         apply substitution_type
---         · apply hpSi
---         · apply hC
---       case iden_elim hB hbB hpId hB' hEq =>
---         rw [hEq]
---         apply hB'
---       case ty_conv hsA hAPi =>
---         apply defeq_is_type' hAPi
---     case univ =>
---       constructor
---       apply boundary_ctx_term hsS
---     case var x => -- TODO: would need proof that terms cannot be types by themselves
---       cases hsS
---       any_goals sorry
---     case tt =>
---       sorry -- inversion lemma s ∶ ⋆ → false
---     any_goals sorry
-
--- theorem boundary_is_type_term_eq {n : Nat} {Γ : Ctx n} {s s' S : Tm n} :
---     IsEqualTerm Γ s s' S → IsType Γ S :=
---   by
---     intro hssS
---     have hsS := boundary_has_type_term_eq hssS
---     apply boundary_is_type_term hsS
-
 theorem boundary_type :
   (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
   (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A type) ∧
@@ -241,7 +73,7 @@ theorem boundary_type :
       apply hB'
     case HasTypeTyConv =>
       intro n Γ a A B _haA hAB _ihaA _ihAB
-      apply defeq_is_type' hAB
+      apply boundary_is_type_type_eq' hAB
     case IsEqualTypeIdenFormEq =>
       intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA'
       have haA := boundary_has_type_term_eq haaA
@@ -322,5 +154,5 @@ theorem boundary_type :
       apply ihBB'
     case IsEqualTermTyConvEq =>
       intro n Γ a b A B habA hAB ihabA ihA
-      apply defeq_is_type' hAB
+      apply boundary_is_type_type_eq' hAB
     any_goals aesop

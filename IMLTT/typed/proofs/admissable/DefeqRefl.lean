@@ -47,87 +47,112 @@ mutual
 
   theorem defeq_refl_term : HasType Γ a A → IsEqualTerm Γ a a A :=
     by
-      intro haA
-      cases a with
-      | unit =>
-        cases haA with
-        | univ_unit hiC =>
-          apply IsEqualTerm.univ_unit_eq hiC
-        | ty_conv h1A hAA =>
-          apply IsEqualTerm.ty_conv_eq
-          · apply IsEqualTerm.univ_unit_eq (boundary_ctx_term h1A)
-          · sorry
-      | empty =>
-        sorry
-      | pi A B =>
-        sorry
-      | sigma A B =>
-        sorry
-      | iden A a a' =>
-        sorry
-      | univ =>
-        sorry
-      | var x =>
-        sorry
-      | tt =>
-        sorry
-      | indUnit A b a =>
-        sorry
-      | indEmpty =>
-        sorry
-      | lam A b =>
-        sorry
-      | app f a =>
-        sorry
-      | pairSigma a b =>
-        sorry
-      | indSigma A B C c p =>
-        sorry
-      | refl A a =>
-        sorry
-      | j A B b a a' p =>
-        sorry
       -- intro haA
-      -- match haA with
-      -- | .var hA hEq =>
-      --   apply IsEqualTerm.var_eq
-      --   · apply hA
-      --   · apply hEq
-      -- | .unit_intro hiC =>
-      --   apply IsEqualTerm.unit_intro_eq hiC
-      -- | .pi_intro hbB =>
-      --   apply IsEqualTerm.pi_intro_eq
-      --   · apply defeq_refl_term hbB
-      --   · apply IsEqualType.pi_form_eq
-      --     · apply defeq_refl_type (ctx_extr (boundary_ctx_term hbB))
-      --     · sorry -- apply defeq_refl_type (boundary_is_type_term hbB)
-      --   · sorry
-      -- | .sigma_intro haA hbB =>
+      -- cases A with
+      -- | unit =>
+      --   cases haA
+      --   case var hA hEq =>
+      --     constructor
+      --     · exact hA
+      --     · exact hEq
+      --   case unit_intro hiC =>
+      --     constructor
+      --     assumption
+      --   case unit_elim h1 h2 h3 h4 =>
+      --     constructor
+      --     · exact defeq_refl_type h1
+      --     · exact defeq_refl_term h2
+      --     · exact defeq_refl_term h3
+      --     · exact h4
+      --   case empty_elim h1 h2 h3 =>
+      --     constructor
+      --     · exact defeq_refl_type h1
+      --     · exact defeq_refl_term h2
+      --     · exact h3
+      --   case pi_elim h1 h2 h3 =>
+      --     constructor
+      --     · exact defeq_refl_term h1
+      --     · exact defeq_refl_term h2
+      --     · exact h3
+      --   case sigma_elim h1 h2 h3 h4 =>
+      --     constructor
+      --     · have h5 := ctx_extr (boundary_ctx_type h2)
+      --       exact defeq_refl_type h5
+      --     · sorry
+      --     · sorry
+      --     · sorry
+      --     · sorry
+      --   any_goals sorry
+      -- | empty =>
       --   sorry
-      -- | .iden_intro haA =>
+      -- | pi A B =>
       --   sorry
-      -- | .univ_unit hiC =>
+      -- | sigma A B =>
       --   sorry
-      -- | .univ_empty hiC =>
+      -- | iden A a a' =>
       --   sorry
-      -- | .univ_pi hAU hBU =>
+      -- | univ =>
       --   sorry
-      -- | .univ_sigma hAU hBU =>
+      -- | var x =>
       --   sorry
-      -- | .univ_iden hAU haA haA' =>
+      -- | tt =>
       --   sorry
-      -- | .unit_elim hA haA hb1 hEq =>
+      -- | indUnit A b a =>
       --   sorry
-      -- | .empty_elim hA hb0 hEq =>
+      -- | indEmpty =>
       --   sorry
-      -- | .pi_elim hfPi haA hEq =>
+      -- | lam A b =>
       --   sorry
-      -- | .sigma_elim hpSi hC hcC hEq =>
+      -- | app f a =>
       --   sorry
-      -- | .iden_elim hB hbB hpId hB' hEq =>
+      -- | pairSigma a b =>
       --   sorry
-      -- | .ty_conv haA hAB =>
+      -- | indSigma A B C c p =>
       --   sorry
+      -- | refl A a =>
+      --   sorry
+      -- | j A B b a a' p =>
+      --   sorry
+      intro haA
+      match haA with
+      | .var hA hEq =>
+        apply IsEqualTerm.var_eq
+        · apply hA
+        · apply hEq
+      | .unit_intro hiC =>
+        apply IsEqualTerm.unit_intro_eq hiC
+      | .pi_intro hbB =>
+        apply IsEqualTerm.pi_intro_eq
+        · apply defeq_refl_term hbB
+        · apply IsEqualType.pi_form_eq
+          · apply defeq_refl_type (ctx_extr (boundary_ctx_term hbB))
+          · apply defeq_refl_type (boundary_is_type_term hbB)
+      | .sigma_intro haA hbB =>
+        sorry
+      | .iden_intro haA =>
+        sorry
+      | .univ_unit hiC =>
+        sorry
+      | .univ_empty hiC =>
+        sorry
+      | .univ_pi hAU hBU =>
+        sorry
+      | .univ_sigma hAU hBU =>
+        sorry
+      | .univ_iden hAU haA haA' =>
+        sorry
+      | .unit_elim hA haA hb1 hEq =>
+        sorry
+      | .empty_elim hA hb0 hEq =>
+        sorry
+      | .pi_elim hfPi haA hEq =>
+        sorry
+      | .sigma_elim hpSi hC hcC hEq =>
+        sorry
+      | .iden_elim hB hbB hpId hB' hEq =>
+        sorry
+      | .ty_conv haA hAB =>
+        sorry
       
 end
 
