@@ -61,3 +61,15 @@ theorem boundary_has_type_term_eq : IsEqualTerm Γ a a' A → HasType Γ a A :=
     intro haaA
     apply (And.right (And.right (And.right (And.right boundary_has_type))))
     apply haaA
+
+theorem boundary_is_type_type_eq' : IsEqualType Γ A A' → IsType Γ A' :=
+  by
+    intro hAA
+    apply (And.left (And.right (And.right (And.right boundary_has_type))))
+    apply defeq_symm_type hAA
+
+theorem boundary_has_type_term_eq' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
+  by
+    intro haaA
+    apply (And.right (And.right (And.right (And.right boundary_has_type))))
+    apply defeq_symm_term haaA

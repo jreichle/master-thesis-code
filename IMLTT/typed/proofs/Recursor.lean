@@ -121,6 +121,8 @@ theorem judgment_recursor :
     (a : Γ ctx), motive_1 Γ a → motive_4 Γ 𝒰 𝒰 (IsEqualType.univ_form_eq a))
   → (IsEqualTypeUnivElimEq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} 
     (a : Γ ⊢ A ≡ A' ∶ 𝒰), motive_5 Γ A A' 𝒰 a → motive_4 Γ A A' (IsEqualType.univ_elim_eq a))
+  → (IsEqualTypeVarRfl : ∀ {n : Nat} {Γ : Ctx n} {x : Fin n}
+    (a : Γ ⊢ v(x) type), motive_2 Γ v(x) a → motive_4 Γ v(x) v(x) (IsEqualType.var_rfl a))
   → (IsEqualTermVarEq : ∀ {x : Nat} {Γ : Ctx x} {A : Tm x} {S : Tm (x + 1)}
     (a : Γ ⊢ A type) (a_1 : S = (weaken Weak.id.shift A)), motive_2 Γ A a
     → motive_5 (Γ ⬝ A) v(0) v(0) S (IsEqualTerm.var_eq a a_1))
@@ -163,9 +165,10 @@ theorem judgment_recursor :
     (a : (Γ ⬝ 𝟘) ⊢ A ≡ A' type) (a_1 : Γ ⊢ b ≡ b' ∶ 𝟘) (a_2 : S = substitute_zero A b),
     motive_4 (Γ ⬝ 𝟘) A A' a → motive_5 Γ b b' 𝟘 a_1 
     → motive_5 Γ (A.indEmpty b) (A'.indEmpty b') S (IsEqualTerm.empty_elim_eq a a_1 a_2))
-  → (IsEqualTermPiIntroEq : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b b' B : Tm (n + 1)} {A' : Tm n} 
-    (a : (Γ ⬝ A) ⊢ b ≡ b' ∶ B), motive_5 (Γ ⬝ A) b b' B a 
-    → motive_5 Γ (A.lam b) (A'.lam b') (A.pi B) (IsEqualTerm.pi_intro_eq a))
+  → (IsEqualTermPiIntroEq : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b b' B B' : Tm (n + 1)} {A' : Tm n} 
+    (a : (Γ ⬝ A) ⊢ b ≡ b' ∶ B) (a1 : Γ ⊢ ΠA;B ≡ ΠA';B' type),
+    motive_5 (Γ ⬝ A) b b' B a → motive_4 Γ (ΠA;B) (ΠA';B') a1
+    → motive_5 Γ (A.lam b) (A'.lam b') (A.pi B) (IsEqualTerm.pi_intro_eq a a1))
   → (IsEqualTermPiElimEq : ∀ {n : Nat} {Γ : Ctx n} {f f' A : Tm n} {B : Tm (n + 1)} {a a' : Tm n}
     {S : Tm n} (a_1 : Γ ⊢ f ≡ f' ∶ A.pi B) (a_2 : Γ ⊢ a ≡ a' ∶ A) (a_3 : S = substitute_zero B a),
     motive_5 Γ f f' (A.pi B) a_1 
@@ -239,7 +242,7 @@ theorem judgment_recursor :
           hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaElim hHasTypeIdenElim
           hHasTypeTyConv
     intro hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
-          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
+          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq hIsEqualTypeVarRfl
     intro hIsEqualTermVarEq hIsEqualTermUnitComp hIsEqualTermPiComp hIsEqualTermSigmaComp
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq hIsEqualTermSigmaElimEq
@@ -259,7 +262,7 @@ theorem judgment_recursor :
           hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
-          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
+          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq hIsEqualTypeVarRfl
         hIsEqualTermVarEq hIsEqualTermUnitComp hIsEqualTermPiComp hIsEqualTermSigmaComp
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq hIsEqualTermSigmaElimEq
@@ -278,7 +281,7 @@ theorem judgment_recursor :
           hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
-          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
+          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq hIsEqualTypeVarRfl
         hIsEqualTermVarEq hIsEqualTermUnitComp hIsEqualTermPiComp hIsEqualTermSigmaComp
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq hIsEqualTermSigmaElimEq
@@ -297,7 +300,7 @@ theorem judgment_recursor :
           hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
-          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
+          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq hIsEqualTypeVarRfl
         hIsEqualTermVarEq hIsEqualTermUnitComp hIsEqualTermPiComp hIsEqualTermSigmaComp
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq hIsEqualTermSigmaElimEq
@@ -316,7 +319,7 @@ theorem judgment_recursor :
           hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
-          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
+          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq hIsEqualTypeVarRfl
         hIsEqualTermVarEq hIsEqualTermUnitComp hIsEqualTermPiComp hIsEqualTermSigmaComp
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq hIsEqualTermSigmaElimEq
@@ -335,7 +338,7 @@ theorem judgment_recursor :
           hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
-          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
+          hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq hIsEqualTypeVarRfl
         hIsEqualTermVarEq hIsEqualTermUnitComp hIsEqualTermPiComp hIsEqualTermSigmaComp
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq hIsEqualTermSigmaElimEq

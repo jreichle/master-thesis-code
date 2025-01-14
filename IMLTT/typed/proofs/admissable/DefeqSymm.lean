@@ -20,7 +20,7 @@ theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .unit_intro_eq hiC => sorry
     | .unit_elim_eq hAA haaA hbbUn hEq => sorry
     | .empty_elim_eq hAA hbbEm hEq => sorry
-    | .pi_intro_eq hbbB => sorry
+    | .pi_intro_eq hbbB hPiPi => sorry
     | .pi_elim_eq haaA hffPi hEq => sorry
     | .sigma_intro_eq haaA hbbB => sorry
     | .sigma_elim_eq hSiSi hppSi hCC hccC hEq => sorry
@@ -68,3 +68,6 @@ theorem defeq_symm_type : IsEqualType Γ A B → IsEqualType Γ B A :=
         apply IsEqualType.univ_elim_eq
         apply defeq_symm_term
         apply hAAU
+    | .var_rfl hV =>
+      by
+        apply IsEqualType.var_rfl hV

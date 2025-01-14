@@ -87,6 +87,8 @@ mutual
       | .univ_elim_eq hAAU =>
           apply IsType.univ_elim
           apply defeq_is_term' hAAU
+      | .var_rfl hV =>
+        apply hV
 
   theorem context_conv_is_equal_type : IsEqualType (Γ ⬝ A) B B' → IsEqualType Γ A A'
                                        → IsEqualType (Γ ⬝ A') B B' :=

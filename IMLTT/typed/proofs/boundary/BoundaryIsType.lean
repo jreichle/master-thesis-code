@@ -8,6 +8,7 @@ import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+import IMLTT.typed.proofs.boundary.BoundaryHasType
 import IMLTT.typed.proofs.admissable.Contexts
 
 -- theorem boundary_is_type {n : Nat} {Γ : Ctx n} {S S' : Tm n} :
@@ -32,14 +33,7 @@ import IMLTT.typed.proofs.admissable.Contexts
 --       | univ_elim_eq h =>
 --         sorry
 --     any_goals sorry
--- 
--- theorem test {n : Nat} {Γ : Ctx n} {s S : Tm n} :
---     HasType Γ s S → IsType Γ S := 
---   by
---     intro hsS
---     cases hsS
---     any_goals sorry
--- 
+
 -- theorem boundary_is_type_term {n : Nat} {Γ : Ctx n} {s S : Tm n} :
 --     HasType Γ s S → IsType Γ S := 
 --   by
@@ -172,7 +166,8 @@ import IMLTT.typed.proofs.admissable.Contexts
 --       constructor
 --       apply boundary_ctx_term hsS
 --     case var x => -- TODO: would need proof that terms cannot be types by themselves
---       sorry
+--       cases hsS
+--       any_goals sorry
 --     case tt =>
 --       sorry -- inversion lemma s ∶ ⋆ → false
 --     any_goals sorry
@@ -249,51 +244,58 @@ theorem boundary_type :
       apply defeq_is_type' hAB
     case IsEqualTypeIdenFormEq =>
       intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA'
-      have haA := boundary_has_type haaA
-      have haA' := boundary_has_type haaA'
+      have haA := boundary_has_type_term_eq haaA
+      have haA' := boundary_has_type_term_eq haaA'
       apply IsType.iden_form 
       · apply haA
       · apply HasType.ty_conv haA' (defeq_symm_type hAA)
     case IsEqualTypeUnivElimEq =>
       intro n Γ A A' hAAU _hU
-      have hAU := boundary_has_type hAAU
+      have hAU := boundary_has_type_term_eq hAAU
       apply IsType.univ_elim hAU
     case IsEqualTermVarEq =>
-      intro n Γ A hA _ihA
+      intro n Γ A S hA hEq _ihA
+      rw [hEq]
       apply weakening_type hA hA
     case IsEqualTermPiComp =>
-      intro n Γ A b B a _hbB haA ihbB _ihaA
+      intro n Γ A b B a s S _hbB haA hEqs hEqS ihbB _ihaA
+      rw [hEqS]
       apply substitution_type
       · apply haA
       · apply ihbB
     case IsEqualTermSigmaComp =>
-      intro n Γ a A b B C c haA hbB hC _hcC _ihaA _ihbB _ihC _ihcC
+      intro n Γ a A b B C s S c haA hbB hC _hcC hEqs hEqS _ihaA _ihbB _ihC _ihcC
+      rw [hEqS]
       apply substitution_type
       · apply HasType.sigma_intro haA hbB
       · apply hC
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a _hB _hbB _haA _ihB ihbB _ihaA
+      intro n Γ A B b a S _hB _hbB _haA hEq _ihB ihbB _ihaA
+      rw [hEq]
       apply ihbB
     case IsEqualTermUnitElimEq =>
-      intro n Γ A A' a a' b b' _hAA _haaA hbb1 ihAA _ihaaA _ihb1
+      intro n Γ A A' a a' b b' S _hAA _haaA hbb1 hEq ihAA _ihaaA _ihb1
+      rw [hEq]
       apply substitution_type
-      · apply boundary_has_type hbb1
+      · apply boundary_has_type_term_eq hbb1
       · apply ihAA
     case IsEqualTermEmptyElimEq =>
-      intro n Γ A A' b b' _hAA hbb0 ihAA _ihb0
+      intro n Γ A A' b b' S _hAA hbb0 hEq ihAA _ihb0
+      rw [hEq]
       apply substitution_type
-      · apply boundary_has_type hbb0
+      · apply boundary_has_type_term_eq hbb0
       · apply ihAA
     case IsEqualTermPiIntroEq =>
-      intro n Γ A b b' B _A' _hbbB ihbbB
+      intro n Γ A b b' B B' A' _hbbB hPiPi ihbbB ihPipi
       apply IsType.pi_form
       · have hiCA := boundary_ctx_type ihbbB
         apply ctx_extr hiCA
       · apply ihbbB
     case IsEqualTermPiElimEq =>
-      intro n Γ f f' A B a a' _hffPi haaA ihffPi _ihaaA
+      intro n Γ f f' A B a a' S _hffPi haaA hEq ihffPi _ihaaA
+      rw [hEq]
       apply substitution_type
-      · apply boundary_has_type haaA
+      · apply boundary_has_type_term_eq haaA
       · apply And.right (pi_is_type_inversion ihffPi)
     case IsEqualTermSigmaIntroEq =>
       intro n Γ a a' A b b' B haaA _hbbB ihaaA ihbbB
@@ -302,19 +304,22 @@ theorem boundary_type :
       · apply substitution_inv_type
         · rfl
         · apply ihbbB
-        · apply boundary_has_type haaA
+        · apply boundary_has_type_term_eq haaA
     case IsEqualTermSigmaElimEq =>
-      intro n Γ A B A' B' p p' C C' c c' _hSiSi hppSi _hCC _hccC _ihSiSi _ihppSi ihCC _ihccC
+      intro n Γ A B A' B' p p' C C' c c' S _hSiSi hppSi _hCC _hccC hEq _ihSiSi _ihppSi ihCC _ihccC
+      rw [hEq]
       apply substitution_type
-      · apply boundary_has_type hppSi
+      · apply boundary_has_type_term_eq hppSi
       · apply ihCC
     case IsEqualTermIdenIntroEq =>
       intro n Γ A A' a a' _hAA haaA ihAA _ihaA
-      have haA := boundary_has_type haaA
+      have haA := boundary_has_type_term_eq haaA
       apply IsType.iden_form haA haA
     case IsEqualTermIdenElimEq =>
-      intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' _hBB _hbbB _hIdId _hppId _ihBB ihbbB _ihIdId _ihppId
-      sorry -- apply ihbbB
+      intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' S
+      intro _hBB _hbbB _hIdId _hppId hBB' hEq _ihBB ihbbB _ihIdId _ihppId ihBB'
+      rw [hEq]
+      apply ihBB'
     case IsEqualTermTyConvEq =>
       intro n Γ a b A B habA hAB ihabA ihA
       apply defeq_is_type' hAB

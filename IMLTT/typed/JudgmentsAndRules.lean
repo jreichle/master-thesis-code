@@ -110,6 +110,7 @@ mutual
     | univ_form_eq : IsCtx Γ
                      → IsEqualType Γ 𝒰 𝒰
     | univ_elim_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualType Γ A A'
+    | var_rfl : IsType Γ v(x) → IsEqualType Γ v(x) v(x)
 
   -- Γ ⊢ a ≡ b : A
   @[aesop unsafe [constructors]]
@@ -145,7 +146,7 @@ mutual
     | empty_elim_eq : IsEqualType (Γ ⬝ 𝟘) A A' → IsEqualTerm Γ b b' 𝟘
                       → S = substitute_zero A b
                       → IsEqualTerm Γ (.indEmpty A b) (.indEmpty A' b') S
-    | pi_intro_eq : IsEqualTerm (Γ ⬝ A) b b' B
+    | pi_intro_eq : IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ (.pi A B) (.pi A' B')
                     → IsEqualTerm Γ (.lam A b) (.lam A' b') (.pi A B)
     | pi_elim_eq : IsEqualTerm Γ f f' (.pi A B) → IsEqualTerm Γ a a' A
                    → S = substitute_zero B a
