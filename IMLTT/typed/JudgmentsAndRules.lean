@@ -110,7 +110,10 @@ mutual
     | univ_form_eq : IsCtx Γ
                      → IsEqualType Γ 𝒰 𝒰
     | univ_elim_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualType Γ A A'
-    | var_rfl : IsType Γ v(x) → IsEqualType Γ v(x) v(x)
+    -- defeq rules
+    | refl : IsType Γ A → IsEqualType Γ A A
+    | symm : IsEqualType Γ A B → IsEqualType Γ B A
+    | trans : IsEqualType Γ A B → IsEqualType Γ B C → IsEqualType Γ A C
 
   -- Γ ⊢ a ≡ b : A
   @[aesop unsafe [constructors]]
@@ -135,7 +138,9 @@ mutual
                     ⬝ (.iden (weaken (.shift (.shift .id)) A) (.var 1) (.var 0))) B
                   → HasType Γ b
                     (substitute (.weak .id, a, a, (.refl A a)) B)
-                  → HasType Γ a A → S = substitute (.weak .id, a, a, (.refl A a)) B
+                  → HasType Γ a A 
+                  → IsType Γ (substitute (.weak .id, a, a, (.refl A a)) B)
+                  → S = substitute (.weak .id, a, a, (.refl A a)) B
                   → IsEqualTerm Γ (.j A B b a a (.refl A a)) b S
     -- congruence rules (introduction and elimination)
     | unit_intro_eq : IsCtx Γ
@@ -183,6 +188,10 @@ mutual
                    → IsEqualTerm Γ (.sigma A B) (.sigma A' B') 𝒰
     | univ_iden_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
                      → IsEqualTerm Γ (.iden A a₁ a₃) (.iden A' a₂ a₄) 𝒰
+    -- defeq rules
+    | refl : HasType Γ a A → IsEqualTerm Γ a a A
+    | symm : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A
+    | trans : IsEqualTerm Γ a b A → IsEqualTerm Γ b c A → IsEqualTerm Γ a c A
     -- conversion
     | ty_conv_eq : IsEqualTerm Γ a b A → IsEqualType Γ A B
                    → IsEqualTerm Γ a b B

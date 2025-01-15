@@ -9,7 +9,6 @@ import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.boundary.BoundaryHasType
-import IMLTT.typed.proofs.admissable.Contexts
 
 theorem boundary_type :
   (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
@@ -80,7 +79,7 @@ theorem boundary_type :
       have haA' := boundary_has_type_term_eq haaA'
       apply IsType.iden_form 
       · apply haA
-      · apply HasType.ty_conv haA' (defeq_symm_type hAA)
+      · apply HasType.ty_conv haA' (IsEqualType.symm hAA)
     case IsEqualTypeUnivElimEq =>
       intro n Γ A A' hAAU _hU
       have hAU := boundary_has_type_term_eq hAAU
@@ -102,7 +101,7 @@ theorem boundary_type :
       · apply HasType.sigma_intro haA hbB
       · apply hC
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a S _hB _hbB _haA hEq _ihB ihbB _ihaA
+      intro n Γ A B b a S _hB _hbB _haA hB' hEq _ihB ihbB _ihaA ihB'
       rw [hEq]
       apply ihbB
     case IsEqualTermUnitElimEq =>

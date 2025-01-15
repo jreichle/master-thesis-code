@@ -4,7 +4,6 @@ import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.DefeqSymm
 
 theorem boundary_has_type :
     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
@@ -30,19 +29,25 @@ theorem boundary_has_type :
       · apply hcC
       · apply hEqS
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a S hB hbB haA hEq ihB ihbB ihaA
+      intro n Γ A B b a S hB hbB haA hB' hEq ihB ihbB ihaA ihB'
       apply HasType.iden_elim
       · apply hB
       · apply hbB
       · apply HasType.iden_intro ihaA
-      · sorry
+      · apply hB'
       · apply hEq
     case IsEqualTypeIdenFormEq =>
-      intro n Γ A A' a₁ a₂ a₃ a₄
+      intro n Γ a₁ a₂ A a₃ a₄ A'
       intro hAA _haaA _haaA' _ihAA ihaaA ihaaA'
       apply IsType.iden_form
       · apply ihaaA
-      · apply HasType.ty_conv ihaaA' (defeq_symm_type hAA)
+      · apply HasType.ty_conv ihaaA' (IsEqualType.symm hAA)
+    case IsEqualTypeSymm =>
+      intro n Γ A B hAB hA
+      sorry
+    case IsEqualTermSymm =>
+      intro n Γ a b A habA ihabA
+      sorry
     any_goals
       solve
       | repeat'
@@ -66,10 +71,10 @@ theorem boundary_is_type_type_eq' : IsEqualType Γ A A' → IsType Γ A' :=
   by
     intro hAA
     apply (And.left (And.right (And.right (And.right boundary_has_type))))
-    apply defeq_symm_type hAA
+    apply IsEqualType.symm hAA
 
 theorem boundary_has_type_term_eq' : IsEqualTerm Γ a a' A → HasType Γ a' A :=
   by
     intro haaA
     apply (And.right (And.right (And.right (And.right boundary_has_type))))
-    apply defeq_symm_term haaA
+    apply IsEqualTerm.symm haaA

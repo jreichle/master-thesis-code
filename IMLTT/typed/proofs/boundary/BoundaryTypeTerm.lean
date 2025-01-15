@@ -3,8 +3,9 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.proofs.admissable.Weakening
+import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.admissable.Inversion
-import IMLTT.typed.proofs.admissable.DefeqSymm
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 import Aesop
@@ -75,7 +76,7 @@ theorem boundary_type_term_a :
       intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA'
       apply IsType.iden_form
       · apply And.left ihaaA
-      · apply HasType.ty_conv (And.left ihaaA') (defeq_symm_type hAA)
+      · apply HasType.ty_conv (And.left ihaaA') (IsEqualType.symm hAA)
     case IsEqualTypeUnivElimEq =>
       intro n Γ A A' hAAU ihAAU
       apply IsType.univ_elim (And.left ihAAU)
@@ -121,7 +122,7 @@ theorem boundary_type_term_a :
         · apply HasType.sigma_intro haA hbB
         · apply hC
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a S _hB _hbB _haA hEq _ihB ihbB _ihaA
+      intro n Γ A B b a S _hB _hbB _haA hB' hEq _ihB ihbB _ihaA ihB'
       rw [hEq]
       apply And.intro
       · apply HasType.iden_elim
@@ -291,7 +292,7 @@ theorem boundary_type_term :
       apply And.intro
       · apply IsType.iden_form
         · apply And.left ihaaA
-        · apply HasType.ty_conv (And.left ihaaA') (defeq_symm_type hAA)
+        · apply HasType.ty_conv (And.left ihaaA') (IsEqualType.symm hAA)
       · apply IsType.iden_form
         · apply HasType.ty_conv (And.left (And.right ihaaA)) hAA
         · apply And.left (And.right ihaaA')
@@ -354,7 +355,7 @@ theorem boundary_type_term :
           · apply HasType.sigma_intro haA hbB
           · apply hC
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a S _hB _hbB _haA hEq _ihB ihbB _ihaA
+      intro n Γ A B b a S _hB _hbB _haA hB' hEq _ihB ihbB _ihaA ihB'
       rw [hEq]
       apply And.intro
       · apply HasType.iden_elim
