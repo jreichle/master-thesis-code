@@ -92,6 +92,8 @@ mutual
     -- conversion
     | ty_conv : HasType Γ a A → IsEqualType Γ A B
                 → HasType Γ a B
+    | ty_conv_symm : HasType Γ a A → IsEqualType Γ B A
+                     → HasType Γ a B
 
   -- Γ ⊢ A ≡ B type
   @[aesop unsafe [constructors]]
@@ -110,10 +112,6 @@ mutual
     | univ_form_eq : IsCtx Γ
                      → IsEqualType Γ 𝒰 𝒰
     | univ_elim_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualType Γ A A'
-    -- defeq rules
-    | refl : IsType Γ A → IsEqualType Γ A A
-    | symm : IsEqualType Γ A B → IsEqualType Γ B A
-    | trans : IsEqualType Γ A B → IsEqualType Γ B C → IsEqualType Γ A C
 
   -- Γ ⊢ a ≡ b : A
   @[aesop unsafe [constructors]]
@@ -188,13 +186,11 @@ mutual
                    → IsEqualTerm Γ (.sigma A B) (.sigma A' B') 𝒰
     | univ_iden_eq : IsEqualTerm Γ A A' 𝒰 → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
                      → IsEqualTerm Γ (.iden A a₁ a₃) (.iden A' a₂ a₄) 𝒰
-    -- defeq rules
-    | refl : HasType Γ a A → IsEqualTerm Γ a a A
-    | symm : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A
-    | trans : IsEqualTerm Γ a b A → IsEqualTerm Γ b c A → IsEqualTerm Γ a c A
     -- conversion
     | ty_conv_eq : IsEqualTerm Γ a b A → IsEqualType Γ A B
                    → IsEqualTerm Γ a b B
+    | ty_conv_eq_symm : IsEqualTerm Γ a b A → IsEqualType Γ B A
+                        → IsEqualTerm Γ a b B
 end
 
 postfix:90 " ctx" => IsCtx

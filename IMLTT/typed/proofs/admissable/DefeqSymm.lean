@@ -4,7 +4,7 @@ import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.admissable.Contexts
+import IMLTT.typed.proofs.admissable.CtxConv
 
 import aesop
 
@@ -16,7 +16,7 @@ theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .unit_comp hC hcC hEq => sorry
     | .pi_comp hbB haA hEqs hEqS => sorry
     | .sigma_comp haA hbB hC hcC hEqs hEqS => sorry
-    | .iden_comp hB hbB haA hEq => sorry
+    | .iden_comp hB hbB haA hB' hEq => sorry
     | .unit_intro_eq hiC => sorry
     | .unit_elim_eq hAA haaA hbbUn hEq => sorry
     | .empty_elim_eq hAA hbbEm hEq => sorry
@@ -32,6 +32,7 @@ theorem defeq_symm_term : IsEqualTerm Γ a b A → IsEqualTerm Γ b a A :=
     | .univ_sigma_eq hAAU hBBU => sorry
     | .univ_iden_eq hAAU haaA haaA' => sorry
     | .ty_conv_eq habA hAB => sorry
+    | .ty_conv_eq_symm habA hBA => sorry
 
 theorem defeq_symm_type : IsEqualType Γ A B → IsEqualType Γ B A :=
   fun hABet : IsEqualType Γ A B ↦
@@ -68,6 +69,3 @@ theorem defeq_symm_type : IsEqualType Γ A B → IsEqualType Γ B A :=
         apply IsEqualType.univ_elim_eq
         apply defeq_symm_term
         apply hAAU
-    | .var_rfl hV =>
-      by
-        apply IsEqualType.var_rfl hV

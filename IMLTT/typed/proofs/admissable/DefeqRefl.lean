@@ -187,7 +187,7 @@ mutual
         have hiC := boundary_ctx_type hA
         apply IsEqualType.univ_form_eq hiC
       | .var x =>
-        apply IsEqualType.var_rfl hA
+        sorry
       | .tt =>
         sorry
       | .indUnit A b a =>
@@ -348,4 +348,3 @@ theorem defeq_refl :
 --     -- apply And.left (And.left (And.right (And.right defeq_refl)))
 --     -- apply haA
 --     sorry
-

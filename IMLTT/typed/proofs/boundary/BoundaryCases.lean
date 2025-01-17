@@ -6,7 +6,6 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
-import IMLTT.typed.proofs.admissable.DefeqSymm
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 mutual
@@ -23,6 +22,12 @@ mutual
         | univ_elim_eq h =>
           constructor
           apply boundary_ctx_term_eq h
+        | refl =>
+          sorry
+        | symm =>
+          sorry
+        | trans =>
+          sorry
       case empty =>
         cases hSS with
         | empty_form_eq h =>
@@ -31,6 +36,12 @@ mutual
         | univ_elim_eq h =>
           constructor
           apply boundary_ctx_term_eq h
+        | refl =>
+          sorry
+        | symm =>
+          sorry
+        | trans =>
+          sorry
       case pi A B =>
         cases hSS with
         | pi_form_eq hAA' hBB' =>
@@ -39,140 +50,266 @@ mutual
           · exact boundary_is_type_type_eq hBB'
         | univ_elim_eq h =>
           have hPiU := boundary_has_type_term_eq h
-          have hInv := pi_has_type_inversion hPiU
-          constructor
-          · exact IsType.univ_elim (And.left hInv)
-          · exact IsType.univ_elim (And.right hInv)
-      case sigma A B =>
-        cases hSS with
-        | sigma_form_eq hAA' hBB' =>
-          constructor
-          · exact boundary_is_type_type_eq hAA'
-          · exact boundary_is_type_type_eq hBB'
-        | univ_elim_eq h =>
-          have hSiU := boundary_has_type_term_eq h
-          have hInv := sigma_has_type_inversion hSiU
-          constructor
-          · exact IsType.univ_elim (And.left hInv)
-          · exact IsType.univ_elim (And.right hInv)
-      case iden A a a' =>
-        cases hSS with
-        | iden_form_eq hAA haaA haaA' =>
-          constructor
-          · exact boundary_has_type_term_eq haaA
-          · exact HasType.ty_conv (boundary_has_type_term_eq haaA') (defeq_symm_type hAA)
-        | univ_elim_eq h =>
-          have hIdU := boundary_has_type_term_eq h
-          have hInv := iden_has_type_inversion hIdU
-          constructor
-          · exact And.left (And.right hInv)
-          · exact And.right (And.right hInv)
-      case univ =>
-        cases hSS with
-        | univ_form_eq hiC =>
-          constructor
-          exact hiC
-        | univ_elim_eq h =>
-          constructor
-          apply boundary_ctx_term_eq h
-      case var =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-        case var_rfl h =>
-          exact h
-      case tt =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case indUnit =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case indEmpty =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case lam =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case app =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case pairSigma =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case indSigma =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case refl =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
-      case j =>
-        cases hSS
-        case univ_elim_eq h =>
-          constructor
-          exact boundary_has_type_term_eq h
+          exact IsType.univ_elim hPiU
+        | refl =>
+          sorry
+        | symm =>
+          sorry
+        | trans =>
+          sorry
+      any_goals sorry
+      -- case sigma A B =>
+      --   cases hSS with
+      --   | sigma_form_eq hAA' hBB' =>
+      --     constructor
+      --     · exact boundary_is_type_type_eq hAA'
+      --     · exact boundary_is_type_type_eq hBB'
+      --   | refl =>
+      --     sorry
+      --   | symm =>
+      --     sorry
+      --   | trans =>
+      --     sorry
+      --   | univ_elim_eq h =>
+      --     have hSiU := boundary_has_type_term_eq h
+      --     have hInv := sigma_has_type_inversion hSiU
+      --     constructor
+      --     · exact IsType.univ_elim (And.left hInv)
+      --     · exact IsType.univ_elim (And.right hInv)
+      -- case iden A a a' =>
+      --   cases hSS with
+      --   | iden_form_eq hAA haaA haaA' =>
+      --     constructor
+      --     · exact boundary_has_type_term_eq haaA
+      --     · exact HasType.ty_conv (boundary_has_type_term_eq haaA') (IsEqualType.symm hAA)
+      --   | univ_elim_eq h =>
+      --     have hIdU := boundary_has_type_term_eq h
+      --     have hInv := iden_has_type_inversion hIdU
+      --     constructor
+      --     · exact And.left (And.right hInv)
+      --     · exact And.right (And.right hInv)
+      --   | refl =>
+      --     sorry
+      --   | symm =>
+      --     sorry
+      --   | trans =>
+      --     sorry
+      -- case univ =>
+      --   cases hSS with
+      --   | univ_form_eq hiC =>
+      --     constructor
+      --     exact hiC
+      --   | univ_elim_eq h =>
+      --     constructor
+      --     apply boundary_ctx_term_eq h
+      --   | refl =>
+      --     sorry
+      --   | symm =>
+      --     sorry
+      --   | trans =>
+      --     sorry
+      -- case var =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case tt =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case indUnit =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case indEmpty =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case lam =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case app =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case pairSigma =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case indSigma =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case refl =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
+      -- case j =>
+      --   cases hSS
+      --   case univ_elim_eq h =>
+      --     constructor
+      --     exact boundary_has_type_term_eq h
+      --   case refl =>
+      --     sorry
+      --   case symm =>
+      --     sorry
+      --   case trans =>
+      --     sorry
 
   theorem boundary_has_type_term_eq {n : Nat} {Γ : Ctx n} {s s' S : Tm n} :
       IsEqualTerm Γ s s' S → HasType Γ s S :=
     by
       intro hssS
       -- both cases on s and S not possible - terrmination error for self reference inside unit case
-      cases hssS
-      case var_eq hA hEq =>
-        constructor
-        · exact hA
-        · exact hEq
-      case unit_comp h1 h2 h3 =>
-        constructor
-        · exact h1
-        · exact h2
-        · constructor
-          exact boundary_ctx_term h2
-        · exact h3
-      case pi_comp h1 h2 h3 h4 =>
-        constructor
-        · constructor
-          exact h1
-        · exact h2
-        · exact h4
-      case sigma_comp h1 h2 h3 h4 h5 h6 =>
-        constructor
-        · constructor
+      cases S
+      case unit =>
+        cases hssS
+        case var_eq h1 h2 =>
+          constructor
+          · assumption
+          · assumption
+        case unit_comp h1 h2 h3 =>
+          constructor
           · exact h1
           · exact h2
-        · exact h3
-        · exact h4
-        · exact h6
-      case iden_comp h1 h2 h3 h4 =>
-        constructor
-        · exact h1
-        · exact h3
-        · constructor
-          exact h2
-        · exact boundary_is_type_term h3
-        · exact h4
-      case unit_intro_eq h1 =>
-        constructor
-        exact h1
-      case pi_intro_eq h1 h2 =>
-        constructor
-        exact boundary_has_type_term_eq h1 -- termination error
+          · constructor
+            exact boundary_ctx_term h2
+          · exact h3
+        case pi_comp h1 h2 h3 h4 =>
+          constructor
+          · constructor
+            exact h1
+          · exact h2
+          · exact h4
+        case sigma_comp h1 h2 h3 h4 h5 h6 =>
+          constructor
+          · constructor
+            · exact h1
+            · exact h2
+          · exact h3
+          · exact h4
+          · exact h6
+        case iden_comp h1 h2 h3 h4 h5 =>
+          constructor
+          · exact h1
+          · exact h4
+          · constructor
+            exact h2
+          · exact h3
+          · exact h5
+        case unit_intro_eq h1 =>
+          constructor
+          assumption
+        case unit_elim_eq h1 h2 h3 h4 =>
+          constructor
+          · exact boundary_is_type_type_eq h1
+          · sorry
+          · sorry
+          · sorry
+        any_goals sorry
+      -- cases hssS
+      -- case var_eq hA hEq =>
+      --   constructor
+      --   · exact hA
+      --   · exact hEq
+      -- case unit_comp h1 h2 h3 =>
+      --   constructor
+      --   · exact h1
+      --   · exact h2
+      --   · constructor
+      --     exact boundary_ctx_term h2
+      --   · exact h3
+      -- case pi_comp h1 h2 h3 h4 =>
+      --   constructor
+      --   · constructor
+      --     exact h1
+      --   · exact h2
+      --   · exact h4
+      -- case sigma_comp h1 h2 h3 h4 h5 h6 =>
+      --   constructor
+      --   · constructor
+      --     · exact h1
+      --     · exact h2
+      --   · exact h3
+      --   · exact h4
+      --   · exact h6
+      -- case iden_comp h1 h2 h3 h4 =>
+      --   constructor
+      --   · exact h1
+      --   · exact h3
+      --   · constructor
+      --     exact h2
+      --   · exact boundary_is_type_term h3
+      --   · exact h4
+      -- case unit_intro_eq h1 =>
+      --   constructor
+      --   exact h1
+      -- case pi_intro_eq h1 h2 =>
+      --   constructor
+      --   exact boundary_has_type_term_eq h1 -- termination error
       any_goals sorry
 
   theorem boundary_is_type_type_eq' : IsEqualType Γ A A' → IsType Γ A' :=

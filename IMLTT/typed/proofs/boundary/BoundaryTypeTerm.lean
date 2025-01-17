@@ -76,7 +76,7 @@ theorem boundary_type_term_a :
       intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA'
       apply IsType.iden_form
       · apply And.left ihaaA
-      · apply HasType.ty_conv (And.left ihaaA') (IsEqualType.symm hAA)
+      · apply HasType.ty_conv (And.left ihaaA') (sorry)
     case IsEqualTypeUnivElimEq =>
       intro n Γ A A' hAAU ihAAU
       apply IsType.univ_elim (And.left ihAAU)
@@ -292,7 +292,7 @@ theorem boundary_type_term :
       apply And.intro
       · apply IsType.iden_form
         · apply And.left ihaaA
-        · apply HasType.ty_conv (And.left ihaaA') (IsEqualType.symm hAA)
+        · apply HasType.ty_conv_symm (And.left ihaaA') (hAA)
       · apply IsType.iden_form
         · apply HasType.ty_conv (And.left (And.right ihaaA)) hAA
         · apply And.left (And.right ihaaA')
@@ -350,7 +350,9 @@ theorem boundary_type_term :
         · rfl
       · apply And.intro
         · rw [hEqs]
+          rw [substitution_separate_test_a]
           sorry
+          -- apply substitution_term -- substituon_term regel anpassen mit 'trick' s = ...
         · apply substitution_type
           · apply HasType.sigma_intro haA hbB
           · apply hC
@@ -486,4 +488,13 @@ theorem boundary_type_term :
       · apply And.intro
         · apply HasType.ty_conv (And.left (And.right ihabA)) hAB
         · apply And.right ihA
+    case IsEqualTermTyConvEqSymm =>
+      intro n Γ a b A B habA hAB ihabA ihA
+      apply And.intro
+      · apply HasType.ty_conv_symm
+        · apply And.left ihabA
+        · apply hAB
+      · apply And.intro
+        · apply HasType.ty_conv_symm (And.left (And.right ihabA)) hAB
+        · apply And.left ihA
     any_goals sorry -- aesop

@@ -296,6 +296,15 @@ theorem substitution_inv_type_eq : B' = (substitute_zero B a) → C' = (substitu
     sorry
 
 -- B⌈Subst.weak id, a, a', p⌉ type
+
+
+theorem substitution_separate_test_a :
+  (substitute (.weak .id, s1, s2) A)
+  = (substitute (.weak .id, s1) (substitute_zero A (weaken (.shift .id) s2))) :=
+  by
+    simp [substitute_zero]
+    sorry
+
 theorem substitution_separate_test :
   (substitute (.weak .id, s1, s2, s3) A)
   = (substitute (.weak .id, s1, s2) (substitute_zero A (weaken (.shift (.shift .id)) s3))) :=
