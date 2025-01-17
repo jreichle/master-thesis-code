@@ -16,22 +16,23 @@ theorem defeq_symm_term :
     | .unit_comp hC hcC => sorry
     | .pi_comp hbB haA => sorry
     | .sigma_comp haA hbB hC hcC => sorry
-    | .iden_comp hB hbB haA  => sorry
+    | .iden_comp hB hbB haA hB'  => sorry
     | .unit_intro_eq hiC => sorry
     | .unit_elim_eq hAA haaA hbbUn => sorry
     | .empty_elim_eq hAA hbbEm => sorry
-    | .pi_intro_eq hbbB => sorry
+    | .pi_intro_eq hbbB hPiPi => sorry
     | .pi_elim_eq haaA hffPi => sorry
     | .sigma_intro_eq haaA hbbB => sorry
     | .sigma_elim_eq hSiSi hppSi hCC hccC => sorry
     | .iden_intro_eq hAA haaA  => sorry
-    | .iden_elim_eq hBB hbbB hIdId hppId => sorry
+    | .iden_elim_eq hBB hbbB hIdId hppId hB' => sorry
     | .univ_unit_eq hiC => sorry
     | .univ_empty_eq hiC => sorry
     | .univ_pi_eq hAAU hBBU => sorry
     | .univ_sigma_eq hAAU hBBU => sorry
     | .univ_iden_eq hAAU haaA haaA' => sorry
     | .ty_conv_eq habA hAB => sorry
+    | .ty_conv_eq_symm habA hBA => sorry
 
 theorem defeq_symm_type : 
     Γ ⊢ A ≡ B type → Γ ⊢ B ≡ A type :=

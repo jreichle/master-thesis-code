@@ -1,10 +1,9 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
-import IMLTT.typed.JudgmentsAndRules
 
+import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.DefeqSymm
 
 theorem boundary_has_type :
     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
@@ -29,25 +28,21 @@ theorem boundary_has_type :
       · apply ihC
       · apply hcC
     case IsEqualTermIdenComp =>
-      intro n Γ A B b a hB hbB _ _ _ ihaA
+      intro n Γ A B b a hB hbB haA hB' ihB ihbB ihaA ihB'
       apply HasType.iden_elim
       · apply hB
       · apply hbB
       · apply HasType.iden_intro ihaA
+      · apply hB'
     case IsEqualTypeIdenFormEq =>
       intro n Γ A A' a₁ a₂ a₃ a₄
       intro hAA _haaA _haaA' _ihAA ihaaA ihaaA'
       apply IsType.iden_form
       · apply ihaaA
-      · apply HasType.ty_conv ihaaA' (defeq_symm_type hAA)
-    any_goals
-      solve
-      | repeat'
-        first
-        | intro a
-        | aesop
+      · apply HasType.ty_conv_symm ihaaA' hAA
+    any_goals aesop
 
-theorem boundary_is_type_type_eq : 
+theorem boundary_is_type_type_eq :
     Γ ⊢ A ≡ A' type → Γ ⊢ A type :=
   by
     intro hAA

@@ -101,10 +101,14 @@ mutual
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ p (a ≃[A] a')
+      → IsType Γ (B⌈(ₛidₚ), a, a', p⌉)
       → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
       -- conversion
     | ty_conv : 
       HasType Γ a A → IsEqualType Γ A B
+      → HasType Γ a B
+    | ty_conv_symm : 
+      HasType Γ a A → IsEqualType Γ B A
       → HasType Γ a B
 
   -- Γ ⊢ A ≡ B type
@@ -154,6 +158,7 @@ mutual
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A
+      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → IsEqualTerm Γ (.j A B b a a (.refl A a)) b (B⌈(ₛidₚ), a, a, .refl A a⌉)
     -- congruence rules (introduction and elimination)
     | unit_intro_eq :
@@ -165,27 +170,29 @@ mutual
     | empty_elim_eq :
       IsEqualType (Γ ⬝ 𝟘) A A' → IsEqualTerm Γ b b' 𝟘 
       → IsEqualTerm Γ (.indEmpty A b) (.indEmpty A' b') (A⌈b⌉₁)
-    | pi_intro_eq : 
-      IsEqualTerm (Γ ⬝ A) b b' B
+    | pi_intro_eq :
+      IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ (ΠA;B) (ΠA';B')
       → IsEqualTerm Γ (λA; b) (λA'; b') (ΠA;B)
     | pi_elim_eq :
       IsEqualTerm Γ f f' (ΠA;B) → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (f◃a) (f'◃a') (B⌈a⌉₁)
-    | sigma_intro_eq : 
+    | sigma_intro_eq :
       IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (B⌈a⌉₁)
       → IsEqualTerm Γ (a&b) (a'&b') (ΣA;B)
-    | sigma_elim_eq : 
-      IsEqualType Γ (ΣA;B) (ΣA';B') → IsEqualTerm Γ p p' (ΣA;B) → IsEqualType (Γ ⬝ ΣA;B) C C'
+    | sigma_elim_eq :
+      IsEqualType Γ (ΣA;B) (ΣA';B') → IsEqualTerm Γ p p' (ΣA;B)
+      → IsEqualType (Γ ⬝ ΣA;B) C C'
       → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A' B' C' c' p') (C⌈p⌉₁)
-    | iden_intro_eq : 
+    | iden_intro_eq :
       IsEqualType Γ A A' → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
-    | iden_elim_eq : 
+    | iden_elim_eq :
       IsEqualType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B B'
       → IsEqualTerm Γ b b' (B⌈(ₛidₚ), a₁, a₁, .refl A a₁⌉)
       → IsEqualType Γ (a₁ ≃[A] a₃) (a₂ ≃[A'] a₄)
-      → IsEqualTerm Γ p p' (a₁ ≃[A] a₃) 
+      → IsEqualTerm Γ p p' (a₁ ≃[A] a₃)
+      → IsType Γ (B⌈(ₛidₚ), a₁, a₃, p⌉)
       → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') (B⌈(ₛidₚ), a₁, a₃, p⌉)
     | univ_unit_eq :
       IsCtx Γ
@@ -193,18 +200,21 @@ mutual
     | univ_empty_eq :
       IsCtx Γ
       → IsEqualTerm Γ 𝟘 𝟘 𝒰
-    | univ_pi_eq : 
+    | univ_pi_eq :
       IsEqualTerm Γ A A' 𝒰 → IsEqualTerm (Γ ⬝ A) B B' 𝒰
       → IsEqualTerm Γ (ΠA;B) (ΠA';B') 𝒰
-    | univ_sigma_eq : 
+    | univ_sigma_eq :
       IsEqualTerm Γ A A' 𝒰 → IsEqualTerm (Γ ⬝ A) B B' 𝒰 
       → IsEqualTerm Γ (ΣA;B) (ΣA';B') 𝒰
     | univ_iden_eq :
       IsEqualTerm Γ A A' 𝒰 → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
       → IsEqualTerm Γ (a₁ ≃[A] a₃) (a₂ ≃[A'] a₄) 𝒰
     -- conversion
-    | ty_conv_eq : 
+    | ty_conv_eq :
       IsEqualTerm Γ a b A → IsEqualType Γ A B
+      → IsEqualTerm Γ a b B
+    | ty_conv_eq_symm :
+      IsEqualTerm Γ a b A → IsEqualType Γ B A
       → IsEqualTerm Γ a b B
 end
 
