@@ -58,10 +58,28 @@ def weaken (ρ : Weak m n) (t : Tm n) : Tm m :=
 def shift_tm : Tm n → Tm (n + 1)
   | t => weaken (.shift .id) t
 
+theorem tst1 {l n : Nat} : l + 1 + n - l = n + 1 := by omega
+theorem tst2 {l n : Nat} : l + n - l = n := by omega
+
+-- def weaken_from_a (n : Nat) (l : Nat) {leq : l ≤ n} : Weak (n + 1) n :=
+--   tst1 ▸ lift_weak_n (n - l) (.shift (.id : Weak l l))
+
+-- usage for Tm l and Ctx n with l ≤ n
+-- !!! add 1 to n for types and terms outside of contexts !!!
+-- XXX: divide into two different ones?
+def weaken_from (n : Nat) (l : Nat) : Weak (n + 1) n :=
+  match n with
+  | .zero => .shift .id
+  | .succ n' =>
+    if l < n' + 1 then
+      .lift (weaken_from n' l)
+    else
+      .shift .id
+
 notation:max "idₚ" => Weak.id
 prefix:97 "↑ₚ" => Weak.shift
 prefix:97 "⇑ₚ" => Weak.lift
 infixl:97 "ₙ⇑ₚ" => lift_weak_n
 infixl:96 "ₚ∘ₚ" => comp_weaken
-notation:95 x "⌊" ρ "⌋ᵥ" => weaken_var ρ x
+notation:95 v "⌊" ρ "⌋ᵥ" => weaken_var ρ v
 notation:95 A "⌊" ρ "⌋" => weaken ρ A

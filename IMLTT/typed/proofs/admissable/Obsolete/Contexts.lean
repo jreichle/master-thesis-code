@@ -113,7 +113,7 @@ end
 --       · sorry -- apply context_conv_is_equal_type_gen hBB' hAA
 --     | _ => sorry
 
-theorem context_conv_is_ctx : 
+theorem context_conv_is_ctx :
     Γ ⬝ A ctx → Γ ⊢ A ≡ A' type → Γ ⬝ A' ctx :=
   fun hiCA : IsCtx (Γ ⬝ A) ↦
     fun hAA : IsEqualType Γ A A' ↦

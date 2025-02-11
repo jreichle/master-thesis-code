@@ -5,8 +5,9 @@ import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.admissable.Inversion
-import IMLTT.typed.proofs.admissable.Contexts
-import IMLTT.typed.proofs.boundary.BoundaryIsType
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+-- import IMLTT.typed.proofs.admissable.Contexts
+-- import IMLTT.typed.proofs.boundary.BoundaryIsType
 
 import aesop
 

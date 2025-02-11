@@ -1,6 +1,7 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+
 import IMLTT.typed.JudgmentsAndRules
 
 theorem pi_has_type_inversion :
@@ -8,14 +9,19 @@ theorem pi_has_type_inversion :
   by
     intro hPiV
     apply HasType.recOn
-      (motive_1 := fun Γ _hiC => IsCtx Γ)
-      (motive_2 := fun Γ A _hA => IsType Γ A)
+      (motive_1 := fun Γ _hiC => True)
+      (motive_2 := fun Γ A _hA => True)
       (motive_3 := fun Γ x X _haA =>
          ∀ A, ∀ B, ∀ V,
          x = (.pi A B) ∧ X = V → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰)
-      (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
-      (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
+      (motive_4 := fun Γ A A' _hAA => True)
+      (motive_5 := fun Γ a a' A _haaA => True)
       hPiV
+    case weak =>
+      intro n Γ i A B hvA hB ihvA ihB A' B' V heq
+      have heql := And.left heq
+      have heqr := And.right heq
+      cases heql
     any_goals aesop
 
 theorem pi_is_type_inversion : 
@@ -44,6 +50,11 @@ theorem sigma_has_type_inversion :
       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
       hSiV
+    case weak =>
+      intro n Γ i A B hvA hB ihvA ihB A' B' V heq
+      have heql := And.left heq
+      have heqr := And.right heq
+      cases heql
     any_goals aesop
 
 theorem sigma_is_type_inversion : 
@@ -81,6 +92,11 @@ theorem iden_has_type_inversion :
       apply And.intro
       · apply (And.left h1)
       · rfl
+    case weak =>
+      intro n Γ i A B hvA hB ihvA ihB A' a a' V heq
+      have heql := And.left heq
+      have heqr := And.right heq
+      cases heql
     any_goals aesop
 
 theorem iden_is_type_inversion : 

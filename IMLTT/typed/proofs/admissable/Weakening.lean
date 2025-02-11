@@ -6,90 +6,140 @@ import IMLTT.untyped.proofs.Weakening
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+import IMLTT.typed.proofs.admissable.WeakeningGeneral
 
-theorem og_weak : 
-    (Γ ⊢ v(i) ∶ A) → Γ ⊢ B type → Γ ⬝ B ⊢ v(.succ i) ∶ A⌊↑ₚidₚ⌋ :=
-  by
-    intro hiA hB
-    match hB with
-    | a => sorry
 
-theorem weakening :
-  (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → ∀ (B A : Tm n), Γ ⬝ A ctx → Γ ⊢ B type 
-    → Γ ⬝ B ⬝ weaken Weak.id.shift A ctx) ∧
-  (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → ∀ (B : Tm n), Γ ⊢ B type 
-    → Γ ⬝ B ⊢ weaken Weak.id.shift A type) ∧
-  (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → ∀ (B : Tm n), Γ ⊢ B type 
-    → Γ ⬝ B ⊢ weaken Weak.id.shift a ∶ weaken Weak.id.shift A) ∧
-  (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → ∀ (B : Tm n), Γ ⊢ B type 
-    → Γ ⬝ B ⊢ weaken Weak.id.shift A ≡ weaken  Weak.id.shift A' type) ∧
-  (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → ∀ (B : Tm n), Γ ⊢ B type 
-    → Γ ⬝ B ⊢ weaken Weak.id.shift a ≡ weaken Weak.id.shift a' ∶ weaken Weak.id.shift A) :=
-  by
-    apply judgment_recursor
-      (motive_1 := fun Γ _hiC =>
-        ∀B, ∀ A, Γ ⬝ A ctx → Γ ⊢ B type
-        → Γ ⬝ B ⬝ (weaken (.shift .id) A) ctx)
-      (motive_2 := fun Γ A _hA =>
-        ∀B, Γ ⊢ B type
-        → Γ ⬝ B ⊢ (weaken (.shift .id) A) type)
-      (motive_3 := fun Γ a A haA =>
-        ∀B, Γ ⊢ B type
-        → HasType (Γ ⬝ B) (weaken (.shift .id) a) (weaken (.shift .id) A))
-      (motive_4 := fun Γ A A' _hAA =>
-        ∀B, Γ ⊢ B type
-        → Γ ⬝ B ⊢ (weaken (.shift .id) A) ≡ (weaken (.shift .id) A') type)
-      (motive_5 := fun Γ a a' A _haaA =>
-        ∀B, Γ ⊢ B type
-        → Γ ⬝ B ⊢ (weaken (.shift .id) a) ≡ (weaken (.shift .id) a') ∶ (weaken (.shift .id)) A)
-    case IsCtxEmpty =>
-      -- ⊢ ∀ (B A : Tm 0), ε ⬝ A ctx → ε ⊢ B type → ε ⬝ B ⬝ (A⌊↑id⌋) ctx
-      intro B A hiA hB
-      apply IsCtx.extend
-      have hiB := IsCtx.extend IsCtx.empty hB
-      have hA := ctx_extr hiA
-      · apply hiB
-      · sorry
-    any_goals sorry
+-- specializations of general weakening theorems
 
-theorem weakening_ctx : 
-    Γ ⬝ A ctx → Γ ⊢ B type → Γ ⬝ B ⬝ A⌊↑ₚidₚ⌋ ctx :=
+theorem weakening_ctx {n : Nat} {Γ : Ctx n} {A S : Tm n} :
+    Γ ⬝ A ctx → Γ ⊢ S type → Γ ⬝ S ⬝ A⌊↑ₚidₚ⌋ ctx :=
   by
-    intro hiCA hB
+    intro hiCA hS
+    rw [middle_insert_into_context]
     apply And.left weakening
-    · apply ctx_decr hiCA
     · apply hiCA
-    · apply hB
+    · rw [extend_get_sub_context]
+      rw [head_get_sub_context]
+      · apply hS
+      · omega
 
-theorem weakening_type : 
+theorem weakening_type {n : Nat} {Γ : Ctx n} {A B : Tm n} :
     Γ ⊢ A type → Γ ⊢ B type → Γ ⬝ B ⊢ A⌊↑ₚidₚ⌋ type :=
   by
     intro hA hB
+    rw [head_insert_into_context]
+    rw [←weaken_from_zero]
     apply And.left (And.right weakening)
     · apply hA
-    · apply hB
+    · rw [head_get_sub_context]
+      · apply hB
+      · rfl
+    · omega
 
-
-theorem weakening_term : 
+theorem weakening_term :
     (Γ ⊢ a ∶ A) → Γ ⊢ B type → Γ ⬝ B ⊢ a⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋ :=
   by
     intro haA hB
+    rw [head_insert_into_context]
+    rw [←weaken_from_zero]
     apply And.left (And.right (And.right weakening))
     · apply haA
-    · apply hB
+    · rw [head_get_sub_context]
+      · apply hB
+      · rfl
+    · omega
 
 theorem weakening_type_eq : 
     Γ ⊢ A ≡ A' type → Γ ⊢ B type → Γ ⬝ B ⊢ A⌊↑ₚidₚ⌋ ≡ A'⌊↑ₚidₚ⌋ type :=
   by
     intro hAA hB
+    rw [head_insert_into_context]
+    rw [←weaken_from_zero]
     apply And.left (And.right (And.right (And.right weakening)))
     · apply hAA
-    · apply hB
+    · rw [head_get_sub_context]
+      · apply hB
+      · rfl
+    · omega
 
 theorem weakening_term_eq : 
     (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ B type → Γ ⬝ B ⊢ a⌊↑ₚidₚ⌋ ≡ a'⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋ :=
   by
     intro haaA hB
+    rw [head_insert_into_context]
+    rw [←weaken_from_zero]
     apply And.right (And.right (And.right (And.right weakening)))
     · apply haaA
-    · apply hB
+    · rw [head_get_sub_context]
+      · apply hB
+      · rfl
+    · omega
+
+-- second one weaken
+
+theorem weakening_second_type {n : Nat} {Γ : Ctx n} {B S : Tm n} {A : Tm (n + 1)} :
+    Γ ⬝ S ⊢ A type → Γ ⊢ B type → Γ ⬝ B ⬝ (S⌊↑ₚidₚ⌋) ⊢ A⌊⇑ₚ↑ₚidₚ⌋ type :=
+  by
+    intro hA hB
+    rw [middle_insert_into_context]
+    rw [←weaken_from_zero]
+    rw [lift_weaken_from]
+    · apply And.left (And.right weakening)
+      · apply hA
+      · rw [extend_get_sub_context]
+        rw [head_get_sub_context]
+        apply hB
+        rfl
+    any_goals omega
+
+theorem weakening_second_term {n : Nat} {Γ : Ctx n} {S B : Tm n} {A a : Tm (n + 1)} :
+    (Γ ⬝ S ⊢ a ∶ A) → Γ ⊢ B type → Γ ⬝ B ⬝ S⌊↑ₚidₚ⌋ ⊢ a⌊⇑ₚ↑ₚidₚ⌋ ∶ A⌊⇑ₚ↑ₚidₚ⌋ :=
+  by
+    intro haA hB
+    rw [middle_insert_into_context]
+    simp_all
+    rw [←weaken_from_zero (l := n)]
+    rw [lift_weaken_from]
+    apply And.left (And.right (And.right weakening))
+    · apply haA
+    · rw [extend_get_sub_context]
+      rw [head_get_sub_context]
+      · apply hB
+      · rfl
+    any_goals omega
+
+set_option pp.proofs true
+
+theorem weakening_second_type_eq {n : Nat} {Γ : Ctx n} {B S : Tm n} {A A' : Tm (n + 1)} :
+    Γ ⬝ S ⊢ A ≡ A' type → Γ ⊢ B type
+    → Γ ⬝ B ⬝ (S⌊↑ₚidₚ⌋) ⊢ A⌊⇑ₚ↑ₚidₚ⌋ ≡ A'⌊⇑ₚ↑ₚidₚ⌋ type :=
+  by
+    intro hAA hB
+    rw [middle_insert_into_context]
+    simp_all
+    rw [←weaken_from_zero (l := n)]
+    rw [lift_weaken_from]
+    · apply And.left (And.right (And.right (And.right weakening)))
+      · apply hAA
+      · rw [extend_get_sub_context]
+        rw [head_get_sub_context]
+        apply hB
+        rfl
+    any_goals omega
+
+theorem weakening_second_term_eq {n : Nat} {Γ : Ctx n} {B S : Tm n} {a a' A : Tm (n + 1)} :
+    (Γ ⬝ S ⊢ a ≡ a' ∶ A) → Γ ⊢ B type 
+    → Γ ⬝ B ⬝ (S⌊↑ₚidₚ⌋) ⊢ a⌊⇑ₚ↑ₚidₚ⌋ ≡ a'⌊⇑ₚ↑ₚidₚ⌋ ∶ A⌊⇑ₚ↑ₚidₚ⌋ :=
+  by
+    intro haaA hB
+    rw [middle_insert_into_context]
+    rw [←weaken_from_zero]
+    rw [lift_weaken_from]
+    apply And.right (And.right (And.right (And.right weakening)))
+    · apply haaA
+    · rw [extend_get_sub_context]
+      rw [head_get_sub_context]
+      · apply hB
+      · rfl
+    any_goals omega
+

@@ -9,6 +9,16 @@ theorem substitution_conv_var :
   by
     simp [substitute]
 
+theorem substitution_conv_zero :
+    t⌈(ₛidₚ), σ⌉ = t⌈σ⌉₀ :=
+  by
+    simp [substitute_zero]
+
+theorem zero_substitution_conv :
+    t⌈(ₛidₚ), σ⌉ = t⌈σ/₀⌉ :=
+  by
+    simp [zero_substitution]
+
 theorem conversion_var_lift :
     (∀ (x : Fin n), v(x)⌈σ⌉ = v(x)⌊ρ⌋) → ∀ (x : Fin (n + 1)), v(x)⌈⇑ₛσ⌉ = v(x)⌊⇑ₚρ⌋ :=
   by

@@ -1,6 +1,8 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 
+import Aesop
+
 inductive Subst : Nat → Nat → Type where
   | weak : Weak m n → Subst m n
   | shift : Subst m n → Subst (m + 1) n
@@ -97,32 +99,77 @@ def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
     | .extend ξ t => .extend (comp_substitute_substitute ξ ξ') t
   | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute σ t)
 
--- def comp (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
---   substitute (comp_substitute_substitute σ σ') t
-
-def comp_subst (t : Tm n) (σ : Subst l m) (σ' : Subst m n) : Tm l :=
-  substitute σ (substitute σ' t)
-
-def weak_subst (t : Tm n) (ρ : Weak l m) (σ : Subst m n) : Tm l :=
-  weaken ρ (substitute σ t)
-
-def subst_weak (t : Tm n) (σ : Subst l m) (ρ : Weak m n) : Tm l :=
-  substitute σ (weaken ρ t)
-
 -- helpers:
+def substitute_head (σ : Subst m (n + 1)) : Tm m :=
+  substitute σ v(0)
+
+def weaken_tail (ρ : Weak m (n + 1)) : Weak m n :=
+  match ρ with
+  | .id =>
+    sorry
+  | .shift ρ' =>
+    sorry
+  | .lift σ' =>
+    sorry
+
+def substitute_tail (σ : Subst m (n + 1)) : Subst m n :=
+  match σ with
+  | .weak ρ =>
+    sorry
+    -- .weak (weaken_tail ρ)
+  | .shift σ' =>
+    .shift (substitute_tail σ')
+  | .lift σ' =>
+    .shift σ'
+  | .extend σ' t =>
+    σ'
+
+-- -- If Γ ⊢ σ : Δ∙A then Γ ⊢ tail σ : Δ.
+-- 
+-- tail : Subst m (1+ n) → Subst m n
+-- tail σ x = σ (x +1)
 
 def substitute_zero (a : Tm n) (t : Tm (n + 1)) : Tm n :=
   substitute (.extend (.weak .id) a) t
+
+--- FIXME: change everything to only use this
+def zero_substitution (a : Tm n) : Subst n (n + 1) :=
+  .extend (.weak .id) a
+
+theorem substitute_n_helper {l n : Nat} :
+    l ≤ n → ¬(l < n) → l = n :=
+  by
+    intro h1 h2
+    rw [Nat.not_lt] at h2
+    apply Iff.mpr Nat.eq_iff_le_and_ge
+    apply And.intro
+    · apply h1
+    · apply h2
+
+#check Subst
+
+def n_substitution {l n : Nat} (leq : l ≤ n) (a : Tm l) : Subst n (n + 1) :=
+  match n with
+  | .zero =>
+    have heq : l = Nat.zero := Iff.mp Nat.le_zero leq
+    .extend (.weak .id) (heq ▸ a)
+  | .succ n' =>
+    if h : l < n' + 1 then
+      .lift (n_substitution (Nat.le_of_lt_succ h) a)
+    else
+      have heq : l = Nat.succ n' := substitute_n_helper leq h
+      .extend (.weak .id) (heq ▸ a)
 
 prefix:96 "ₛ" => Subst.weak
 prefix:97 "↑ₛ" => Subst.shift
 prefix:97 "⇑ₛ" => Subst.lift
 infixl:97 "ₙ⇑ₛ" => lift_subst_n
-infixl:96 ", " => Subst.extend
-infixl:96 "∘ₛ" => comp_subst
+infixl:96 ", " => Subst.extend -- FIXME: change , (interferences with pattern matching)
 infixl:96 "ₚ∘ₛ" => comp_weaken_substitute
 infixl:96 "ₛ∘ₚ" => comp_substitute_weaken
 infixl:96 "ₛ∘ₛ" => comp_substitute_substitute
 notation:95 A "⌈" σ "⌉" => substitute σ A
 notation:95 A "⌈" σ "⌉ᵥ" => substitute_var σ A
-notation:95 A "⌈" σ "⌉₁" => substitute_zero σ A
+notation:95 A "⌈" σ "⌉₀" => substitute_zero σ A
+notation:95 a "/₀" => zero_substitution a
+notation:95 a "/ₙ" le => n_substitution le a

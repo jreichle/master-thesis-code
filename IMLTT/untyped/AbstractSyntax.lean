@@ -41,27 +41,3 @@ infixl:94 " ⬝ " => Ctx.extend
 
 instance : Coe (Fin n) (Tm n) where
   coe n := .var n
-
--- def convert_tm_higher (t : Tm m) (hleq : m ≤ n) : Tm n :=
---   sorry
--- 
--- theorem leq_add (m n : Nat) : m ≤ m + n :=
---   by
---     induction m with
---     | zero => simp []
---     | succ m' ih =>
---       rw [Nat.add_comm _ n]
---       rw [←Nat.add_assoc]
---       apply Nat.succ_le_succ
---       rw [Nat.add_comm]
---       apply ih
--- 
--- def concat_ctx (Γ : Ctx n) (Δ : Ctx m) : Ctx (n + m) :=
---   match Δ with
---   | .empty => Γ
---   | .extend Δ' A => .extend (concat_ctx Γ Δ') (convert_tm_higher A (by
---       simp []
---       rw [Nat.add_comm]
---       simp [leq_add])
---     )
--- infixl:65 "; " => concat_ctx

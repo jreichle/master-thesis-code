@@ -300,3 +300,44 @@ theorem weakening_lift_id {t : Tm (n + 1)} :
     apply weakening_var_weaken
     intro i
     apply weakening_var_lift_id
+
+theorem weakening_unit {ρ : Weak m n} :
+    𝟙⌊ρ⌋ = 𝟙 :=
+  by
+    simp [weaken]
+
+theorem weakening_empty {ρ : Weak m n} :
+    𝟘⌊ρ⌋ = 𝟘 :=
+  by
+    simp [weaken]
+
+theorem weakening_sigma {ρ : Weak m n} :
+    (ΣA;B)⌊ρ⌋ = Σ(A⌊ρ⌋);(B⌊⇑ₚρ⌋) :=
+  by
+    simp [weaken]
+    simp [lift_weak_n]
+
+theorem weaken_from_zero {geq : l ≥ n} :
+    weaken_from n l = ↑ₚidₚ :=
+  by
+    cases n with
+    | zero =>
+      rw [weaken_from]
+    | succ n' =>
+      rw [weaken_from]
+      split
+      case succ.isTrue hT =>
+        omega
+      case succ.isFalse hF =>
+        rfl
+
+theorem lift_weaken_from {n : Nat} {leq : l ≤ n} :
+    ⇑ₚweaken_from n l = weaken_from (n + 1) l :=
+  by
+    simp [weaken_from]
+    split
+    case isTrue h =>
+      rfl
+    case isFalse h =>
+      apply False.elim
+      omega

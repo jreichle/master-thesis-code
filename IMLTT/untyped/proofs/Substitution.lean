@@ -312,3 +312,58 @@ theorem substitution_lift_id {t : Tm (n + 1)} :
     intro i
     rw [←substitution_var_lift_id]
     apply substitution_conv_lift_id
+
+theorem substitution_univ : 𝒰⌈σ⌉ = 𝒰 := 
+  by
+    simp [substitute]
+
+theorem substitution_unit : 𝟙⌈σ⌉ = 𝟙 := 
+  by
+    simp [substitute]
+
+theorem substitution_empty : 𝟘⌈σ⌉ = 𝟘 := 
+  by
+    simp [substitute]
+
+theorem substitution_tt : ⋆⌈σ⌉ = ⋆ := 
+  by
+    simp [substitute]
+
+theorem substitution_pi : (ΠA;B)⌈σ⌉ = ΠA⌈σ⌉;B⌈⇑ₛσ⌉ := 
+  by
+    simp [substitute]
+    simp [lift_subst_n]
+
+theorem substitution_sigma : (ΣA;B)⌈σ⌉ = ΣA⌈σ⌉;B⌈⇑ₛσ⌉ := 
+  by
+    simp [substitute]
+    simp [lift_subst_n]
+
+theorem substitution_iden : (a ≃[A] a')⌈σ⌉ = a⌈σ⌉ ≃[A⌈σ⌉] a'⌈σ⌉ :=
+  by
+    simp [substitute]
+
+theorem substitution_refl : (.refl A a)⌈σ⌉ = .refl (A⌈σ⌉) (a⌈σ⌉) :=
+  by
+    simp [substitute]
+
+theorem lift_n_substitution {n : Nat} {leq : l ≤ n} {s : Tm l} :
+    ⇑ₛ(s/ₙleq) = s/ₙ(Nat.le_step leq) :=
+  by
+    simp [n_substitution]
+    split
+    case isTrue h =>
+      rfl
+    case isFalse h =>
+      apply False.elim
+      omega
+
+theorem n_substitution_zero {n : Nat} {s : Tm n}:
+    (s/ₙ (Nat.le_refl n)) = s/₀ :=
+  by
+    simp [zero_substitution]
+    cases n with
+    | zero =>
+      simp [n_substitution]
+    | succ n' =>
+      simp [n_substitution]
