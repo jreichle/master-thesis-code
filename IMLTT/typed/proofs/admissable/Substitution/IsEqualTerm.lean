@@ -1220,49 +1220,6 @@ theorem substitution_gen_ty_conv_eq : ∀ {n : Nat} {Γ : Ctx n} {a b A B : Tm n
       · apply hsS
       · rfl
 
-theorem substitution_gen_ty_conv_eq_symm : ∀ {n : Nat} {Γ : Ctx n} {a b A B : Tm n},
-   (Γ ⊢ a ≡ b ∶ A) →
-     Γ ⊢ B ≡ A type →
-       (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-           (a_3 a' A_1 : Tm (m + 1 - 1 + 1)),
-           eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-             eqM ▸ a = a_3 →
-               eqM ▸ b = a' →
-                 eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_3⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
-         (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-             (A_1 A' : Tm (m + 1 - 1 + 1)),
-             eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-               eqM ▸ B = A_1 →
-                 eqM ▸ A = A' → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ A_1⌈s/ₙleq⌉ ≡ A'⌈s/ₙleq⌉ type) →
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-             (a_5 a' A : Tm (m + 1 - 1 + 1)),
-             eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-               eqM ▸ a = a_5 →
-                 eqM ▸ b = a' →
-                   eqM ▸ B = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_5⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
-  by
-    intro n Γ' a b A B habA hBA ihabA ihBA m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
-    cases heqM
-    cases heqΓ
-    cases heqt
-    cases heqt'
-    cases heqT
-    simp [substitute]
-    apply IsEqualTerm.ty_conv_eq_symm
-    · apply ihabA
-      · rfl
-      · rfl
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
-    · apply ihBA
-      · rfl
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
-
 theorem substitution_gen_term_symm : ∀ {n : Nat} {Γ : Ctx n} {a a' A : Tm n},
   (Γ ⊢ a ≡ a' ∶ A) →
   (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)

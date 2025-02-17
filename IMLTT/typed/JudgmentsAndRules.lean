@@ -108,9 +108,6 @@ mutual
     | ty_conv : 
       HasType Γ a A → IsEqualType Γ A B
       → HasType Γ a B
-    | ty_conv_symm : 
-      HasType Γ a A → IsEqualType Γ B A
-      → HasType Γ a B
 
   -- Γ ⊢ A ≡ B type
   @[aesop unsafe [constructors]]
@@ -222,9 +219,6 @@ mutual
     -- conversion
     | ty_conv_eq :
       IsEqualTerm Γ a b A → IsEqualType Γ A B
-      → IsEqualTerm Γ a b B
-    | ty_conv_eq_symm :
-      IsEqualTerm Γ a b A → IsEqualType Γ B A
       → IsEqualTerm Γ a b B
     | term_symm :
       IsEqualTerm Γ a a' A

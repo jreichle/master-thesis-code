@@ -71,7 +71,7 @@ theorem boundary_type_term :
       apply And.intro
       · apply IsType.iden_form
         · apply And.left ihaaA
-        · apply HasType.ty_conv_symm (And.left ihaaA') (hAA)
+        · apply HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA)
       · apply IsType.iden_form
         · apply HasType.ty_conv (And.left (And.right ihaaA)) hAA
         · apply And.left (And.right ihaaA')
@@ -150,7 +150,7 @@ theorem boundary_type_term :
             · apply And.right ihAA
             · sorry
             · apply And.left (And.right _ihb1)
-          · sorry
+          · sorry -- XXX: trans and symm
         · apply substitution_type
           · apply And.left _ihb1
           · apply And.left ihAA
@@ -244,13 +244,4 @@ theorem boundary_type_term :
       · apply And.intro
         · apply HasType.ty_conv (And.left (And.right ihabA)) hAB
         · apply And.right ihA
-    case IsEqualTermTyConvEqSymm =>
-      intro n Γ a b A B habA hAB ihabA ihA
-      apply And.intro
-      · apply HasType.ty_conv_symm
-        · apply And.left ihabA
-        · apply hAB
-      · apply And.intro
-        · apply HasType.ty_conv_symm (And.left (And.right ihabA)) hAB
-        · apply And.left ihA
     any_goals sorry -- aesop

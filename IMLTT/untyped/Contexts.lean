@@ -133,7 +133,6 @@ def substitute_into_gen_ctx
       (substitute_into_gen_ctx s Δ' leq)
       ((ht_ext_exp_n (neq := h3) ▸ T)⌈s/ₙ h2⌉))
 
--- %s/⊕/⊗/g
 infixl:93 " ⊗ " => expand_ctx
 infixl:94 " ⊙ " => CtxGen.expand
 

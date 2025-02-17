@@ -11,6 +11,7 @@ import IMLTT.typed.proofs.admissable.Substitution
 import aesop
 
 -- different weakening
+-- might have to do it with recursor after all
 
 theorem weakening_inv :
     Γ ⬝ A ⊢ B⌊↑ₚidₚ⌋ ≡ B'⌊↑ₚidₚ⌋ type

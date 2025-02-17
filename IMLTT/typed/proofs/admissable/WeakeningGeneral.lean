@@ -635,13 +635,6 @@ theorem weakening :
         apply hS
       · apply ihAB
         apply hS
-    case HasTypeTyConvSymm =>
-      intro n Γ a A B haA hAB ihaA ihAB l hleq S hS
-      apply HasType.ty_conv_symm
-      · apply ihaA
-        apply hS
-      · apply ihAB
-        apply hS
     case IsEqualTypeUnitFormEq =>
       intro n Γ hiC ihiC l hleq S hS
       apply IsEqualType.unit_form_eq
@@ -1081,13 +1074,6 @@ theorem weakening :
     case IsEqualTermTyConvEq =>
       intro n Γ a b A B habA hAB ihabA ihAB l hleq S hS
       apply IsEqualTerm.ty_conv_eq
-      · apply ihabA
-        apply hS
-      · apply ihAB
-        apply hS
-    case IsEqualTermTyConvEqSymm =>
-      intro n Γ a b A B habA hAB ihabA ihAB l hleq S hS
-      apply IsEqualTerm.ty_conv_eq_symm
       · apply ihabA
         apply hS
       · apply ihAB
