@@ -100,14 +100,14 @@ theorem iden_has_type_inversion :
     any_goals aesop
 
 theorem iden_is_type_inversion :
-    Γ ⊢ a ≃[A] a' type → (Γ ⊢ a ∶ A) ∧ Γ ⊢ a' ∶ A :=
+    Γ ⊢ a ≃[A] a' type → (Γ ⊢ A type) ∧ (Γ ⊢ a ∶ A) ∧ Γ ⊢ a' ∶ A :=
   by
     intro hId
     match hId with
-    | .iden_form haA haA' => apply And.intro haA haA'
+    | .iden_form hA haA haA' => apply And.intro hA (And.intro haA haA')
     | .univ_elim hIdU => 
       have h1 := iden_has_type_inversion hIdU
-      apply And.right h1
+      apply And.intro (IsType.univ_elim (And.left h1)) (And.right h1)
 
 -- theorem iden_is_equal_type_inversion :
 --       Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A'] a₄ type 

@@ -342,9 +342,11 @@ theorem weakening :
         · omega
         omega
     case IsTypeIdenForm =>
-      intro n Γ a A a' haA haA' ihaA ihaA' l hleq B hB
+      intro n Γ a A a' hA haA haA' ihA ihaA ihaA' l hleq B hB
       simp [weaken]
       apply IsType.iden_form
+      · apply ihA
+        apply hB
       · apply ihaA
         apply hB
       · apply ihaA'
@@ -910,7 +912,7 @@ theorem weakening :
       · apply ihbb0
         apply hS
     case IsEqualTermPiIntroEq =>
-      intro n Γ A A' b b' B B' hbbB hPiPi ihbbB ihPiPi l hleq S hS
+      intro n Γ A A' b b' B hbbB hPiPi ihbbB ihPiPi l hleq S hS
       apply IsEqualTerm.pi_intro_eq
       · rw [extend_insert_into_context]
         simp [lift_weak_n]

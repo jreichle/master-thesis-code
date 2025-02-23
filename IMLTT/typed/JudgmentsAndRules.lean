@@ -36,7 +36,7 @@ mutual
       IsType Γ A → IsType (Γ ⬝ A) B
       → IsType Γ (ΣA;B)
     | iden_form :
-      HasType Γ a A → HasType Γ a' A
+      IsType Γ A → HasType Γ a A → HasType Γ a' A
       → IsType Γ (a ≃[A] a')
     | univ_form :
       IsCtx Γ
@@ -98,7 +98,7 @@ mutual
     | sigma_elim :
       HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
-    | iden_elim :
+    | iden_elim :-- XXX: change elim rule so that: Γ ⬝ Id A a a' ⊢ B type with id from hpId
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ p (a ≃[A] a')
@@ -178,7 +178,7 @@ mutual
       IsEqualType (Γ ⬝ 𝟘) A A' → IsEqualTerm Γ b b' 𝟘 
       → IsEqualTerm Γ (.indEmpty A b) (.indEmpty A' b') (A⌈b⌉₀)
     | pi_intro_eq :
-      IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ (ΠA;B) (ΠA';B')
+      IsEqualTerm (Γ ⬝ A) b b' B → IsEqualType Γ A A'
       → IsEqualTerm Γ (λA; b) (λA'; b') (ΠA;B)
     | pi_elim_eq :
       IsEqualTerm Γ f f' (ΠA;B) → IsEqualTerm Γ a a' A

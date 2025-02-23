@@ -56,7 +56,7 @@ theorem boundary_ctx :
       intro n Γ A b B _ hiCA 
       apply ctx_decr hiCA
     case IsEqualTermPiIntroEq =>
-      intro n Γ A b b' B _ _ _ _ hiCA _
+      intro n Γ A b b' B _ _ _ hiCA _
       apply ctx_decr hiCA
     all_goals aesop
 

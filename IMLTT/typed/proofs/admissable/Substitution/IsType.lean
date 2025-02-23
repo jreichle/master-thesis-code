@@ -137,28 +137,40 @@ theorem substitution_gen_sigma_form {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n
       · apply hsS
       · rfl
 
-theorem substitution_gen_iden_form : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
-  (Γ ⊢ a ∶ A) →
-    (Γ ⊢ a' ∶ A) →
-      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-          (a_3 A_1 : Tm (m + 1 - 1 + 1)),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ a = a_3 → eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a_3⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
-        (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-            (a A_1 : Tm (m + 1 - 1 + 1)),
-            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-              eqM ▸ a' = a → eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
-          ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) {s S : Tm l}
-            (A_1 : Tm (m + 1 - 1 + 1)),
-            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-              (eqM ▸ a ≃[A] a') = A_1 → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ A_1⌈s/ₙleq⌉ type :=
+theorem substitution_gen_iden_form : 
+  ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
+    Γ ⊢ A type →
+      (Γ ⊢ a ∶ A) →
+        (Γ ⊢ a' ∶ A) →
+          (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) {s S : Tm l}
+              (A_1 : Tm (m + 1 - 1 + 1)),
+              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ A_1⌈s/ₙleq⌉ type) →
+            (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+                (a_5 A_1 : Tm (m + 1 - 1 + 1)),
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ a = a_5 →
+                    eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_5⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
+              (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+                  (a A_1 : Tm (m + 1 - 1 + 1)),
+                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                    eqM ▸ a' = a →
+                      eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
+                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) {s S : Tm l}
+                  (A_1 : Tm (m + 1 - 1 + 1)),
+                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                    (eqM ▸ a ≃[A] a') = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ A_1⌈s/ₙleq⌉ type :=
   by
-    intro n Γ' a A a' haA haA' ihaA ihaA' m l hleq Γ Δ heqM s S T heqΓ heqT hsS
+    intro n Γ' a A a' hA haA haA' ihA ihaA ihaA' m l hleq Γ Δ heqM s S T heqΓ heqT hsS
     cases heqM
     cases heqΓ
     cases heqT
     simp [substitute]
     apply IsType.iden_form
+    · apply ihA
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
     · apply ihaA
       · rfl
       · rfl

@@ -177,37 +177,52 @@ theorem functionality_typing_sigma_form : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} 
       · rfl
 
 theorem functionality_typing_iden_form : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
-    (Γ ⊢ a ∶ A) →
-      (Γ ⊢ a' ∶ A) →
-        (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-            (eqM : n = m + 1),
-            (Γ_1 ⊢ s ≡ s' ∶ S) →
-              (Γ_1 ⊢ s ∶ S) →
-                (Γ_1 ⊢ s' ∶ S) →
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                    eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-          (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+    Γ ⊢ A type →
+      (Γ ⊢ a ∶ A) →
+        (Γ ⊢ a' ∶ A) →
+          (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
               (eqM : n = m + 1),
               (Γ_1 ⊢ s ≡ s' ∶ S) →
                 (Γ_1 ⊢ s ∶ S) →
                   (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                      eqM ▸ a' = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-              (eqM : n = m + 1),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                      (eqM ▸ a ≃[A] a') = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type  :=
+                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
+            (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+                (eqM : n = m + 1),
+                (Γ_1 ⊢ s ≡ s' ∶ S) →
+                  (Γ_1 ⊢ s ∶ S) →
+                    (Γ_1 ⊢ s' ∶ S) →
+                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                        eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
+              (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+                  (eqM : n = m + 1),
+                  (Γ_1 ⊢ s ≡ s' ∶ S) →
+                    (Γ_1 ⊢ s ∶ S) →
+                      (Γ_1 ⊢ s' ∶ S) →
+                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                          eqM ▸ a' = t →
+                            eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
+                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+                  (eqM : n = m + 1),
+                  (Γ_1 ⊢ s ≡ s' ∶ S) →
+                    (Γ_1 ⊢ s ∶ S) →
+                      (Γ_1 ⊢ s' ∶ S) →
+                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                          (eqM ▸ a ≃[A] a') = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type
+ :=
   by
-    intro n Γ' a A a' haA haA' ihaA ihaA' m l hleq Γ Δ s s' S T heqM hssS hsS hsS' heqΓ heqT
+    intro n Γ' a A a' hA haA haA' ihA ihaA ihaA' m l hleq Γ Δ s s' S T heqM hssS hsS hsS' heqΓ heqT
     cases heqM
     cases heqΓ
     cases heqT
     simp [substitute]
     apply IsEqualType.iden_form_eq
-    · sorry
+    · apply ihA
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      · rfl
+      · rfl
+      · rfl
     · apply ihaA
       · apply hssS
       · apply hsS
@@ -216,16 +231,22 @@ theorem functionality_typing_iden_form : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm
       · rfl
       · rfl
       · rfl
-    · sorry
-      -- apply ihaA' -- need ty_conv
-      -- · sorry
-      -- · sorry
-      -- · sorry
-      -- · sorry
-      -- · sorry
-      -- · sorry
-      -- · sorry
-      -- · sorry
+    · apply IsEqualTerm.ty_conv_eq
+      · apply ihaA' -- need ty_conv
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        · rfl
+        · rfl
+        · rfl
+        · rfl
+      · apply ihA
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        · rfl
+        · rfl
+        · rfl
 
 theorem functionality_typing_univ_form : ∀ {n : Nat} {Γ : Ctx n},
    Γ ctx →

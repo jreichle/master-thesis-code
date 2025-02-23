@@ -367,3 +367,14 @@ theorem n_substitution_zero {n : Nat} {s : Tm n}:
       simp [n_substitution]
     | succ n' =>
       simp [n_substitution]
+
+theorem substitution_unit_sub : 
+    ¬(∀ {n : Nat} {B : Tm (n + 1)} {a : Tm n}, 𝟙 = B⌈a⌉₀ → B = 𝟙) :=
+  by
+    intro hEq
+    have h : (𝟙 : Tm 0) = v(0)⌈𝟙⌉₀ :=
+        by simp [substitute_zero]
+           simp [substitute]
+           simp [substitute_var]
+    have h1 := hEq h
+    cases h1

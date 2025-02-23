@@ -26,9 +26,9 @@ theorem judgment_recursor :
     (a : Γ ⊢ A type) (a_1 : (Γ ⬝ A) ⊢ B type),
     motive_2 Γ A a → motive_2 (Γ ⬝ A) B a_1 → motive_2 Γ (.sigma A B) (IsType.sigma_form a a_1))
   → (IsTypeIdenForm : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n}
-    (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ a' ∶ A),
-    motive_3 Γ a A a_1 → motive_3 Γ a' A a_2 
-    → motive_2 Γ (.iden A a a') (IsType.iden_form a_1 a_2))
+    (a_3 : Γ ⊢ A type) (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ a' ∶ A),
+    motive_2 Γ A a_3 → motive_3 Γ a A a_1 → motive_3 Γ a' A a_2 
+    → motive_2 Γ (.iden A a a') (IsType.iden_form a_3 a_1 a_2))
   → (IsTypeUnivForm : ∀ {n : Nat} {Γ : Ctx n}
     (a : Γ ctx), motive_1 Γ a → motive_2 Γ 𝒰 (IsType.univ_form a))
   → (IsTypeUnivElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} (a : Γ ⊢ A ∶ 𝒰),
@@ -47,7 +47,7 @@ theorem judgment_recursor :
     (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ b ∶ substitute_zero a B),
     motive_3 Γ a A a_1 → motive_3 Γ b (substitute_zero a B) a_2
     → motive_3 Γ (.pairSigma a b) (.sigma A B) (HasType.sigma_intro a_1 a_2))
-  → (HasTypeIdenIntro : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n} 
+  → (HasTypeIdenIntro : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}
     (a_2 : Γ ⊢ a ∶ A),
     motive_3 Γ a A a_2
     → motive_3 Γ (.refl A a) (.iden A a a) (HasType.iden_intro a_2))
@@ -171,9 +171,13 @@ theorem judgment_recursor :
   → (IsEqualTermEmptyElimEq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm (n + 1)} {b b' : Tm n} 
     (a : (Γ ⬝ 𝟘) ⊢ A ≡ A' type) (a_1 : Γ ⊢ b ≡ b' ∶ 𝟘), motive_4 (Γ ⬝ 𝟘) A A' a → motive_5 Γ b b' 𝟘 a_1 
     → motive_5 Γ (A.indEmpty b) (A'.indEmpty b') (substitute_zero b A) (IsEqualTerm.empty_elim_eq a a_1))
-  → (IsEqualTermPiIntroEq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {b b' B B' : Tm (n + 1)}
-    (a : (Γ ⬝ A) ⊢ b ≡ b' ∶ B) (a1 : Γ ⊢ (ΠA;B) ≡ (ΠA';B') type),
-    motive_5 (Γ ⬝ A) b b' B a → motive_4 Γ (ΠA;B) (ΠA';B') a1
+  -- → (IsEqualTermPiIntroEq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {b b' B B' : Tm (n + 1)}
+  --   (a : (Γ ⬝ A) ⊢ b ≡ b' ∶ B) (a1 : Γ ⊢ (ΠA;B) ≡ (ΠA';B') type),
+  --   motive_5 (Γ ⬝ A) b b' B a → motive_4 Γ (ΠA;B) (ΠA';B') a1
+  --   → motive_5 Γ (A.lam b) (A'.lam b') (A.pi B) (IsEqualTerm.pi_intro_eq a a1))
+  → (IsEqualTermPiIntroEq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {b b' B : Tm (n + 1)}
+    (a : (Γ ⬝ A) ⊢ b ≡ b' ∶ B) (a1 : Γ ⊢ A ≡ A' type),
+    motive_5 (Γ ⬝ A) b b' B a → motive_4 Γ A A' a1
     → motive_5 Γ (A.lam b) (A'.lam b') (A.pi B) (IsEqualTerm.pi_intro_eq a a1))
   → (IsEqualTermPiElimEq : ∀ {n : Nat} {Γ : Ctx n} {f f' A : Tm n} {B : Tm (n + 1)} {a a' : Tm n} 
     (a_1 : Γ ⊢ f ≡ f' ∶ A.pi B) (a_2 : Γ ⊢ a ≡ a' ∶ A), motive_5 Γ f f' (A.pi B) a_1 

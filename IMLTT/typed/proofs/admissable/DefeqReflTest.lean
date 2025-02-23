@@ -7,6 +7,9 @@ import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.admissable.Weakening
 
+import IMLTT.typed.proofs.admissable.defeqrefl.IsCtx
+import IMLTT.typed.proofs.admissable.defeqrefl.IsType
+
 import aesop
 
 theorem defeq_refl :
@@ -21,8 +24,15 @@ theorem defeq_refl :
     (∀ {n : Nat} {Γ : Ctx n},
       Γ ctx →
         (∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
-          ∀ (m : Nat) (Γ_1 : Ctx m) (eqM : n = m + 1) (B : Tm m), eqM ▸ Γ = Γ_1 ⬝ B → Γ_1 ⊢ B ≡ B type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A ≡ A type) ∧
+          ∀ (m : Nat) (z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+        Γ ⊢ A type →
+          (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) ∧
       (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
           (Γ ⊢ a ∶ A) →
             (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
@@ -40,8 +50,22 @@ theorem defeq_refl :
       · intro n Γ hiC
         apply hiC
       · intro n Γ A hA
-        apply And.left (And.right h)
-        apply hA
+        have ihA := And.left (And.right h) hA
+        have ihεAA := And.left ihA
+        have ihΓBB := And.left (And.right ihA)
+        have ihΓAA := And.right (And.right ihA)
+        cases Γ with
+        | empty =>
+          apply ihεAA
+          · rfl
+          · rfl
+          · rfl
+        | extend Γ S =>
+          rw [←empty_expand_context (Γ := Γ ⬝ S)]
+          apply ihΓAA
+          · rfl
+          · rfl
+          · rfl
       · intro n Γ A a haA
         have ihbB := And.left (And.right (And.right h)) haA
         have ihεAA := And.left ihbB
@@ -72,10 +96,19 @@ theorem defeq_refl :
     apply judgment_recursor
       (motive_1 := fun {n} Γ' _hiC =>
         (∀ (eqM : n = 0), eqM ▸ Γ' = ε → (ε ctx)) ∧
-        (∀m (Γ : Ctx m) (eqM : n = m + 1) B,
-          eqM ▸ Γ' = Γ ⬝ B →
+        (∀m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) B,
+          eqM ▸ Γ' = Γ ⬝ B ⊗ Δ →
           (Γ ⊢ B ≡ B type)))
-      (motive_2 := fun Γ A _hA => Γ ⊢ A ≡ A type)
+      (motive_2 := fun {n} Γ' A' _hA => 
+        (∀ (eqM : n = 0) A,
+          eqM ▸ Γ' = ε → eqM ▸ A' = A →
+          (ε ⊢ A ≡ A type)) ∧
+        (∀ m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) B,
+          eqM ▸ Γ' = Γ ⬝ B ⊗ Δ →
+          Γ ⊢ B ≡ B type) ∧
+        (∀ m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) A B,
+          eqM ▸ Γ' = Γ ⬝ B ⊗ Δ → eqM ▸ A' = A →
+          (Γ ⬝ B ⊗ Δ ⊢ A ≡ A type)))
       (motive_3 := fun {n} Γ' a' A' _haA =>
         (∀ (eqM : n = 0) A,
           eqM ▸ Γ' = ε → eqM ▸ A' = A →
@@ -96,53 +129,130 @@ theorem defeq_refl :
       (motive_4 := fun Γ A A' _hAA => Γ ⊢ A ≡ A' type)
       (motive_5 := fun Γ a a' A _haaA => Γ ⊢ a ≡ a' ∶ A)
     case IsCtxEmpty =>
-      apply And.intro
-      · intro heqM heqΓ
-        cases heqM
-        cases heqΓ
-        apply IsCtx.empty
-      · intro n Γ heqM
-        omega
+      apply defeq_refl_empty
     case IsCtxExtend =>
-      intro n Γ' A hiC hA ihiC ihA
-      apply And.intro
-      · intro heqM
-        omega
-      · intro m Γ heqM B heqΓ
-        cases heqM
-        cases heqΓ
-        apply ihA
-    case IsTypeUnitForm =>
-      intro n Γ hiC _ihiC
-      apply IsEqualType.unit_form_eq hiC
-    case IsTypeEmptyForm =>
-      intro n Γ hiC _ihiC
-      apply IsEqualType.empty_form_eq hiC
-    case IsTypePiForm =>
-      intro n Γ A B hA hB ihA ihB
-      apply IsEqualType.pi_form_eq ihA ihB
-    case IsTypeSigmaForm =>
-      intro n Γ A B hA hB ihA ihB
-      apply IsEqualType.sigma_form_eq ihA ihB
-    case IsTypeIdenForm =>
-      intro n Γ a A a' haA haA' ihaA ihaA'
-      cases Γ with
-      | empty =>
-        aesop
-      | extend Γ' B =>
-        sorry
-        -- aesop
-    case IsTypeUnivForm =>
-      intro n Γ hiC _ihiC
-      apply IsEqualType.univ_form_eq hiC
-    case IsTypeUnivElim =>
-      intro n Γ A hAU ihAU
-      cases Γ with
-      | empty =>
-        aesop
-      | extend Γ' B =>
-        sorry
+      apply defeq_refl_extend
+    -- case IsTypeUnitForm =>
+    --   apply defeq_refl_unit_form
+    -- case IsTypeEmptyForm =>
+    --   apply defeq_refl_empty_form
+    -- case IsTypePiForm =>
+    --   apply defeq_refl_pi_form
+    -- case IsTypeSigmaForm =>
+    --   apply defeq_refl_sigma_form
+    -- case IsTypeIdenForm =>
+    --   apply defeq_refl_iden_form
+    -- case IsTypeUnivForm =>
+    --   apply defeq_refl_univ_form
+    -- case IsTypeUnivElim =>
+    --   apply defeq_refl_univ_elim
     any_goals sorry
+
+-- theorem defeq_refl :
+--     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A ≡ A type) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → (Γ ⊢ a ≡ a ∶ A) ∧ (Γ ⊢ A ≡ A type)) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A))
+--   :=
+--   by
+--     suffices h :
+--     (∀ {n : Nat} {Γ : Ctx n},
+--       Γ ctx →
+--         (∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
+--           ∀ (m : Nat) (Γ_1 : Ctx m) (eqM : n = m + 1) (B : Tm m), eqM ▸ Γ = Γ_1 ⬝ B → Γ_1 ⊢ B ≡ B type) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, Γ ⊢ A type → Γ ⊢ A ≡ A type) ∧
+--       (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+--           (Γ ⊢ a ∶ A) →
+--             (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+--               (∀ (eqM : n = 0) (a_1 A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ a = a_1 → eqM ▸ A = A_1 → ε ⊢ a_1 ≡ a_1 ∶ A_1) ∧
+--                 (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+--                     eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+--                   (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+--                       eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) ∧
+--                     ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a_1 A_1 : Tm z) (B : Tm m),
+--                       eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ a = a_1 → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a_1 ≡ a_1 ∶ A_1) ∧
+--         (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
+--           ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ≡ a' ∶ A
+--     by
+--       any_goals repeat' apply And.intro
+--       · intro n Γ hiC
+--         apply hiC
+--       · intro n Γ A hA
+--         apply And.left (And.right h)
+--         apply hA
+--       · intro n Γ A a haA
+--         have ihbB := And.left (And.right (And.right h)) haA
+--         have ihεAA := And.left ihbB
+--         have ihεaaA := And.left (And.right ihbB)
+--         have ihΓBB := And.left (And.right (And.right ihbB))
+--         have ihΓAA := And.left (And.right (And.right (And.right ihbB)))
+--         have ihΓaaA := And.right (And.right (And.right (And.right ihbB)))
+--         cases Γ with
+--         | empty =>
+--           apply And.intro
+--           · apply ihεaaA
+--             any_goals rfl
+--           · apply ihεAA
+--             any_goals rfl
+--         | extend Γ S =>
+--           simp_all
+--           apply And.intro
+--           · rw [←empty_expand_context (Γ := Γ ⬝ S)]
+--             apply ihΓaaA
+--             any_goals rfl
+--           · rw [←empty_expand_context (Γ := Γ ⬝ S)]
+--             apply ihΓAA
+--             any_goals rfl
+--       · intro n Γ A A' hAA
+--         apply hAA
+--       · intro n Γ a a' A haaA
+--         apply haaA
+--     apply judgment_recursor
+--       (motive_1 := fun {n} Γ' _hiC =>
+--         (∀ (eqM : n = 0), eqM ▸ Γ' = ε → (ε ctx)) ∧
+--         (∀m (Γ : Ctx m) (eqM : n = m + 1) B,
+--           eqM ▸ Γ' = Γ ⬝ B →
+--           (Γ ⊢ B ≡ B type)))
+--       (motive_2 := fun Γ A _hA => Γ ⊢ A ≡ A type)
+--       (motive_3 := fun {n} Γ' a' A' _haA =>
+--         (∀ (eqM : n = 0) A,
+--           eqM ▸ Γ' = ε → eqM ▸ A' = A →
+--           (ε ⊢ A ≡ A type)) ∧
+--         (∀ (eqM : n = 0) a A,
+--           eqM ▸ Γ' = ε → eqM ▸ a' = a → eqM ▸ A' = A →
+--           (ε ⊢ a ≡ a ∶ A)) ∧
+--         (∀ m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) B,
+--           eqM ▸ Γ' = Γ ⬝ B ⊗ Δ →
+--           Γ ⊢ B ≡ B type) ∧
+--         (∀ m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) A B,
+--           eqM ▸ Γ' = Γ ⬝ B ⊗ Δ → eqM ▸ A' = A →
+--           (Γ ⬝ B ⊗ Δ ⊢ A ≡ A type)) ∧
+--         (∀ m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) a A B,
+--           eqM ▸ Γ' = Γ ⬝ B ⊗ Δ → eqM ▸ a' = a → eqM ▸ A' = A →
+--           (Γ ⬝ B  ⊗ Δ ⊢ a ≡ a ∶ A))
+--       )
+--       (motive_4 := fun Γ A A' _hAA => Γ ⊢ A ≡ A' type)
+--       (motive_5 := fun Γ a a' A _haaA => Γ ⊢ a ≡ a' ∶ A)
+--     case IsCtxEmpty =>
+--       apply defeq_refl_empty
+--     case IsCtxExtend =>
+--       apply defeq_refl_extend
+--     case IsTypeUnitForm =>
+--       apply defeq_refl_unit_form
+--     case IsTypeEmptyForm =>
+--       apply defeq_refl_empty_form
+--     case IsTypePiForm =>
+--       apply defeq_refl_pi_form
+--     case IsTypeSigmaForm =>
+--       apply defeq_refl_sigma_form
+--     case IsTypeIdenForm =>
+--       apply defeq_refl_iden_form
+--     case IsTypeUnivForm =>
+--       apply defeq_refl_univ_form
+--     case IsTypeUnivElim =>
+--       apply defeq_refl_univ_elim
+--     any_goals sorry
 
 -- theorem defeq_refl :
 --     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧

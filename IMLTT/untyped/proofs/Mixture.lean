@@ -285,3 +285,5 @@ theorem conversion_var_lift_n_sub_weak :
           rw [weakening_shift_id]
           simp [weaken]
           simp [weaken_var]
+
+

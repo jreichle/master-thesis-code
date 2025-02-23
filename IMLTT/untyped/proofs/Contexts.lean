@@ -150,7 +150,18 @@ theorem empty_extend_expand_context_n_substitution {n : Nat} {Γ : Ctx n} {s : T
   by
     simp [substitute_into_gen_ctx]
 
-theorem extend_expand_context_n_substitution {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {A : Tm n}:
+theorem extend_expand_context_n_substitution' {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)}:
+    (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
+    Γ ⊗ ⌈s⌉((Δ ⊙ A) w/Nat.le_refl l) :=
+  by
+    rw [substitute_into_gen_ctx]
+    cases Δ
+    case start =>
+      rw [expand_ctx]
+    case expand Δ T =>
+      rw [expand_ctx]
+
+theorem extend_expand_context_n_substitution {Γ : Ctx l} {Δ : CtxGen (l + 1) (n)} {A : Tm n}:
     (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (ht_ext_exp_n (neq := gen_ctx_neq Δ) ▸ A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
     ht_ext_exp_n_extr (neq := gen_ctx_neq Δ) ▸ Γ ⊗ ⌈s⌉((Δ ⊙ A) w/Nat.le_refl l) :=
   by
