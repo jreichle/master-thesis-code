@@ -108,18 +108,3 @@ theorem iden_is_type_inversion :
     | .univ_elim hIdU => 
       have h1 := iden_has_type_inversion hIdU
       apply And.intro (IsType.univ_elim (And.left h1)) (And.right h1)
-
--- theorem iden_is_equal_type_inversion :
---       Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A'] a₄ type 
---       → Γ ⊢ A ≡ A' type ∧ (Γ ⊢ a₁ ≡ a₂ ∶ A) ∧ Γ ⊢ a₃ ≡ a₄ ∶ A'  :=
---   by
---     intro hIdId
---     match hIdId with
---     | .iden_form_eq hAA haA haA' => apply And.intro hAA (And.intro haA haA')
---     | .univ_elim_eq hIdU =>
---       have h1 := iden_has_type_inversion hIdIdU
---       apply And.right h1
---     | .type_symm hAB =>
---       sorry
---     | .type_trans hAB hBC =>
---       sorry

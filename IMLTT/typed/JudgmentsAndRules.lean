@@ -67,7 +67,7 @@ mutual
       HasType Γ a A → HasType Γ b (B⌈a⌉₀)
       → HasType Γ (a&b) (ΣA;B)
     | iden_intro :
-      HasType Γ a A
+      IsType Γ A → HasType Γ a A
       → HasType Γ (A.refl a) (a ≃[A] a)
     -- universe intro
     | univ_unit :
@@ -98,7 +98,7 @@ mutual
     | sigma_elim :
       HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
-    | iden_elim :-- XXX: change elim rule so that: Γ ⬝ Id A a a' ⊢ B type with id from hpId
+    | iden_elim :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ p (a ≃[A] a')

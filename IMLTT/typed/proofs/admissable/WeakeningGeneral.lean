@@ -474,10 +474,12 @@ theorem weakening :
             omega
         · exact hleq
     case HasTypeIdenIntro =>
-      intro n Γ A a haA ihaA l hleq B hB
+      intro n Γ A a hA haA ihA ihaA l hleq B hB
       apply HasType.iden_intro
-      apply ihaA
-      apply hB
+      · apply ihA
+        apply hB
+      · apply ihaA
+        apply hB
     case HasTypeUnivUnit =>
       intro n Γ hiC ihiC l hleq B hB
       simp [weaken]

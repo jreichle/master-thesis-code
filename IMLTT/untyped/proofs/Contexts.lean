@@ -150,6 +150,11 @@ theorem empty_extend_expand_context_n_substitution {n : Nat} {Γ : Ctx n} {s : T
   by
     simp [substitute_into_gen_ctx]
 
+theorem middle_expand_context :
+    Γ ⊗ CtxGen.start ⊙ A ⊙ B = Γ ⬝ A ⊗ CtxGen.start ⊙ B :=
+  by
+    simp [expand_ctx]
+
 theorem extend_expand_context_n_substitution' {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)}:
     (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
     Γ ⊗ ⌈s⌉((Δ ⊙ A) w/Nat.le_refl l) :=

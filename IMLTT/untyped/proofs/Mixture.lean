@@ -287,3 +287,24 @@ theorem conversion_var_lift_n_sub_weak :
           simp [weaken_var]
 
 
+theorem substitution_twice_zero {n : Nat} {T : Tm (n + 2)} {b : Tm (n)} {a : Tm (n)} :
+    T⌈(ₛidₚ), a, b⌉ = T⌈b⌊↑ₚidₚ⌋⌉₀⌈a⌉₀ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [substitution_comp_σρ]
+        simp [comp_substitute_weaken]
+        simp [substitution_id]
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+

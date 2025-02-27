@@ -48,9 +48,9 @@ theorem judgment_recursor :
     motive_3 Γ a A a_1 → motive_3 Γ b (substitute_zero a B) a_2
     → motive_3 Γ (.pairSigma a b) (.sigma A B) (HasType.sigma_intro a_1 a_2))
   → (HasTypeIdenIntro : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}
-    (a_2 : Γ ⊢ a ∶ A),
-    motive_3 Γ a A a_2
-    → motive_3 Γ (.refl A a) (.iden A a a) (HasType.iden_intro a_2))
+    (a_1 : Γ ⊢ A type) (a_2 : Γ ⊢ a ∶ A),
+    motive_2 Γ A a_1 → motive_3 Γ a A a_2
+    → motive_3 Γ (.refl A a) (.iden A a a) (HasType.iden_intro a_1 a_2))
   → (HasTypeUnivUnit : ∀ {n : Nat} {Γ : Ctx n} 
     (a : Γ ctx), motive_1 Γ a → motive_3 Γ 𝟙 𝒰 (HasType.univ_unit a))
   → (HasTypeUnivEmpty : ∀ {n : Nat} {Γ : Ctx n} 

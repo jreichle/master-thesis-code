@@ -260,31 +260,41 @@ theorem substitution_gen_sigma_intro : ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n}
       · apply hsS
       · rfl
 
-theorem substitution_gen_iden_intro : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+theorem substitution_gen_iden_intro :  ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+  Γ ⊢ A type →
     (Γ ⊢ a ∶ A) →
-      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-          (a_1 A_1 : Tm (m + 1 - 1 + 1)),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ a = a_1 → eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a_1⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-          (a_3 A_1 : Tm (m + 1 - 1 + 1)),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ A.refl a = a_3 →
-              (eqM ▸ a ≃[A] a) = A_1 → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a_3⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
+      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) {s S : Tm l}
+          (A_1 : Tm (m + 1 - 1 + 1)),
+          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ A_1⌈s/ₙleq⌉ type) →
+        (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+            (a_4 A_1 : Tm (m + 1 - 1 + 1)),
+            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+              eqM ▸ a = a_4 →
+                eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_4⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
+          ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+            (a_5 A_1 : Tm (m + 1 - 1 + 1)),
+            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+              eqM ▸ A.refl a = a_5 →
+                (eqM ▸ a ≃[A] a) = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_5⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
   by
-    intro n Γ' A a haA ihaA m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
+    intro n Γ' A a hA haA ihA ihaA m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
     cases heqΓ
     cases heqt
     cases heqT
     simp [substitute]
     apply HasType.iden_intro
-    apply ihaA
-    · rfl
-    · rfl
-    · rfl
-    · apply hsS
-    · rfl
+    · apply ihA
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · apply ihaA
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem substitution_gen_univ_unit : ∀ {n : Nat} {Γ : Ctx n},
     Γ ctx →

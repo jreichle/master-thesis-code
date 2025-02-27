@@ -12,15 +12,13 @@ import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.admissable.WeakeningGeneral
 import IMLTT.typed.proofs.admissable.SubstitutionGeneral
 
-import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsEqualType
-import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsEqualTerm
 import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsCtx
-import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsTypeRfl
-import IMLTT.typed.proofs.admissable.FunctionalityTyping.HasTypeRfl
+import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsType
+import IMLTT.typed.proofs.admissable.FunctionalityTyping.HasType
 
 set_option pp.proofs true
 
-theorem functionality_typing_like_refl :
+theorem functionality_typing :
     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
     (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {T : Tm (n + 1)} {s s' S : Tm l},
       (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
@@ -195,6 +193,40 @@ theorem functionality_typing_like_refl :
     --   | intro a
     --   | apply False.elim
     --   | assumption
+
+  theorem functionality_typing_type {l : Nat} {Γ : Ctx l} {s s' S : Tm l} {T : Tm (l + 1)} :
+      Γ ⬝ S ⊢ T type
+      → (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+      → (Γ ⊢ T⌈s⌉₀ ≡ T⌈s'⌉₀ type) :=
+  by
+    intro hT hssS hsS hsS'
+    simp [substitute_zero]
+    simp [zero_substitution_conv]
+    simp [←n_substitution_zero]
+    rw [←empty_expand_context (Γ := Γ)]
+    rw [←empty_extend_expand_context_n_substitution]
+    apply And.left (And.right functionality_typing)
+    · apply hssS
+    · apply hsS
+    · apply hsS'
+    · apply hT
+
+theorem functionality_typing_term {l : Nat} {Γ : Ctx l} {s s' S : Tm l} {t T : Tm (l + 1)} :
+      (Γ ⬝ S ⊢ t ∶ T)
+      → (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+      → (Γ ⊢  t⌈s⌉₀ ≡ t⌈s'⌉₀ ∶ T⌈s⌉₀) :=
+  by
+    intro htT hssS hsS hsS'
+    simp [substitute_zero]
+    simp [zero_substitution_conv]
+    simp [←n_substitution_zero]
+    rw [←empty_expand_context (Γ := Γ)]
+    rw [←empty_extend_expand_context_n_substitution]
+    apply And.left (And.right (And.right functionality_typing))
+    · apply hssS
+    · apply hsS
+    · apply hsS'
+    · apply htT
 
 -- theorem functionality_typing :
 --     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
