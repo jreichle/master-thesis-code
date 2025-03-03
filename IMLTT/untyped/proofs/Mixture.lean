@@ -308,3 +308,27 @@ theorem substitution_twice_zero {n : Nat} {T : Tm (n + 2)} {b : Tm (n)} {a : Tm 
         simp [substitute]
         simp [substitute_var]
 
+
+theorem substitution_separate {n m : Nat} {t : Tm (n + 1)} {s : Tm m} {σ : Subst m n} :
+    t⌈σ, s⌉ = t⌈⇑ₛσ⌉⌈s⌉₀ :=
+  by
+    rw [substitute_zero]
+    rw [substitution_comp]
+    simp [comp_substitute_substitute]
+    apply substitution_var_substitute
+    intro x
+    cases x with
+    | mk i hFin =>
+      cases i with
+      | zero =>
+        rw [substitute]
+        rw [substitute_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [←substitution_conv_var]
+        rw [←substitution_comp]
+        simp [substitution_id]
+
+

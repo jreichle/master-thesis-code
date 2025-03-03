@@ -155,6 +155,11 @@ theorem middle_expand_context :
   by
     simp [expand_ctx]
 
+theorem context_to_gen_ctx :
+    Γ ⬝ A = Γ ⊗ CtxGen.start ⊙ A :=
+  by
+    simp [expand_ctx]
+
 theorem extend_expand_context_n_substitution' {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)}:
     (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
     Γ ⊗ ⌈s⌉((Δ ⊙ A) w/Nat.le_refl l) :=

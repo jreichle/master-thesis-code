@@ -13,38 +13,201 @@ import aesop
 theorem defeq_refl_unit_form : ∀ {n : Nat} {Γ : Ctx n},
   Γ ctx →
     ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
-        ∀ (m : Nat) (Γ_1 : Ctx m) (eqM : n = m + 1) (B : Tm m), eqM ▸ Γ = Γ_1 ⬝ B → Γ_1 ⊢ B ≡ B type) →
-      Γ ⊢ 𝟙 ≡ 𝟙 type :=
+        ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+          eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
+      (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝟙 = A → ε ⊢ A ≡ A type) ∧
+        (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+          ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝟙 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type :=
   by
-    intro n Γ hiC _ihiC
-    apply IsEqualType.unit_form_eq hiC
+    intro n Γ hiC ihiC
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.unit_form_eq hiC
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      cases Δ
+      case start =>
+        apply And.right ihiC
+        rotate_left
+        · apply m + 1
+        · apply CtxGen.start
+        · rfl
+        · rfl
+      case expand n' Δ' S =>
+        apply And.right ihiC
+        rotate_left
+        · apply n' + 1
+        · apply Δ' ⊙ S
+        · rfl
+        · rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.unit_form_eq hiC
 
-theorem defeq_refl_empty_form : ∀ {n : Nat} {Γ : Ctx n},
+theorem defeq_refl_empty_form : 
+    ∀ {n : Nat} {Γ : Ctx n},
   Γ ctx →
     ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
-        ∀ (m : Nat) (Γ_1 : Ctx m) (eqM : n = m + 1) (B : Tm m), eqM ▸ Γ = Γ_1 ⬝ B → Γ_1 ⊢ B ≡ B type) →
-      Γ ⊢ 𝟘 ≡ 𝟘 type :=
+        ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+          eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
+      (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝟘 = A → ε ⊢ A ≡ A type) ∧
+        (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+          ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝟘 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type :=
   by
-    intro n Γ hiC _ihiC
-    apply IsEqualType.empty_form_eq hiC
+    intro n Γ hiC ihiC
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.empty_form_eq hiC
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      cases Δ
+      case start =>
+        apply And.right ihiC
+        rotate_left
+        · apply m + 1
+        · apply CtxGen.start
+        · rfl
+        · rfl
+      case expand n' Δ' S =>
+        apply And.right ihiC
+        rotate_left
+        · apply n' + 1
+        · apply Δ' ⊙ S
+        · rfl
+        · rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.empty_form_eq hiC
 
-theorem defeq_refl_pi_form : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
-    Γ ⊢ A type → Γ ⬝ A ⊢ B type → Γ ⊢ A ≡ A type → Γ ⬝ A ⊢ B ≡ B type → Γ ⊢ ΠA;B ≡ ΠA;B type :=
+
+theorem defeq_refl_pi_form :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
+    Γ ⊢ A type →
+    Γ ⬝ A ⊢ B type →
+      ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+          (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+            ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
+        ((∀ (eqM : n + 1 = 0) (A_1 : Tm 0), eqM ▸ Γ ⬝ A = ε → eqM ▸ B = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (B : Tm m),
+                eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (A_1 : Tm z) (B_1 : Tm m),
+                eqM ▸ Γ ⬝ A = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ B = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type) →
+          (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → (eqM ▸ ΠA;B) = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B_1 : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → (eqM ▸ ΠA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type :=
   by
     intro n Γ A B hA hB ihA ihB
-    apply IsEqualType.pi_form_eq ihA ihB
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.pi_form_eq
+      · apply And.left ihA
+        repeat' rfl
+      · rw [←empty_expand_context (Γ := ε ⬝ A)]
+        apply And.right (And.right ihB)
+        repeat' rfl
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left (And.right ihA)
+      rotate_left
+      · apply n
+      · apply Δ
+      repeat' rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.pi_form_eq
+      · apply And.right (And.right ihA)
+        repeat' rfl
+      · rw [extend_expand_context]
+        apply And.right (And.right ihB)
+        repeat' rfl
 
-theorem defeq_refl_sigma_form : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
-    Γ ⊢ A type → Γ ⬝ A ⊢ B type → Γ ⊢ A ≡ A type → Γ ⬝ A ⊢ B ≡ B type → Γ ⊢ ΣA;B ≡ ΣA;B type :=
+theorem defeq_refl_sigma_form :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
+      Γ ⊢ A type →
+        Γ ⬝ A ⊢ B type →
+          ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+              (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                  eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+                ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+                  eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
+            ((∀ (eqM : n + 1 = 0) (A_1 : Tm 0), eqM ▸ Γ ⬝ A = ε → eqM ▸ B = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+                (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (B : Tm m),
+                    eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+                  ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (A_1 : Tm z) (B_1 : Tm m),
+                    eqM ▸ Γ ⬝ A = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ B = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type) →
+              (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → (eqM ▸ ΣA;B) = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+                (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+                  ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B_1 : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → (eqM ▸ ΣA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type :=
   by
     intro n Γ A B hA hB ihA ihB
-    apply IsEqualType.sigma_form_eq ihA ihB
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.sigma_form_eq
+      · apply And.left ihA
+        repeat' rfl
+      · rw [←empty_expand_context (Γ := ε ⬝ A)]
+        apply And.right (And.right ihB)
+        repeat' rfl
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left (And.right ihA)
+      rotate_left
+      · apply n
+      · apply Δ
+      repeat' rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.sigma_form_eq
+      · apply And.right (And.right ihA)
+        repeat' rfl
+      · rw [extend_expand_context]
+        apply And.right (And.right ihB)
+        repeat' rfl
 
-theorem defeq_refl_iden_form : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
-  Γ ⊢ A type →
+theorem defeq_refl_iden_form :
+    ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
+    Γ ⊢ A type →
     (Γ ⊢ a ∶ A) →
       (Γ ⊢ a' ∶ A) →
-        Γ ⊢ A ≡ A type →
+        ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
           ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
               (∀ (eqM : n = 0) (a_5 A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ a = a_5 → eqM ▸ A = A_1 → ε ⊢ a_5 ≡ a_5 ∶ A_1) ∧
                 (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
@@ -61,201 +224,126 @@ theorem defeq_refl_iden_form : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
                         eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) ∧
                       ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B : Tm m),
                         eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ a' = a → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a ≡ a ∶ A_1) →
-              Γ ⊢ a ≃[A] a' ≡ a ≃[A] a' type :=
+              (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → (eqM ▸ a ≃[A] a') = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+                (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+                  ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → (eqM ▸ a ≃[A] a') = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type :=
   by
-    intro n Γ a A a' hA haA haA' ihA ihaA ihaA'
-    cases Γ with
-    | empty =>
-      simp_all
-      aesop
-    | extend Γ' B =>
-      have ihεAA := And.left ihaA
-      have ihεaaA := And.left (And.right ihaA)
-      have ihΓBB := And.left (And.right (And.right ihaA))
-      have ihΓAA := And.left (And.right (And.right (And.right ihaA)))
-      have ihΓaaA := And.right (And.right (And.right (And.right ihaA)))
-      have ihΓaaA' := And.right (And.right (And.right (And.right ihaA')))
-      simp_all
+    intro n Γ' a A a' hA haA haA' ihA ihaA ihaA'
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
       apply IsEqualType.iden_form_eq
-      · rw [←empty_expand_context (Γ := Γ' ⬝ B)]
-        apply ihΓAA
-        · rfl
-        · rfl
-        · rfl
-      · rw [←empty_expand_context (Γ := Γ' ⬝ B)]
-        apply ihΓaaA
-        · rfl
-        · rfl
-        · rfl
-        · rfl
-      · rw [←empty_expand_context (Γ := Γ' ⬝ B)]
-        apply ihΓaaA'
-        · rfl
-        · rfl
-        · rfl
-        · rfl
+      · apply And.left ihA
+        repeat' rfl
+      · apply And.left (And.right ihaA)
+        repeat' rfl
+      · apply And.left (And.right ihaA')
+        repeat' rfl
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left (And.right ihA)
+      rotate_left
+      · apply n
+      · apply Δ
+      repeat' rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.iden_form_eq
+      · apply And.right (And.right ihA)
+        repeat' rfl
+      · apply And.right (And.right (And.right (And.right ihaA)))
+        repeat' rfl
+      · apply And.right (And.right (And.right (And.right ihaA')))
+        repeat' rfl
 
-theorem defeq_refl_univ_form : ∀ {n : Nat} {Γ : Ctx n},
-  Γ ctx →
-    ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
-        ∀ (m : Nat) (Γ_1 : Ctx m) (eqM : n = m + 1) (B : Tm m), eqM ▸ Γ = Γ_1 ⬝ B → Γ_1 ⊢ B ≡ B type) →
-      Γ ⊢ 𝒰 ≡ 𝒰 type :=
+theorem defeq_refl_univ_form :
+    ∀ {n : Nat} {Γ : Ctx n},
+      Γ ctx →
+        ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
+            ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
+          (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝒰 = A → ε ⊢ A ≡ A type) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝒰 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type :=
   by
-    intro n Γ hiC _ihiC
-    apply IsEqualType.univ_form_eq hiC
+    intro n Γ hiC ihiC
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.univ_form_eq hiC
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      cases Δ
+      case start =>
+        apply And.right ihiC
+        rotate_left
+        · apply m + 1
+        · apply CtxGen.start
+        · rfl
+        · rfl
+      case expand n' Δ' S =>
+        apply And.right ihiC
+        rotate_left
+        · apply n' + 1
+        · apply Δ' ⊙ S
+        · rfl
+        · rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.univ_form_eq hiC
 
-theorem defeq_refl_univ_elim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
-  (Γ ⊢ A ∶ 𝒰) →
-    ((∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝒰 = A → ε ⊢ A ≡ A type) ∧
-        (∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
-          (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
-                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝒰 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type) ∧
-              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B : Tm m),
-                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a ≡ a ∶ A_1) →
-      Γ ⊢ A ≡ A type :=
+theorem defeq_refl_univ_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+      (Γ ⊢ A ∶ 𝒰) →
+        ((∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝒰 = A → ε ⊢ A ≡ A type) ∧
+            (∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
+              (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                  eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+                (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝒰 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type) ∧
+                  ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a ≡ a ∶ A_1) →
+          (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type :=
   by
-    intro n Γ A hAU ihAU
-    cases Γ with
-    | empty =>
-      aesop
-    | extend Γ' B =>
-      have ihεAA := And.left ihAU
-      have ihεaaA := And.left (And.right ihAU)
-      have ihΓBB := And.left (And.right (And.right ihAU))
-      have ihΓAA := And.left (And.right (And.right (And.right ihAU)))
-      have ihΓaaA := And.right (And.right (And.right (And.right ihAU)))
+    intro n Γ' A hAU ihAU
+    repeat' apply And.intro
+    · intro heqM T heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
       apply IsEqualType.univ_elim_eq
-      rw [←empty_expand_context (Γ := Γ' ⬝ B)]
-      apply ihΓaaA
-      · rfl
-      · rfl
-      · rfl
-      · rfl
-
--- case IsTypeUnitForm
--- ⊢ ∀ {n : Nat} {Γ : Ctx n},
---   Γ ctx →
---     ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
---         ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---           eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
---       (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝟙 = A → ε ⊢ A ≡ A type) ∧
---         (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---           ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝟙 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type
--- 
--- case IsTypeEmptyForm
--- ⊢ ∀ {n : Nat} {Γ : Ctx n},
---   Γ ctx →
---     ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
---         ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---           eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
---       (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝟘 = A → ε ⊢ A ≡ A type) ∧
---         (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---           ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝟘 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type
--- 
--- case IsTypePiForm
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
---   Γ ⊢ A type →
---     Γ ⬝ A ⊢ B type →
---       ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---           (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---               eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---             ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---               eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
---         ((∀ (eqM : n + 1 = 0) (A_1 : Tm 0), eqM ▸ Γ ⬝ A = ε → eqM ▸ B = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---             (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (B : Tm m),
---                 eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (A_1 : Tm z) (B_1 : Tm m),
---                 eqM ▸ Γ ⬝ A = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ B = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type) →
---           (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → (eqM ▸ ΠA;B) = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---             (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B_1 : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → (eqM ▸ ΠA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type
--- 
--- case IsTypeSigmaForm
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
---   Γ ⊢ A type →
---     Γ ⬝ A ⊢ B type →
---       ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---           (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---               eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---             ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---               eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
---         ((∀ (eqM : n + 1 = 0) (A_1 : Tm 0), eqM ▸ Γ ⬝ A = ε → eqM ▸ B = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---             (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (B : Tm m),
---                 eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (A_1 : Tm z) (B_1 : Tm m),
---                 eqM ▸ Γ ⬝ A = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ B = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type) →
---           (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → (eqM ▸ ΣA;B) = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---             (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B_1 : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → (eqM ▸ ΣA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type
--- 
--- case IsTypeIdenForm
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
---   Γ ⊢ A type →
---     (Γ ⊢ a ∶ A) →
---       (Γ ⊢ a' ∶ A) →
---         ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---             (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
---           ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---               (∀ (eqM : n = 0) (a_5 A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ a = a_5 → eqM ▸ A = A_1 → ε ⊢ a_5 ≡ a_5 ∶ A_1) ∧
---                 (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---                     eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---                   (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---                       eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) ∧
---                     ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a_5 A_1 : Tm z) (B : Tm m),
---                       eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ a = a_5 → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a_5 ≡ a_5 ∶ A_1) →
---             ((∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---                 (∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ a' = a → eqM ▸ A = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
---                   (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---                       eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---                     (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---                         eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) ∧
---                       ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B : Tm m),
---                         eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ a' = a → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a ≡ a ∶ A_1) →
---               (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → (eqM ▸ a ≃[A] a') = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---                 (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---                     eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---                   ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---                     eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → (eqM ▸ a ≃[A] a') = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type
--- 
--- case IsTypeUnivForm
--- ⊢ ∀ {n : Nat} {Γ : Ctx n},
---   Γ ctx →
---     ((∀ (eqM : n = 0), eqM ▸ Γ = ε → ε ctx) ∧
---         ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---           eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
---       (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝒰 = A → ε ⊢ A ≡ A type) ∧
---         (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---           ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝒰 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type
--- 
--- case IsTypeUnivElim
--- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
---   (Γ ⊢ A ∶ 𝒰) →
---     ((∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝒰 = A → ε ⊢ A ≡ A type) ∧
---         (∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
---           (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---               eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---             (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ 𝒰 = A → Γ_1 ⬝ B ⊗ Δ ⊢ A ≡ A type) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B : Tm m),
---                 eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a ≡ a ∶ A_1) →
---       (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---         (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---           ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
---             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type
--- 
+      apply And.left (And.right ihAU)
+      repeat' rfl
+    · intro m z Γ Δ heqM S heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left (And.right (And.right ihAU))
+      rotate_left
+      · apply n
+      · apply Δ
+      repeat' rfl
+    · intro m z Γ Δ heqM T S heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      apply IsEqualType.univ_elim_eq
+      apply And.right (And.right (And.right (And.right ihAU)))
+      repeat' rfl

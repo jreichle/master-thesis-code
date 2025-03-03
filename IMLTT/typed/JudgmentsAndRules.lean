@@ -64,7 +64,7 @@ mutual
       HasType (Γ ⬝ A) b B
       → HasType Γ (λA;b) (ΠA;B)
     | sigma_intro :
-      HasType Γ a A → HasType Γ b (B⌈a⌉₀)
+      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ A) B
       → HasType Γ (a&b) (ΣA;B)
     | iden_intro :
       IsType Γ A → HasType Γ a A
@@ -98,9 +98,10 @@ mutual
     | sigma_elim :
       HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
-    | iden_elim :
+    | iden_elim : -- XXX: sim subst wrong
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
+      → HasType Γ a A → HasType Γ a' A
       → HasType Γ p (a ≃[A] a')
       → IsType Γ (B⌈(ₛidₚ), a, a', p⌉)
       → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
@@ -157,11 +158,11 @@ mutual
     | pi_comp :
       HasType (Γ ⬝ A) b B → HasType Γ a A
       → IsEqualTerm Γ ((λA; b)◃a) (b⌈a⌉₀) (B⌈a⌉₀)
-    | sigma_comp :
+    | sigma_comp : -- XXX: sim subst wrong
       HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C
       → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ), a, b⌉) (C⌈a&b⌉₀)
-    | iden_comp :
+    | iden_comp : -- XXX: sim subst wrong
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A
@@ -184,22 +185,22 @@ mutual
       IsEqualTerm Γ f f' (ΠA;B) → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (f◃a) (f'◃a') (B⌈a⌉₀)
     | sigma_intro_eq :
-      IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (B⌈a⌉₀)
+      IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (B⌈a⌉₀) → IsType (Γ ⬝ A) B
       → IsEqualTerm Γ (a&b) (a'&b') (ΣA;B)
     | sigma_elim_eq :
-      IsEqualType Γ (ΣA;B) (ΣA';B') → IsEqualTerm Γ p p' (ΣA;B)
+      IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ p p' (ΣA;B)
       → IsEqualType (Γ ⬝ ΣA;B) C C'
       → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A' B' C' c' p') (C⌈p⌉₀)
     | iden_intro_eq :
       IsEqualType Γ A A' → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
-    | iden_elim_eq :
+    | iden_elim_eq : -- XXX: sim subst wrong
       IsEqualType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B B'
       → IsEqualTerm Γ b b' (B⌈(ₛidₚ), a₁, a₁, .refl A a₁⌉)
-      → IsEqualType Γ (a₁ ≃[A] a₃) (a₂ ≃[A'] a₄)
+      → IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
       → IsEqualTerm Γ p p' (a₁ ≃[A] a₃)
-      → IsType Γ (B⌈(ₛidₚ), a₁, a₃, p⌉)
+      → IsEqualType Γ (B⌈(ₛidₚ), a₁, a₃, p⌉) (B'⌈(ₛidₚ), a₂, a₄, p'⌉)
       → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') (B⌈(ₛidₚ), a₁, a₃, p⌉)
     | univ_unit_eq :
       IsCtx Γ

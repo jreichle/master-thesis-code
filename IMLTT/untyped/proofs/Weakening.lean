@@ -341,3 +341,9 @@ theorem lift_weaken_from {n : Nat} {leq : l ≤ n} :
     case isFalse h =>
       apply False.elim
       omega
+
+theorem weakening_shift_vone {n : Nat} :
+    (v(1)) = (v(0) : Tm (n + 1))⌊↑ₚidₚ⌋ :=
+  by
+    simp [weaken]
+    simp [weaken_var]

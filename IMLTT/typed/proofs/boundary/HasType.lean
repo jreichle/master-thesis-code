@@ -40,16 +40,12 @@ theorem boundary_pi_intro :
 
 theorem boundary_sigma_intro :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ a ∶ A) → (Γ ⊢ b ∶ B⌈a⌉₀) → Γ ⊢ A type → Γ ⊢ B⌈a⌉₀ type → Γ ⊢ ΣA;B type :=
+    (Γ ⊢ a ∶ A) → (Γ ⊢ b ∶ B⌈a⌉₀) → Γ ⬝ A ⊢ B type → Γ ⊢ A type → Γ ⊢ B⌈a⌉₀ type → Γ ⬝ A ⊢ B type → Γ ⊢ ΣA;B type :=
   by
-    intro n Γ a A b B haA _hbB ihaA ihbB
+    intro n Γ a A b B haA hbB hB ihaA ihbB ihB
     apply IsType.sigma_form
     · apply ihaA
-    · sorry
-      -- apply substitution_inv_type
-      -- · rfl
-      -- · apply ihbB
-      -- · apply haA
+    · apply hB
 
 theorem boundary_iden_intro :
     ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, Γ ⊢ A type → (Γ ⊢ a ∶ A) → Γ ⊢ A type → Γ ⊢ A type → Γ ⊢ a ≃[A] a type :=
@@ -132,46 +128,20 @@ theorem boundary_sigma_elim :
     · apply hpSi
     · apply ihC
 
-
-theorem substitution_separate_degeneralized : -- TODO: is this provable?
-    A⌈(ₛidₚ), s1, s2, s3⌉ = A⌈s3⌊↑ₚ↑ₚidₚ⌋⌉₀⌈s2⌊↑ₚidₚ⌋⌉₀⌈s1⌉₀ :=
-  by
-    simp [substitute_zero]
-    simp [substitution_comp]
-    simp [comp_substitute_substitute]
-    simp [comp_substitute_weaken]
-    simp [comp_substitute_substitute]
-    sorry
-
 theorem boundary_iden_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},
     (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-      (Γ ⊢ b ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) →
-        (Γ ⊢ p ∶ a ≃[A] a') →
-          Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
-            (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-              Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-                Γ ⊢ a ≃[A] a' type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type :=
+    (Γ ⊢ b ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) →
+      (Γ ⊢ a ∶ A) →
+        (Γ ⊢ a' ∶ A) →
+          (Γ ⊢ p ∶ a ≃[A] a') →
+            Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
+              (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
+                Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
+                  Γ ⊢ A type →
+                    Γ ⊢ A type → Γ ⊢ a ≃[A] a' type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type :=
   by
-    intro n Γ A B b a a' p hB hbB hpId hB' ihB ihbB ihpId ihB'
-    -- rw [substitution_separate_degeneralized]
-    -- have IdInv := iden_is_type_inversion ihpId
-    -- apply substitution_type
-    -- · apply And.left (And.right IdInv)
-    -- · apply substitution_type
-    --   · apply weakening_term
-    --     · apply And.right (And.right IdInv)
-    --     · apply And.left IdInv
-    --   · apply substitution_type
-    --     rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-    --     · apply weakening_term
-    --       · apply weakening_term
-    --         · apply hpId
-    --         · apply And.left IdInv
-    --       · apply weakening_type
-    --         · apply And.left IdInv
-    --         · apply And.left IdInv
-    --     · apply hB
+    intro n Γ A B b a a' p hB hbB haA haA' hpId hB' ihB ihbB ihaA ihaA' ihpId ihB'
     apply ihB'
 
 theorem boundary_ty_conv :

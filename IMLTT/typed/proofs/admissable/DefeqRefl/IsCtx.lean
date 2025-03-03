@@ -10,25 +10,6 @@ import IMLTT.typed.proofs.admissable.Weakening
 
 import aesop
 
--- case IsCtxEmpty
--- ⊢ (∀ (eqM : 0 = 0), eqM ▸ ε = ε → ε ctx) ∧
---     ∀ (m z : Nat) (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : 0 = z) (B : Tm m), eqM ▸ ε = Γ ⬝ B ⊗ Δ → Γ ⊢ B ≡ B type
--- case IsCtxExtend
--- ⊢ ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
---     Γ ctx →
---       Γ ⊢ A type →
---         ((∀ (eqM : x = 0), eqM ▸ Γ = ε → ε ctx) ∧
---             ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (B : Tm m),
---               eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
---           ((∀ (eqM : x = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
---               (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (B : Tm m),
---                   eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
---                 ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (A_1 : Tm z) (B : Tm m),
---                   eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) →
---             (∀ (eqM : x + 1 = 0), eqM ▸ Γ ⬝ A = ε → ε ctx) ∧
---               ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x + 1 = z) (B : Tm m),
---                 eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type
-
 theorem defeq_refl_empty :
    (∀ (eqM : 0 = 0), eqM ▸ ε = ε → ε ctx) ∧
    ∀ (m z : Nat) (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : 0 = z) (B : Tm m), eqM ▸ ε = Γ ⬝ B ⊗ Δ → Γ ⊢ B ≡ B type :=
