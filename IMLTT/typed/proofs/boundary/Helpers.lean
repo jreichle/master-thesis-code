@@ -87,6 +87,37 @@ theorem boundary_helper_iden_elim_one {n : Nat} {t : Tm (n + 3)} {r : Tm (n + 2)
           simp [comp_substitute_substitute]
           simp [substitute_var]
 
+theorem new_test_hahaha :
+    B⌈(.refl A a)⌊↑ₚ↑ₚidₚ⌋⌉₀⌈a⌊↑ₚidₚ⌋⌉₀⌈a⌉₀ = B⌈(ₛidₚ), a, a, .refl A a⌉ :=
+  by
+    simp [substitute_zero]
+    rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    simp [comp_substitute_weaken]
+    simp [substitute]
+    simp [←substitution_refl]
+    simp [←weakening_refl]
+    simp [substitution_conv_zero]
+    simp [substitution_shift_substitute_zero]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [comp_substitute_substitute]
+        simp [comp_substitute_weaken]
+        simp [substitution_conv_zero]
+        simp [substitution_shift_substitute_zero]
+        rfl
+
 -- theorem boundary_helper_iden_elim_two  {n : Nat} {t : Tm (n + 3)} {r : Tm (n + 2)} {s : Tm (n + 1)} {u : Tm (n)} :
 --     t⌈(ₛidₚ), u, s, r⌉ = t⌈(ₛidₚ), u, (s⌈(ₛidₚ), u⌉), (r⌈(ₛidₚ), s⌉⌈(ₛidₚ), u⌉)⌉ :=
 --   by

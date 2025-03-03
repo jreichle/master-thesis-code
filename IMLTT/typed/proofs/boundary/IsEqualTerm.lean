@@ -531,8 +531,26 @@ theorem boundary_iden_elim_eq :
           · apply IsEqualType.type_trans
             rotate_right
             · apply B'⌈(ₛidₚ), a₁, a₁, A.refl a₁⌉
-            · simp [substitution_separate]
-              sorry -- XXX: need more general substitution
+            · simp [←new_test_hahaha]
+              apply substitution_type_eq
+              · apply And.left ihaaA
+              · apply substitution_type_eq
+                · apply weakening_term
+                  · apply And.left ihaaA
+                  · apply And.left ihAA
+                · apply substitution_type_eq
+                  rotate_left
+                  · apply hBB
+                  · apply HasType.ty_conv
+                    rotate_right
+                    · apply (a₁ ≃[A] a₁)⌊↑ₚ↑ₚidₚ⌋
+                    · sorry
+                    · apply IsEqualType.type_symm
+                      apply IsEqualType.iden_form_eq
+                      · apply defeq_refl_type
+                        sorry
+                      · sorry
+                      · sorry
             · sorry -- XXX: need more general functionality of typing
         · apply HasType.ty_conv
           · apply And.left (And.right ihaaA)

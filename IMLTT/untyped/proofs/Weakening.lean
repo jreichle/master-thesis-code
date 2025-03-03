@@ -317,6 +317,11 @@ theorem weakening_sigma {ρ : Weak m n} :
     simp [weaken]
     simp [lift_weak_n]
 
+theorem weakening_refl {ρ : Weak m n} :
+    (.refl A a)⌊ρ⌋ = .refl (A⌊ρ⌋) (a⌊ρ⌋) :=
+  by
+    simp [weaken]
+
 theorem weaken_from_zero {geq : l ≥ n} :
     weaken_from n l = ↑ₚidₚ :=
   by
