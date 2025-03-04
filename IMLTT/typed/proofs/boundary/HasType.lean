@@ -135,14 +135,18 @@ theorem boundary_iden_elim :
       (Γ ⊢ a ∶ A) →
         (Γ ⊢ a' ∶ A) →
           (Γ ⊢ p ∶ a ≃[A] a') →
-            Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
-              (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-                Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-                  Γ ⊢ A type →
-                    Γ ⊢ A type → Γ ⊢ a ≃[A] a' type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type :=
+            Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
+              Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
+                (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
+                  Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
+                    Γ ⊢ A type →
+                      Γ ⊢ A type →
+                        Γ ⊢ a ≃[A] a' type →
+                          Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
+                            Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type :=
   by
-    intro n Γ A B b a a' p hB hbB haA haA' hpId hB' ihB ihbB ihaA ihaA' ihpId ihB'
-    apply ihB'
+    intro n Γ A B b a a' p hB hbB haA haA' hpId hBa hBc ihB ihbB ihaA ihaA' ihpId ihBa ihBc
+    apply ihBc
 
 theorem boundary_ty_conv :
     ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ A ≡ B type → Γ ⊢ A type → Γ ⊢ A type ∧ Γ ⊢ B type → Γ ⊢ B type :=

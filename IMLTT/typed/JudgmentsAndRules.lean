@@ -98,11 +98,12 @@ mutual
     | sigma_elim :
       HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
-    | iden_elim : -- XXX: sim subst wrong
+    | iden_elim :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A → HasType Γ a' A
       → HasType Γ p (a ≃[A] a')
+      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → IsType Γ (B⌈(ₛidₚ), a, a', p⌉)
       → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
       -- conversion
@@ -158,11 +159,11 @@ mutual
     | pi_comp :
       HasType (Γ ⬝ A) b B → HasType Γ a A
       → IsEqualTerm Γ ((λA; b)◃a) (b⌈a⌉₀) (B⌈a⌉₀)
-    | sigma_comp : -- XXX: sim subst wrong
+    | sigma_comp :
       HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C
       → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ), a, b⌉) (C⌈a&b⌉₀)
-    | iden_comp : -- XXX: sim subst wrong
+    | iden_comp : 
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A
@@ -195,11 +196,12 @@ mutual
     | iden_intro_eq :
       IsEqualType Γ A A' → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
-    | iden_elim_eq : -- XXX: sim subst wrong
+    | iden_elim_eq :
       IsEqualType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B B'
       → IsEqualTerm Γ b b' (B⌈(ₛidₚ), a₁, a₁, .refl A a₁⌉)
       → IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
       → IsEqualTerm Γ p p' (a₁ ≃[A] a₃)
+      → IsEqualType Γ (B⌈(ₛidₚ), a₁, a₁, .refl A a₁⌉) (B'⌈(ₛidₚ), a₂, a₂, .refl A' a₂⌉)
       → IsEqualType Γ (B⌈(ₛidₚ), a₁, a₃, p⌉) (B'⌈(ₛidₚ), a₂, a₄, p'⌉)
       → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') (B⌈(ₛidₚ), a₁, a₃, p⌉)
     | univ_unit_eq :

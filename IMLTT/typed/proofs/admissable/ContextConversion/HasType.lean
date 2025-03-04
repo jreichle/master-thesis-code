@@ -534,50 +534,59 @@ theorem context_conversion_iden_elim :
       (Γ ⊢ a ∶ A) →
         (Γ ⊢ a' ∶ A) →
           (Γ ⊢ p ∶ a ≃[A] a') →
-            Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
-              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 + 1 = m) {S S' : Tm l} (A_1 : Tm m),
-                  Γ_1 ⊢ S ≡ S' type →
-                    Γ_1 ⊢ S type →
-                      Γ_1 ⊢ S' type →
-                        (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ →
-                          eqM ▸ B = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) →
-                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_6 A_1 : Tm m),
+            Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
+              Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
+                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 + 1 = m) {S S' : Tm l}
+                    (A_1 : Tm m),
                     Γ_1 ⊢ S ≡ S' type →
                       Γ_1 ⊢ S type →
                         Γ_1 ⊢ S' type →
-                          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                            eqM ▸ b = a_6 → eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_6 ∶ A_1) →
+                          (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ →
+                            eqM ▸ B = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) →
                   (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_7 A_1 : Tm m),
                       Γ_1 ⊢ S ≡ S' type →
                         Γ_1 ⊢ S type →
                           Γ_1 ⊢ S' type →
-                            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ a = a_7 → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_7 ∶ A_1) →
-                    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A_1 : Tm m),
+                            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                              eqM ▸ b = a_7 → eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_7 ∶ A_1) →
+                    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_8 A_1 : Tm m),
                         Γ_1 ⊢ S ≡ S' type →
                           Γ_1 ⊢ S type →
                             Γ_1 ⊢ S' type →
-                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ a' = a → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A_1) →
-                      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_9 A_1 : Tm m),
+                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ a = a_8 → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_8 ∶ A_1) →
+                      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A_1 : Tm m),
                           Γ_1 ⊢ S ≡ S' type →
                             Γ_1 ⊢ S type →
                               Γ_1 ⊢ S' type →
-                                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                  eqM ▸ p = a_9 → (eqM ▸ a ≃[A] a') = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_9 ∶ A_1) →
-                        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A : Tm m),
-                            Γ_1 ⊢ S ≡ S' type →
-                              Γ_1 ⊢ S type →
-                                Γ_1 ⊢ S' type →
-                                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A → Γ_1 ⬝ S' ⊗ Δ ⊢ A type) →
-                          ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l)
-                            (a_11 A_1 : Tm m),
+                                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ a' = a → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A_1) →
+                        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l)
+                            (a_10 A_1 : Tm m),
                             Γ_1 ⊢ S ≡ S' type →
                               Γ_1 ⊢ S type →
                                 Γ_1 ⊢ S' type →
                                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                    eqM ▸ A.j B b a a' p = a_11 →
-                                      eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_11 ∶ A_1 :=
+                                    eqM ▸ p = a_10 → (eqM ▸ a ≃[A] a') = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_10 ∶ A_1) →
+                          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A_1 : Tm m),
+                              Γ_1 ⊢ S ≡ S' type →
+                                Γ_1 ⊢ S type →
+                                  Γ_1 ⊢ S' type →
+                                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                                      eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) →
+                            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A : Tm m),
+                                Γ_1 ⊢ S ≡ S' type →
+                                  Γ_1 ⊢ S type →
+                                    Γ_1 ⊢ S' type →
+                                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A → Γ_1 ⬝ S' ⊗ Δ ⊢ A type) →
+                              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l)
+                                (a_13 A_1 : Tm m),
+                                Γ_1 ⊢ S ≡ S' type →
+                                  Γ_1 ⊢ S type →
+                                    Γ_1 ⊢ S' type →
+                                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                                        eqM ▸ A.j B b a a' p = a_13 →
+                                          eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_13 ∶ A_1 :=
   by
-    intro n Γ' A B b a a' p hB hbB haA haA' hpId hB' ihB ihbB ihaA ihaA' ihpId ihB' m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
+    intro n Γ' A B b a a' p hB hbB haA haA' hpId hBa hBc ihB ihbB ihaA ihaA' ihpId ihBa ihBc m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
     cases heqM
     cases heqΓ
     cases heqt
@@ -609,7 +618,12 @@ theorem context_conversion_iden_elim :
       · apply hS
       · apply hS'
       repeat' rfl
-    · apply ihB'
+    · apply ihBa
+      · apply hSS
+      · apply hS
+      · apply hS'
+      repeat' rfl
+    · apply ihBc
       · apply hSS
       · apply hS
       · apply hS'

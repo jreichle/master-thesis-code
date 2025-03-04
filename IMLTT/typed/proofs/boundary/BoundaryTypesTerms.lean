@@ -7,6 +7,7 @@ import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+
 import IMLTT.typed.proofs.boundary.HasType
 import IMLTT.typed.proofs.boundary.IsEqualType
 import IMLTT.typed.proofs.boundary.IsEqualTerm

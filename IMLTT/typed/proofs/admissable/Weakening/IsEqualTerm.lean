@@ -541,46 +541,52 @@ theorem weakening_iden_intro_eq :
 
 theorem weakening_iden_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B B' : Tm (n + 1 + 1 + 1)} {b b' a₁ a₃ A' a₂ a₄ p p' : Tm n},
-    (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B ≡ B' type →
+  (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B ≡ B' type →
     (Γ ⊢ b ≡ b' ∶ B⌈(ₛidₚ), a₁, a₁, A.refl a₁⌉) →
       Γ ⊢ A ≡ A' type →
         (Γ ⊢ a₁ ≡ a₂ ∶ A) →
           (Γ ⊢ a₃ ≡ a₄ ∶ A') →
             (Γ ⊢ p ≡ p' ∶ a₁ ≃[A] a₃) →
-              Γ ⊢ B⌈(ₛidₚ), a₁, a₃, p⌉ ≡ B'⌈(ₛidₚ), a₂, a₄, p'⌉ type →
-                (∀ (l : Nat) {leq : l ≤ n + 1 + 1 + 1} {B_1 : Tm l},
-                    get_sub_context (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) l leq ⊢ B_1 type →
-                      insert_into_ctx leq (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B_1 ⊢
-                        B⌊weaken_from (n + 1 + 1 + 1) l⌋ ≡ B'⌊weaken_from (n + 1 + 1 + 1) l⌋ type) →
-                  (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-                      get_sub_context Γ l leq ⊢ B_1 type →
-                        insert_into_ctx leq Γ B_1 ⊢ b⌊weaken_from n l⌋ ≡ b'⌊weaken_from n l⌋ ∶
-                          B⌈(ₛidₚ), a₁, a₁, A.refl a₁⌉⌊weaken_from n l⌋) →
-                    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-                        get_sub_context Γ l leq ⊢ B type →
-                          insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) →
+              Γ ⊢ B⌈(ₛidₚ), a₁, a₁, A.refl a₁⌉ ≡ B'⌈(ₛidₚ), a₂, a₂, A'.refl a₂⌉ type →
+                Γ ⊢ B⌈(ₛidₚ), a₁, a₃, p⌉ ≡ B'⌈(ₛidₚ), a₂, a₄, p'⌉ type →
+                  (∀ (l : Nat) {leq : l ≤ n + 1 + 1 + 1} {B_1 : Tm l},
+                      get_sub_context (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) l leq ⊢ B_1 type →
+                        insert_into_ctx leq (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B_1 ⊢
+                          B⌊weaken_from (n + 1 + 1 + 1) l⌋ ≡ B'⌊weaken_from (n + 1 + 1 + 1) l⌋ type) →
+                    (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
+                        get_sub_context Γ l leq ⊢ B_1 type →
+                          insert_into_ctx leq Γ B_1 ⊢ b⌊weaken_from n l⌋ ≡ b'⌊weaken_from n l⌋ ∶
+                            B⌈(ₛidₚ), a₁, a₁, A.refl a₁⌉⌊weaken_from n l⌋) →
                       (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
                           get_sub_context Γ l leq ⊢ B type →
-                            insert_into_ctx leq Γ B ⊢ a₁⌊weaken_from n l⌋ ≡ a₂⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋) →
+                            insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) →
                         (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
                             get_sub_context Γ l leq ⊢ B type →
-                              insert_into_ctx leq Γ B ⊢ a₃⌊weaken_from n l⌋ ≡ a₄⌊weaken_from n l⌋ ∶
-                                A'⌊weaken_from n l⌋) →
+                              insert_into_ctx leq Γ B ⊢ a₁⌊weaken_from n l⌋ ≡ a₂⌊weaken_from n l⌋ ∶
+                                A⌊weaken_from n l⌋) →
                           (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
                               get_sub_context Γ l leq ⊢ B type →
-                                insert_into_ctx leq Γ B ⊢ p⌊weaken_from n l⌋ ≡ p'⌊weaken_from n l⌋ ∶
-                                  (a₁ ≃[A] a₃)⌊weaken_from n l⌋) →
-                            (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-                                get_sub_context Γ l leq ⊢ B_1 type →
-                                  insert_into_ctx leq Γ B_1 ⊢ B⌈(ₛidₚ), a₁, a₃, p⌉⌊weaken_from n l⌋ ≡
-                                    B'⌈(ₛidₚ), a₂, a₄, p'⌉⌊weaken_from n l⌋ type) →
-                              ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-                                get_sub_context Γ l leq ⊢ B_1 type →
-                                  insert_into_ctx leq Γ B_1 ⊢ A.j B b a₁ a₃ p⌊weaken_from n l⌋ ≡
-                                    A'.j B' b' a₂ a₄ p'⌊weaken_from n l⌋ ∶ B⌈(ₛidₚ), a₁, a₃, p⌉⌊weaken_from n l⌋ :=
+                                insert_into_ctx leq Γ B ⊢ a₃⌊weaken_from n l⌋ ≡ a₄⌊weaken_from n l⌋ ∶
+                                  A'⌊weaken_from n l⌋) →
+                            (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                                get_sub_context Γ l leq ⊢ B type →
+                                  insert_into_ctx leq Γ B ⊢ p⌊weaken_from n l⌋ ≡ p'⌊weaken_from n l⌋ ∶
+                                    (a₁ ≃[A] a₃)⌊weaken_from n l⌋) →
+                              (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
+                                  get_sub_context Γ l leq ⊢ B_1 type →
+                                    insert_into_ctx leq Γ B_1 ⊢ B⌈(ₛidₚ), a₁, a₁, A.refl a₁⌉⌊weaken_from n l⌋ ≡
+                                      B'⌈(ₛidₚ), a₂, a₂, A'.refl a₂⌉⌊weaken_from n l⌋ type) →
+                                (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
+                                    get_sub_context Γ l leq ⊢ B_1 type →
+                                      insert_into_ctx leq Γ B_1 ⊢ B⌈(ₛidₚ), a₁, a₃, p⌉⌊weaken_from n l⌋ ≡
+                                        B'⌈(ₛidₚ), a₂, a₄, p'⌉⌊weaken_from n l⌋ type) →
+                                  ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
+                                    get_sub_context Γ l leq ⊢ B_1 type →
+                                      insert_into_ctx leq Γ B_1 ⊢ A.j B b a₁ a₃ p⌊weaken_from n l⌋ ≡
+                                        A'.j B' b' a₂ a₄ p'⌊weaken_from n l⌋ ∶ B⌈(ₛidₚ), a₁, a₃, p⌉⌊weaken_from n l⌋ :=
   by
     intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' 
-    intro hBB hbbB hAA haaA haaA' hppId hBB' ihBB ihbbB ihAA ihaaA ihaaA' ihppId ihBB' l hleq S hS
+    intro hBB hbbB hAA haaA haaA' hppId hBBa hBBc ihBB ihbbB ihAA ihaaA ihaaA' ihppId ihBBa ihBBc l hleq S hS
     rw [weak_subst_iden_elim]
     apply IsEqualTerm.iden_elim_eq
     · simp [lift_weak_n]
@@ -614,9 +620,14 @@ theorem weakening_iden_elim_eq :
       apply hS
     · apply ihppId
       apply hS
+    · simp [←weakening_refl]
+      rw [←weak_subst_iden_elim]
+      rw [←weak_subst_iden_elim]
+      apply ihBBa
+      apply hS
     · rw [←weak_subst_iden_elim]
       rw [←weak_subst_iden_elim]
-      apply ihBB'
+      apply ihBBc
       apply hS
 
 theorem weakening_univ_unit_eq :
