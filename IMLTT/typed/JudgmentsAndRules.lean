@@ -1,6 +1,6 @@
 import IMLTT.untyped.AbstractSyntax
-import IMLTT.untyped.Substitution
 import IMLTT.untyped.Weakening
+import IMLTT.untyped.Substitution
 
 import aesop
 
@@ -76,13 +76,13 @@ mutual
     | univ_empty :
       IsCtx Γ
       → HasType Γ 𝟘 𝒰
-    | univ_pi : 
+    | univ_pi :
       HasType Γ A 𝒰 → HasType (Γ ⬝ A) B 𝒰
       → HasType Γ (ΠA;B) 𝒰
     | univ_sigma :
       HasType Γ A 𝒰 → HasType (Γ ⬝ A) B 𝒰
       → HasType Γ (ΣA;B) 𝒰
-    | univ_iden : 
+    | univ_iden :
       HasType Γ A 𝒰 → HasType Γ a A → HasType Γ a' A
       → HasType Γ (a ≃[A] a') 𝒰
     -- elimination rules (except univ)
@@ -95,19 +95,22 @@ mutual
     | pi_elim :
       HasType Γ f (ΠA;B) → HasType Γ a A
       → HasType Γ (f◃a) (B⌈a⌉₀)
-    | sigma_elim :
-      HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
-      → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
+    | sigma_first :
+      HasType Γ p (ΣA;B)
+      → HasType Γ (π₁ p) A
+    | sigma_second :
+      HasType Γ p (ΣA;B)
+      → HasType Γ (π₂ p) (B⌈π₁ p⌉₀)
     | iden_elim :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A → HasType Γ a' A
       → HasType Γ p (a ≃[A] a')
-      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉)
+      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉) -- XXX: not pretty
       → IsType Γ (B⌈(ₛidₚ), a, a', p⌉)
       → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
       -- conversion
-    | ty_conv : 
+    | ty_conv :
       HasType Γ a A → IsEqualType Γ A B
       → HasType Γ a B
 
@@ -159,10 +162,12 @@ mutual
     | pi_comp :
       HasType (Γ ⬝ A) b B → HasType Γ a A
       → IsEqualTerm Γ ((λA; b)◃a) (b⌈a⌉₀) (B⌈a⌉₀)
-    | sigma_comp :
-      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C
-      → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
-      → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ), a, b⌉) (C⌈a&b⌉₀)
+    | sigma_first_comp :
+      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType Γ (ΣA;B)
+      → IsEqualTerm Γ (π₁ (.pairSigma a b)) (a) (A)
+    | sigma_second_comp :
+      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType Γ (ΣA;B)
+      → IsEqualTerm Γ (π₂ a&b) b (B⌈π₁ a&b⌉₀)
     | iden_comp : 
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
@@ -188,11 +193,12 @@ mutual
     | sigma_intro_eq :
       IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (B⌈a⌉₀) → IsType (Γ ⬝ A) B
       → IsEqualTerm Γ (a&b) (a'&b') (ΣA;B)
-    | sigma_elim_eq :
-      IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ p p' (ΣA;B)
-      → IsEqualType (Γ ⬝ ΣA;B) C C'
-      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
-      → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A' B' C' c' p') (C⌈p⌉₀)
+    | sigma_first_eq :
+      IsEqualTerm Γ p p' (ΣA;B)
+      → IsEqualTerm Γ (π₁ p) (π₁ p') A
+    | sigma_second_eq :
+      IsEqualTerm Γ p p' (ΣA;B)
+      → IsEqualTerm Γ (π₂ p) (π₂ p') (B⌈π₁ p⌉₀)
     | iden_intro_eq :
       IsEqualType Γ A A' → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)

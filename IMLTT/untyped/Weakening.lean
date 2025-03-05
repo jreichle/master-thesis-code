@@ -49,9 +49,9 @@ def weaken (ρ : Weak m n) (t : Tm n) : Tm m :=
   | .lam A b => .lam (weaken ρ A) (weaken (lift_weak_n 1 ρ) b)
   | .app f a => .app (weaken ρ f) (weaken ρ a)
   | .pairSigma a b => .pairSigma (weaken ρ a) (weaken ρ b)
-  | .indSigma A B C c p => .indSigma (weaken ρ A) (weaken (lift_weak_n 1 ρ) B)
-                            (weaken (lift_weak_n 1 ρ) C) (weaken (lift_weak_n 2 ρ) c) (weaken ρ p)
   | .refl A a => .refl (weaken ρ A) (weaken ρ a)
+  | .firstSigma p => .firstSigma (weaken ρ p)
+  | .secondSigma p => .secondSigma (weaken ρ p)
   | .j A B b a a' p => .j (weaken ρ A) (weaken (lift_weak_n 3 ρ) B) (weaken ρ b)
                         (weaken ρ a) (weaken ρ a') (weaken ρ p)
 

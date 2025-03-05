@@ -626,66 +626,57 @@ theorem substitution_gen_pi_elim : ∀ {n : Nat} {Γ : Ctx n} {f A : Tm n} {B : 
       · apply hsS
       · rfl
 
-theorem substitution_gen_sigma_elim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
-   (Γ ⊢ p ∶ ΣA;B) →
-     (Γ ⬝ ΣA;B) ⊢ C type →
-       (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
-         (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-             (a A_1 : Tm (m + 1 - 1 + 1)),
-             eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-               eqM ▸ p = a →
-                 (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
-           (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n + 1 = m + 1) {s S : Tm l}
-               (A_1 : Tm (m + 1 - 1 + 1)),
-               (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ →
-                 eqM ▸ C = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ A_1⌈s/ₙleq⌉ type) →
-             (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n + 1 + 1 = m + 1)
-                 (s S : Tm l) (a A_1 : Tm (m + 1 - 1 + 1)),
-                 eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ c = a →
-                     eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 →
-                       (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
-               ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-                 (a A_1 : Tm (m + 1 - 1 + 1)),
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ A.indSigma B C c p = a →
-                     eqM ▸ C⌈p⌉₀ = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
+theorem substitution_gen_sigma_first :
+    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
+    (Γ ⊢ p ∶ ΣA;B) →
+    (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A_1 : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
+      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A_1 : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ π₁ p = a → eqM ▸ A = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
   by
-    intro n Γ' A B p C c hpSi hC hcC ihpSi ihC ihcC m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
+    intro n Γ' p A B hpSi ihpSi m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
+    cases heqM
+    cases heqΓ
+    cases heqt
+    cases heqT
+    apply HasType.sigma_first
+    rotate_right
+    · apply B⌈1ₙ⇑ₛ(s/ₙhleq)⌉
+    · simp [lift_subst_n]
+      rw [←substitution_sigma]
+      apply ihpSi
+      repeat' rfl
+      apply hsS
+
+theorem substitution_gen_sigma_second :
+    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
+    (Γ ⊢ p ∶ ΣA;B) →
+    (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A_1 : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
+      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ π₂ p = a → eqM ▸ B⌈π₁ p⌉₀ = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
+  by
+    intro n Γ' p A B hpSi ihpSi m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
     cases heqΓ
     cases heqt
     cases heqT
     simp [substitution_zero_lift]
-    apply HasType.sigma_elim
-    · simp [lift_subst_n]
-      rw [←substitution_sigma]
+    apply HasType.sigma_second
+    rotate_right
+    · apply A⌈(s/ₙhleq)⌉
+    · rw [←substitution_sigma]
       apply ihpSi
-      · rfl
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
-    · simp [lift_subst_n]
-      rw [←substitution_sigma]
-      rw [lift_n_substitution]
-      rw [extend_expand_context_n_substitution]
-      apply ihC
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
-    · simp [lift_subst_n]
-      rw [subst_subst_sigma_C]
-      simp [lift_n_substitution]
-      rw [extend_expand_context_n_substitution]
-      rw [extend_expand_context_n_substitution]
-      apply ihcC
-      · rfl
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
+      repeat' rfl
+      apply hsS
 
 theorem substitution_gen_iden_elim : 
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},

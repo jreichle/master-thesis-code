@@ -168,8 +168,10 @@ theorem context_conversion :
       apply context_conversion_empty_elim
     case HasTypePiElim =>
       apply context_conversion_pi_elim
-    case HasTypeSigmaElim =>
-      apply context_conversion_sigma_elim
+    case HasTypeSigmaFirst =>
+      apply context_conversion_sigma_first
+    case HasTypeSigmaSecond =>
+      apply context_conversion_sigma_second
     case HasTypeIdenElim =>
       apply context_conversion_iden_elim
     case HasTypeTyConv =>
@@ -200,8 +202,10 @@ theorem context_conversion :
       apply context_conversion_unit_comp
     case IsEqualTermPiComp =>
       apply context_conversion_pi_comp
-    case IsEqualTermSigmaComp =>
-      apply context_conversion_sigma_comp
+    case IsEqualTermSigmaFirstComp =>
+      apply context_conversion_sigma_first_comp
+    case IsEqualTermSigmaSecondComp =>
+      apply context_conversion_sigma_second_comp
     case IsEqualTermIdenComp =>
       apply context_conversion_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -216,8 +220,10 @@ theorem context_conversion :
       apply context_conversion_pi_elim_eq
     case IsEqualTermSigmaIntroEq =>
       apply context_conversion_sigma_intro_eq
-    case IsEqualTermSigmaElimEq =>
-      apply context_conversion_sigma_elim_eq
+    case IsEqualTermSigmaFirstEq =>
+      apply context_conversion_sigma_first_eq
+    case IsEqualTermSigmaSecondEq =>
+      apply context_conversion_sigma_second_eq
     case IsEqualTermIdenIntroEq =>
       apply context_conversion_iden_intro_eq
     case IsEqualTermIdenElimEq =>

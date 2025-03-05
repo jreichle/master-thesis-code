@@ -102,20 +102,12 @@ theorem weakening_var_weaken :
       apply And.intro
       · apply weakening_var_weaken h
       · apply weakening_var_weaken h
-    | .indSigma A B C c p =>
+    | .firstSigma p =>
       simp [weaken]
-      apply And.intro
-      · apply weakening_var_weaken h
-      · apply And.intro
-        · apply weakening_var_weaken
-          apply weakening_var_lift_n h
-        · apply And.intro
-          · apply weakening_var_weaken
-            apply weakening_var_lift_n h
-          · apply And.intro
-            · apply weakening_var_weaken
-              apply weakening_var_lift_n h
-            · apply weakening_var_weaken h
+      apply weakening_var_weaken h
+    | .secondSigma p =>
+      simp [weaken]
+      apply weakening_var_weaken h
     | .refl A a =>
       simp [weaken]
       apply And.intro
@@ -246,29 +238,12 @@ theorem weakening_id :
       apply And.intro
       · apply weakening_id
       · apply weakening_id
-    | .indSigma A B C c p =>
+    | .firstSigma p =>
       simp [weaken]
-      apply And.intro
-      · apply weakening_id
-      · apply And.intro
-        · have h := weakening_id (t := B)
-          rw (config := {occs := .pos [2]}) [←h]
-          apply weakening_var_weaken
-          intro i
-          apply weakening_var_lift_n_id
-        · apply And.intro
-          · have h := weakening_id (t := C)
-            rw (config := {occs := .pos [2]}) [←h]
-            apply weakening_var_weaken
-            intro i
-            apply weakening_var_lift_n_id
-          · apply And.intro
-            · have h := weakening_id (t := c)
-              rw (config := {occs := .pos [2]}) [←h]
-              apply weakening_var_weaken
-              intro i
-              apply weakening_var_lift_n_id
-            · apply weakening_id
+      apply weakening_id
+    | .secondSigma p =>
+      simp [weaken]
+      apply weakening_id
     | .refl A a => 
       simp [weaken]
       apply And.intro

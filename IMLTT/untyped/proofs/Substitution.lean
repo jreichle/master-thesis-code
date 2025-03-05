@@ -101,20 +101,12 @@ theorem substitution_var_substitute {σ σ' : Subst m n} :
       apply And.intro
       · apply substitution_var_substitute h
       · apply substitution_var_substitute h
-    | .indSigma A B C c p =>
+    | .firstSigma p =>
       simp [substitute]
-      apply And.intro
-      · apply substitution_var_substitute h
-      · apply And.intro
-        · apply substitution_var_substitute
-          apply substitution_var_lift h
-        · apply And.intro
-          · apply substitution_var_substitute
-            apply substitution_var_lift h
-          · apply And.intro
-            · apply substitution_var_substitute
-              apply substitution_var_lift_n h
-            · apply substitution_var_substitute h
+      apply substitution_var_substitute h
+    | .secondSigma p =>
+      simp [substitute]
+      apply substitution_var_substitute h
     | .refl A a =>
       simp [substitute]
       apply And.intro
@@ -237,29 +229,12 @@ theorem substitution_id {t : Tm n} :
       apply And.intro
       · apply substitution_id
       · apply substitution_id
-    | .indSigma A B C c p =>
+    | .firstSigma p =>
       simp [substitute]
-      apply And.intro
-      · apply substitution_id
-      · apply And.intro
-        · have h := substitution_id (t := B)
-          rw (config := {occs := .pos [2]}) [←h]
-          apply substitution_var_substitute
-          intro x
-          apply substitution_var_lift_n_id
-        · apply And.intro
-          · have h := substitution_id (t := C)
-            rw (config := {occs := .pos [2]}) [←h]
-            apply substitution_var_substitute
-            intro x
-            apply substitution_var_lift_n_id
-          · apply And.intro
-            · have h := substitution_id (t := c)
-              rw (config := {occs := .pos [2]}) [←h]
-              apply substitution_var_substitute
-              intro x
-              apply substitution_var_lift_n_id
-            · apply substitution_id
+      apply substitution_id
+    | .secondSigma p =>
+      simp [substitute]
+      apply substitution_id
     | .refl A a =>
       simp [substitute]
       apply And.intro

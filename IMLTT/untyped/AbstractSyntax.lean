@@ -14,7 +14,8 @@ inductive Tm : Nat → Type where
   | lam : Tm n → Tm (n + 1) → Tm n
   | app : Tm n → Tm n → Tm n
   | pairSigma : Tm n → Tm n → Tm n
-  | indSigma: Tm n → Tm (n + 1) → Tm (n + 1) → Tm (n + 2) → Tm n → Tm n
+  | firstSigma : Tm n → Tm n
+  | secondSigma : Tm n → Tm n
   | refl : Tm n → Tm n → Tm n
   | j : Tm n → Tm (n + 3) → Tm n → Tm n → Tm n → Tm n → Tm n
 
@@ -35,6 +36,8 @@ notation:max "⋆" => Tm.tt
 notation:98 "λ" A "; " b => Tm.lam A b
 infixl:98 "◃" => Tm.app
 infixl:98 "&" => Tm.pairSigma
+prefix:98 "π₁" => Tm.firstSigma
+prefix:98 "π₂" => Tm.secondSigma
 
 notation:max "ε" => Ctx.empty
 infixl:94 " ⬝ " => Ctx.extend

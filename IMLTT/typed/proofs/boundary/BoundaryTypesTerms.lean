@@ -55,8 +55,10 @@ theorem boundary_type_term :
       apply boundary_empty_elim
     case HasTypePiElim =>
       apply boundary_pi_elim
-    case HasTypeSigmaElim =>
-      apply boundary_sigma_elim
+    case HasTypeSigmaFirst =>
+      apply boundary_sigma_first
+    case HasTypeSigmaSecond =>
+      apply boundary_sigma_second
     case HasTypeIdenElim =>
       apply boundary_iden_elim
     case HasTypeTyConv =>
@@ -87,8 +89,10 @@ theorem boundary_type_term :
       apply boundary_unit_comp
     case IsEqualTermPiComp =>
       apply boundary_pi_comp
-    case IsEqualTermSigmaComp =>
-      apply boundary_sigma_comp
+    case IsEqualTermSigmaFirstComp =>
+      apply boundary_sigma_first_comp
+    case IsEqualTermSigmaSecondComp =>
+      apply boundary_sigma_second_comp
     case IsEqualTermIdenComp =>
       apply boundary_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -103,8 +107,10 @@ theorem boundary_type_term :
       apply boundary_pi_elim_eq
     case IsEqualTermSigmaIntroEq =>
       apply boundary_sigma_intro_eq
-    case IsEqualTermSigmaElimEq =>
-      apply boundary_sigma_elim_eq
+    case IsEqualTermSigmaFirstEq =>
+      apply boundary_sigma_first_eq
+    case IsEqualTermSigmaSecondEq =>
+      apply boundary_sigma_second_eq
     case IsEqualTermIdenIntroEq =>
       apply boundary_iden_intro_eq
     case IsEqualTermIdenElimEq =>
@@ -125,4 +131,4 @@ theorem boundary_type_term :
       apply boundary_term_symm
     case IsEqualTermTermTrans =>
       apply boundary_term_trans
-    any_goals sorry
+    any_goals aesop

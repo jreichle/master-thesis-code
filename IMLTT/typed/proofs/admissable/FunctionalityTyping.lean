@@ -181,8 +181,10 @@ theorem functionality_typing :
       apply functionality_typing_empty_elim
     case HasTypePiElim =>
       apply functionality_typing_pi_elim
-    case HasTypeSigmaElim =>
-      apply functionality_typing_sigma_elim
+    case HasTypeSigmaFirst =>
+      apply functionality_typing_sigma_first
+    case HasTypeSigmaSecond =>
+      apply functionality_typing_sigma_second
     case HasTypeIdenElim =>
       apply functionality_typing_iden_elim
     case HasTypeTyConv =>

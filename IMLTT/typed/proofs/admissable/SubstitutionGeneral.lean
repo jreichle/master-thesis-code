@@ -183,8 +183,10 @@ theorem substitution :
       apply substitution_gen_empty_elim
     case HasTypePiElim =>
       apply substitution_gen_pi_elim
-    case HasTypeSigmaElim =>
-      apply substitution_gen_sigma_elim
+    case HasTypeSigmaFirst =>
+      apply substitution_gen_sigma_first
+    case HasTypeSigmaSecond =>
+      apply substitution_gen_sigma_second
     case HasTypeIdenElim =>
       apply substitution_gen_iden_elim
     case HasTypeTyConv =>
@@ -215,8 +217,10 @@ theorem substitution :
       apply substitution_gen_unit_comp
     case IsEqualTermPiComp =>
       apply substitution_gen_pi_comp
-    case IsEqualTermSigmaComp =>
-      apply substitution_gen_sigma_comp
+    case IsEqualTermSigmaFirstComp =>
+      apply substitution_gen_sigma_first_comp
+    case IsEqualTermSigmaSecondComp =>
+      apply substitution_gen_sigma_second_comp
     case IsEqualTermIdenComp =>
       apply substitution_gen_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -231,8 +235,10 @@ theorem substitution :
       apply substitution_gen_pi_elim_eq
     case IsEqualTermSigmaIntroEq =>
       apply substitution_gen_sigma_intro_eq
-    case IsEqualTermSigmaElimEq =>
-      apply substitution_gen_sigma_elim_eq
+    case IsEqualTermSigmaFirstEq =>
+      sorry
+    case IsEqualTermSigmaSecondEq =>
+      sorry
     case IsEqualTermIdenIntroEq =>
       apply substitution_gen_iden_intro_eq
     case IsEqualTermIdenElimEq =>
