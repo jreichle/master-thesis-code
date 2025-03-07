@@ -1291,7 +1291,35 @@ theorem functionality_typing_sigma_second :
                   eqM ▸ π₂ p = t →
                     eqM ▸ B⌈π₁ p⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
-    sorry
+    intro n Γ' p A B hpSi ihpSi
+    apply And.intro
+    · intro m l k hleq Γ Δ Ξ heqM s s' S T hssS hsS hsS' heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left ihpSi
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      rotate_left
+      · apply k
+      · apply Ξ
+      · rfl
+      · rfl
+    · intro m l hleq Γ Δ s s' S t T heqM hssS hsS hsS' heqΓ heqt heqT
+      cases heqM
+      cases heqΓ
+      cases heqt
+      cases heqT
+      simp [substitution_zero_lift]
+      apply IsEqualTerm.sigma_second_eq
+      rotate_left
+      · apply A⌈(s/ₙhleq)⌉
+      · rw [←substitution_sigma]
+        apply And.right ihpSi
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        repeat' rfl
 
 theorem functionality_typing_iden_elim :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},

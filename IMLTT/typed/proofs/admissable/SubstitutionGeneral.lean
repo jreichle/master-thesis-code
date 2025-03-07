@@ -236,9 +236,9 @@ theorem substitution :
     case IsEqualTermSigmaIntroEq =>
       apply substitution_gen_sigma_intro_eq
     case IsEqualTermSigmaFirstEq =>
-      sorry
+      apply substitution_gen_sigma_first_eq
     case IsEqualTermSigmaSecondEq =>
-      sorry
+      apply substitution_gen_sigma_second_eq
     case IsEqualTermIdenIntroEq =>
       apply substitution_gen_iden_intro_eq
     case IsEqualTermIdenElimEq =>

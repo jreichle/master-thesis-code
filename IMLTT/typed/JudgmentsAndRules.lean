@@ -106,7 +106,7 @@ mutual
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A → HasType Γ a' A
       → HasType Γ p (a ≃[A] a')
-      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉) -- XXX: not pretty
+      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → IsType Γ (B⌈(ₛidₚ), a, a', p⌉)
       → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
       -- conversion

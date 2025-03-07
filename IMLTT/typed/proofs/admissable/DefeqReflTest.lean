@@ -110,7 +110,7 @@ theorem defeq_refl :
         (∀ m z (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) A B,
           eqM ▸ Γ' = Γ ⬝ B ⊗ Δ → eqM ▸ A' = A →
           (Γ ⬝ B ⊗ Δ ⊢ A ≡ A type)))
-      (motive_3 := fun {n} Γ' a' A' _haA =>
+      (motive_3 := fun {n} Γ' a' A' _haA => -- Γ ⊢ a ∶ A → Γ ⊢ A ≡ A type
         (∀ (eqM : n = 0) A,
           eqM ▸ Γ' = ε → eqM ▸ A' = A →
           (ε ⊢ A ≡ A type)) ∧
