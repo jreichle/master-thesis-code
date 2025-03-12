@@ -494,6 +494,126 @@ theorem functionality_typing_sigma_intro :
         · apply hB
         · apply hsS
 
+theorem functionality_typing_nat_zero_intro :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S) →
+          (Γ_1 ⊢ s ∶ S) →
+            (Γ_1 ⊢ s' ∶ S) →
+              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
+      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ 𝓏 = t → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+  by
+    intro n Γ' hiC ihiC
+    apply And.intro
+    · intro m l k hleq Γ Δ Ξ heqM s s' S T hssS hsS hsS' heqΓ
+      cases heqM
+      cases heqΓ
+      apply ihiC
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      rotate_left
+      · apply k
+      · apply Ξ
+      · rfl
+      · rfl
+    · intro m l hleq Γ Δ s s' S t T heqM hssS hsS hsS' heqΓ heqt heqT
+      cases heqM
+      cases heqΓ
+      cases heqt
+      cases heqT
+      simp [substitute]
+      apply IsEqualTerm.nat_zero_intro_eq
+      simp_all
+      cases Δ
+      case start =>
+        simp [substitute_into_gen_ctx]
+        simp [expand_ctx]
+        simp [expand_ctx] at ihiC
+        exact ctx_decr hiC
+      case expand Δ' T =>
+        cases m with
+        | zero =>
+          have h := gen_ctx_leq Δ'
+          omega
+        | succ m' =>
+          apply And.left substitution
+          · apply hiC
+          · apply hsS
+          · omega
+ 
+theorem functionality_typing_nat_succ_intro :
+    ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
+    (Γ ⊢ x ∶ 𝒩) →
+    ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ x = t → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
+      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ 𝓈(x) = t → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+  by
+    intro n Γ' x hxNat ihxNat
+    apply And.intro
+    · intro m l k hleq Γ Δ Ξ heqM s s' S T hssS hsS hsS' heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left ihxNat
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      rotate_left
+      · apply k
+      · apply Ξ
+      · rfl
+      · rfl
+    · intro m l hleq Γ Δ s s' S t T heqM hssS hsS hsS' heqΓ heqt heqT
+      cases heqM
+      cases heqΓ
+      cases heqt
+      cases heqT
+      simp [substitute]
+      apply IsEqualTerm.nat_succ_intro_eq
+      rw [←substitution_nat]
+      apply And.right ihxNat
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      repeat' rfl
+
 theorem functionality_typing_iden_intro :
   ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
   Γ ⊢ A type →
@@ -831,6 +951,55 @@ theorem functionality_typing_univ_sigma :
         · apply hsS
         · apply hsS'
         repeat' rfl
+
+theorem functionality_typing_univ_nat :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S) →
+          (Γ_1 ⊢ s ∶ S) →
+            (Γ_1 ⊢ s' ∶ S) →
+              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
+      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ 𝒩 = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+  by
+    intro n Γ' hiC ihiC
+    apply And.intro
+    · intro m l k hleq Γ Δ Ξ heqM s s' S T hssS hsS hsS' heqΓ
+      cases heqM
+      cases heqΓ
+      apply ihiC
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      rotate_left
+      · apply k
+      · apply Ξ
+      · rfl
+      · rfl
+    · intro m l hleq Γ Δ s s' S t T heqM hssS hsS hsS' heqΓ heqt heqT
+      cases heqM
+      cases heqΓ
+      cases heqt
+      cases heqT
+      simp [substitute]
+      apply IsEqualTerm.univ_nat_eq
+      apply And.left substitution
+      · apply hiC
+      · apply hsS
+      · apply hleq
 
 theorem functionality_typing_univ_iden :
   ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
@@ -1316,6 +1485,144 @@ theorem functionality_typing_sigma_second :
       · apply A⌈(s/ₙhleq)⌉
       · rw [←substitution_sigma]
         apply And.right ihpSi
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        repeat' rfl
+
+theorem functionality_typing_nat_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
+    Γ ⬝ 𝒩 ⊢ A type →
+      (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
+        (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+          (Γ ⊢ x ∶ 𝒩) →
+            ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+                  (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+                  (Γ_1 ⊢ s ≡ s' ∶ S) →
+                    (Γ_1 ⊢ s ∶ S) →
+                      (Γ_1 ⊢ s' ∶ S) →
+                        eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+                  (eqM : n + 1 = m + 1),
+                  (Γ_1 ⊢ s ≡ s' ∶ S) →
+                    (Γ_1 ⊢ s ∶ S) →
+                      (Γ_1 ⊢ s' ∶ S) →
+                        eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ →
+                          eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
+              ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+                    (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+                    (Γ_1 ⊢ s ≡ s' ∶ S) →
+                      (Γ_1 ⊢ s ∶ S) →
+                        (Γ_1 ⊢ s' ∶ S) →
+                          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+                  ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+                    (t T : Tm (m + 1)) (eqM : n = m + 1),
+                    (Γ_1 ⊢ s ≡ s' ∶ S) →
+                      (Γ_1 ⊢ s ∶ S) →
+                        (Γ_1 ⊢ s' ∶ S) →
+                          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                            eqM ▸ z = t →
+                              eqM ▸ A⌈𝓏⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
+                ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+                      (eqM : n + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+                      (Γ_1 ⊢ s ≡ s' ∶ S) →
+                        (Γ_1 ⊢ s ∶ S) →
+                          (Γ_1 ⊢ s' ∶ S) →
+                            eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
+                              Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+                    ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s_1 s' S : Tm l)
+                      (t T : Tm (m + 1)) (eqM : n + 1 + 1 = m + 1),
+                      (Γ_1 ⊢ s_1 ≡ s' ∶ S) →
+                        (Γ_1 ⊢ s_1 ∶ S) →
+                          (Γ_1 ⊢ s' ∶ S) →
+                            eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ →
+                              eqM ▸ s = t →
+                                eqM ▸ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = T →
+                                  Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ t⌈s_1/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s_1/ₙleq⌉) →
+                  ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+                        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+                        (Γ_1 ⊢ s ≡ s' ∶ S) →
+                          (Γ_1 ⊢ s ∶ S) →
+                            (Γ_1 ⊢ s' ∶ S) →
+                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
+                                Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+                      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+                        (t T : Tm (m + 1)) (eqM : n = m + 1),
+                        (Γ_1 ⊢ s ≡ s' ∶ S) →
+                          (Γ_1 ⊢ s ∶ S) →
+                            (Γ_1 ⊢ s' ∶ S) →
+                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                                eqM ▸ x = t →
+                                  eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
+                    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+                        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+                        (Γ_1 ⊢ s ≡ s' ∶ S) →
+                          (Γ_1 ⊢ s ∶ S) →
+                            (Γ_1 ⊢ s' ∶ S) →
+                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
+                                Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+                      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s_1 s' S : Tm l)
+                        (t T : Tm (m + 1)) (eqM : n = m + 1),
+                        (Γ_1 ⊢ s_1 ≡ s' ∶ S) →
+                          (Γ_1 ⊢ s_1 ∶ S) →
+                            (Γ_1 ⊢ s' ∶ S) →
+                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                                eqM ▸ A.indNat z s x = t →
+                                  eqM ▸ A⌈x⌉₀ = T →
+                                    Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ t⌈s_1/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s_1/ₙleq⌉ :=
+  by
+    intro n Γ' z x A s hA hzA hsA hxNat ihA ihzA ihsA ihxNat
+    apply And.intro
+    · intro m l k hleq Γ Δ Ξ heqM s s' S T hssS hsS hsS' heqΓ
+      cases heqM
+      cases heqΓ
+      apply And.left ihxNat
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      rotate_left
+      · apply k
+      · apply Ξ
+      · rfl
+      · rfl
+    · intro m l hleq Γ Δ s s' S t T heqM hssS hsS hsS' heqΓ heqt heqT
+      cases heqM
+      cases heqΓ
+      cases heqt
+      cases heqT
+      rw [substitution_zero_lift]
+      apply IsEqualTerm.nat_elim_eq
+      · simp [lift_subst_n]
+        simp [lift_n_substitution]
+        rw [←substitution_nat]
+        rw [extend_expand_context_n_substitution]
+        apply And.right ihA
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        repeat' rfl
+      · simp [lift_subst_n]
+        rw [←substitution_var_zero]
+        rw [←substitution_zero_lift]
+        apply And.right ihzA
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        repeat' rfl
+      · rw [←substitution_nat]
+        rw [extend_expand_context_n_substitution]
+        simp [lift_subst_n]
+        rw [←helper_subst_nat_elim]
+        simp [lift_n_substitution]
+        rw [extend_expand_context_n_substitution]
+        apply And.right ihsA
+        · apply hssS
+        · apply hsS
+        · apply hsS'
+        repeat' rfl
+        apply hleq
+      · rw [←substitution_nat]
+        apply And.right ihxNat
         · apply hssS
         · apply hsS
         · apply hsS'

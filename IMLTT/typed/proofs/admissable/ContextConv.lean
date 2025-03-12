@@ -134,6 +134,8 @@ theorem context_conversion :
       apply context_conversion_pi_form
     case IsTypeSigmaForm =>
       apply context_conversion_sigma_form
+    case IsTypeNatForm =>
+      apply context_conversion_nat_form
     case IsTypeIdenForm =>
       apply context_conversion_iden_form
     case IsTypeUnivForm =>
@@ -150,6 +152,10 @@ theorem context_conversion :
       apply context_conversion_pi_intro
     case HasTypeSigmaIntro =>
       apply context_conversion_sigma_intro
+    case HasTypeNatZeroIntro =>
+      apply context_conversion_nat_zero_intro
+    case HasTypeNatSuccIntro =>
+      apply context_conversion_nat_succ_intro
     case HasTypeIdenIntro =>
       apply context_conversion_iden_intro
     case HasTypeUnivUnit =>
@@ -160,6 +166,8 @@ theorem context_conversion :
       apply context_conversion_univ_pi
     case HasTypeUnivSigma =>
       apply context_conversion_univ_sigma
+    case HasTypeUnivNat =>
+      apply context_conversion_univ_nat
     case HasTypeUnivIden =>
       apply context_conversion_univ_iden
     case HasTypeUnitElim =>
@@ -172,6 +180,8 @@ theorem context_conversion :
       apply context_conversion_sigma_first
     case HasTypeSigmaSecond =>
       apply context_conversion_sigma_second
+    case HasTypeNatElim =>
+      apply context_conversion_nat_elim
     case HasTypeIdenElim =>
       apply context_conversion_iden_elim
     case HasTypeTyConv =>
@@ -184,6 +194,8 @@ theorem context_conversion :
       apply context_conversion_pi_form_eq
     case IsEqualTypeSigmaFormEq =>
       apply context_conversion_sigma_form_eq
+    case IsEqualTypeNatFormEq =>
+      apply context_conversion_nat_form_eq
     case IsEqualTypeIdenFormEq =>
       apply context_conversion_iden_form_eq
     case IsEqualTypeUnivFormEq =>
@@ -206,6 +218,10 @@ theorem context_conversion :
       apply context_conversion_sigma_first_comp
     case IsEqualTermSigmaSecondComp =>
       apply context_conversion_sigma_second_comp
+    case IsEqualTermNatZeroComp =>
+      apply context_conversion_nat_zero_comp
+    case IsEqualTermNatSuccComp =>
+      apply context_conversion_nat_succ_comp
     case IsEqualTermIdenComp =>
       apply context_conversion_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -224,6 +240,12 @@ theorem context_conversion :
       apply context_conversion_sigma_first_eq
     case IsEqualTermSigmaSecondEq =>
       apply context_conversion_sigma_second_eq
+    case IsEqualTermNatZeroIntroEq =>
+      apply context_conversion_nat_zero_intro_eq
+    case IsEqualTermNatSuccIntroEq =>
+      apply context_conversion_nat_succ_intro_eq
+    case IsEqualTermNatElimEq =>
+      apply context_conversion_nat_elim_eq
     case IsEqualTermIdenIntroEq =>
       apply context_conversion_iden_intro_eq
     case IsEqualTermIdenElimEq =>
@@ -236,6 +258,8 @@ theorem context_conversion :
       apply context_conversion_univ_pi_eq
     case IsEqualTermUnivSigmaEq =>
       apply context_conversion_univ_sigma_eq
+    case IsEqualTermUnivNatEq =>
+      apply context_conversion_univ_nat_eq
     case IsEqualTermUnivIdenEq =>
       apply context_conversion_univ_iden_eq
     case IsEqualTermTyConvEq =>

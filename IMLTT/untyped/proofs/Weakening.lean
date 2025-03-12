@@ -57,6 +57,8 @@ theorem weakening_var_weaken :
       · apply weakening_var_weaken
         intro i
         apply weakening_var_lift_n h
+    | .nat =>
+      simp [weaken]
     | .iden A a a' =>
       simp [weaken]
       apply And.intro
@@ -108,6 +110,20 @@ theorem weakening_var_weaken :
     | .secondSigma p =>
       simp [weaken]
       apply weakening_var_weaken h
+    | .zeroNat =>
+      simp [weaken]
+    | .succNat x =>
+      simp [weaken]
+      apply weakening_var_weaken h
+    | .indNat A s z i =>
+      simp [weaken]
+      repeat' apply And.intro
+      · apply weakening_var_weaken
+        apply weakening_var_lift_n h
+      · apply weakening_var_weaken h
+      · apply weakening_var_weaken
+        apply weakening_var_lift_n h
+      · apply weakening_var_weaken h
     | .refl A a =>
       simp [weaken]
       apply And.intro
@@ -185,6 +201,8 @@ theorem weakening_id :
         apply weakening_var_weaken
         intro i
         apply weakening_var_lift_n_id
+    | .nat =>
+      simp [weaken]
     | .iden A a a' =>
       simp [weaken]
       apply And.intro
@@ -244,6 +262,26 @@ theorem weakening_id :
     | .secondSigma p =>
       simp [weaken]
       apply weakening_id
+    | .zeroNat =>
+      simp [weaken]
+    | .succNat x =>
+      simp [weaken]
+      apply weakening_id
+    | .indNat A z s i =>
+      simp [weaken]
+      repeat' apply And.intro
+      · have h := weakening_id (t := A)
+        rw (config := {occs := .pos [2]}) [←h]
+        apply weakening_var_weaken
+        intro i
+        apply weakening_var_lift_n_id
+      · apply weakening_id
+      · have h := weakening_id (t := s)
+        rw (config := {occs := .pos [2]}) [←h]
+        apply weakening_var_weaken
+        intro i
+        apply weakening_var_lift_n_id
+      · apply weakening_id
     | .refl A a => 
       simp [weaken]
       apply And.intro
@@ -292,8 +330,18 @@ theorem weakening_sigma {ρ : Weak m n} :
     simp [weaken]
     simp [lift_weak_n]
 
+theorem weakening_nat {ρ : Weak m n} :
+    𝒩 ⌊ρ⌋ = 𝒩 :=
+  by
+    simp [weaken]
+
 theorem weakening_refl {ρ : Weak m n} :
     (.refl A a)⌊ρ⌋ = .refl (A⌊ρ⌋) (a⌊ρ⌋) :=
+  by
+    simp [weaken]
+
+theorem weakening_nat_zero {ρ : Weak m n} :
+    𝓏⌊ρ⌋ = 𝓏 :=
   by
     simp [weaken]
 

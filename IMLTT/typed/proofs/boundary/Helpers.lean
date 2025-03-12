@@ -122,3 +122,145 @@ theorem new_test_hahaha :
 --     t⌈(ₛidₚ), u, s, r⌉ = t⌈(ₛidₚ), u, (s⌈(ₛidₚ), u⌉), (r⌈(ₛidₚ), s⌉⌈(ₛidₚ), u⌉)⌉ :=
 --   by
 --     sorry
+
+
+    -- ↑ₚρ∘(σ, t) => .shift (.extend (comp_weaken_substitute ρ σ) (weaken ρ t))
+theorem boundary_helper_nat {n : Nat} {t : Tm (n + 2)}:
+    t⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉ = t⌊↑ₚidₚ⌋⌈⇑ₛ((ₛidₚ), 𝓈(v(0)))⌉:=
+  by
+    -- rw [←substitution_conv_zero]
+    rw [substitution_comp_σρ]
+    simp [comp_substitute_weaken]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [weaken]
+        simp [weaken_var]
+        simp [shift_tm]
+        sorry
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [shift_tm]
+        simp [weaken]
+        simp [weaken_var]
+
+
+--  A'⌊↑ₚidₚ⌋⌈𝓈(v(0))⌉₀ 
+-- A'⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉
+
+theorem boundary_helper_nat' {n : Nat} {t : Tm (n + 1)}:
+    t⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉ = t⌊⇑ₚ↑ₚidₚ⌋⌈((ₛidₚ), 𝓈(v(0)))⌉:=
+  by
+    rw [substitution_comp_σρ]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        rw [←substitution_comp_σρ]
+        simp [weaken]
+        simp [weaken_var]
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        rw [←substitution_comp_σρ]
+        simp [substitute]
+        simp [substitute_var]
+        simp [weaken]
+        simp [weaken_var]
+
+theorem insane {x : Tm n}:
+    A⌈𝓈(x)⌉₀⌊↑ₚidₚ⌋ = A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌈⇑ₛ((ₛidₚ), x)⌉ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp_ρσ]
+    simp [substitution_comp]
+    simp [comp_weaken_substitute]
+    simp [comp_substitute_substitute]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [weakening_id]
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        simp [weakening_id]
+        simp [substitute]
+        simp [substitute_var]
+
+theorem test_insanity {A : Tm (n + 1)}:
+    A⌈(ₛidₚ), x⌉⌊↑ₚidₚ⌋ = A⌈ₛidₚ⌉ :=
+  by
+    simp [substitution_comp_ρσ]
+    simp [comp_weaken_substitute]
+    simp [weakening_id]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        sorry
+      | succ i' =>
+        sorry
+
+theorem lol111 :
+    A⌈𝓈(x)⌉₀ = A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌈((ₛidₚ), x)⌉ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [weakening_id]
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+
+-- theorem lol1111 :
+--     A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉ = A⌈(ₛ↑ₚidₚ), v(0)⌉⌈𝓈(v(0))⌉₀ :=
+--   by
+--     simp [substitute_zero]
+--     simp [substitution_comp_ρσ]
+--     simp [substitution_comp]
+--     simp [comp_weaken_substitute]
+--     simp [comp_substitute_substitute]
+--     apply substitution_var_substitute
+--     intro x
+--     cases x
+--     case a.mk i hFin =>
+--       cases i with
+--       | zero =>
+--         simp [weakening_id]
+--         simp [substitute]
+--         simp [substitute_var]
+--         simp [comp_weaken_substitute]
+--         simp [substitute_var]
+--         simp [weaken]
+--         simp [weaken_var]
+--         sorry
+--       | succ i' =>
+--         simp [substitute]
+--         simp [substitute_var]
+--         sorry

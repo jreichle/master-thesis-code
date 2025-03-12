@@ -165,6 +165,41 @@ theorem substitution_gen_sigma_form_eq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n
       · apply hsS
       · rfl
 
+theorem substitution_gen_nat_form_eq :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
+        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+          (A A' : Tm (m + 1 - 1 + 1)),
+          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+            eqM ▸ 𝒩 = A → eqM ▸ 𝒩 = A' → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ A⌈s/ₙleq⌉ ≡ A'⌈s/ₙleq⌉ type :=
+  by
+    intro n Γ' hiC ihiC m l hleq Γ Δ heqM s S T T' heqΓ heqT heqT' hsS
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
+    apply IsEqualType.nat_form_eq
+    simp_all
+    cases Δ
+    case start =>
+      simp [substitute_into_gen_ctx]
+      simp [expand_ctx]
+      simp [expand_ctx] at hiC
+      exact ctx_decr hiC
+    case expand Δ' T =>
+      cases m with
+      | zero =>
+        have h := gen_ctx_leq Δ'
+        omega
+      | succ m' =>
+        apply ihiC
+        · exact hleq
+        · rfl
+        · apply hsS
+        · rfl
+
 theorem substitution_gen_iden_form_eq : ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n},
    Γ ⊢ A ≡ A' type →
      (Γ ⊢ a₁ ≡ a₂ ∶ A) →

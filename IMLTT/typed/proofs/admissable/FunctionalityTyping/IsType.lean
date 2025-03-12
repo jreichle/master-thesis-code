@@ -274,6 +274,53 @@ theorem functionality_typing_sigma_form :
         · rfl
         · rfl
 
+theorem functionality_typing_nat_form :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S) →
+          (Γ_1 ⊢ s ∶ S) →
+            (Γ_1 ⊢ s' ∶ S) →
+              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
+      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n = m + 1),
+          (Γ_1 ⊢ s ≡ s' ∶ S) →
+            (Γ_1 ⊢ s ∶ S) →
+              (Γ_1 ⊢ s' ∶ S) →
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type :=
+  by
+    intro n Γ' hiC ihiC
+    apply And.intro
+    · intro m l k hleq Γ Δ Ξ heqM s s' S T hssS hsS hsS' heqΓ
+      cases heqM
+      cases heqΓ
+      apply ihiC
+      · apply hssS
+      · apply hsS
+      · apply hsS'
+      rotate_left
+      · apply k
+      · apply Ξ
+      · rfl
+      · rfl
+    · intro m l hleq Γ Δ s s' S T heqM hssS hsS hsS' heqΓ heqT
+      cases heqM
+      cases heqΓ
+      cases heqT
+      simp_all
+      simp [substitute]
+      rw [←substitution_nat]
+      apply And.left (And.right (And.right (And.right substitution)))
+      · apply IsEqualType.nat_form_eq hiC
+      · apply hsS
+      · exact hleq
 
 theorem functionality_typing_iden_form :
  ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},

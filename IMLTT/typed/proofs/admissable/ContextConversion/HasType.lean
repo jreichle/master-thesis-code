@@ -172,6 +172,49 @@ theorem context_conversion_sigma_intro :
       · apply hS'
       repeat' rfl
 
+theorem context_conversion_nat_zero_intro :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l},
+        Γ_1 ⊢ S ≡ S' type → Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → Γ_1 ⬝ S' ⊗ Δ ctx) →
+      ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A : Tm m),
+        Γ_1 ⊢ S ≡ S' type →
+          Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ 𝓏 = a → eqM ▸ 𝒩 = A → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A :=
+  by
+    intro n Γ' hiC ihiC m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
+    cases heqM
+    cases heqΓ
+    cases heqt
+    cases heqT
+    apply HasType.nat_zero_intro
+    apply ihiC
+    · apply hSS
+    · apply hS
+    · apply hS'
+    repeat' rfl
+
+theorem context_conversion_nat_succ_intro :
+    ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
+    (Γ ⊢ x ∶ 𝒩) →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A : Tm m),
+        Γ_1 ⊢ S ≡ S' type →
+          Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ x = a → eqM ▸ 𝒩 = A → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A) →
+      ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A : Tm m),
+        Γ_1 ⊢ S ≡ S' type →
+          Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ 𝓈(x) = a → eqM ▸ 𝒩 = A → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A :=
+  by
+    intro n Γ' x hxNat ihxNat m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
+    cases heqM
+    cases heqΓ
+    cases heqt
+    cases heqT
+    apply HasType.nat_succ_intro
+    apply ihxNat
+    · apply hSS
+    · apply hS
+    · apply hS'
+    repeat' rfl
+
 theorem context_conversion_iden_intro :
     ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
       Γ ⊢ A type →
@@ -317,6 +360,27 @@ theorem context_conversion_univ_sigma :
       · apply hS
       · apply hS'
       repeat' rfl
+
+theorem context_conversion_univ_nat :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l},
+        Γ_1 ⊢ S ≡ S' type → Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → Γ_1 ⬝ S' ⊗ Δ ctx) →
+      ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A : Tm m),
+        Γ_1 ⊢ S ≡ S' type →
+          Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ 𝒩 = a → eqM ▸ 𝒰 = A → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A :=
+  by
+    intro n Γ' hiC ihiC m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
+    cases heqM
+    cases heqΓ
+    cases heqt
+    cases heqT
+    apply HasType.univ_nat
+    apply ihiC
+    · apply hSS
+    · apply hS
+    · apply hS'
+    repeat' rfl
 
 theorem context_conversion_univ_iden :
     ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
@@ -523,6 +587,66 @@ theorem context_conversion_sigma_second :
     rotate_left
     · apply A
     · apply ihpSi
+      · apply hSS
+      · apply hS
+      · apply hS'
+      repeat' rfl
+
+theorem context_conversion_nat_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
+    Γ ⬝ 𝒩 ⊢ A type →
+    (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+        (Γ ⊢ x ∶ 𝒩) →
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 = m) {S S' : Tm l} (A_1 : Tm m),
+              Γ_1 ⊢ S ≡ S' type →
+                Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) →
+            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A_1 : Tm m),
+                Γ_1 ⊢ S ≡ S' type →
+                  Γ_1 ⊢ S type →
+                    Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ z = a → eqM ▸ A⌈𝓏⌉₀ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A_1) →
+              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 = m) (S S' : Tm l) (a A_1 : Tm m),
+                  Γ_1 ⊢ S ≡ S' type →
+                    Γ_1 ⊢ S type →
+                      Γ_1 ⊢ S' type →
+                        eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ →
+                          eqM ▸ s = a → eqM ▸ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A_1) →
+                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A : Tm m),
+                    Γ_1 ⊢ S ≡ S' type →
+                      Γ_1 ⊢ S type →
+                        Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ x = a → eqM ▸ 𝒩 = A → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A) →
+                  ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a A_1 : Tm m),
+                    Γ_1 ⊢ S ≡ S' type →
+                      Γ_1 ⊢ S type →
+                        Γ_1 ⊢ S' type →
+                          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A.indNat z s x = a → eqM ▸ A⌈x⌉₀ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A_1 :=
+  by
+    intro n Γ' z x A s hA hzA hsA hxN ihA ihzA ihsA ihxN m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
+    cases heqM
+    cases heqΓ
+    cases heqt
+    cases heqT
+    simp [substitution_zero_lift]
+    apply HasType.nat_elim
+    · rw [extend_expand_context]
+      apply ihA
+      · apply hSS
+      · apply hS
+      · apply hS'
+      repeat' rfl
+    · apply ihzA
+      · apply hSS
+      · apply hS
+      · apply hS'
+      repeat' rfl
+    · rw [extend_expand_context]
+      rw [extend_expand_context]
+      apply ihsA
+      · apply hSS
+      · apply hS
+      · apply hS'
+      repeat' rfl
+    · apply ihxN
       · apply hSS
       · apply hS
       · apply hS'

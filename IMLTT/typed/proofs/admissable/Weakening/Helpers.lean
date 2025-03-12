@@ -232,3 +232,40 @@ theorem helper_weak_1 :
   by
     intro h1 h2
     omega
+
+
+theorem helper_weak_nat_succ {leq : l ≤ n} :
+    A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌊weaken_from (n + 1 + 1) l⌋
+    = A⌊1ₙ⇑ₚweaken_from n l⌋⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ :=
+  by
+    simp [lift_weak_n]
+    simp [substitution_comp_σρ]
+    simp [substitution_comp_ρσ]
+    simp [comp_weaken_substitute]
+    apply substitution_var_substitute
+    intro x
+    simp [←substitution_comp_ρσ]
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [shift_tm]
+        simp [weakening_id]
+        rw [shift_weaken_from]
+        rw [←lift_weaken_from]
+        simp [weaken]
+        simp [weaken_var]
+        rfl
+        any_goals omega
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [shift_tm]
+        simp [←substitution_conv_var]
+        simp [←substitution_comp_σρ]
+        rw [shift_weaken_from]
+        rw [shift_weaken_from]
+        rfl
+        any_goals omega

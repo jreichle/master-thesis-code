@@ -90,6 +90,19 @@ theorem weakening_sigma_form :
       · omega
       omega
 
+theorem weakening_nat_form :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
+      ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+        get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ 𝒩⌊weaken_from n l⌋ type :=
+  by
+    intro n Γ hiC ihiC l hleq B hB
+    simp [weaken]
+    apply IsType.nat_form
+    apply ihiC
+    apply hB
+
 theorem weakening_iden_form :
     ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
     Γ ⊢ A type →

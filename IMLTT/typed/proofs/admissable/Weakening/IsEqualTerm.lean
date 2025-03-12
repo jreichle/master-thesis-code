@@ -238,6 +238,114 @@ theorem weakening_sigma_second_comp :
     · apply ihSi
       apply hS
 
+theorem weakening_nat_zero_comp :
+    ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
+    Γ ⬝ 𝒩 ⊢ A type →
+    (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+        (Γ ⊢ 𝓏 ∶ 𝒩) →
+          (∀ (l : Nat) {leq : l ≤ n + 1} {B : Tm l},
+              get_sub_context (Γ ⬝ 𝒩) l leq ⊢ B type → insert_into_ctx leq (Γ ⬝ 𝒩) B ⊢ A⌊weaken_from (n + 1) l⌋ type) →
+            (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                get_sub_context Γ l leq ⊢ B type →
+                  insert_into_ctx leq Γ B ⊢ z⌊weaken_from n l⌋ ∶ A⌈𝓏⌉₀⌊weaken_from n l⌋) →
+              (∀ (l : Nat) {leq : l ≤ n + 1 + 1} {B : Tm l},
+                  get_sub_context (Γ ⬝ 𝒩 ⬝ A) l leq ⊢ B type →
+                    insert_into_ctx leq (Γ ⬝ 𝒩 ⬝ A) B ⊢ s⌊weaken_from (n + 1 + 1) l⌋ ∶
+                      A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌊weaken_from (n + 1 + 1) l⌋) →
+                (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                    get_sub_context Γ l leq ⊢ B type →
+                      insert_into_ctx leq Γ B ⊢ 𝓏⌊weaken_from n l⌋ ∶ 𝒩⌊weaken_from n l⌋) →
+                  ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                    get_sub_context Γ l leq ⊢ B type →
+                      insert_into_ctx leq Γ B ⊢ A.indNat z s 𝓏⌊weaken_from n l⌋ ≡ z⌊weaken_from n l⌋ ∶
+                        A⌈𝓏⌉₀⌊weaken_from n l⌋ :=
+  by
+    intro n Γ z A s hA hzA hsA hzNat ihA ihzA ihsA ihzNat l hleq S hS
+    rw [weak_sub_zero]
+    apply IsEqualTerm.nat_zero_comp
+    · simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [←weakening_nat]
+      rw [extend_insert_into_context]
+      apply ihA
+      rw [extend_get_sub_context]
+      apply hS
+      any_goals omega
+    · simp [lift_weak_n]
+      rw [←weakening_nat_zero]
+      rw [←weak_sub_zero]
+      apply ihzA
+      apply hS
+    · rw [←helper_weak_nat_succ]
+      rw [←weakening_nat]
+      rw [extend_insert_into_context]
+      simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [extend_insert_into_context]
+      rw [lift_weaken_from]
+      apply ihsA
+      rw [extend_get_sub_context]
+      rw [extend_get_sub_context]
+      apply hS
+      any_goals omega
+    · apply ihzNat
+      apply hS
+
+theorem weakening_nat_succ_comp :
+    ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
+    Γ ⬝ 𝒩 ⊢ A type →
+    (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+        (Γ ⊢ x ∶ 𝒩) →
+          (∀ (l : Nat) {leq : l ≤ n + 1} {B : Tm l},
+              get_sub_context (Γ ⬝ 𝒩) l leq ⊢ B type → insert_into_ctx leq (Γ ⬝ 𝒩) B ⊢ A⌊weaken_from (n + 1) l⌋ type) →
+            (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                get_sub_context Γ l leq ⊢ B type →
+                  insert_into_ctx leq Γ B ⊢ z⌊weaken_from n l⌋ ∶ A⌈𝓏⌉₀⌊weaken_from n l⌋) →
+              (∀ (l : Nat) {leq : l ≤ n + 1 + 1} {B : Tm l},
+                  get_sub_context (Γ ⬝ 𝒩 ⬝ A) l leq ⊢ B type →
+                    insert_into_ctx leq (Γ ⬝ 𝒩 ⬝ A) B ⊢ s⌊weaken_from (n + 1 + 1) l⌋ ∶
+                      A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌊weaken_from (n + 1 + 1) l⌋) →
+                (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                    get_sub_context Γ l leq ⊢ B type →
+                      insert_into_ctx leq Γ B ⊢ x⌊weaken_from n l⌋ ∶ 𝒩⌊weaken_from n l⌋) →
+                  ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                    get_sub_context Γ l leq ⊢ B type →
+                      insert_into_ctx leq Γ B ⊢ A.indNat z s 𝓈(x)⌊weaken_from n l⌋ ≡
+                        s⌈(ₛidₚ), x, A.indNat z s x⌉⌊weaken_from n l⌋ ∶ A⌈𝓈(x)⌉₀⌊weaken_from n l⌋ :=
+  by
+    intro n Γ z x A s hA hzA hsA hsNat ihA ihzA ihsA ihsNat l hleq S hS
+    rw [weak_sub_zero]
+    rw [weak_subst_sigma_c]
+    apply IsEqualTerm.nat_succ_comp
+    · simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [←weakening_nat]
+      rw [extend_insert_into_context]
+      apply ihA
+      rw [extend_get_sub_context]
+      apply hS
+      any_goals omega
+    · simp [lift_weak_n]
+      rw [←weakening_nat_zero]
+      rw [←weak_sub_zero]
+      apply ihzA
+      apply hS
+    · rw [←helper_weak_nat_succ]
+      rw [←weakening_nat]
+      rw [extend_insert_into_context]
+      simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [extend_insert_into_context]
+      rw [lift_weaken_from]
+      apply ihsA
+      rw [extend_get_sub_context]
+      rw [extend_get_sub_context]
+      apply hS
+      any_goals omega
+    · apply ihsNat
+      apply hS
 
 theorem weakening_iden_comp :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a : Tm n},
@@ -499,6 +607,90 @@ theorem weakening_sigma_second_eq :
     apply ihppSi
     apply hS
 
+theorem weakening_nat_zero_intro_eq :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
+      ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+        get_sub_context Γ l leq ⊢ B type →
+          insert_into_ctx leq Γ B ⊢ 𝓏⌊weaken_from n l⌋ ≡ 𝓏⌊weaken_from n l⌋ ∶ 𝒩⌊weaken_from n l⌋ :=
+  by
+    intro n Γ hiC ihiC l hleq S hS
+    apply IsEqualTerm.nat_zero_intro_eq
+    apply ihiC
+    apply hS
+
+theorem weakening_nat_succ_intro_eq :
+    ∀ {n : Nat} {Γ : Ctx n} {x x' : Tm n},
+    (Γ ⊢ x ≡ x' ∶ 𝒩) →
+    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+        get_sub_context Γ l leq ⊢ B type →
+          insert_into_ctx leq Γ B ⊢ x⌊weaken_from n l⌋ ≡ x'⌊weaken_from n l⌋ ∶ 𝒩⌊weaken_from n l⌋) →
+      ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+        get_sub_context Γ l leq ⊢ B type →
+          insert_into_ctx leq Γ B ⊢ 𝓈(x)⌊weaken_from n l⌋ ≡ 𝓈(x')⌊weaken_from n l⌋ ∶ 𝒩⌊weaken_from n l⌋ :=
+  by
+    intro n Γ x x' hxxNat ihxxNat l hleq S hS
+    apply IsEqualTerm.nat_succ_intro_eq
+    apply ihxxNat
+    apply hS
+
+theorem weakening_nat_elim_eq :
+    ∀ {n : Nat} {Γ : Ctx n} {z z' x x' : Tm n} {A A' : Tm (n + 1)} {s s' : Tm (n + 2)},
+    Γ ⬝ 𝒩 ⊢ A ≡ A' type →
+    (Γ ⊢ z ≡ z' ∶ A⌈𝓏⌉₀) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ≡ s' ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+        (Γ ⊢ x ≡ x' ∶ 𝒩) →
+          (∀ (l : Nat) {leq : l ≤ n + 1} {B : Tm l},
+              get_sub_context (Γ ⬝ 𝒩) l leq ⊢ B type →
+                insert_into_ctx leq (Γ ⬝ 𝒩) B ⊢ A⌊weaken_from (n + 1) l⌋ ≡ A'⌊weaken_from (n + 1) l⌋ type) →
+            (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                get_sub_context Γ l leq ⊢ B type →
+                  insert_into_ctx leq Γ B ⊢ z⌊weaken_from n l⌋ ≡ z'⌊weaken_from n l⌋ ∶ A⌈𝓏⌉₀⌊weaken_from n l⌋) →
+              (∀ (l : Nat) {leq : l ≤ n + 1 + 1} {B : Tm l},
+                  get_sub_context (Γ ⬝ 𝒩 ⬝ A) l leq ⊢ B type →
+                    insert_into_ctx leq (Γ ⬝ 𝒩 ⬝ A) B ⊢ s⌊weaken_from (n + 1 + 1) l⌋ ≡ s'⌊weaken_from (n + 1 + 1) l⌋ ∶
+                      A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌊weaken_from (n + 1 + 1) l⌋) →
+                (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                    get_sub_context Γ l leq ⊢ B type →
+                      insert_into_ctx leq Γ B ⊢ x⌊weaken_from n l⌋ ≡ x'⌊weaken_from n l⌋ ∶ 𝒩⌊weaken_from n l⌋) →
+                  ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+                    get_sub_context Γ l leq ⊢ B type →
+                      insert_into_ctx leq Γ B ⊢ A.indNat z s x⌊weaken_from n l⌋ ≡ A'.indNat z' s' x'⌊weaken_from n l⌋ ∶
+                        A⌈x⌉₀⌊weaken_from n l⌋ :=
+  by
+    intro n Γ z z' x x' A A' s s' hAA hzzA hssA hxxNat ihAA ihzzA ihssA ihxxNat l hleq S hS
+    rw [weak_sub_zero]
+    apply IsEqualTerm.nat_elim_eq
+    · simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [←weakening_nat]
+      rw [extend_insert_into_context]
+      apply ihAA
+      rw [extend_get_sub_context]
+      apply hS
+      any_goals omega
+    · simp [lift_weak_n]
+      rw [←weakening_nat_zero]
+      rw [←weak_sub_zero]
+      apply ihzzA
+      apply hS
+    · rw [←helper_weak_nat_succ]
+      rw [←weakening_nat]
+      rw [extend_insert_into_context]
+      simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [extend_insert_into_context]
+      rw [lift_weaken_from]
+      apply ihssA
+      rw [extend_get_sub_context]
+      rw [extend_get_sub_context]
+      apply hS
+      any_goals omega
+    · apply ihxxNat
+      apply hS
+
+
 theorem weakening_iden_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' a a' : Tm n},
     Γ ⊢ A ≡ A' type →
@@ -698,6 +890,20 @@ theorem weakening_univ_sigma_eq :
       · exact hS
       · omega
       omega
+
+theorem weakening_univ_nat_eq :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
+      ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+        get_sub_context Γ l leq ⊢ B type →
+          insert_into_ctx leq Γ B ⊢ 𝒩⌊weaken_from n l⌋ ≡ 𝒩⌊weaken_from n l⌋ ∶ 𝒰⌊weaken_from n l⌋ :=
+  by
+    intro n Γ hiC ihiC l hleq S hS
+    simp [weaken]
+    apply IsEqualTerm.univ_nat_eq
+    apply ihiC
+    apply hS
 
 theorem weakening_univ_iden_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' a₁ a₂ a₃ a₄ : Tm n},

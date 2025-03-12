@@ -149,6 +149,8 @@ theorem substitution :
       apply substitution_gen_pi_form
     case IsTypeSigmaForm =>
       apply substitution_gen_sigma_form
+    case IsTypeNatForm =>
+      apply substitution_gen_nat_form
     case IsTypeIdenForm =>
       apply substitution_gen_iden_form
     case IsTypeUnivForm =>
@@ -165,6 +167,10 @@ theorem substitution :
       apply substitution_gen_pi_intro
     case HasTypeSigmaIntro =>
       apply substitution_gen_sigma_intro
+    case HasTypeNatZeroIntro =>
+      apply substitution_gen_nat_zero_intro
+    case HasTypeNatSuccIntro =>
+      apply substitution_gen_nat_succ_intro
     case HasTypeIdenIntro =>
       apply substitution_gen_iden_intro
     case HasTypeUnivUnit =>
@@ -175,6 +181,8 @@ theorem substitution :
       apply substitution_gen_univ_pi
     case HasTypeUnivSigma =>
       apply substitution_gen_univ_sigma
+    case HasTypeUnivNat =>
+      apply substitution_gen_univ_nat
     case HasTypeUnivIden =>
       apply substitution_gen_univ_iden
     case HasTypeUnitElim =>
@@ -187,6 +195,8 @@ theorem substitution :
       apply substitution_gen_sigma_first
     case HasTypeSigmaSecond =>
       apply substitution_gen_sigma_second
+    case HasTypeNatElim =>
+      apply substitution_gen_nat_elim
     case HasTypeIdenElim =>
       apply substitution_gen_iden_elim
     case HasTypeTyConv =>
@@ -199,6 +209,8 @@ theorem substitution :
       apply substitution_gen_pi_form_eq
     case IsEqualTypeSigmaFormEq =>
       apply substitution_gen_sigma_form_eq
+    case IsEqualTypeNatFormEq =>
+      apply substitution_gen_nat_form_eq
     case IsEqualTypeIdenFormEq =>
       apply substitution_gen_iden_form_eq
     case IsEqualTypeUnivFormEq =>
@@ -221,6 +233,10 @@ theorem substitution :
       apply substitution_gen_sigma_first_comp
     case IsEqualTermSigmaSecondComp =>
       apply substitution_gen_sigma_second_comp
+    case IsEqualTermNatZeroComp =>
+      apply substitution_gen_nat_zero_comp
+    case IsEqualTermNatSuccComp =>
+      apply substitution_gen_nat_succ_comp
     case IsEqualTermIdenComp =>
       apply substitution_gen_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -239,6 +255,12 @@ theorem substitution :
       apply substitution_gen_sigma_first_eq
     case IsEqualTermSigmaSecondEq =>
       apply substitution_gen_sigma_second_eq
+    case IsEqualTermNatZeroIntroEq =>
+      apply substitution_gen_nat_zero_intro_eq
+    case IsEqualTermNatSuccIntroEq =>
+      apply substitution_gen_nat_succ_intro_eq
+    case IsEqualTermNatElimEq =>
+      apply substitution_gen_nat_elim_eq
     case IsEqualTermIdenIntroEq =>
       apply substitution_gen_iden_intro_eq
     case IsEqualTermIdenElimEq =>
@@ -251,6 +273,8 @@ theorem substitution :
       apply substitution_gen_univ_pi_eq
     case IsEqualTermUnivSigmaEq =>
       apply substitution_gen_univ_sigma_eq
+    case IsEqualTermUnivNatEq =>
+      apply substitution_gen_univ_nat_eq
     case IsEqualTermUnivIdenEq =>
       apply substitution_gen_univ_iden_eq
     case IsEqualTermTyConvEq =>

@@ -147,6 +147,8 @@ theorem functionality_typing :
       apply functionality_typing_pi_form
     case IsTypeSigmaForm =>
       apply functionality_typing_sigma_form
+    case IsTypeNatForm =>
+      apply functionality_typing_nat_form
     case IsTypeIdenForm =>
       apply functionality_typing_iden_form
     case IsTypeUnivForm =>
@@ -163,6 +165,10 @@ theorem functionality_typing :
       apply functionality_typing_pi_intro
     case HasTypeSigmaIntro =>
       apply functionality_typing_sigma_intro
+    case HasTypeNatZeroIntro =>
+      apply functionality_typing_nat_zero_intro
+    case HasTypeNatSuccIntro =>
+      apply functionality_typing_nat_succ_intro
     case HasTypeIdenIntro =>
       apply functionality_typing_iden_intro
     case HasTypeUnivUnit =>
@@ -173,6 +179,8 @@ theorem functionality_typing :
       apply functionality_typing_univ_pi
     case HasTypeUnivSigma =>
       apply functionality_typing_univ_sigma
+    case HasTypeUnivNat =>
+      apply functionality_typing_univ_nat
     case HasTypeUnivIden =>
       apply functionality_typing_univ_iden
     case HasTypeUnitElim =>
@@ -185,6 +193,8 @@ theorem functionality_typing :
       apply functionality_typing_sigma_first
     case HasTypeSigmaSecond =>
       apply functionality_typing_sigma_second
+    case HasTypeNatElim =>
+      apply functionality_typing_nat_elim
     case HasTypeIdenElim =>
       apply functionality_typing_iden_elim
     case HasTypeTyConv =>

@@ -85,6 +85,18 @@ theorem weakening_sigma_form_eq :
         apply hS
       · exact hleq
 
+theorem weakening_nat_form_eq :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
+      ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
+        get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ 𝒩⌊weaken_from n l⌋ ≡ 𝒩⌊weaken_from n l⌋ type :=
+  by
+    intro n Γ hiC ihiC l hleq S hS
+    apply IsEqualType.nat_form_eq
+    apply ihiC
+    apply hS
+
 theorem weakening_iden_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n},
     Γ ⊢ A ≡ A' type →

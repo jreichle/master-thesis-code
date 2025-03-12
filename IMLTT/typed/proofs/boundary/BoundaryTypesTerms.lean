@@ -37,6 +37,10 @@ theorem boundary_type_term :
       apply boundary_pi_intro
     case HasTypeSigmaIntro =>
       apply boundary_sigma_intro
+    case HasTypeNatZeroIntro =>
+      apply boundary_nat_zero_intro
+    case HasTypeNatSuccIntro =>
+      apply boundary_nat_succ_intro
     case HasTypeIdenIntro =>
       apply boundary_iden_intro
     case HasTypeUnivUnit =>
@@ -47,6 +51,8 @@ theorem boundary_type_term :
       apply boundary_univ_pi
     case HasTypeUnivSigma =>
       apply boundary_univ_sigma
+    case HasTypeUnivNat =>
+      apply boundary_univ_nat
     case HasTypeUnivIden =>
       apply boundary_univ_iden
     case HasTypeUnitElim =>
@@ -59,6 +65,8 @@ theorem boundary_type_term :
       apply boundary_sigma_first
     case HasTypeSigmaSecond =>
       apply boundary_sigma_second
+    case HasTypeNatElim =>
+      apply boundary_nat_elim
     case HasTypeIdenElim =>
       apply boundary_iden_elim
     case HasTypeTyConv =>
@@ -71,6 +79,8 @@ theorem boundary_type_term :
       apply boundary_pi_form_eq
     case IsEqualTypeSigmaFormEq =>
       apply boundary_sigma_form_eq
+    case IsEqualTypeNatFormEq =>
+      apply boundary_nat_form_eq
     case IsEqualTypeIdenFormEq =>
       apply boundary_iden_form_eq
     case IsEqualTypeUnivFormEq =>
@@ -93,6 +103,10 @@ theorem boundary_type_term :
       apply boundary_sigma_first_comp
     case IsEqualTermSigmaSecondComp =>
       apply boundary_sigma_second_comp
+    case IsEqualTermNatZeroComp =>
+      apply boundary_nat_zero_comp
+    case IsEqualTermNatSuccComp =>
+      apply boundary_nat_succ_comp
     case IsEqualTermIdenComp =>
       apply boundary_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -111,6 +125,12 @@ theorem boundary_type_term :
       apply boundary_sigma_first_eq
     case IsEqualTermSigmaSecondEq =>
       apply boundary_sigma_second_eq
+    case IsEqualTermNatZeroIntroEq =>
+      sorry
+    case IsEqualTermNatSuccIntroEq =>
+      sorry
+    case IsEqualTermNatElimEq =>
+      sorry
     case IsEqualTermIdenIntroEq =>
       apply boundary_iden_intro_eq
     case IsEqualTermIdenElimEq =>
@@ -123,6 +143,8 @@ theorem boundary_type_term :
       apply boundary_univ_pi_eq
     case IsEqualTermUnivSigmaEq =>
       apply boundary_univ_sigma_eq
+    case IsEqualTermUnivNatEq =>
+      sorry
     case IsEqualTermUnivIdenEq =>
       apply boundary_univ_iden_eq
     case IsEqualTermTyConvEq =>
@@ -131,4 +153,4 @@ theorem boundary_type_term :
       apply boundary_term_symm
     case IsEqualTermTermTrans =>
       apply boundary_term_trans
-    any_goals aesop
+    any_goals sorry -- aesop

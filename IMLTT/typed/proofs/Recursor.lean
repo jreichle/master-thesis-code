@@ -25,6 +25,8 @@ theorem judgment_recursor :
   → (IsTypeSigmaForm : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} 
     (a : Γ ⊢ A type) (a_1 : (Γ ⬝ A) ⊢ B type),
     motive_2 Γ A a → motive_2 (Γ ⬝ A) B a_1 → motive_2 Γ (.sigma A B) (IsType.sigma_form a a_1))
+  → (IsTypeNatForm : ∀ {n : Nat} {Γ : Ctx n} (a : Γ ctx),
+    motive_1 Γ a → motive_2 Γ 𝒩 (IsType.nat_form a))
   → (IsTypeIdenForm : ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n}
     (a_3 : Γ ⊢ A type) (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ a' ∶ A),
     motive_2 Γ A a_3 → motive_3 Γ a A a_1 → motive_3 Γ a' A a_2 
@@ -47,6 +49,10 @@ theorem judgment_recursor :
     (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ b ∶ substitute_zero a B) (a_3 : Γ ⬝ A ⊢ B type),
     motive_3 Γ a A a_1 → motive_3 Γ b (substitute_zero a B) a_2 → motive_2 (Γ ⬝ A) B a_3
     → motive_3 Γ (.pairSigma a b) (.sigma A B) (HasType.sigma_intro a_1 a_2 a_3))
+  → (HasTypeNatZeroIntro : ∀ {n : Nat} {Γ : Ctx n}
+    (a : Γ ctx), motive_1 Γ a → motive_3 Γ 𝓏 𝒩 (HasType.nat_zero_intro a))
+  → (HasTypeNatSuccIntro : ∀ {n : Nat} {Γ : Ctx n} {x : Tm n}
+    (a : Γ ⊢ x ∶ 𝒩), motive_3 Γ x 𝒩  a → motive_3 Γ 𝓈(x) 𝒩  (HasType.nat_succ_intro a))
   → (HasTypeIdenIntro : ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}
     (a_1 : Γ ⊢ A type) (a_2 : Γ ⊢ a ∶ A),
     motive_2 Γ A a_1 → motive_3 Γ a A a_2
@@ -61,6 +67,8 @@ theorem judgment_recursor :
   → (HasTypeUnivSigma : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} 
     (a : Γ ⊢ A ∶ 𝒰) (a_1 : (Γ ⬝ A) ⊢ B ∶ 𝒰),
     motive_3 Γ A 𝒰 a → motive_3 (Γ ⬝ A) B 𝒰 a_1 → motive_3 Γ (.sigma A B) 𝒰 (HasType.univ_sigma a a_1))
+  → (HasTypeUnivNat : ∀ {n : Nat} {Γ : Ctx n} 
+    (a : Γ ctx), motive_1 Γ a → motive_3 Γ 𝒩  𝒰 (HasType.univ_nat a))
   → (HasTypeUnivIden : ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n} 
     (a_1 : Γ ⊢ A ∶ 𝒰) (a_2 : Γ ⊢ a ∶ A) (a_3 : Γ ⊢ a' ∶ A),
     motive_3 Γ A 𝒰 a_1 → motive_3 Γ a A a_2 → motive_3 Γ a' A a_3 
@@ -83,6 +91,14 @@ theorem judgment_recursor :
   → (HasTypeSigmaSecond : ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)}
     (a_1 : Γ ⊢ p ∶ (ΣA;B)), motive_3 Γ p (ΣA;B) a_1
     → motive_3 Γ (π₂ p) (B⌈π₁ p⌉₀) (HasType.sigma_second a_1))
+  → (HasTypeNatElim : ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)}
+    (a_1 : Γ ⬝ 𝒩  ⊢ A type) (a_2 : Γ ⊢ z ∶ A⌈𝓏⌉₀) 
+    (a_3 : (Γ ⬝ 𝒩 ⬝ A) ⊢ s ∶ (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋))
+    (a_4 : Γ ⊢ x ∶ 𝒩 ),
+    motive_2 (Γ ⬝ 𝒩 ) A a_1 → motive_3 Γ z (A⌈𝓏⌉₀) a_2
+    → motive_3 (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) a_3
+    → motive_3 Γ x 𝒩  a_4
+    → motive_3 Γ (.indNat A z s x) (A⌈x⌉₀) (HasType.nat_elim a_1 a_2 a_3 a_4))
   → (HasTypeIdenElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm n} 
     {a a' p : Tm n}
     (a_1 : (Γ ⬝ A ⬝ (weaken Weak.id.shift A) ⬝ (weaken Weak.id.shift.shift A).iden v(1) v(0)) ⊢ B type)
@@ -115,6 +131,8 @@ theorem judgment_recursor :
     (a : Γ ⊢ A ≡ A' type) (a_1 : (Γ ⬝ A) ⊢ B ≡ B' type),
     motive_4 Γ A A' a → motive_4 (Γ ⬝ A) B B' a_1 
     → motive_4 Γ (A.sigma B) (A'.sigma B') (IsEqualType.sigma_form_eq a a_1))
+  → (IsEqualTypeNatFormEq : ∀ {n : Nat} {Γ : Ctx n}
+    (a : Γ ctx), motive_1 Γ a → motive_4 Γ 𝒩  𝒩  (IsEqualType.nat_form_eq a))
   → (IsEqualTypeIdenFormEq : ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n} 
     (ae : Γ ⊢ A ≡ A' type) (a : Γ ⊢ a₁ ≡ a₂ ∶ A) (a_1 : Γ ⊢ a₃ ≡ a₄ ∶ A'),
      motive_4 Γ A A' ae → motive_5 Γ a₁ a₂ A a → motive_5 Γ a₃ a₄ A' a_1
@@ -150,6 +168,23 @@ theorem judgment_recursor :
     (a_1 : Γ ⊢ a ∶ A) (a_2 : Γ ⊢ b ∶ B⌈a⌉₀) (a_3 : Γ ⊢ (ΣA;B) type), 
     motive_3 Γ a A a_1 → motive_3 Γ b (B⌈a⌉₀) a_2 → motive_2 Γ (ΣA;B) a_3
     → motive_5 Γ (π₂ (.pairSigma a b)) b (B⌈π₁ a&b⌉₀) (IsEqualTerm.sigma_second_comp a_1 a_2 a_3))
+  → (IsEqualTermNatZeroComp : ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)}
+    (a_1 : Γ ⬝ 𝒩  ⊢ A type) (a_2 : Γ ⊢ z ∶ A⌈𝓏⌉₀)
+    (a_3 : (Γ ⬝ 𝒩 ⬝ A) ⊢ s ∶ (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋))
+    (a_4 : Γ ⊢ 𝓏 ∶ 𝒩 ),
+    motive_2 (Γ ⬝ 𝒩 ) A a_1 → motive_3 Γ z (A⌈𝓏⌉₀) a_2
+    → motive_3 (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) a_3
+    → motive_3 Γ 𝓏 𝒩  a_4
+    → motive_5 Γ (.indNat A z s 𝓏) z (A⌈𝓏⌉₀) (IsEqualTerm.nat_zero_comp a_1 a_2 a_3 a_4))
+  → (IsEqualTermNatSuccComp : ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)}
+    (a_1 : Γ ⬝ 𝒩  ⊢ A type) (a_2 : Γ ⊢ z ∶ A⌈𝓏⌉₀)
+    (a_3 : (Γ ⬝ 𝒩 ⬝ A) ⊢ s ∶ (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋))
+    (a_4 : Γ ⊢ x ∶ 𝒩 ),
+    motive_2 (Γ ⬝ 𝒩 ) A a_1 → motive_3 Γ z (A⌈𝓏⌉₀) a_2
+    → motive_3 (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) a_3
+    → motive_3 Γ x 𝒩  a_4
+    → motive_5 Γ (.indNat A z s 𝓈(x)) (s⌈(ₛidₚ), x, (.indNat A z s x)⌉) (A⌈𝓈(x)⌉₀)
+      (IsEqualTerm.nat_succ_comp a_1 a_2 a_3 a_4))
   → (IsEqualTermIdenComp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)}
     {b : Tm n} {a : Tm n}
     (a_1 : (Γ ⬝ A ⬝ (weaken Weak.id.shift A) ⬝ (weaken Weak.id.shift.shift A).iden v(1) v(0)) ⊢ B type)
@@ -190,6 +225,18 @@ theorem judgment_recursor :
   → (IsEqualTermSigmaSecondEq : ∀ {n : Nat} {Γ : Ctx n} {p p' A : Tm n} {B : Tm (n + 1)}
     (a_1 : Γ ⊢ p ≡ p' ∶ (ΣA;B)), motive_5 Γ p p' (ΣA;B) a_1
     → motive_5 Γ (π₂ p) (π₂ p') (B⌈π₁ p⌉₀) (IsEqualTerm.sigma_second_eq a_1))
+  → (IsEqualTermNatZeroIntroEq : ∀ {n : Nat} {Γ : Ctx n}
+    (a : Γ ctx), motive_1 Γ a → motive_5 Γ 𝓏 𝓏 𝒩  (IsEqualTerm.nat_zero_intro_eq a))
+  → (IsEqualTermNatSuccIntroEq : ∀ {n : Nat} {Γ : Ctx n} {x x' : Tm n}
+    (a : Γ ⊢ x ≡ x' ∶ 𝒩), motive_5 Γ x x' 𝒩  a → motive_5 Γ 𝓈(x) 𝓈(x') 𝒩  (IsEqualTerm.nat_succ_intro_eq a))
+  → (IsEqualTermNatElimEq : ∀ {n : Nat} {Γ : Ctx n} {z z' x x' : Tm n} {A A' : Tm (n + 1)} {s s' : Tm (n + 2)}
+    (a_1 : Γ ⬝ 𝒩  ⊢ A ≡ A' type) (a_2 : Γ ⊢ z ≡ z' ∶ A⌈𝓏⌉₀)
+    (a_3 : (Γ ⬝ 𝒩 ⬝ A) ⊢ s ≡ s' ∶ (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋))
+    (a_4 : Γ ⊢ x ≡ x' ∶ 𝒩 ),
+    motive_4 (Γ ⬝ 𝒩 ) A A' a_1 → motive_5 Γ z z' (A⌈𝓏⌉₀) a_2
+    → motive_5 (Γ ⬝ 𝒩 ⬝ A) s s' (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) a_3
+    → motive_5 Γ x x' 𝒩  a_4
+    → motive_5 Γ (.indNat A z s x) (.indNat A' z' s' x') (A⌈x⌉₀) (IsEqualTerm.nat_elim_eq a_1 a_2 a_3 a_4))
   → (IsEqualTermIdenIntroEq : ∀ {n : Nat} {Γ : Ctx n} {A A' a a' : Tm n} 
     (a_1 : Γ ⊢ A ≡ A' type) (a_2 : Γ ⊢ a ≡ a' ∶ A), motive_4 Γ A A' a_1 → motive_5 Γ a a' A a_2 
     → motive_5 Γ (A.refl a) (A'.refl a') (A.iden a a) (IsEqualTerm.iden_intro_eq a_1 a_2))
@@ -221,6 +268,8 @@ theorem judgment_recursor :
     (a : Γ ⊢ A ≡ A' ∶ 𝒰) (a_1 : (Γ ⬝ A) ⊢ B ≡ B' ∶ 𝒰), motive_5 Γ A A' 𝒰 a →
     motive_5 (Γ ⬝ A) B B' 𝒰 a_1 
     → motive_5 Γ (A.sigma B) (A'.sigma B') 𝒰 (IsEqualTerm.univ_sigma_eq a a_1))
+  → (IsEqualTermUnivNatEq : ∀ {n : Nat} {Γ : Ctx n}
+    (a : Γ ctx), motive_1 Γ a → motive_5 Γ 𝒩  𝒩  𝒰 (IsEqualTerm.univ_nat_eq a))
   → (IsEqualTermUnivIdenEq : ∀ {n : Nat} {Γ : Ctx n} {A A' a₁ a₂ a₃ a₄ : Tm n} 
     (a : Γ ⊢ A ≡ A' ∶ 𝒰) (a_1 : Γ ⊢ a₁ ≡ a₂ ∶ A) (a_2 : Γ ⊢ a₃ ≡ a₄ ∶ A), motive_5 Γ A A' 𝒰 a 
     → motive_5 Γ a₁ a₂ A a_1 → motive_5 Γ a₃ a₄ A a_2 
@@ -245,22 +294,30 @@ theorem judgment_recursor :
   by
     intro motive_1 motive_2 motive_3 motive_4 motive_5
     intro hIsCtxEmpty hIsCtxExtend
-    intro hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeIdenForm 
+    intro hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeNatForm hIsTypeIdenForm 
           hIsTypeUnivForm hIsTypeUnivElim
-    intro hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro hHasTypeIdenIntro
-          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma hHasTypeUnivIden
-          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond hHasTypeIdenElim
+    intro hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro 
+          hHasTypeNatZeroIntro hHasTypeNatSuccIntro hHasTypeIdenIntro
+          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma
+          hHasTypeUnivNat hHasTypeUnivIden
+          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond 
+          hHasTypeNatElim hHasTypeIdenElim
           hHasTypeTyConv
     intro hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
+          hIsEqualTypeNatFormEq
           hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
           hIsEqualTypeTypeSymm hIsEqualTypeTypeTrans
     intro hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp
           hIsEqualTermSigmaFirstComp hIsEqualTermSigmaSecondComp
+          hIsEqualTermNatZeroComp hIsEqualTermNatSuccComp 
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq
           hIsEqualTermSigmaFirstEq hIsEqualTermSigmaSecondEq
+          hIsEqualTermNatZeroIntroEq hIsEqualTermNatSuccIntroEq
+          hIsEqualTermNatElimEq
           hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq
           hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq
+          hIsEqualTermUnivNatEq
           hIsEqualTermUnivIdenEq hIsEqualTermTyConvEq
           hIsEqualTermTermSymm hIsEqualTermTermTrans
     any_goals repeat' apply And.intro
@@ -270,22 +327,30 @@ theorem judgment_recursor :
         (motive_4 := motive_4) (motive_5 := motive_5)
         isCtx
         hIsCtxEmpty hIsCtxExtend
-        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeIdenForm
+        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeNatForm hIsTypeIdenForm 
           hIsTypeUnivForm hIsTypeUnivElim
-        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro hHasTypeIdenIntro
-          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma hHasTypeUnivIden
-          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond hHasTypeIdenElim
+        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro 
+          hHasTypeNatZeroIntro hHasTypeNatSuccIntro hHasTypeIdenIntro
+          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma
+          hHasTypeUnivNat hHasTypeUnivIden
+          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond 
+          hHasTypeNatElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
+          hIsEqualTypeNatFormEq
           hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
           hIsEqualTypeTypeSymm hIsEqualTypeTypeTrans
-        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp 
+        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp
           hIsEqualTermSigmaFirstComp hIsEqualTermSigmaSecondComp
+          hIsEqualTermNatZeroComp hIsEqualTermNatSuccComp 
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq
           hIsEqualTermSigmaFirstEq hIsEqualTermSigmaSecondEq
-          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq 
-          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq 
+          hIsEqualTermNatZeroIntroEq hIsEqualTermNatSuccIntroEq
+          hIsEqualTermNatElimEq
+          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq
+          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq
+          hIsEqualTermUnivNatEq
           hIsEqualTermUnivIdenEq hIsEqualTermTyConvEq
           hIsEqualTermTermSymm hIsEqualTermTermTrans
     · intro n Γ A isType
@@ -294,22 +359,30 @@ theorem judgment_recursor :
         (motive_4 := motive_4) (motive_5 := motive_5)
         isType
         hIsCtxEmpty hIsCtxExtend
-        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeIdenForm
+        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeNatForm hIsTypeIdenForm 
           hIsTypeUnivForm hIsTypeUnivElim
-        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro hHasTypeIdenIntro
-          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma hHasTypeUnivIden
-          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond hHasTypeIdenElim
+        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro 
+          hHasTypeNatZeroIntro hHasTypeNatSuccIntro hHasTypeIdenIntro
+          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma
+          hHasTypeUnivNat hHasTypeUnivIden
+          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond 
+          hHasTypeNatElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
+          hIsEqualTypeNatFormEq
           hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
           hIsEqualTypeTypeSymm hIsEqualTypeTypeTrans
-        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp 
+        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp
           hIsEqualTermSigmaFirstComp hIsEqualTermSigmaSecondComp
+          hIsEqualTermNatZeroComp hIsEqualTermNatSuccComp 
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq
           hIsEqualTermSigmaFirstEq hIsEqualTermSigmaSecondEq
-          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq 
-          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq 
+          hIsEqualTermNatZeroIntroEq hIsEqualTermNatSuccIntroEq
+          hIsEqualTermNatElimEq
+          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq
+          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq
+          hIsEqualTermUnivNatEq
           hIsEqualTermUnivIdenEq hIsEqualTermTyConvEq
           hIsEqualTermTermSymm hIsEqualTermTermTrans
     · intro n Γ a A hasType
@@ -318,22 +391,30 @@ theorem judgment_recursor :
         (motive_4 := motive_4) (motive_5 := motive_5)
         hasType
         hIsCtxEmpty hIsCtxExtend
-        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeIdenForm
+        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeNatForm hIsTypeIdenForm 
           hIsTypeUnivForm hIsTypeUnivElim
-        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro hHasTypeIdenIntro
-          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma hHasTypeUnivIden
-          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond hHasTypeIdenElim
+        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro 
+          hHasTypeNatZeroIntro hHasTypeNatSuccIntro hHasTypeIdenIntro
+          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma
+          hHasTypeUnivNat hHasTypeUnivIden
+          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond 
+          hHasTypeNatElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
+          hIsEqualTypeNatFormEq
           hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
           hIsEqualTypeTypeSymm hIsEqualTypeTypeTrans
-        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp 
+        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp
           hIsEqualTermSigmaFirstComp hIsEqualTermSigmaSecondComp
+          hIsEqualTermNatZeroComp hIsEqualTermNatSuccComp 
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq
           hIsEqualTermSigmaFirstEq hIsEqualTermSigmaSecondEq
-          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq 
-          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq 
+          hIsEqualTermNatZeroIntroEq hIsEqualTermNatSuccIntroEq
+          hIsEqualTermNatElimEq
+          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq
+          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq
+          hIsEqualTermUnivNatEq
           hIsEqualTermUnivIdenEq hIsEqualTermTyConvEq
           hIsEqualTermTermSymm hIsEqualTermTermTrans
     · intro n Γ A A' isEqualType
@@ -342,22 +423,30 @@ theorem judgment_recursor :
         (motive_4 := motive_4) (motive_5 := motive_5)
         isEqualType
         hIsCtxEmpty hIsCtxExtend
-        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeIdenForm
+        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeNatForm hIsTypeIdenForm 
           hIsTypeUnivForm hIsTypeUnivElim
-        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro hHasTypeIdenIntro
-          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma hHasTypeUnivIden
-          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond hHasTypeIdenElim
+        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro 
+          hHasTypeNatZeroIntro hHasTypeNatSuccIntro hHasTypeIdenIntro
+          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma
+          hHasTypeUnivNat hHasTypeUnivIden
+          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond 
+          hHasTypeNatElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
+          hIsEqualTypeNatFormEq
           hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
           hIsEqualTypeTypeSymm hIsEqualTypeTypeTrans
-        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp 
+        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp
           hIsEqualTermSigmaFirstComp hIsEqualTermSigmaSecondComp
+          hIsEqualTermNatZeroComp hIsEqualTermNatSuccComp 
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq
           hIsEqualTermSigmaFirstEq hIsEqualTermSigmaSecondEq
-          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq 
-          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq 
+          hIsEqualTermNatZeroIntroEq hIsEqualTermNatSuccIntroEq
+          hIsEqualTermNatElimEq
+          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq
+          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq
+          hIsEqualTermUnivNatEq
           hIsEqualTermUnivIdenEq hIsEqualTermTyConvEq
           hIsEqualTermTermSymm hIsEqualTermTermTrans
     · intro n Γ a a' A isEqualTerm
@@ -366,21 +455,29 @@ theorem judgment_recursor :
         (motive_4 := motive_4) (motive_5 := motive_5)
         isEqualTerm
         hIsCtxEmpty hIsCtxExtend
-        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeIdenForm
+        hIsTypeUnitForm hIsTypeEmptyForm hIsTypePiForm hIsTypeSigmaForm hIsTypeNatForm hIsTypeIdenForm 
           hIsTypeUnivForm hIsTypeUnivElim
-        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro hHasTypeIdenIntro
-          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma hHasTypeUnivIden
-          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond hHasTypeIdenElim
+        hHasTypeVar hHasTypeWeak hHasTypeUnitIntro hHasTypePiIntro hHasTypeSigmaIntro 
+          hHasTypeNatZeroIntro hHasTypeNatSuccIntro hHasTypeIdenIntro
+          hHasTypeUnivUnit hHasTypeUnivEmpty hHasTypeUnivPi hHasTypeUnivSigma
+          hHasTypeUnivNat hHasTypeUnivIden
+          hHasTypeUnitElim hHasTypeEmptyElim hHasTypePiElim hHasTypeSigmaFirst hHasTypeSigmaSecond 
+          hHasTypeNatElim hHasTypeIdenElim
           hHasTypeTyConv
         hIsEqualTypeUnitFormEq hIsEqualTypeEmptyFormEQ hIsEqualTypePiFormEq hIsEqualTypeSigmaFormEq
+          hIsEqualTypeNatFormEq
           hIsEqualTypeIdenFormEq hIsEqalTypeUnivFormEq hIsEqualTypeUnivElimEq
           hIsEqualTypeTypeSymm hIsEqualTypeTypeTrans
-        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp 
+        hIsEqualTermVarEq hIsEqualTermWeakEq hIsEqualTermUnitComp hIsEqualTermPiComp
           hIsEqualTermSigmaFirstComp hIsEqualTermSigmaSecondComp
+          hIsEqualTermNatZeroComp hIsEqualTermNatSuccComp 
           hIsEqualTermIdenComp hIsEqualTermUnitIntroEq hIsEqualTermUnitElimEq hIsEqualTermEmptyElimEq
           hIsEqualTermPiIntroEq hIsEqualTermPiElimEq hIsEqualTermSigmaIntroEq
           hIsEqualTermSigmaFirstEq hIsEqualTermSigmaSecondEq
-          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq 
-          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq 
+          hIsEqualTermNatZeroIntroEq hIsEqualTermNatSuccIntroEq
+          hIsEqualTermNatElimEq
+          hIsEqualTermIdenIntroEq hIsEqualTermIdenElimEq hIsEqualTermUnivUnitEq
+          hIsEqualTermUnivEmptyEq hIsEqualTermUnivPiEq hIsEqualTermUnivSigmaEq
+          hIsEqualTermUnivNatEq
           hIsEqualTermUnivIdenEq hIsEqualTermTyConvEq
           hIsEqualTermTermSymm hIsEqualTermTermTrans

@@ -59,6 +59,14 @@ theorem boundary_sigma_form_eq :
         · apply hAA
         · apply And.right ihBB
 
+theorem boundary_nat_form_eq :
+    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝒩 type ∧ Γ ⊢ 𝒩 type :=
+  by
+    intro n Γ hiC ihiC
+    apply And.intro
+    · apply IsType.nat_form hiC
+    · apply IsType.nat_form hiC
+
 theorem boundary_iden_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n},
     Γ ⊢ A ≡ A' type →

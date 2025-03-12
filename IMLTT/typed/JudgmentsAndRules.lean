@@ -35,6 +35,9 @@ mutual
     | sigma_form :
       IsType Γ A → IsType (Γ ⬝ A) B
       → IsType Γ (ΣA;B)
+    | nat_form :
+      IsCtx Γ
+      → IsType Γ 𝒩
     | iden_form :
       IsType Γ A → HasType Γ a A → HasType Γ a' A
       → IsType Γ (a ≃[A] a')
@@ -66,6 +69,12 @@ mutual
     | sigma_intro :
       HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ A) B
       → HasType Γ (a&b) (ΣA;B)
+    | nat_zero_intro :
+      IsCtx Γ
+      → HasType Γ 𝓏 𝒩
+    | nat_succ_intro :
+      HasType Γ n 𝒩
+      → HasType Γ 𝓈(n) 𝒩
     | iden_intro :
       IsType Γ A → HasType Γ a A
       → HasType Γ (A.refl a) (a ≃[A] a)
@@ -82,6 +91,9 @@ mutual
     | univ_sigma :
       HasType Γ A 𝒰 → HasType (Γ ⬝ A) B 𝒰
       → HasType Γ (ΣA;B) 𝒰
+    | univ_nat :
+      IsCtx Γ
+      → HasType Γ 𝒩 𝒰
     | univ_iden :
       HasType Γ A 𝒰 → HasType Γ a A → HasType Γ a' A
       → HasType Γ (a ≃[A] a') 𝒰
@@ -101,6 +113,13 @@ mutual
     | sigma_second :
       HasType Γ p (ΣA;B)
       → HasType Γ (π₂ p) (B⌈π₁ p⌉₀)
+    | nat_elim :
+      IsType (Γ ⬝ 𝒩) A
+      → HasType Γ z (A⌈𝓏⌉₀)
+      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      -- Π ℕ ▹ (F ▹▹ F [ suc (var x0) ]↑)
+      → HasType Γ n 𝒩
+      → HasType Γ (.indNat A z s n) (A⌈n⌉₀)
     | iden_elim :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
@@ -130,6 +149,9 @@ mutual
     | sigma_form_eq :
       IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B'
       → IsEqualType Γ (ΣA;B) (ΣA';B')
+    | nat_form_eq :
+      IsCtx Γ
+      → IsEqualType Γ 𝒩  𝒩
     | iden_form_eq :
       IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
       → IsEqualType Γ (a₁ ≃[A] a₃) (a₂ ≃[A'] a₄)
@@ -168,7 +190,21 @@ mutual
     | sigma_second_comp :
       HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType Γ (ΣA;B)
       → IsEqualTerm Γ (π₂ a&b) b (B⌈π₁ a&b⌉₀)
-    | iden_comp : 
+    | nat_zero_comp :
+      IsType (Γ ⬝ 𝒩) A
+      → HasType Γ z (A⌈𝓏⌉₀)
+      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      → HasType Γ 𝓏 𝒩
+      → IsEqualTerm Γ (.indNat A z s 𝓏) z (A⌈𝓏⌉₀)
+    | nat_succ_comp :
+      IsType (Γ ⬝ 𝒩) A
+      → HasType Γ z (A⌈𝓏⌉₀)
+      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      -- → HasType (Γ) k (Π𝒩 ;(ΠA;(A⌊↑ₚidₚ⌋⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉)))
+              -- → Γ       ⊢ s ∷ Π ℕ ▹ (G ▹▹ G [ suc (var x0) ]↑)
+      → HasType Γ n 𝒩
+      → IsEqualTerm Γ (.indNat A z s 𝓈(n)) (s⌈(ₛidₚ), n, (.indNat A z s n)⌉) (A⌈𝓈(n)⌉₀)
+    | iden_comp :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
       → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
       → HasType Γ a A
@@ -199,6 +235,18 @@ mutual
     | sigma_second_eq :
       IsEqualTerm Γ p p' (ΣA;B)
       → IsEqualTerm Γ (π₂ p) (π₂ p') (B⌈π₁ p⌉₀)
+    | nat_zero_intro_eq :
+      IsCtx Γ
+      → IsEqualTerm Γ 𝓏 𝓏 𝒩
+    | nat_succ_intro_eq :
+      IsEqualTerm Γ n n' 𝒩
+      → IsEqualTerm Γ 𝓈(n) 𝓈(n') 𝒩
+    | nat_elim_eq :
+      IsEqualType (Γ ⬝ 𝒩) A A'
+      → IsEqualTerm Γ z z' (A⌈𝓏⌉₀)
+      → IsEqualTerm (Γ ⬝ 𝒩 ⬝ A) s s' (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      → IsEqualTerm Γ n n' 𝒩
+      → IsEqualTerm Γ (.indNat A z s n) (.indNat A' z' s' n') (A⌈n⌉₀)
     | iden_intro_eq :
       IsEqualType Γ A A' → IsEqualTerm Γ a a' A
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
@@ -222,6 +270,9 @@ mutual
     | univ_sigma_eq :
       IsEqualTerm Γ A A' 𝒰 → IsEqualTerm (Γ ⬝ A) B B' 𝒰 
       → IsEqualTerm Γ (ΣA;B) (ΣA';B') 𝒰
+    | univ_nat_eq :
+      IsCtx Γ
+      → IsEqualTerm Γ 𝒩  𝒩  𝒰
     | univ_iden_eq :
       IsEqualTerm Γ A A' 𝒰 → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A 
       → IsEqualTerm Γ (a₁ ≃[A] a₃) (a₂ ≃[A'] a₄) 𝒰

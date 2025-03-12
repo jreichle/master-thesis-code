@@ -114,3 +114,31 @@ theorem helper_subst_iden_propagate_subst :
       rfl
     · simp [substitute_var]
       rfl
+
+theorem helper_subst_nat_elim {leq : l ≤ n} {s : Tm l} {A : Tm (n + 2)} :
+    A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌈⇑ₛ⇑ₛ(s/ₙhleq)⌉
+    = A⌈⇑ₛ(s/ₙhleq)⌉⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ :=
+  by
+    simp [substitution_comp_ρσ]
+    simp [substitution_comp]
+    simp [comp_weaken_substitute]
+    simp [comp_substitute_substitute]
+    simp [weakening_id]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [shift_tm]
+        simp [←substitution_conv_var]
+        simp [←substitution_comp_σρ]
+        simp [←substitution_comp]
+        simp [weakening_id]
+        simp [substitution_conv_shift_id_conv]

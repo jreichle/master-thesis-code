@@ -47,6 +47,18 @@ theorem boundary_sigma_intro :
     · apply ihaA
     · apply hB
 
+theorem boundary_nat_zero_intro :
+    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝒩 type :=
+  by
+    intro n Γ hiC ihiC
+    apply IsType.nat_form hiC
+
+theorem boundary_nat_succ_intro :
+    ∀ {n : Nat} {Γ : Ctx n} {x : Tm n}, (Γ ⊢ x ∶ 𝒩) → Γ ⊢ 𝒩 type → Γ ⊢ 𝒩 type :=
+  by
+    intro n Γ x hxNat ihxNat
+    apply ihxNat
+
 theorem boundary_iden_intro :
     ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, Γ ⊢ A type → (Γ ⊢ a ∶ A) → Γ ⊢ A type → Γ ⊢ A type → Γ ⊢ a ≃[A] a type :=
   by
@@ -81,6 +93,12 @@ theorem boundary_univ_sigma :
   by
     intro n Γ A B hAU hBU ihAU ihBU
     apply ihAU
+
+theorem boundary_univ_nat :
+    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝒰 type :=
+  by
+    intro n Γ hiC ihiC
+    apply IsType.univ_form hiC
 
 theorem boundary_univ_iden :
     ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
@@ -131,6 +149,19 @@ theorem boundary_sigma_second :
     apply substitution_type
     · apply HasType.sigma_first hpSi
     · apply And.right h
+
+theorem boundary_nat_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
+    Γ ⬝ 𝒩 ⊢ A type →
+    (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+        (Γ ⊢ x ∶ 𝒩) →
+          Γ ⬝ 𝒩 ⊢ A type → Γ ⊢ A⌈𝓏⌉₀ type → Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type → Γ ⊢ 𝒩 type → Γ ⊢ A⌈x⌉₀ type :=
+  by
+    intro n Γ z x A s hA izA isA hxNat ihA ihzA ihsA ihxNat
+    apply substitution_type
+    · apply hxNat
+    · apply hA
 
 theorem boundary_iden_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},

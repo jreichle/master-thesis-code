@@ -67,6 +67,8 @@ theorem weakening :
       apply weakening_pi_form
     case IsTypeSigmaForm =>
       apply weakening_sigma_form
+    case IsTypeNatForm =>
+      apply weakening_nat_form
     case IsTypeIdenForm =>
       apply weakening_iden_form
     case IsTypeUnivForm =>
@@ -83,6 +85,10 @@ theorem weakening :
       apply weakening_pi_intro
     case HasTypeSigmaIntro =>
       apply weakening_sigma_intro
+    case HasTypeNatZeroIntro =>
+      apply weakening_nat_zero_intro
+    case HasTypeNatSuccIntro =>
+      apply weakening_nat_succ_intro
     case HasTypeIdenIntro =>
       apply weakening_iden_intro
     case HasTypeUnivUnit =>
@@ -93,6 +99,8 @@ theorem weakening :
       apply weakening_univ_pi
     case HasTypeUnivSigma =>
       apply weakening_univ_sigma
+    case HasTypeUnivNat =>
+      apply weakening_univ_nat
     case HasTypeUnivIden =>
       apply weakening_univ_iden
     case HasTypeUnitElim =>
@@ -105,6 +113,8 @@ theorem weakening :
       apply weakening_sigma_first
     case HasTypeSigmaSecond =>
       apply weakening_sigma_second
+    case HasTypeNatElim =>
+      apply weakening_nat_elim
     case HasTypeIdenElim =>
       apply weakening_iden_elim
     case HasTypeTyConv =>
@@ -117,6 +127,8 @@ theorem weakening :
       apply weakening_pi_form_eq
     case IsEqualTypeSigmaFormEq =>
       apply weakening_sigma_form_eq
+    case IsEqualTypeNatFormEq =>
+      apply weakening_nat_form_eq
     case IsEqualTypeIdenFormEq =>
       apply weakening_iden_form_eq
     case IsEqualTypeUnivFormEq =>
@@ -139,6 +151,10 @@ theorem weakening :
       apply weakening_sigma_first_comp
     case IsEqualTermSigmaSecondComp =>
       apply weakening_sigma_second_comp
+    case IsEqualTermNatZeroComp =>
+      apply weakening_nat_zero_comp
+    case IsEqualTermNatSuccComp =>
+      apply weakening_nat_succ_comp
     case IsEqualTermIdenComp =>
       apply weakening_iden_comp
     case IsEqualTermUnitIntroEq =>
@@ -157,6 +173,12 @@ theorem weakening :
       apply weakening_sigma_first_eq
     case IsEqualTermSigmaSecondEq =>
       apply weakening_sigma_second_eq
+    case IsEqualTermNatZeroIntroEq =>
+      apply weakening_nat_zero_intro_eq
+    case IsEqualTermNatSuccIntroEq =>
+      apply weakening_nat_succ_intro_eq
+    case IsEqualTermNatElimEq =>
+      apply weakening_nat_elim_eq
     case IsEqualTermIdenIntroEq =>
       apply weakening_iden_intro_eq
     case IsEqualTermIdenElimEq =>
@@ -169,6 +191,8 @@ theorem weakening :
       apply weakening_univ_pi_eq
     case IsEqualTermUnivSigmaEq =>
       apply weakening_univ_sigma_eq
+    case IsEqualTermUnivNatEq =>
+      apply weakening_univ_nat_eq
     case IsEqualTermUnivIdenEq =>
       apply weakening_univ_iden_eq
     case IsEqualTermTyConvEq =>

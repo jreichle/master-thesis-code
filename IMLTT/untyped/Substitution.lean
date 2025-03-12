@@ -33,6 +33,7 @@ def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
   | .empty => .empty
   | .pi A B => .pi (substitute σ A) (substitute (lift_subst_n 1 σ) B)
   | .sigma A B => .sigma (substitute σ A) (substitute (lift_subst_n 1 σ) B)
+  | .nat => .nat
   | .iden A a a' => .iden (substitute σ A) (substitute σ a) (substitute σ a')
   | .univ => .univ
   | .var i => substitute_var σ i
@@ -44,6 +45,10 @@ def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
   | .pairSigma a b => .pairSigma (substitute σ a) (substitute σ b)
   | .firstSigma p => .firstSigma (substitute σ p)
   | .secondSigma p => .secondSigma (substitute σ p)
+  | .zeroNat => .zeroNat
+  | .succNat x => .succNat (substitute σ x)
+  | .indNat A z s n => .indNat (substitute (lift_subst_n 1 σ) A) (substitute σ z)
+                        (substitute (lift_subst_n 2 σ) s) (substitute σ n)
   | .refl A a => .refl (substitute σ A) (substitute σ a)
   | .j A B b a a' p => .j (substitute σ A) (substitute (lift_subst_n 3 σ) B)
                         (substitute σ b) (substitute σ a) (substitute σ a')

@@ -108,6 +108,25 @@ theorem context_conversion_sigma_form :
       · apply hS'
       repeat' rfl
 
+theorem context_conversion_nat_form :
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l},
+        Γ_1 ⊢ S ≡ S' type → Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → Γ_1 ⬝ S' ⊗ Δ ctx) →
+      ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A : Tm m),
+        Γ_1 ⊢ S ≡ S' type → Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ 𝒩 = A → Γ_1 ⬝ S' ⊗ Δ ⊢ A type :=
+  by
+    intro n Γ' hiC ihiC m l Γ Δ heqM S S' A hSS hS hS' heqΓ heqT
+    cases heqM
+    cases heqΓ
+    cases heqT
+    apply IsType.nat_form
+    apply ihiC
+    · apply hSS
+    · apply hS
+    · apply hS'
+    repeat' rfl
+
 theorem context_conversion_iden_form :
     ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
       Γ ⊢ A type →

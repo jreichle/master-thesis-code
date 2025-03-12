@@ -58,6 +58,8 @@ theorem substitution_var_substitute {σ σ' : Subst m n} :
       · apply substitution_var_substitute h
       · apply substitution_var_substitute
         apply substitution_var_lift_n h
+    | .nat =>
+      simp [substitute]
     | .iden A a a' =>
       simp [substitute]
       apply And.intro
@@ -107,6 +109,20 @@ theorem substitution_var_substitute {σ σ' : Subst m n} :
     | .secondSigma p =>
       simp [substitute]
       apply substitution_var_substitute h
+    | .zeroNat =>
+      simp [substitute]
+    | .succNat x =>
+      simp [substitute]
+      apply substitution_var_substitute h
+    | .indNat A z s i =>
+      simp [substitute]
+      repeat' apply And.intro
+      · apply substitution_var_substitute
+        apply substitution_var_lift_n h
+      · apply substitution_var_substitute h
+      · apply substitution_var_substitute
+        apply substitution_var_lift_n h
+      · apply substitution_var_substitute h
     | .refl A a =>
       simp [substitute]
       apply And.intro
@@ -176,6 +192,8 @@ theorem substitution_id {t : Tm n} :
         apply substitution_var_substitute
         intro x
         apply substitution_var_lift_n_id
+    | .nat =>
+      simp [substitute]
     | .iden A a a' =>
       simp [substitute]
       apply And.intro
@@ -235,6 +253,26 @@ theorem substitution_id {t : Tm n} :
     | .secondSigma p =>
       simp [substitute]
       apply substitution_id
+    | .zeroNat =>
+      simp [substitute]
+    | .succNat i =>
+      simp [substitute]
+      apply substitution_id
+    | .indNat A z s i =>
+      simp [substitute]
+      repeat' apply And.intro
+      · have h := substitution_id (t := A)
+        rw (config := {occs := .pos [2]}) [←h]
+        apply substitution_var_substitute
+        intro x
+        apply substitution_var_lift_n_id
+      · apply substitution_id
+      · have h := substitution_id (t := s)
+        rw (config := {occs := .pos [2]}) [←h]
+        apply substitution_var_substitute
+        intro x
+        apply substitution_var_lift_n_id
+      · apply substitution_id
     | .refl A a =>
       simp [substitute]
       apply And.intro
@@ -314,7 +352,19 @@ theorem substitution_sigma : (ΣA;B)⌈σ⌉ = ΣA⌈σ⌉;B⌈⇑ₛσ⌉ :=
     simp [substitute]
     simp [lift_subst_n]
 
+theorem substitution_nat : 𝒩 ⌈σ⌉ = 𝒩  := 
+  by
+    simp [substitute]
+
 theorem substitution_iden : (a ≃[A] a')⌈σ⌉ = a⌈σ⌉ ≃[A⌈σ⌉] a'⌈σ⌉ :=
+  by
+    simp [substitute]
+
+theorem substitution_var_zero : 𝓏⌈σ⌉ = 𝓏 := 
+  by
+    simp [substitute]
+
+theorem substitution_succ : 𝓈(x)⌈σ⌉ = 𝓈(x⌈σ⌉) := 
   by
     simp [substitute]
 
@@ -343,7 +393,7 @@ theorem n_substitution_zero {n : Nat} {s : Tm n}:
     | succ n' =>
       simp [n_substitution]
 
-theorem substitution_unit_sub : 
+theorem substitution_unit_sub :
     ¬(∀ {n : Nat} {B : Tm (n + 1)} {a : Tm n}, 𝟙 = B⌈a⌉₀ → B = 𝟙) :=
   by
     intro hEq
@@ -353,3 +403,21 @@ theorem substitution_unit_sub :
            simp [substitute_var]
     have h1 := hEq h
     cases h1
+
+theorem substitution_id_shift_var :
+    A⌈(ₛ(↑ₚidₚ)), v(0)⌉ = A :=
+  by
+    rw (config := {occs := .pos [2]}) [←substitution_id (t := A)]
+    apply substitution_var_substitute
+    intro x
+    cases x with
+    | mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        rfl
