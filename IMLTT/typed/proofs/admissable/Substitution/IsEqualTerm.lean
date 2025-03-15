@@ -10,7 +10,7 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.admissable.WeakeningGeneral
-import IMLTT.typed.proofs.admissable.DefeqReflTest
+import IMLTT.typed.proofs.admissable.DefeqRefl
 
 import IMLTT.typed.proofs.admissable.substitution.Helpers
 

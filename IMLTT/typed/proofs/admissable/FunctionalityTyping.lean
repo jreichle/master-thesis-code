@@ -38,7 +38,7 @@ theorem functionality_typing :
     suffices h :
   (∀ {n : Nat} {Γ : Ctx n},
       Γ ctx →
-        ∀ (m l : Nat) (k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        ∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
           (Γ_1 ⊢ s ≡ s' ∶ S) →
             (Γ_1 ⊢ s ∶ S) →
@@ -73,8 +73,9 @@ theorem functionality_typing :
                     (Γ_1 ⊢ s' ∶ S) →
                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                         eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) ∧
-        (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → False → True) ∧
-          ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → False → True
+        (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
+          ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ≡ a' ∶ A
+
     by
       any_goals repeat' (apply And.intro)
       · intro n Γ hiC
@@ -133,8 +134,8 @@ theorem functionality_typing :
         → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
         → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ) → eqM ▸ a' = t → eqM ▸ A' = T
         → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ (t⌈s/ₙ leq⌉) ≡ (t⌈s'/ₙ (leq)⌉) ∶ (T⌈s/ₙ (leq)⌉)))
-      (motive_4 := fun {n} Γ' C C' _hCC => False → True)
-      (motive_5 := fun {n} Γ' c c' C _haaA => False → True)
+      (motive_4 := fun {n} Γ' C C' _hCC => Γ' ⊢ C ≡ C' type)
+      (motive_5 := fun {n} Γ' c c' C _haaA => Γ' ⊢ c ≡ c' ∶ C)
     case IsCtxEmpty =>
        apply functionality_typing_empty
     case IsCtxExtend =>
@@ -199,12 +200,170 @@ theorem functionality_typing :
       apply functionality_typing_iden_elim
     case HasTypeTyConv =>
       apply functionality_typing_ty_conv
-    any_goals sorry
-    --   repeat'
-    --   first
-    --   | intro a
-    --   | apply False.elim
-    --   | assumption
+    case IsEqualTypeUnitFormEq =>
+      repeat' intro
+      apply IsEqualType.unit_form_eq
+      assumption
+    case IsEqualTypeEmptyFormEq =>
+      repeat' intro
+      apply IsEqualType.empty_form_eq
+      assumption
+    case IsEqualTypePiFormEq =>
+      repeat' intro
+      apply IsEqualType.pi_form_eq
+      repeat' assumption
+    case IsEqualTypeSigmaFormEq =>
+      repeat' intro
+      apply IsEqualType.sigma_form_eq
+      repeat' assumption
+    case IsEqualTypeNatFormEq =>
+      repeat' intro
+      apply IsEqualType.nat_form_eq
+      repeat' assumption
+    case IsEqualTypeIdenFormEq =>
+      repeat' intro
+      apply IsEqualType.iden_form_eq
+      repeat' assumption
+    case IsEqualTypeUnivFormEq =>
+      repeat' intro
+      apply IsEqualType.univ_form_eq
+      repeat' assumption
+    case IsEqualTypeUnivElimEq =>
+      repeat' intro
+      apply IsEqualType.univ_elim_eq
+      repeat' assumption
+    case IsEqualTypeTypeSymm =>
+      repeat' intro
+      apply IsEqualType.type_symm
+      repeat' assumption
+    case IsEqualTypeTypeTrans =>
+      repeat' intro
+      apply IsEqualType.type_trans
+      repeat' assumption
+    case IsEqualTermVarEq =>
+      repeat' intro
+      apply IsEqualTerm.var_eq
+      repeat' assumption
+    case IsEqualTermWeakEq =>
+      repeat' intro
+      apply IsEqualTerm.weak_eq
+      repeat' assumption
+    case IsEqualTermUnitComp =>
+      repeat' intro
+      apply IsEqualTerm.unit_comp
+      repeat' assumption
+    case IsEqualTermPiComp =>
+      repeat' intro
+      apply IsEqualTerm.pi_comp
+      repeat' assumption
+    case IsEqualTermSigmaFirstComp =>
+      repeat' intro
+      apply IsEqualTerm.sigma_first_comp
+      repeat' assumption
+    case IsEqualTermSigmaSecondComp =>
+      repeat' intro
+      apply IsEqualTerm.sigma_second_comp
+      repeat' assumption
+    case IsEqualTermNatZeroComp =>
+      repeat' intro
+      apply IsEqualTerm.nat_zero_comp
+      repeat' assumption
+    case IsEqualTermNatSuccComp =>
+      repeat' intro
+      apply IsEqualTerm.nat_succ_comp
+      repeat' assumption
+    case IsEqualTermIdenComp =>
+      repeat' intro
+      apply IsEqualTerm.iden_comp
+      repeat' assumption
+    case IsEqualTermUnitIntroEq =>
+      repeat' intro
+      apply IsEqualTerm.unit_intro_eq
+      repeat' assumption
+    case IsEqualTermUnitElimEq =>
+      repeat' intro
+      apply IsEqualTerm.unit_elim_eq
+      repeat' assumption
+    case IsEqualTermEmptyElimEq =>
+      repeat' intro
+      apply IsEqualTerm.empty_elim_eq
+      repeat' assumption
+    case IsEqualTermPiIntroEq =>
+      repeat' intro
+      apply IsEqualTerm.pi_intro_eq
+      repeat' assumption
+    case IsEqualTermPiElimEq =>
+      repeat' intro
+      apply IsEqualTerm.pi_elim_eq
+      repeat' assumption
+    case IsEqualTermSigmaIntroEq =>
+      repeat' intro
+      apply IsEqualTerm.sigma_intro_eq
+      repeat' assumption
+    case IsEqualTermSigmaFirstEq =>
+      repeat' intro
+      apply IsEqualTerm.sigma_first_eq
+      repeat' assumption
+    case IsEqualTermSigmaSecondEq =>
+      repeat' intro
+      apply IsEqualTerm.sigma_second_eq
+      repeat' assumption
+    case IsEqualTermNatZeroIntroEq =>
+      repeat' intro
+      apply IsEqualTerm.nat_zero_intro_eq
+      repeat' assumption
+    case IsEqualTermNatSuccIntroEq =>
+      repeat' intro
+      apply IsEqualTerm.nat_succ_intro_eq
+      repeat' assumption
+    case IsEqualTermNatElimEq =>
+      repeat' intro
+      apply IsEqualTerm.nat_elim_eq
+      repeat' assumption
+    case IsEqualTermIdenIntroEq =>
+      repeat' intro
+      apply IsEqualTerm.iden_intro_eq
+      repeat' assumption
+    case IsEqualTermIdenElimEq =>
+      repeat' intro
+      apply IsEqualTerm.iden_elim_eq
+      repeat' assumption
+    case IsEqualTermUnivUnitEq =>
+      repeat' intro
+      apply IsEqualTerm.univ_unit_eq
+      repeat' assumption
+    case IsEqualTermUnivEmptyEq =>
+      repeat' intro
+      apply IsEqualTerm.univ_empty_eq
+      repeat' assumption
+    case IsEqualTermUnivPiEq =>
+      repeat' intro
+      apply IsEqualTerm.univ_pi_eq
+      repeat' assumption
+    case IsEqualTermUnivSigmaEq =>
+      repeat' intro
+      apply IsEqualTerm.univ_sigma_eq
+      repeat' assumption
+    case IsEqualTermUnivNatEq =>
+      repeat' intro
+      apply IsEqualTerm.univ_nat_eq
+      repeat' assumption
+    case IsEqualTermUnivIdenEq =>
+      repeat' intro
+      apply IsEqualTerm.univ_iden_eq
+      repeat' assumption
+    case IsEqualTermTyConvEq =>
+      repeat' intro
+      apply IsEqualTerm.ty_conv_eq
+      repeat' assumption
+    case IsEqualTermTermSymm =>
+      repeat' intro
+      apply IsEqualTerm.term_symm
+      repeat' assumption
+    case IsEqualTermTermTrans =>
+      repeat' intro
+      apply IsEqualTerm.term_trans
+      repeat' assumption
 
   theorem functionality_typing_type {l : Nat} {Γ : Ctx l} {s s' S : Tm l} {T : Tm (l + 1)} :
       Γ ⬝ S ⊢ T type

@@ -421,3 +421,25 @@ theorem substitution_id_shift_var :
         simp [substitute]
         simp [substitute_var]
         rfl
+
+theorem lift_n_substitution_shift {n : Nat} {leq : l ≤ n} {s : Tm l} :
+    ⇑ₛ(s↑/ₙleq) = s↑/ₙ(Nat.le_step leq) :=
+  by
+    simp [n_substitution_shift]
+    split
+    case isTrue h =>
+      rfl
+    case isFalse h =>
+      apply False.elim
+      omega
+
+theorem n_substitution_shift_zero {n : Nat} {s : Tm (n + 1)} :
+    (s↑/ₙ (Nat.le_refl (n + 1))) = .extend (.weak (.shift .id)) (s) :=
+  by
+    rw [n_substitution_shift]
+    split
+    case isTrue h =>
+      apply False.elim
+      omega
+    case isFalse h =>
+      rfl

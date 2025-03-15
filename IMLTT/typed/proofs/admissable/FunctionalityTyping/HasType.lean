@@ -1876,7 +1876,7 @@ theorem functionality_typing_ty_conv :
                 (Γ_1 ⊢ s' ∶ S) →
                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                     eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-        (False → True) →
+        Γ ⊢ A ≡ B type →
           (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
               (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
               (Γ_1 ⊢ s ≡ s' ∶ S) →

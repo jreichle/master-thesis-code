@@ -133,9 +133,24 @@ def substitute_into_gen_ctx
       (substitute_into_gen_ctx s Δ' leq)
       ((ht_ext_exp_n (neq := h3) ▸ T)⌈s/ₙ h2⌉))
 
+def substitute_shift_into_gen_ctx
+    (s : Tm l) (Δ : CtxGen m n) (leq : l ≤ m) : CtxGen m n :=
+  match Δ with
+  | .start => CtxGen.start
+  | .expand (n:= n) Δ' T =>
+    have h :  m ≤ n := gen_ctx_leq Δ'
+    have h1 : l ≤ n := by omega
+    .expand (substitute_shift_into_gen_ctx s Δ' leq) (substitute (n_substitution_shift h1 s) T)
+
+def weaken_from_into_gen_ctx (l : Nat) (Δ : CtxGen m n) : CtxGen (m + 1) (n + 1) :=
+  match Δ with
+  | .start => CtxGen.start
+  | .expand (n := n') Δ' T =>
+    .expand (weaken_from_into_gen_ctx l Δ') (T⌊(weaken_from n' l)⌋)
+
 infixl:93 " ⊗ " => expand_ctx
 infixl:94 " ⊙ " => CtxGen.expand
 
 notation:95 "⌈" s "⌉(" Δ "w/" leq ")" => substitute_into_gen_ctx s Δ leq
--- prefix:96 "γ" => to_gen_ctx
--- prefix:96 "a" => to_val_ctx
+notation:95 "⌈" s "↑⌉(" Δ "w/" leq ")" => substitute_shift_into_gen_ctx s Δ leq
+notation:95 "⌊↑₁↬" l "⌋" Δ => weaken_from_into_gen_ctx l Δ

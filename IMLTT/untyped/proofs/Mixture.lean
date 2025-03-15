@@ -332,3 +332,4 @@ theorem substitution_separate {n m : Nat} {t : Tm (n + 1)} {s : Tm m} {σ : Subs
         simp [substitution_id]
 
 
+

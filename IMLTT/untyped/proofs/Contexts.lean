@@ -138,38 +138,29 @@ theorem extend_expand_context {Γ : Ctx l} {Δ : CtxGen (l) n} {A : Tm n}:
     (Γ ⊗ Δ) ⬝ A =
     Γ ⊗ (Δ ⊙ A) :=
   by
-    induction Δ
-    case start =>
-      simp [expand_ctx]
-    case expand Δ T =>
-      simp [expand_ctx]
+    rfl
 
 theorem empty_extend_expand_context_n_substitution {n : Nat} {Γ : Ctx n} {s : Tm n} :
     Γ ⊗ ⌈s⌉(CtxGen.start w/ (Nat.le_refl n)) =
     Γ ⊗ CtxGen.start :=
   by
-    simp [substitute_into_gen_ctx]
+    rfl
 
 theorem middle_expand_context :
     Γ ⊗ CtxGen.start ⊙ A ⊙ B = Γ ⬝ A ⊗ CtxGen.start ⊙ B :=
   by
-    simp [expand_ctx]
+    rfl
 
 theorem context_to_gen_ctx :
     Γ ⬝ A = Γ ⊗ CtxGen.start ⊙ A :=
   by
-    simp [expand_ctx]
+    rfl
 
 theorem extend_expand_context_n_substitution' {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)}:
     (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
     Γ ⊗ ⌈s⌉((Δ ⊙ A) w/Nat.le_refl l) :=
   by
-    rw [substitute_into_gen_ctx]
-    cases Δ
-    case start =>
-      rw [expand_ctx]
-    case expand Δ T =>
-      rw [expand_ctx]
+    rfl
 
 theorem extend_expand_context_n_substitution {Γ : Ctx l} {Δ : CtxGen (l + 1) (n)} {A : Tm n}:
     (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (ht_ext_exp_n (neq := gen_ctx_neq Δ) ▸ A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
@@ -181,3 +172,27 @@ theorem extend_expand_context_n_substitution {Γ : Ctx l} {Δ : CtxGen (l + 1) (
       rw [expand_ctx]
     case expand Δ T =>
       rw [expand_ctx]
+
+theorem empty_extend_expand_context_n_substitution_shift {n : Nat} {Γ : Ctx n} {s : Tm n} :
+    Γ ⊗ ⌈s↑⌉(CtxGen.start w/ (Nat.le_refl n)) =
+    Γ ⊗ CtxGen.start :=
+  by
+    rfl
+
+theorem extend_expand_context_n_substitution_shift {Γ : Ctx l} {Δ : CtxGen (l) (n)} {A : Tm n}:
+    (Γ ⊗ ⌈s↑⌉(Δ w/Nat.le_refl l)) ⬝ A⌈s↑/ₙ(gen_ctx_leq Δ)⌉ =
+    Γ ⊗ ⌈s↑⌉((Δ ⊙ A) w/Nat.le_refl l) :=
+  by
+    rfl
+
+theorem empty_expand_context_weaken_from {n : Nat} {Γ : Ctx n} {S : Tm n} :
+    (Γ ⬝ S ⊗ (⌊↑₁↬l⌋CtxGen.start))
+    = Γ ⬝ S ⊗ (CtxGen.start) :=
+  by
+    rw [weaken_from_into_gen_ctx]
+
+theorem extend_expand_context_weaken_from {Γ : Ctx l} {Δ : CtxGen (l) (n)} {S : Tm l} {A : Tm n}:
+    (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⬝ A⌊↑₁n↬l⌋
+    = Γ ⬝ S ⊗ (⌊↑₁↬l⌋(Δ ⊙ A)) :=
+  by
+    rfl

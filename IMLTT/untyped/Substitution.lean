@@ -164,6 +164,17 @@ def n_substitution {l n : Nat} (leq : l ≤ n) (a : Tm l) : Subst n (n + 1) :=
       have heq : l = Nat.succ n' := substitute_n_helper leq h
       .extend (.weak .id) (heq ▸ a)
 
+def n_substitution_shift {l n : Nat} (leq : l ≤ n) (a : Tm l) : Subst n n :=
+  match n with
+  | .zero =>
+    .weak .id
+  | .succ n' =>
+    if h : l < n' + 1 then
+      .lift (n_substitution_shift (Nat.le_of_lt_succ h) a)
+    else
+      have heq : l = Nat.succ n' := substitute_n_helper leq h
+      .extend (.weak (.shift .id)) (heq ▸ a)
+
 prefix:96 "ₛ" => Subst.weak
 prefix:97 "↑ₛ" => Subst.shift
 prefix:97 "⇑ₛ" => Subst.lift
@@ -177,3 +188,4 @@ notation:95 A "⌈" σ "⌉ᵥ" => substitute_var σ A
 notation:95 A "⌈" σ "⌉₀" => substitute_zero σ A
 notation:95 a "/₀" => zero_substitution a
 notation:95 a "/ₙ" le => n_substitution le a
+notation:95 a "↑/ₙ" le => n_substitution_shift le a

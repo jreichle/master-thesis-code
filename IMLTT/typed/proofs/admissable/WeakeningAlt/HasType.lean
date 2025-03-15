@@ -1,0 +1,296 @@
+import IMLTT.untyped.AbstractSyntax
+import IMLTT.untyped.Weakening
+import IMLTT.untyped.Substitution
+import IMLTT.untyped.proofs.Weakening
+import IMLTT.untyped.proofs.Substitution
+import IMLTT.untyped.proofs.Contexts
+import IMLTT.untyped.proofs.Mixture
+
+import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.proofs.Recursor
+import IMLTT.typed.proofs.boundary.BoundaryIsCtx
+
+-- case HasTypeVar
+-- ⊢ ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
+--     Γ ⊢ A type →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A_1 : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l) (a A_1 : Tm m),
+--           Γ_1 ⊢ S type →
+--             eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → eqM ▸ v(0) = a → eqM ▸ A⌊↑ₚidₚ⌋ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeWeak
+-- ⊢ ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x},
+--     (Γ ⊢ v(i) ∶ A) →
+--       Γ ⊢ B type →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (a A_1 : Tm m),
+--             Γ_1 ⊢ S type →
+--               eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ v(i) = a → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A : Tm m),
+--               Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ B = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ type) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ ⬝ B = Γ_1 ⊗ Δ →
+--                   eqM ▸ v(i)⌊↑ₚidₚ⌋ = a → eqM ▸ A⌊↑ₚidₚ⌋ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeUnitIntro
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n},
+--     Γ ctx →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ ⋆ = a → eqM ▸ 𝟙 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypePiIntro
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)},
+--     (Γ ⬝ A ⊢ b ∶ B) →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (a A_1 : Tm m),
+--           Γ_1 ⊢ S type →
+--             eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → eqM ▸ b = a → eqM ▸ B = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--           Γ_1 ⊢ S type →
+--             eqM ▸ Γ = Γ_1 ⊗ Δ → (eqM ▸ λA; b) = a → (eqM ▸ ΠA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeSigmaIntro
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B : Tm (n + 1)},
+--     (Γ ⊢ a ∶ A) →
+--       (Γ ⊢ b ∶ B⌈a⌉₀) →
+--         Γ ⬝ A ⊢ B type →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_4 A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_4 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_4⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--             (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A : Tm m),
+--                 Γ_1 ⊢ S type →
+--                   eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ b = a_5 → eqM ▸ B⌈a⌉₀ = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+--               (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 : Tm m),
+--                   Γ_1 ⊢ S type → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → eqM ▸ B = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--                 ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_7 A_1 : Tm m),
+--                   Γ_1 ⊢ S type →
+--                     eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                       eqM ▸ a&b = a_7 → (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_7⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeNatZeroIntro
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n},
+--     Γ ctx →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝓏 = a → eqM ▸ 𝒩 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeNatSuccIntro
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
+--     (Γ ⊢ x ∶ 𝒩) →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ x = a → eqM ▸ 𝒩 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝓈(x) = a → eqM ▸ 𝒩 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeIdenIntro
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+--     Γ ⊢ A type →
+--       (Γ ⊢ a ∶ A) →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 : Tm m),
+--             Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_4 A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_4 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_4⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                   eqM ▸ A.refl a = a_5 → (eqM ▸ a ≃[A] a) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeUnivUnit
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n},
+--     Γ ctx →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝟙 = a → eqM ▸ 𝒰 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeUnivEmpty
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n},
+--     Γ ctx →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝟘 = a → eqM ▸ 𝒰 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeUnivPi
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
+--     (Γ ⊢ A ∶ 𝒰) →
+--       (Γ ⬝ A ⊢ B ∶ 𝒰) →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--             Γ_1 ⊢ S type →
+--               eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → eqM ▸ B = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → (eqM ▸ ΠA;B) = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeUnivSigma
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
+--     (Γ ⊢ A ∶ 𝒰) →
+--       (Γ ⬝ A ⊢ B ∶ 𝒰) →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--             Γ_1 ⊢ S type →
+--               eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → eqM ▸ B = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → (eqM ▸ ΣA;B) = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeUnivNat
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n},
+--     Γ ctx →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝒩 = a → eqM ▸ 𝒰 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeUnivIden
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
+--     (Γ ⊢ A ∶ 𝒰) →
+--       (Γ ⊢ a ∶ A) →
+--         (Γ ⊢ a' ∶ A) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = a → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--             (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A_1 : Tm m),
+--                 Γ_1 ⊢ S type →
+--                   eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_5 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--               (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--                   Γ_1 ⊢ S type →
+--                     eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a' = a → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                 ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_7 A_1 : Tm m),
+--                   Γ_1 ⊢ S type →
+--                     eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                       (eqM ▸ a ≃[A] a') = a_7 → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_7⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeUnitElim
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {a b : Tm n},
+--     Γ ⬝ 𝟙 ⊢ A type →
+--       (Γ ⊢ a ∶ A⌈⋆⌉₀) →
+--         (Γ ⊢ b ∶ 𝟙) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 : Tm m),
+--               Γ_1 ⊢ S type → eqM ▸ Γ ⬝ 𝟙 = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--             (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A_1 : Tm m),
+--                 Γ_1 ⊢ S type →
+--                   eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_5 → eqM ▸ A⌈⋆⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--               (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--                   Γ_1 ⊢ S type →
+--                     eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ b = a → eqM ▸ 𝟙 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+--                 ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_7 A_1 : Tm m),
+--                   Γ_1 ⊢ S type →
+--                     eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                       eqM ▸ A.indUnit b a = a_7 → eqM ▸ A⌈b⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_7⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeEmptyElim
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {b : Tm n},
+--     Γ ⬝ 𝟘 ⊢ A type →
+--       (Γ ⊢ b ∶ 𝟘) →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 : Tm m),
+--             Γ_1 ⊢ S type → eqM ▸ Γ ⬝ 𝟘 = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--               Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ b = a → eqM ▸ 𝟘 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                   eqM ▸ A.indEmpty b = a → eqM ▸ A⌈b⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypePiElim
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {f A : Tm n} {B : Tm (n + 1)} {a : Tm n},
+--     (Γ ⊢ f ∶ ΠA;B) →
+--       (Γ ⊢ a ∶ A) →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--             Γ_1 ⊢ S type →
+--               eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ f = a → (eqM ▸ ΠA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_4 A_1 : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_4 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_4⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ f◃a = a_5 → eqM ▸ B⌈a⌉₀ = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeSigmaFirst
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
+--     (Γ ⊢ p ∶ ΣA;B) →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--           Γ_1 ⊢ S type →
+--             eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--           Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ π₁ p = a → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeSigmaSecond
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
+--     (Γ ⊢ p ∶ ΣA;B) →
+--       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--           Γ_1 ⊢ S type →
+--             eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--         ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--           Γ_1 ⊢ S type →
+--             eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ π₂ p = a → eqM ▸ B⌈π₁ p⌉₀ = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
+-- case HasTypeNatElim
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
+--     Γ ⬝ 𝒩 ⊢ A type →
+--       (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
+--         (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+--           (Γ ⊢ x ∶ 𝒩) →
+--             (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 : Tm m),
+--                 Γ_1 ⊢ S type → eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--               (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--                   Γ_1 ⊢ S type →
+--                     eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ z = a → eqM ▸ A⌈𝓏⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                 (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 + 1 = m) (S : Tm l) (a A_1 : Tm m),
+--                     Γ_1 ⊢ S type →
+--                       eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⊗ Δ →
+--                         eqM ▸ s = a →
+--                           eqM ▸ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                   (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A : Tm m),
+--                       Γ_1 ⊢ S type →
+--                         eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ x = a → eqM ▸ 𝒩 = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+--                     ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--                       Γ_1 ⊢ S type →
+--                         eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                           eqM ▸ A.indNat z s x = a → eqM ▸ A⌈x⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeIdenElim
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},
+--     (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
+--       (Γ ⊢ b ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) →
+--         (Γ ⊢ a ∶ A) →
+--           (Γ ⊢ a' ∶ A) →
+--             (Γ ⊢ p ∶ a ≃[A] a') →
+--               Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
+--                 Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
+--                   (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 + 1 + 1 = m) (S : Tm l) (A_1 : Tm m),
+--                       Γ_1 ⊢ S type →
+--                         (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⊗ Δ →
+--                           eqM ▸ B = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--                     (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_7 A_1 : Tm m),
+--                         Γ_1 ⊢ S type →
+--                           eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                             eqM ▸ b = a_7 →
+--                               eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_7⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                       (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_8 A_1 : Tm m),
+--                           Γ_1 ⊢ S type →
+--                             eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                               eqM ▸ a = a_8 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_8⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a A_1 : Tm m),
+--                             Γ_1 ⊢ S type →
+--                               eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                                 eqM ▸ a' = a → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_10 A_1 : Tm m),
+--                               Γ_1 ⊢ S type →
+--                                 eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                                   eqM ▸ p = a_10 →
+--                                     (eqM ▸ a ≃[A] a') = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_10⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--                             (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 : Tm m),
+--                                 Γ_1 ⊢ S type →
+--                                   eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                                     eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+--                               (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A : Tm m),
+--                                   Γ_1 ⊢ S type →
+--                                     eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                                       eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ type) →
+--                                 ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_13 A_1 : Tm m),
+--                                   Γ_1 ⊢ S type →
+--                                     eqM ▸ Γ = Γ_1 ⊗ Δ →
+--                                       eqM ▸ A.j B b a a' p = a_13 →
+--                                         eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_13⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+-- case HasTypeTyConv
+-- ⊢ ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n},
+--     (Γ ⊢ a ∶ A) →
+--       Γ ⊢ A ≡ B type →
+--         (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_3 A_1 : Tm m),
+--             Γ_1 ⊢ S type →
+--               eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_3 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_3⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+--           (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A' : Tm m),
+--               Γ_1 ⊢ S type →
+--                 eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ B = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+--             ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A : Tm m),
+--               Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_5 → eqM ▸ B = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋
