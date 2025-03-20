@@ -152,4 +152,149 @@ theorem weak_substitution :
         eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ) → eqM ▸ c = a → eqM ▸ c' = a' → eqM ▸ C = A
         → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
         → (Γ ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1))) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉)
-    any_goals sorry
+    case IsCtxEmpty =>
+      apply weak_substitution_empty
+    case IsCtxExtend =>
+      apply weak_substitution_extend
+    case IsTypeUnitForm =>
+      apply weak_substitution_unit_form
+    case IsTypeEmptyForm =>
+      apply weak_substitution_empty_form
+    case IsTypePiForm =>
+      apply weak_substitution_pi_form
+    case IsTypeSigmaForm =>
+      apply weak_substitution_sigma_form
+    case IsTypeNatForm =>
+      apply weak_substitution_nat_form
+    case IsTypeIdenForm =>
+      apply weak_substitution_iden_form
+    case IsTypeUnivForm =>
+      apply weak_substitution_univ_form
+    case IsTypeUnivElim =>
+      apply weak_substitution_univ_elim
+    case HasTypeVar =>
+      apply weak_substitution_var
+    case HasTypeWeak =>
+      apply weak_substitution_weak
+    case HasTypeUnitIntro =>
+      apply weak_substitution_unit_intro
+    case HasTypePiIntro =>
+      apply weak_substitution_pi_intro
+    case HasTypeSigmaIntro =>
+      apply weak_substitution_sigma_intro
+    case HasTypeNatZeroIntro =>
+      apply weak_substitution_nat_zero_intro
+    case HasTypeNatSuccIntro =>
+      apply weak_substitution_nat_succ_intro
+    case HasTypeIdenIntro =>
+      apply weak_substitution_iden_intro
+    case HasTypeUnivUnit =>
+      apply weak_substitution_univ_unit
+    case HasTypeUnivEmpty =>
+      apply weak_substitution_univ_empty
+    case HasTypeUnivPi =>
+      apply weak_substitution_univ_pi
+    case HasTypeUnivSigma =>
+      apply weak_substitution_univ_sigma
+    case HasTypeUnivNat =>
+      apply weak_substitution_univ_nat
+    case HasTypeUnivIden =>
+      apply weak_substitution_univ_iden
+    case HasTypeUnitElim =>
+      apply weak_substitution_unit_elim
+    case HasTypeEmptyElim =>
+      apply weak_substitution_empty_elim
+    case HasTypePiElim =>
+      apply weak_substitution_pi_elim
+    case HasTypeSigmaFirst =>
+      apply weak_substitution_sigma_first
+    case HasTypeSigmaSecond =>
+      apply weak_substitution_sigma_second
+    case HasTypeNatElim =>
+      apply weak_substitution_nat_elim
+    case HasTypeIdenElim =>
+      apply weak_substitution_iden_elim
+    case HasTypeTyConv =>
+      apply weak_substitution_ty_conv
+    case IsEqualTypeUnitFormEq =>
+      apply weak_substitution_unit_form_eq
+    case IsEqualTypeEmptyFormEq =>
+      apply weak_substitution_empty_form_eq
+    case IsEqualTypePiFormEq =>
+      apply weak_substitution_pi_form_eq
+    case IsEqualTypeSigmaFormEq =>
+      apply weak_substitution_sigma_form_eq
+    case IsEqualTypeNatFormEq =>
+      apply weak_substitution_nat_form_eq
+    case IsEqualTypeIdenFormEq =>
+      apply weak_substitution_iden_form_eq
+    case IsEqualTypeUnivFormEq =>
+      apply weak_substitution_univ_form_eq
+    case IsEqualTypeUnivElimEq =>
+      apply weak_substitution_univ_elim_eq
+    case IsEqualTypeTypeSymm =>
+      apply weak_substitution_type_symm
+    case IsEqualTypeTypeTrans =>
+      apply weak_substitution_type_trans
+    case IsEqualTermVarEq =>
+      apply weak_substitution_var_eq
+    case IsEqualTermWeakEq =>
+      apply weak_substitution_weak_eq
+    case IsEqualTermUnitComp =>
+      apply weak_substitution_unit_comp
+    case IsEqualTermPiComp =>
+      apply weak_substitution_pi_comp
+    case IsEqualTermSigmaFirstComp =>
+      apply weak_substitution_sigma_first_comp
+    case IsEqualTermSigmaSecondComp =>
+      apply weak_substitution_sigma_second_comp
+    case IsEqualTermNatZeroComp =>
+      apply weak_substitution_nat_zero_comp
+    case IsEqualTermNatSuccComp =>
+      apply weak_substitution_nat_succ_comp
+    case IsEqualTermIdenComp =>
+      apply weak_substitution_iden_comp
+    case IsEqualTermUnitIntroEq =>
+      apply weak_substitution_unit_intro_eq
+    case IsEqualTermUnitElimEq =>
+      apply weak_substitution_unit_elim_eq
+    case IsEqualTermEmptyElimEq =>
+      apply weak_substitution_empty_elim_eq
+    case IsEqualTermPiIntroEq =>
+      apply weak_substitution_pi_intro_eq
+    case IsEqualTermPiElimEq =>
+      apply weak_substitution_pi_elim_eq
+    case IsEqualTermSigmaIntroEq =>
+      apply weak_substitution_sigma_intro_eq
+    case IsEqualTermSigmaFirstEq =>
+      apply weak_substitution_sigma_first_eq
+    case IsEqualTermSigmaSecondEq =>
+      apply weak_substitution_sigma_second_eq
+    case IsEqualTermNatZeroIntroEq =>
+      apply weak_substitution_nat_zero_intro_eq
+    case IsEqualTermNatSuccIntroEq =>
+      apply weak_substitution_nat_succ_intro_eq
+    case IsEqualTermNatElimEq =>
+      apply weak_substitution_nat_elim_eq
+    case IsEqualTermIdenIntroEq =>
+      apply weak_substitution_iden_intro_eq
+    case IsEqualTermIdenElimEq =>
+      apply weak_substitution_iden_elim_eq
+    case IsEqualTermUnivUnitEq =>
+      apply weak_substitution_univ_unit_eq
+    case IsEqualTermUnivEmptyEq =>
+      apply weak_substitution_univ_empty_eq
+    case IsEqualTermUnivPiEq =>
+      apply weak_substitution_univ_pi_eq
+    case IsEqualTermUnivSigmaEq =>
+      apply weak_substitution_univ_sigma_eq
+    case IsEqualTermUnivNatEq =>
+      apply weak_substitution_univ_nat_eq
+    case IsEqualTermUnivIdenEq =>
+      apply weak_substitution_univ_iden_eq
+    case IsEqualTermTyConvEq =>
+      apply weak_substitution_ty_conv_eq
+    case IsEqualTermTermSymm =>
+      apply weak_substitution_term_symm
+    case IsEqualTermTermTrans =>
+      apply weak_substitution_term_trans

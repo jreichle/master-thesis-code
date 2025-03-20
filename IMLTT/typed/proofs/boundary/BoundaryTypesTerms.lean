@@ -126,11 +126,11 @@ theorem boundary_type_term :
     case IsEqualTermSigmaSecondEq =>
       apply boundary_sigma_second_eq
     case IsEqualTermNatZeroIntroEq =>
-      sorry
+      apply boundary_nat_zero_intro_eq
     case IsEqualTermNatSuccIntroEq =>
-      sorry
+      apply boundary_nat_succ_intro_eq
     case IsEqualTermNatElimEq =>
-      sorry
+      apply boundary_nat_elim_eq
     case IsEqualTermIdenIntroEq =>
       apply boundary_iden_intro_eq
     case IsEqualTermIdenElimEq =>
@@ -144,7 +144,7 @@ theorem boundary_type_term :
     case IsEqualTermUnivSigmaEq =>
       apply boundary_univ_sigma_eq
     case IsEqualTermUnivNatEq =>
-      sorry
+      apply boundary_univ_nat_eq
     case IsEqualTermUnivIdenEq =>
       apply boundary_univ_iden_eq
     case IsEqualTermTyConvEq =>

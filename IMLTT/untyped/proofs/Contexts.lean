@@ -5,6 +5,8 @@ import IMLTT.untyped.Contexts
 import IMLTT.untyped.proofs.Weakening
 import IMLTT.untyped.proofs.Substitution
 
+import aesop
+
 theorem empty_insert_into_context :
     insert_into_ctx (leq := Nat.le_refl 0) ε B = ε ⬝ B :=
   by
@@ -189,7 +191,9 @@ theorem empty_expand_context_weaken_from {n : Nat} {Γ : Ctx n} {S : Tm n} :
     (Γ ⬝ S ⊗ (⌊↑₁↬l⌋CtxGen.start))
     = Γ ⬝ S ⊗ (CtxGen.start) :=
   by
-    rw [weaken_from_into_gen_ctx]
+    -- rw [weaken_from_into_gen_ctx]
+    sorry
+
 
 theorem extend_expand_context_weaken_from {Γ : Ctx l} {Δ : CtxGen (l) (n)} {S : Tm l} {A : Tm n}:
     (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⬝ A⌊↑₁n↬l⌋

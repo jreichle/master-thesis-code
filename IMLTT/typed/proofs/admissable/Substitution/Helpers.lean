@@ -68,6 +68,46 @@ theorem subst_subst_sigma_C :
         rw (config := {occs := .pos [1]}) [weakening_shift_id]
         simp [←conversion_sub_weak]
 
+theorem subst_subst_iden_refl :
+    B⌈3ₙ⇑ₛ(σ)⌉⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋⌈⇑ₛ(σ)⌉.refl v(0))⌉
+    = B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉⌈⇑ₛ(σ)⌉ :=
+  by
+    simp [substitution_comp]
+    simp [lift_subst_n]
+    simp [comp_substitute_substitute]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        cases i' with
+        | zero =>
+          simp [substitute]
+          simp [substitute_var]
+          rfl
+        | succ j =>
+          cases j with
+          | zero =>
+            simp [substitute]
+            simp [substitute_var]
+            simp [←substitution_conv_var]
+            simp [←substitution_comp_ρσ]
+            simp [weakening_id]
+            aesop
+          | succ j' =>
+            simp [substitute]
+            simp [substitute_var]
+            simp [←substitution_conv_var]
+            simp [←substitution_comp_ρσ]
+            simp [weakening_id]
+            simp [substitute]
+            aesop
+
 theorem subst_subst_iden_elim :
     B⌈(ₛidₚ), a, b, c⌉⌈σ⌉
     = B⌈lift_subst_n 3 σ⌉⌈(ₛidₚ), (a⌈σ⌉), (b⌈σ⌉), (c⌈σ⌉)⌉ :=

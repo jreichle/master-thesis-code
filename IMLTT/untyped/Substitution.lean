@@ -51,7 +51,7 @@ def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
                         (substitute (lift_subst_n 2 σ) s) (substitute σ n)
   | .refl A a => .refl (substitute σ A) (substitute σ a)
   | .j A B b a a' p => .j (substitute σ A) (substitute (lift_subst_n 3 σ) B)
-                        (substitute σ b) (substitute σ a) (substitute σ a')
+                        (substitute (lift_subst_n 1 σ) b) (substitute σ a) (substitute σ a')
                         (substitute σ p)
 
 def comp_substitute_weaken (σ : Subst l m) (ρ : Weak m n) : Subst l n :=

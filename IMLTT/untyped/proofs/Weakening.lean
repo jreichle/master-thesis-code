@@ -137,7 +137,8 @@ theorem weakening_var_weaken :
         · apply weakening_var_weaken
           apply weakening_var_lift_n h
         · apply And.intro
-          · apply weakening_var_weaken h
+          · apply weakening_var_weaken
+            apply weakening_var_lift_n h
           · apply And.intro
             · apply weakening_var_weaken h
             · apply And.intro
@@ -298,7 +299,11 @@ theorem weakening_id :
           intro i
           apply weakening_var_lift_n_id
         · apply And.intro
-          · apply weakening_id
+          · have h := weakening_id (t := b)
+            rw (config := {occs := .pos [2]}) [←h]
+            apply weakening_var_weaken
+            intro i
+            apply weakening_var_lift_n_id
           · apply And.intro
             · apply weakening_id
             · apply And.intro

@@ -136,7 +136,8 @@ theorem substitution_var_substitute {σ σ' : Subst m n} :
         · apply substitution_var_substitute
           apply substitution_var_lift_n h
         · apply And.intro
-          · apply substitution_var_substitute h
+          · apply substitution_var_substitute
+            apply substitution_var_lift_n h
           · apply And.intro
             · apply substitution_var_substitute h
             · apply And.intro
@@ -289,7 +290,11 @@ theorem substitution_id {t : Tm n} :
           intro x
           apply substitution_var_lift_n_id
         · apply And.intro
-          · apply substitution_id
+          · have h := substitution_id (t := b)
+            rw (config := {occs := .pos [2]}) [←h]
+            apply substitution_var_substitute
+            intro x
+            apply substitution_var_lift_n_id
           · apply And.intro
             · apply substitution_id
             · apply And.intro

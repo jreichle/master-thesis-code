@@ -8,6 +8,8 @@ import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
+import IMLTT.typed.proofs.boundary.Helpers
+
 theorem boundary_var :
     ∀ {x : Nat} {Γ : Ctx x} {A : Tm x}, Γ ⊢ A type → Γ ⊢ A type → Γ ⬝ A ⊢ A⌊↑ₚidₚ⌋ type :=
   by
@@ -164,24 +166,41 @@ theorem boundary_nat_elim :
     · apply hA
 
 theorem boundary_iden_elim :
-    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},
-    (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-    (Γ ⊢ b ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) →
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
+  (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
+    (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
       (Γ ⊢ a ∶ A) →
         (Γ ⊢ a' ∶ A) →
           (Γ ⊢ p ∶ a ≃[A] a') →
-            Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-              Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
-                (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-                  Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-                    Γ ⊢ A type →
-                      Γ ⊢ A type →
-                        Γ ⊢ a ≃[A] a' type →
-                          Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-                            Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type :=
+            (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))) ⊢ B type →
+              Γ ⬝ A ⊢ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ type →
+                Γ ⊢ A type → Γ ⊢ A type → Γ ⊢ a ≃[A] a' type → Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type :=
   by
-    intro n Γ A B b a a' p hB hbB haA haA' hpId hBa hBc ihB ihbB ihaA ihaA' ihpId ihBa ihBc
-    apply ihBc
+    intro n Γ A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId
+    rw [context_to_gen_ctx] at hB
+    rw [←middle_expand_context (Γ := Γ ⬝ A)] at hB
+    have h := And.left (And.right substitution) (leq := Nat.le_step (Nat.le_step (Nat.le_refl n))) hB haA
+    simp [substitute_into_gen_ctx] at h
+    rw [n_substitution_zero] at h
+    rw [zero_substitution] at h
+    rw [substitution_conv_zero] at h
+    rw [substitution_shift_substitute_zero] at h
+    rw [middle_expand_context] at h
+    have h2 := And.left (And.right substitution) (leq := Nat.le_step (Nat.le_refl n)) h haA'
+    simp [substitute_into_gen_ctx] at h2
+    simp [expand_ctx] at h2
+    rw [←lift_n_substitution] at h2
+    simp [n_substitution_zero] at h2
+    simp [zero_substitution] at h2
+    simp [substitution_conv_zero] at h2
+    simp [clean_this_mess_asap] at h2
+    have h3 := substitution_type hpId h2
+    simp [←lift_n_substitution] at h3
+    simp [n_substitution_zero] at h3
+    simp [zero_substitution] at h3
+    rw [clean_this_mess_too] at h3
+    apply h3
+    any_goals omega
 
 theorem boundary_ty_conv :
     ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ A ≡ B type → Γ ⊢ A type → Γ ⊢ A type ∧ Γ ⊢ B type → Γ ⊢ B type :=

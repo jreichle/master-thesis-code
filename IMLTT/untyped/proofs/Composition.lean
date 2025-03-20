@@ -579,7 +579,8 @@ theorem substitution_comp_ρσ {t : Tm n} :
         · rw [←substitution_lift_n_comp_ρσ]
           apply substitution_comp_ρσ
         · apply And.intro
-          · apply substitution_comp_ρσ
+          · rw [←substitution_lift_n_comp_ρσ]
+            apply substitution_comp_ρσ
           · apply And.intro
             · apply substitution_comp_ρσ
             · apply And.intro
@@ -1148,7 +1149,8 @@ theorem substitution_comp :
         · rw [←substitution_lift_n_comp]
           apply substitution_comp
         · apply And.intro
-          · apply substitution_comp
+          · rw [←substitution_lift_n_comp]
+            apply substitution_comp
           · apply And.intro
             · apply substitution_comp
             · apply And.intro

@@ -122,11 +122,9 @@ mutual
       → HasType Γ (.indNat A z s n) (A⌈n⌉₀)
     | iden_elim :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
-      → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
+      → HasType (Γ ⬝ A) b (B⌈(ₛidₚ), v(0), .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
       → HasType Γ a A → HasType Γ a' A
       → HasType Γ p (a ≃[A] a')
-      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉)
-      → IsType Γ (B⌈(ₛidₚ), a, a', p⌉)
       → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
       -- conversion
     | ty_conv :
@@ -200,15 +198,13 @@ mutual
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
       → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
-      -- → HasType (Γ) k (Π𝒩 ;(ΠA;(A⌊↑ₚidₚ⌋⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉)))
       → HasType Γ n 𝒩
       → IsEqualTerm Γ (.indNat A z s 𝓈(n)) (s⌈(ₛidₚ), n, (.indNat A z s n)⌉) (A⌈𝓈(n)⌉₀)
     | iden_comp :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
-      → HasType Γ b (B⌈(ₛidₚ), a, a, .refl A a⌉)
+      → HasType (Γ ⬝ A) b (B⌈(ₛidₚ), v(0), .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
       → HasType Γ a A
-      → IsType Γ (B⌈(ₛidₚ), a, a, .refl A a⌉)
-      → IsEqualTerm Γ (.j A B b a a (.refl A a)) b (B⌈(ₛidₚ), a, a, .refl A a⌉)
+      → IsEqualTerm Γ (.j A B b a a (.refl A a)) (b⌈a⌉₀) (B⌈(ₛidₚ), a, a, .refl A a⌉)
     -- congruence rules (introduction and elimination)
     | unit_intro_eq :
       IsCtx Γ
@@ -251,11 +247,9 @@ mutual
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
     | iden_elim_eq :
       IsEqualType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B B'
-      → IsEqualTerm Γ b b' (B⌈(ₛidₚ), a₁, a₁, .refl A a₁⌉)
+      → IsEqualTerm (Γ ⬝ A) b b' (B⌈(ₛidₚ), v(0), .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
       → IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
       → IsEqualTerm Γ p p' (a₁ ≃[A] a₃)
-      → IsEqualType Γ (B⌈(ₛidₚ), a₁, a₁, .refl A a₁⌉) (B'⌈(ₛidₚ), a₂, a₂, .refl A' a₂⌉)
-      → IsEqualType Γ (B⌈(ₛidₚ), a₁, a₃, p⌉) (B'⌈(ₛidₚ), a₂, a₄, p'⌉)
       → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') (B⌈(ₛidₚ), a₁, a₃, p⌉)
     | univ_unit_eq :
       IsCtx Γ

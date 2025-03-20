@@ -653,14 +653,12 @@ theorem context_conversion_nat_elim :
       repeat' rfl
 
 theorem context_conversion_iden_elim :
-    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},
-    (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-    (Γ ⊢ b ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) →
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
+  (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
+    (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
       (Γ ⊢ a ∶ A) →
         (Γ ⊢ a' ∶ A) →
           (Γ ⊢ p ∶ a ≃[A] a') →
-            Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-              Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
                 (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 + 1 = m) {S S' : Tm l}
                     (A_1 : Tm m),
                     Γ_1 ⊢ S ≡ S' type →
@@ -668,12 +666,12 @@ theorem context_conversion_iden_elim :
                         Γ_1 ⊢ S' type →
                           (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ →
                             eqM ▸ B = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) →
-                  (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_7 A_1 : Tm m),
+                  (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 = m) (S S' : Tm l) (a A_1 : Tm m),
                       Γ_1 ⊢ S ≡ S' type →
                         Γ_1 ⊢ S type →
                           Γ_1 ⊢ S' type →
-                            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                              eqM ▸ b = a_7 → eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_7 ∶ A_1) →
+                            eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
+                              eqM ▸ b = a → eqM ▸ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a ∶ A_1) →
                     (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_8 A_1 : Tm m),
                         Γ_1 ⊢ S ≡ S' type →
                           Γ_1 ⊢ S type →
@@ -691,17 +689,6 @@ theorem context_conversion_iden_elim :
                                 Γ_1 ⊢ S' type →
                                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                                     eqM ▸ p = a_10 → (eqM ▸ a ≃[A] a') = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_10 ∶ A_1) →
-                          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A_1 : Tm m),
-                              Γ_1 ⊢ S ≡ S' type →
-                                Γ_1 ⊢ S type →
-                                  Γ_1 ⊢ S' type →
-                                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                      eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) →
-                            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A : Tm m),
-                                Γ_1 ⊢ S ≡ S' type →
-                                  Γ_1 ⊢ S type →
-                                    Γ_1 ⊢ S' type →
-                                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A → Γ_1 ⬝ S' ⊗ Δ ⊢ A type) →
                               ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l)
                                 (a_13 A_1 : Tm m),
                                 Γ_1 ⊢ S ≡ S' type →
@@ -711,7 +698,7 @@ theorem context_conversion_iden_elim :
                                         eqM ▸ A.j B b a a' p = a_13 →
                                           eqM ▸ B⌈(ₛidₚ), a, a', p⌉ = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_13 ∶ A_1 :=
   by
-    intro n Γ' A B b a a' p hB hbB haA haA' hpId hBa hBc ihB ihbB ihaA ihaA' ihpId ihBa ihBc m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
+    intro n Γ' A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId m l Γ Δ heqM S S' t T hSS hS hS' heqΓ heqt heqT
     cases heqM
     cases heqΓ
     cases heqt
@@ -723,7 +710,8 @@ theorem context_conversion_iden_elim :
       · apply hS
       · apply hS'
       repeat' rfl
-    · apply ihbB
+    · simp [extend_expand_context]
+      apply ihbB
       · apply hSS
       · apply hS
       · apply hS'
@@ -739,16 +727,6 @@ theorem context_conversion_iden_elim :
       · apply hS'
       repeat' rfl
     · apply ihpId
-      · apply hSS
-      · apply hS
-      · apply hS'
-      repeat' rfl
-    · apply ihBa
-      · apply hSS
-      · apply hS
-      · apply hS'
-      repeat' rfl
-    · apply ihBc
       · apply hSS
       · apply hS
       · apply hS'

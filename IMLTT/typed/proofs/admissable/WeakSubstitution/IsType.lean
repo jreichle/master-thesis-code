@@ -88,7 +88,7 @@ theorem weak_substitution_empty_form :
           · rfl
 
 
-theorem weak_subsitution_pi_form :
+theorem weak_substitution_pi_form :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
   Γ ⊢ A type →
     Γ ⬝ A ⊢ B type →

@@ -511,42 +511,32 @@ theorem weakening_nat_elim :
       apply hS
 
 theorem weakening_iden_elim :
-    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b a a' p : Tm n},
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
   (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-    (Γ ⊢ b ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) →
+    (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), (v(0)), (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
       (Γ ⊢ a ∶ A) →
         (Γ ⊢ a' ∶ A) →
           (Γ ⊢ p ∶ a ≃[A] a') →
-            Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type →
-              Γ ⊢ B⌈(ₛidₚ), a, a', p⌉ type →
                 (∀ (l : Nat) {leq : l ≤ n + 1 + 1 + 1} {B_1 : Tm l},
                     get_sub_context (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) l leq ⊢ B_1 type →
                       insert_into_ctx leq (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B_1 ⊢
-                        B⌊weaken_from (n + 1 + 1 + 1) l⌋ type) →
-                  (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-                      get_sub_context Γ l leq ⊢ B_1 type →
-                        insert_into_ctx leq Γ B_1 ⊢ b⌊weaken_from n l⌋ ∶ B⌈(ₛidₚ), a, a, A.refl a⌉⌊weaken_from n l⌋) →
+                        B⌊↑₁n + 1 + 1 + 1↬l⌋ type) →
+                  (∀ (l : Nat) {leq : l ≤ n + 1} {B_1 : Tm l},
+                      get_sub_context (Γ ⬝ A) l leq ⊢ B_1 type →
+                        insert_into_ctx leq (Γ ⬝ A) B_1 ⊢ b⌊↑₁n + 1↬l⌋ ∶
+                          B⌈(ₛidₚ), (v(0)), (A⌊↑ₚidₚ⌋.refl v(0))⌉⌊↑₁n + 1↬l⌋) →
                     (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-                        get_sub_context Γ l leq ⊢ B type →
-                          insert_into_ctx leq Γ B ⊢ a⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋) →
+                        get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ a⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋) →
                       (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-                          get_sub_context Γ l leq ⊢ B type →
-                            insert_into_ctx leq Γ B ⊢ a'⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋) →
+                          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ a'⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋) →
                         (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
                             get_sub_context Γ l leq ⊢ B type →
-                              insert_into_ctx leq Γ B ⊢ p⌊weaken_from n l⌋ ∶ (a ≃[A] a')⌊weaken_from n l⌋) →
-                          (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-                              get_sub_context Γ l leq ⊢ B_1 type →
-                                insert_into_ctx leq Γ B_1 ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉⌊weaken_from n l⌋ type) →
-                            (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-                                get_sub_context Γ l leq ⊢ B_1 type →
-                                  insert_into_ctx leq Γ B_1 ⊢ B⌈(ₛidₚ), a, a', p⌉⌊weaken_from n l⌋ type) →
+                              insert_into_ctx leq Γ B ⊢ p⌊↑₁n↬l⌋ ∶ (a ≃[A] a')⌊↑₁n↬l⌋) →
                               ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
                                 get_sub_context Γ l leq ⊢ B_1 type →
-                                  insert_into_ctx leq Γ B_1 ⊢ A.j B b a a' p⌊weaken_from n l⌋ ∶
-                                    B⌈(ₛidₚ), a, a', p⌉⌊weaken_from n l⌋ :=
+                                  insert_into_ctx leq Γ B_1 ⊢ A.j B b a a' p⌊↑₁n↬l⌋ ∶ B⌈(ₛidₚ), a, a', p⌉⌊↑₁n↬l⌋ :=
   by
-    intro n Γ A B b a a' p hB hbB haA haA' hpId hBa hBc ihB ihbB ihaA ihaA' ihpId ihBa ihBc l hleq S hS
+    intro n Γ A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId l hleq S hS
     rw [weak_subst_iden_elim]
     apply HasType.iden_elim
     · simp [lift_weak_n]
@@ -568,22 +558,19 @@ theorem weakening_iden_elim :
       rw [extend_get_sub_context]
       apply hS
       any_goals omega
-    · rw [helper_weak_refl_propagate_weak]
-      rw [←weak_subst_iden_elim]
+    · rw [extend_insert_into_context]
+      simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [helper_weak_refl_propagate_weak]
       apply ihbB
+      rw [extend_get_sub_context]
       apply hS
+      any_goals omega
     · apply ihaA
       apply hS
     · apply ihaA'
       apply hS
     · apply ihpId
-      apply hS
-    · rw [←weakening_refl]
-      rw [←weak_subst_iden_elim]
-      apply ihBa
-      apply hS
-    · rw [←weak_subst_iden_elim]
-      apply ihBc
       apply hS
 
 theorem weakening_ty_conv :

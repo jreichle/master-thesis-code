@@ -87,6 +87,157 @@ theorem boundary_helper_iden_elim_one {n : Nat} {t : Tm (n + 3)} {r : Tm (n + 2)
           simp [comp_substitute_substitute]
           simp [substitute_var]
 
+theorem old_test_hahah :
+    B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉⌈a⌉₀
+    = B⌈(ₛidₚ), a, a, A.refl a⌉ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    simp [substitute]
+    simp [substitute_var]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [weakening_id]
+        simp [substitution_conv_zero]
+        simp [substitution_shift_substitute_zero]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [weakening_id]
+        rfl
+
+theorem vone_to_vtwo :
+    (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))⌈(ₛ↑ₚidₚ), (v(0)⌊↑ₚidₚ⌋)⌉
+    = v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
+  by
+    simp [substitute]
+    simp [substitute_var]
+    simp [weaken]
+    simp [weaken_var]
+    simp [substitution_comp_σρ]
+    simp [comp_substitute_weaken]
+    simp [comp_weaken]
+    apply And.intro
+    · apply conversion_sub_weak
+    · aesop
+
+theorem separate_two_sub :
+    B⌈(.refl (A⌊↑ₚidₚ⌋) v(0))⌊↑ₚidₚ⌋⌉₀⌈v(0)⌉₀ = B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [substitution_conv_zero]
+        rw [substitution_shift_substitute_zero (A := A⌊↑ₚidₚ⌋)]
+        simp [weaken_var]
+        simp [weakening_id]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+
+theorem clean_this_mess_too :
+    A⌈⇑ₛ⇑ₛ((ₛidₚ), a)⌉⌈⇑ₛ((ₛidₚ), a')⌉⌈p⌉₀
+    = A⌈(ₛidₚ), a, a', p⌉ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    simp [comp_substitute_weaken]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [substitution_id]
+        simp [weakening_id]
+        simp [←substitution_conv_var]
+        simp [comp_substitute_substitute]
+        simp [comp_substitute_weaken]
+        simp [substitution_id]
+
+theorem clean_this_mess_asap :
+    (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))⌈⇑ₛ((ₛidₚ), a)⌉⌈a'⌉₀
+    = (a ≃[A] a') :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    simp [comp_substitute_weaken]
+    simp [substitution_id]
+    simp [substitute]
+    repeat' apply And.intro
+    · simp [substitution_comp_σρ]
+      simp [comp_substitute_weaken]
+      simp [substitution_id]
+    · simp [substitute_var]
+      rfl
+    · simp [substitute_var]
+      rfl
+
+theorem even_new_test {B : Tm (n + 3)} :
+    B⌈⇑ₛ((v(1) : Tm (n + 2))↑/ₙ(Nat.le_refl (n + 2)))⌉⌈A⌊↑ₚ↑ₚidₚ⌋.refl v(1)⌉₀⌈v(0)⌉₀
+    = B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ :=
+  by
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [n_substitution_shift]
+    simp [comp_substitute_substitute]
+    simp [comp_substitute_weaken]
+    simp [comp_weaken]
+    apply substitution_var_substitute
+    intro x
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [weakening_id]
+        rw (config := {occs := .pos [1]}) [←weakening_shift_id]
+        simp [substitution_conv_zero]
+        simp [substitution_shift_substitute_zero]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [weaken]
+        simp [weaken_var]
+        simp [comp_substitute_substitute]
+        simp [←substitution_conv_var]
+        cases i' with
+        | zero =>
+          simp [substitute]
+          rfl
+        | succ j =>
+          simp [substitute]
+          simp [substitute_var]
+          simp [weakening_id]
+
+
 theorem new_test_hahaha :
     B⌈(.refl A a)⌊↑ₚ↑ₚidₚ⌋⌉₀⌈a⌊↑ₚidₚ⌋⌉₀⌈a⌉₀ = B⌈(ₛidₚ), a, a, .refl A a⌉ :=
   by

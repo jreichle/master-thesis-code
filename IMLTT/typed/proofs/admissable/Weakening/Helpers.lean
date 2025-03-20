@@ -215,11 +215,40 @@ theorem helper_weak_iden_propagate_weak {leq : l ≤ n} :
       · omega
     · omega
 
-theorem helper_weak_refl_propagate_weak :
-    .refl (A⌊weaken_from n l⌋) (a⌊weaken_from n l⌋)
-    = (.refl A a)⌊weaken_from n l⌋ :=
+theorem helper_weak_refl_propagate_weak {leq : l ≤ n} :
+    B⌊⇑ₚ⇑ₚ↑₁n + 1↬l⌋⌈(ₛidₚ), v(0), (A⌊↑₁n↬l⌋⌊↑ₚidₚ⌋.refl v(0))⌉
+    = B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉⌊↑₁n + 1↬l⌋ :=
   by
-    · simp [weaken]
+    simp [substitution_comp_σρ]
+    simp [substitution_comp_ρσ]
+    simp [comp_substitute_weaken]
+    apply substitution_var_substitute
+    intro x
+    simp [←substitution_comp_ρσ]
+    cases x
+    case a.mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        rw [←shift_weaken_from]
+        simp [weaken]
+        rw [←lift_weaken_from]
+        simp [weaken_var]
+        any_goals omega
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [←substitution_conv_var]
+        simp [←substitution_comp_σρ]
+        simp [substitution_id]
+        simp [weakening_id]
+        rw [←lift_weaken_from]
+        simp [weaken]
+        simp [weaken_var]
+        any_goals omega
+        aesop
 
 theorem tleq {l : Nat} :
     l + 1 ≤ 0 -> False :=
