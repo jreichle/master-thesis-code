@@ -40,10 +40,10 @@ notation:max "v(" x ")" => Tm.var x
 notation:max "⋆" => Tm.tt
 notation:98 "λ" A "; " b => Tm.lam A b
 infixl:98 "◃" => Tm.app
-infixl:98 "&" => Tm.pairSigma
+infixl:98 "&" => Tm.pairSigma -- FIXME: add ()
 prefix:98 "π₁" => Tm.firstSigma
 prefix:98 "π₂" => Tm.secondSigma
-notation:max "𝓏" => Tm.zeroNat -- 𝓏 𝓈
+notation:max "𝓏" => Tm.zeroNat
 notation:max "𝓈(" x ")" => Tm.succNat x
 
 notation:max "ε" => Ctx.empty

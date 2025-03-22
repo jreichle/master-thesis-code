@@ -125,6 +125,7 @@ theorem functionality_typing_var :
             cases Δ with
             | start =>
               cases heqΓ
+              simp [substitute_into_gen_ctx]
               simp [expand_ctx]
               simp [weakening_id]
               cases h

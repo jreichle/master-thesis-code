@@ -12,10 +12,12 @@ import aesop
 
 theorem defeq_refl_unit_form :
     ∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx →
-    (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-        eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) →
-      (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε → eqM ▸ 𝟙 = A → ε ⊢ A ≡ A type) ∧
+    Γ ctx
+    → (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+      eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ
+      → Γ_1 ⊢ B ≡ B type)
+    → (∀ (eqM : n = 0) (A : Tm 0), eqM ▸ Γ = ε
+      → eqM ▸ 𝟙 = A → ε ⊢ A ≡ A type) ∧
         (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
             eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
           ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A : Tm z) (B : Tm m),

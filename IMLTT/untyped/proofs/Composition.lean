@@ -22,6 +22,7 @@ theorem weakening_var_comp {ρ : Weak l m} {ρ' : Weak m n} {x : Fin n} :
       cases ρ' with
       | id =>
         simp [weaken_var]
+        rfl
       | shift γ' =>
         rw [comp_weaken]
         simp [weaken_var]
@@ -423,7 +424,6 @@ theorem substitution_var_comp_ρσ {ρ : Weak l m} {σ : Subst m n} {x : Fin n} 
             simp [comp_weaken_substitute]
             simp [substitute]
             simp [substitute_var]
-            simp [weaken]
             rfl
           | succ i' =>
             simp [comp_weaken_substitute]
@@ -684,14 +684,14 @@ theorem substitution_var_comp_σρ {x : Fin n} :
         simp [←substitution_var_conv_shift_id]
         simp [←substitution_conv_var]
         simp [←ih]
-        simp [←weakening_conv_var]
+        rfl
       | lift ρ' =>
         simp [comp_substitute_weaken]
         simp [substitute]
         simp [←substitution_var_conv_shift_id]
         simp [←substitution_conv_var]
         simp [←ih]
-        simp [←weakening_conv_var]
+        rfl
     | lift σ' ih =>
       cases ρ with
       | id =>
@@ -703,7 +703,6 @@ theorem substitution_var_comp_σρ {x : Fin n} :
         simp [←substitution_var_conv_shift_id]
         simp [←substitution_conv_var]
         simp [←ih]
-        simp [←weakening_conv_var]
         rw [←weakening_shift_id]
         rw [weaken]
         simp [substitution_var_shift_id_lift]
@@ -718,7 +717,6 @@ theorem substitution_var_comp_σρ {x : Fin n} :
             simp [substitute_var]
             rfl
           | succ i' =>
-            simp [weaken_var]
             simp [substitute_var]
             simp [shift_tm]
             simp [←substitution_conv_var]
@@ -985,6 +983,7 @@ theorem substitution_var_comp {x : Fin n} :
             simp [←substitution_conv_var]
             rw [←substitution_var_comp]
             simp [substitute]
+            rfl
           | succ i' =>
             simp [substitute]
             simp [substitute_var]

@@ -153,4 +153,4 @@ theorem boundary_type_term :
       apply boundary_term_symm
     case IsEqualTermTermTrans =>
       apply boundary_term_trans
-    any_goals sorry -- aesop
+    any_goals aesop

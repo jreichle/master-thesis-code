@@ -21,7 +21,7 @@ theorem leibniz_priniple {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {B : Tm (n +
     (Γ ⊢ p ∶ a ≃[A] a')
     → (Γ ⬝ A ⊢ P type)
     → (Γ ⊢ h ∶ P⌈a⌉₀)
-    → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ P⌊↑ₚ↑ₚidₚ⌋ type
+    -- → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ P⌊↑ₚ↑ₚidₚ⌋ type
     → (Γ ⊢ (.j A ((ΠP; P⌊↑ₚidₚ⌋)⌊↑ₚ↑ₚidₚ⌋) (λ(P); v(0)) a a' p) ◃ h ∶ P⌈a'⌉₀)
     :=
   by

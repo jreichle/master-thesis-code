@@ -204,9 +204,9 @@ theorem substVarCompTest :
         simp [comp_substitute_substitute]
         simp [substitute_var]
         simp [comp_substitute_weaken]
-        simp [shift_tm]
         simp [←substitution_conv_var]
         simp [←substitution_comp]
+        simp [←substitution_conv_shift_id]
         simp [←conversion_sub_weak]
 
 theorem singleSubstLift :
@@ -251,10 +251,6 @@ theorem substitution_shift_substitute_zero :
     simp [substitution_comp_σρ]
     simp [comp_substitute_weaken]
     simp [substitution_id]
-
--- A'⌊↑ₚidₚ⌋⌈⇑ₛ(s/ₙ)⌉ = A'⌈(s/ₙ)⌉⌊↑ₚidₚ⌋
-
-#check substitution_shift_id_lift
 
 theorem conversion_var_lift_n_sub_weak :
     v(x)⌈lift_subst_n n (ₛρ)⌉ = v(x)⌊lift_weak_n n ρ⌋ :=
@@ -304,9 +300,11 @@ theorem substitution_twice_zero {n : Nat} {T : Tm (n + 2)} {b : Tm (n)} {a : Tm 
         simp [substitution_comp_σρ]
         simp [comp_substitute_weaken]
         simp [substitution_id]
+        rfl
       | succ i' =>
         simp [substitute]
         simp [substitute_var]
+        rfl
 
 
 theorem substitution_separate {n m : Nat} {t : Tm (n + 1)} {s : Tm m} {σ : Subst m n} :

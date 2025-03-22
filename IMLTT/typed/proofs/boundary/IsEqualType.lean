@@ -10,7 +10,10 @@ import IMLTT.typed.proofs.admissable.ContextConv
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 theorem boundary_unit_form_eq :
-    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝟙 type ∧ Γ ⊢ 𝟙 type :=
+    ∀ {n : Nat} {Γ : Ctx n},
+   Γ ctx
+   → Γ ctx
+   → Γ ⊢ 𝟙 type ∧ Γ ⊢ 𝟙 type :=
   by
     intro n Γ hiC ihiC
     apply And.intro
@@ -18,7 +21,10 @@ theorem boundary_unit_form_eq :
     · apply IsType.unit_form hiC
 
 theorem boundary_empty_form_eq :
-    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝟘 type ∧ Γ ⊢ 𝟘 type :=
+    ∀ {n : Nat} {Γ : Ctx n}, 
+    Γ ctx
+    → Γ ctx
+    → Γ ⊢ 𝟘 type ∧ Γ ⊢ 𝟘 type :=
   by
     intro n Γ hiC ihiC
     apply And.intro
@@ -27,8 +33,11 @@ theorem boundary_empty_form_eq :
 
 theorem boundary_pi_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
-    Γ ⊢ A ≡ A' type →
-    Γ ⬝ A ⊢ B ≡ B' type → Γ ⊢ A type ∧ Γ ⊢ A' type → Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type → Γ ⊢ ΠA;B type ∧ Γ ⊢ ΠA';B' type :=
+    Γ ⊢ A ≡ A' type
+    → Γ ⬝ A ⊢ B ≡ B' type
+    → Γ ⊢ A type ∧ Γ ⊢ A' type
+    → Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type
+    → Γ ⊢ ΠA;B type ∧ Γ ⊢ ΠA';B' type :=
   by
     intro n Γ A A' B B' hAA hBB ihAA ihBB
     apply And.intro
@@ -44,8 +53,11 @@ theorem boundary_pi_form_eq :
 
 theorem boundary_sigma_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
-    Γ ⊢ A ≡ A' type →
-    Γ ⬝ A ⊢ B ≡ B' type → Γ ⊢ A type ∧ Γ ⊢ A' type → Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type → Γ ⊢ ΣA;B type ∧ Γ ⊢ ΣA';B' type :=
+    Γ ⊢ A ≡ A' type
+    → Γ ⬝ A ⊢ B ≡ B' type
+    → Γ ⊢ A type ∧ Γ ⊢ A' type
+    → Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type
+    → Γ ⊢ ΣA;B type ∧ Γ ⊢ ΣA';B' type :=
   by
     intro n Γ A A' B B' hAA hBB ihAA ihBB
     apply And.intro
@@ -60,7 +72,10 @@ theorem boundary_sigma_form_eq :
         · apply And.right ihBB
 
 theorem boundary_nat_form_eq :
-    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝒩 type ∧ Γ ⊢ 𝒩 type :=
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx
+    → Γ ctx
+    → Γ ⊢ 𝒩 type ∧ Γ ⊢ 𝒩 type :=
   by
     intro n Γ hiC ihiC
     apply And.intro
@@ -69,12 +84,13 @@ theorem boundary_nat_form_eq :
 
 theorem boundary_iden_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n},
-    Γ ⊢ A ≡ A' type →
-    (Γ ⊢ a₁ ≡ a₂ ∶ A) →
-    (Γ ⊢ a₃ ≡ a₄ ∶ A') →
-    Γ ⊢ A type ∧ Γ ⊢ A' type →
-    (Γ ⊢ a₁ ∶ A) ∧ (Γ ⊢ a₂ ∶ A) ∧ Γ ⊢ A type →
-    (Γ ⊢ a₃ ∶ A') ∧ (Γ ⊢ a₄ ∶ A') ∧ Γ ⊢ A' type → Γ ⊢ a₁ ≃[A] a₃ type ∧ Γ ⊢ a₂ ≃[A'] a₄ type :=
+    Γ ⊢ A ≡ A' type
+    → (Γ ⊢ a₁ ≡ a₂ ∶ A)
+    → (Γ ⊢ a₃ ≡ a₄ ∶ A')
+    → Γ ⊢ A type ∧ Γ ⊢ A' type
+    → (Γ ⊢ a₁ ∶ A) ∧ (Γ ⊢ a₂ ∶ A) ∧ Γ ⊢ A type
+    → (Γ ⊢ a₃ ∶ A') ∧ (Γ ⊢ a₄ ∶ A') ∧ Γ ⊢ A' type
+    → Γ ⊢ a₁ ≃[A] a₃ type ∧ Γ ⊢ a₂ ≃[A'] a₄ type :=
   by
     intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA'
     apply And.intro
@@ -88,7 +104,10 @@ theorem boundary_iden_form_eq :
       · apply And.left (And.right ihaaA')
 
 theorem boundary_univ_form_eq :
-    ∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx → Γ ⊢ 𝒰 type ∧ Γ ⊢ 𝒰 type :=
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx
+    → Γ ctx
+    → Γ ⊢ 𝒰 type ∧ Γ ⊢ 𝒰 type :=
   by
     intro n Γ hiC ihiC
     apply And.intro
@@ -97,7 +116,9 @@ theorem boundary_univ_form_eq :
 
 theorem boundary_univ_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
-    (Γ ⊢ A ≡ A' ∶ 𝒰) → (Γ ⊢ A ∶ 𝒰) ∧ (Γ ⊢ A' ∶ 𝒰) ∧ Γ ⊢ 𝒰 type → Γ ⊢ A type ∧ Γ ⊢ A' type :=
+    (Γ ⊢ A ≡ A' ∶ 𝒰)
+    → (Γ ⊢ A ∶ 𝒰) ∧ (Γ ⊢ A' ∶ 𝒰) ∧ Γ ⊢ 𝒰 type
+    → Γ ⊢ A type ∧ Γ ⊢ A' type :=
   by
     intro n Γ' A A' hAAU ihAAU
     apply And.intro
@@ -105,7 +126,10 @@ theorem boundary_univ_elim_eq :
     · apply IsType.univ_elim (And.left (And.right ihAAU))
 
 theorem boundary_type_symm :
-    ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A type ∧ Γ ⊢ A' type → Γ ⊢ A' type ∧ Γ ⊢ A type :=
+    ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, 
+    Γ ⊢ A ≡ A' type
+    → Γ ⊢ A type ∧ Γ ⊢ A' type
+    → Γ ⊢ A' type ∧ Γ ⊢ A type :=
   by
     intro n Γ A A' hAA ihAA
     apply And.intro
@@ -114,7 +138,11 @@ theorem boundary_type_symm :
 
 theorem boundary_type_trans :
     ∀ {n : Nat} {Γ : Ctx n} {A B C : Tm n},
-    Γ ⊢ A ≡ B type → Γ ⊢ B ≡ C type → Γ ⊢ A type ∧ Γ ⊢ B type → Γ ⊢ B type ∧ Γ ⊢ C type → Γ ⊢ A type ∧ Γ ⊢ C type :=
+    Γ ⊢ A ≡ B type
+    → Γ ⊢ B ≡ C type
+    → Γ ⊢ A type ∧ Γ ⊢ B type
+    → Γ ⊢ B type ∧ Γ ⊢ C type
+    → Γ ⊢ A type ∧ Γ ⊢ C type :=
   by
     intro n Γ A B C hAB hBC ihAB ihBC
     apply And.intro

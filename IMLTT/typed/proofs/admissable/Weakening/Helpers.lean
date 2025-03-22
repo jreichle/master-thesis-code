@@ -87,8 +87,6 @@ theorem weak_subst_sigma_c :
       simp [weakening_id]
     | shift ρ' =>
       simp [comp_weaken_substitute]
-      simp [comp_substitute_weaken]
-      simp [comp_weaken]
       apply substitution_var_substitute
       intro x
       rw [←substitution_conv_shift_id]
@@ -101,6 +99,10 @@ theorem weak_subst_sigma_c :
           rw [←weakening_shift_id]
           rw (config := {occs := .pos [2]}) [←weakening_shift_id]
           simp [weakening_id]
+          simp [lift_weak_n]
+          simp [comp_substitute_weaken]
+          simp [substitute_var]
+          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
           rfl
         | succ i' hInd =>
           simp [substitute]
@@ -114,6 +116,9 @@ theorem weak_subst_sigma_c :
             simp [weakening_shift_id]
             rfl
           | succ j =>
+            simp [lift_weak_n]
+            simp [comp_substitute_weaken]
+            simp [comp_weaken]
             simp [substitute_var]
             cases j with
             | zero =>
@@ -131,6 +136,7 @@ theorem weak_subst_sigma_c :
               simp [weakening_shift_id]
               rfl
     | lift ρ' =>
+      simp [lift_weak_n]
       simp [comp_weaken_substitute]
       simp [comp_substitute_weaken]
       simp [comp_weaken]
@@ -153,6 +159,7 @@ theorem weak_subst_iden_elim :
       simp [weakening_id]
     | shift ρ' =>
       simp [comp_weaken_substitute]
+      simp [lift_weak_n]
       simp [comp_substitute_weaken]
       simp [comp_weaken]
       apply substitution_var_substitute
@@ -198,6 +205,7 @@ theorem weak_subst_iden_elim :
               rfl
     | lift ρ' =>
       simp [comp_weaken_substitute]
+      simp [lift_weak_n]
       simp [comp_substitute_weaken]
       simp [comp_weaken]
 

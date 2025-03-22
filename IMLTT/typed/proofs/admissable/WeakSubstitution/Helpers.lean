@@ -36,5 +36,7 @@ theorem helper_weak_subst_nat_elim {leq : l ≤ n} {s : Tm l} {A : Tm (n + 1)} :
         simp [←substitution_conv_var]
         simp [←substitution_comp_σρ]
         simp [←substitution_comp]
-        simp [weakening_id]
+        simp [substitution_comp_σρ]
+        simp [comp_substitute_weaken]
         simp [substitution_conv_shift_id_conv]
+        rfl

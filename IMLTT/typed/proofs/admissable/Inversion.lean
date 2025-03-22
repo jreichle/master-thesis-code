@@ -109,35 +109,3 @@ theorem iden_is_type_inversion :
     | .univ_elim hIdU => 
       have h1 := iden_has_type_inversion hIdU
       apply And.intro (IsType.univ_elim (And.left h1)) (And.right h1)
-
--- theorem iden_is_type_inversion_test :
---     (Γ ⊢ p ∶ a ≃[A] a') → (Γ ⊢ A type) ∧ (Γ ⊢ a ∶ A) ∧ (Γ ⊢ a' ∶ A) :=
---   by
---     intro hpId
---     apply HasType.recOn
---       (motive_1 := fun Γ _hiC => IsCtx Γ)
---       (motive_2 := fun Γ A _hA => IsType Γ A)
---       (motive_3 := fun Γ x X _haA =>
---          ∀ A, ∀ a, ∀ a', ∀ p,
---          X = (.iden A a a') ∧ x = p → (Γ ⊢ A type) ∧ (Γ ⊢ a ∶ A) ∧ (Γ ⊢ a' ∶ A))
---       (motive_4 := fun Γ A A' _hAA => IsEqualType Γ A A')
---       (motive_5 := fun Γ a a' A _haaA => IsEqualTerm Γ a a' A)
---       hpId
---     case var =>
---       intro n Γ' S hS ihS A a a' p heq
---       repeat' apply And.intro
---       · cases (And.left heq)
---         sorry
---       · sorry
---       · sorry
---     case unit_intro =>
---       sorry
---     case pi_intro =>
---       sorry
---     case pi_elim =>
---       sorry
---     case iden_intro =>
---       sorry
---     case iden_elim =>
---       sorry
--- any_goals sorry

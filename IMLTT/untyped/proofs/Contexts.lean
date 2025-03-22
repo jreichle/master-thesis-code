@@ -191,9 +191,7 @@ theorem empty_expand_context_weaken_from {n : Nat} {Γ : Ctx n} {S : Tm n} :
     (Γ ⬝ S ⊗ (⌊↑₁↬l⌋CtxGen.start))
     = Γ ⬝ S ⊗ (CtxGen.start) :=
   by
-    -- rw [weaken_from_into_gen_ctx]
-    sorry
-
+    rw [weaken_from_into_gen_ctx]
 
 theorem extend_expand_context_weaken_from {Γ : Ctx l} {Δ : CtxGen (l) (n)} {S : Tm l} {A : Tm n}:
     (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⬝ A⌊↑₁n↬l⌋

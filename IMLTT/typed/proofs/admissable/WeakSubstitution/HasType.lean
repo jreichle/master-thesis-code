@@ -43,7 +43,7 @@ theorem weak_substitution_var :
       cases Δ with
       | start =>
         cases heqΓ
-        simp [substitute_into_gen_ctx]
+        simp [substitute_shift_into_gen_ctx]
         simp [expand_ctx]
         simp [substitution_conv_shift_id_conv]
         apply hsS
