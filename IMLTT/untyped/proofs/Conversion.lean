@@ -153,16 +153,29 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         assumption
       · apply conversion_var_substitute h
         assumption
-    | .firstSigma p =>
+    | .indSigma A B C c p =>
       simp [substitute]
       simp [weaken]
-      apply conversion_var_substitute h
-      assumption
-    | .secondSigma p =>
-      simp [substitute]
-      simp [weaken]
-      apply conversion_var_substitute h
-      assumption
+      apply And.intro
+      · apply conversion_var_substitute h
+        assumption
+      · apply And.intro
+        · apply conversion_var_substitute
+          · have ξ := lift_subst_n 1 σ
+            apply ξ
+          · apply conversion_var_lift_n h
+        · apply And.intro
+          · apply conversion_var_substitute
+            · have ξ := lift_subst_n 1 σ
+              apply ξ
+            · apply conversion_var_lift_n h
+          · apply And.intro
+            · apply conversion_var_substitute
+              · have ξ := lift_subst_n 2 σ
+                apply ξ
+              · apply conversion_var_lift_n h
+            · apply conversion_var_substitute h
+              assumption
     | .zeroNat =>
       simp [substitute]
       simp [weaken]
@@ -314,14 +327,27 @@ theorem conversion_sub_weak :
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_sub_weak
-    | firstSigma p =>
+    | indSigma A B C c p =>
       simp [substitute]
       simp [weaken]
-      apply conversion_sub_weak
-    | secondSigma p =>
-      simp [substitute]
-      simp [weaken]
-      apply conversion_sub_weak
+      apply And.intro
+      · apply conversion_sub_weak
+      · apply And.intro
+        · apply conversion_var_substitute
+          · apply lift_subst_n 1 (.weak ρ)
+          · apply conversion_var_lift_n
+            apply conversion_var_sub_weak
+        · apply And.intro
+          · apply conversion_var_substitute
+            · apply lift_subst_n 1 (.weak ρ)
+            · apply conversion_var_lift_n
+              apply conversion_var_sub_weak
+          · apply And.intro
+            · apply conversion_var_substitute
+              · apply lift_subst_n 2 (.weak ρ)
+              · apply conversion_var_lift_n
+                apply conversion_var_sub_weak
+            · apply conversion_sub_weak
     | zeroNat =>
       simp [substitute]
       simp [weaken]

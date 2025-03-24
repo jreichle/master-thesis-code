@@ -203,27 +203,17 @@ theorem boundary_pi_elim :
     · apply haA
     · apply And.right (pi_is_type_inversion ihfPi)
 
-theorem boundary_sigma_first :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B)
-    → Γ ⊢ ΣA;B type
-    → Γ ⊢ A type :=
+theorem boundary_sigma_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
+    (Γ ⊢ p ∶ ΣA;B) →
+    (Γ ⬝ ΣA;B) ⊢ C type →
+    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+    Γ ⊢ ΣA;B type → (Γ ⬝ ΣA;B) ⊢ C type → Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type → Γ ⊢ C⌈p⌉₀ type :=
   by
-    intro n Γ p A B hpSi ihpSi
-    have h := sigma_is_type_inversion ihpSi
-    apply And.left h
-
-theorem boundary_sigma_second :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B)
-    → Γ ⊢ ΣA;B type
-    → Γ ⊢ B⌈π₁ p⌉₀ type :=
-  by
-    intro n Γ p A B hpSi ihpSi
-    have h := sigma_is_type_inversion ihpSi
+    intro n Γ A B p C c hpSi hC hcC ihpSi ihC ihcC
     apply substitution_type
-    · apply HasType.sigma_first hpSi
-    · apply And.right h
+    · apply hpSi
+    · apply ihC
 
 theorem boundary_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},

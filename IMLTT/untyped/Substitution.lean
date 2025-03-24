@@ -43,8 +43,9 @@ def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
   | .lam A b => .lam (substitute σ A) (substitute (lift_subst_n 1 σ) b)
   | .app f a => .app (substitute σ f) (substitute σ a)
   | .pairSigma a b => .pairSigma (substitute σ a) (substitute σ b)
-  | .firstSigma p => .firstSigma (substitute σ p)
-  | .secondSigma p => .secondSigma (substitute σ p)
+  | .indSigma A B C c p => .indSigma (substitute σ A) (substitute (lift_subst_n 1 σ) B)
+                            (substitute (lift_subst_n 1 σ) C) (substitute (lift_subst_n 2 σ) c)
+                            (substitute σ p)
   | .zeroNat => .zeroNat
   | .succNat x => .succNat (substitute σ x)
   | .indNat A z s n => .indNat (substitute (lift_subst_n 1 σ) A) (substitute σ z)

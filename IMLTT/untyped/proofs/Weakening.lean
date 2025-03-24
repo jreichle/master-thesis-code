@@ -104,12 +104,20 @@ theorem weakening_var_weaken :
       apply And.intro
       · apply weakening_var_weaken h
       · apply weakening_var_weaken h
-    | .firstSigma p =>
+    | .indSigma A B C c p =>
       simp [weaken]
-      apply weakening_var_weaken h
-    | .secondSigma p =>
-      simp [weaken]
-      apply weakening_var_weaken h
+      apply And.intro
+      · apply weakening_var_weaken h
+      · apply And.intro
+        · apply weakening_var_weaken
+          apply weakening_var_lift_n h
+        · apply And.intro
+          · apply weakening_var_weaken
+            apply weakening_var_lift_n h
+          · apply And.intro
+            · apply weakening_var_weaken
+              apply weakening_var_lift_n h
+            · apply weakening_var_weaken h
     | .zeroNat =>
       simp [weaken]
     | .succNat x =>
@@ -257,12 +265,29 @@ theorem weakening_id :
       apply And.intro
       · apply weakening_id
       · apply weakening_id
-    | .firstSigma p =>
+    | .indSigma A B C c p =>
       simp [weaken]
-      apply weakening_id
-    | .secondSigma p =>
-      simp [weaken]
-      apply weakening_id
+      apply And.intro
+      · apply weakening_id
+      · apply And.intro
+        · have h := weakening_id (t := B)
+          rw (config := {occs := .pos [2]}) [←h]
+          apply weakening_var_weaken
+          intro i
+          apply weakening_var_lift_n_id
+        · apply And.intro
+          · have h := weakening_id (t := C)
+            rw (config := {occs := .pos [2]}) [←h]
+            apply weakening_var_weaken
+            intro i
+            apply weakening_var_lift_n_id
+          · apply And.intro
+            · have h := weakening_id (t := c)
+              rw (config := {occs := .pos [2]}) [←h]
+              apply weakening_var_weaken
+              intro i
+              apply weakening_var_lift_n_id
+            · apply weakening_id
     | .zeroNat =>
       simp [weaken]
     | .succNat x =>
@@ -319,8 +344,18 @@ theorem weakening_lift_id {t : Tm (n + 1)} :
     intro i
     apply weakening_var_lift_id
 
+theorem weakening_univ {ρ : Weak m n} :
+    𝒰⌊ρ⌋ = 𝒰 :=
+  by
+    simp [weaken]
+
 theorem weakening_unit {ρ : Weak m n} :
     𝟙⌊ρ⌋ = 𝟙 :=
+  by
+    simp [weaken]
+
+theorem weakening_tt {ρ : Weak m n} :
+    ⋆⌊ρ⌋ = ⋆  :=
   by
     simp [weaken]
 
@@ -328,6 +363,12 @@ theorem weakening_empty {ρ : Weak m n} :
     𝟘⌊ρ⌋ = 𝟘 :=
   by
     simp [weaken]
+
+theorem weakening_pi {ρ : Weak m n} :
+    (ΠA;B)⌊ρ⌋ = Π(A⌊ρ⌋);(B⌊⇑ₚρ⌋) :=
+  by
+    simp [weaken]
+    simp [lift_weak_n]
 
 theorem weakening_sigma {ρ : Weak m n} :
     (ΣA;B)⌊ρ⌋ = Σ(A⌊ρ⌋);(B⌊⇑ₚρ⌋) :=
@@ -337,6 +378,11 @@ theorem weakening_sigma {ρ : Weak m n} :
 
 theorem weakening_nat {ρ : Weak m n} :
     𝒩 ⌊ρ⌋ = 𝒩 :=
+  by
+    simp [weaken]
+
+theorem weakening_iden {ρ : Weak m n} :
+    (.iden A a a')⌊ρ⌋ = .iden (A⌊ρ⌋) (a⌊ρ⌋) (a'⌊ρ⌋) :=
   by
     simp [weaken]
 

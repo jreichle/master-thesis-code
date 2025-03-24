@@ -100,12 +100,17 @@ theorem weakening_comp {ρ : Weak l m} {ρ' : Weak m n} {t : Tm n} :
       apply And.intro
       · apply weakening_comp
       · apply weakening_comp
-    | .firstSigma p =>
+    | .indSigma A B C c p =>
       simp [weaken]
-      apply weakening_comp
-    | .secondSigma p =>
-      simp [weaken]
-      apply weakening_comp
+      apply And.intro
+      · apply weakening_comp
+      · apply And.intro
+        · apply weakening_comp
+        · apply And.intro
+          · apply weakening_comp
+          · apply And.intro
+            · apply weakening_comp
+            · apply weakening_comp
     | .zeroNat =>
       simp [weaken]
     | .succNat i =>
@@ -537,14 +542,25 @@ theorem substitution_comp_ρσ {t : Tm n} :
       apply And.intro
       · apply substitution_comp_ρσ
       · apply substitution_comp_ρσ
-    | .firstSigma p =>
+    | .indSigma A B C c p =>
       simp [substitute]
       simp [weaken]
-      apply substitution_comp_ρσ
-    | .secondSigma p =>
-      simp [substitute]
-      simp [weaken]
-      apply substitution_comp_ρσ
+      apply And.intro
+      · apply substitution_comp_ρσ
+      · apply And.intro
+        · simp [lift_weak_n]
+          simp [lift_subst_n]
+          rw [←substitution_lift_comp_ρσ]
+          apply substitution_comp_ρσ
+        · apply And.intro
+          · simp [lift_weak_n]
+            simp [lift_subst_n]
+            rw [←substitution_lift_comp_ρσ]
+            apply substitution_comp_ρσ
+          · apply And.intro
+            · rw [←substitution_lift_n_comp_ρσ]
+              apply substitution_comp_ρσ
+            · apply substitution_comp_ρσ
     | .zeroNat =>
       simp [substitute]
       simp [weaken]
@@ -835,14 +851,26 @@ theorem substitution_comp_σρ {t : Tm n} :
       apply And.intro
       · apply substitution_comp_σρ
       · apply substitution_comp_σρ
-    | .firstSigma p =>
+    | .indSigma A B C c p =>
       simp [weaken]
       simp [substitute]
-      apply substitution_comp_σρ
-    | .secondSigma p =>
-      simp [weaken]
-      simp [substitute]
-      apply substitution_comp_σρ
+      apply And.intro
+      · apply substitution_comp_σρ
+      · apply And.intro
+        · simp [lift_weak_n]
+          simp [lift_subst_n]
+          rw [←substitution_lift_comp_σρ]
+          apply substitution_comp_σρ
+        · apply And.intro
+          · simp [lift_weak_n]
+            simp [lift_subst_n]
+            rw [←substitution_lift_comp_σρ]
+            apply substitution_comp_σρ
+          · apply And.intro
+            · simp [lift_weak_n]
+              rw [←substitution_lift_n_comp_σρ]
+              apply substitution_comp_σρ
+            · apply substitution_comp_σρ
     | .zeroNat =>
       simp [weaken]
       simp [substitute]
@@ -1115,12 +1143,22 @@ theorem substitution_comp :
       apply And.intro
       · apply substitution_comp
       · apply substitution_comp
-    | firstSigma p =>
+    | indSigma A B C c p =>
       simp [substitute]
-      apply substitution_comp
-    | secondSigma p =>
-      simp [substitute]
-      apply substitution_comp
+      apply And.intro
+      · apply substitution_comp
+      · apply And.intro
+        · simp [lift_subst_n]
+          rw [←substitution_lift_comp]
+          apply substitution_comp
+        · apply And.intro
+          · simp [lift_subst_n]
+            rw [←substitution_lift_comp]
+            apply substitution_comp
+          · apply And.intro
+            · rw [←substitution_lift_n_comp]
+              apply substitution_comp
+            · apply substitution_comp
     | zeroNat =>
       simp [substitute]
     | succNat i =>

@@ -107,12 +107,9 @@ mutual
     | pi_elim :
       HasType Γ f (ΠA;B) → HasType Γ a A
       → HasType Γ (f◃a) (B⌈a⌉₀)
-    | sigma_first :
-      HasType Γ p (ΣA;B)
-      → HasType Γ (π₁ p) A
-    | sigma_second :
-      HasType Γ p (ΣA;B)
-      → HasType Γ (π₂ p) (B⌈π₁ p⌉₀)
+    | sigma_elim :
+      HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
+      → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
     | nat_elim :
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
@@ -182,12 +179,10 @@ mutual
     | pi_comp :
       HasType (Γ ⬝ A) b B → HasType Γ a A
       → IsEqualTerm Γ ((λA; b)◃a) (b⌈a⌉₀) (B⌈a⌉₀)
-    | sigma_first_comp :
-      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType Γ (ΣA;B)
-      → IsEqualTerm Γ (π₁ (.pairSigma a b)) (a) (A)
-    | sigma_second_comp :
-      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType Γ (ΣA;B)
-      → IsEqualTerm Γ (π₂ a&b) b (B⌈π₁ a&b⌉₀)
+    | sigma_comp :
+      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C -- FIXME: do I really need a and b or would p suffice?
+      → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
+      → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ), a, b⌉) (C⌈a&b⌉₀)
     | nat_zero_comp :
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
@@ -198,7 +193,7 @@ mutual
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
       → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
-      → HasType Γ n 𝒩
+      → HasType Γ n 𝒩 -- FIXME: find a way with 𝓈(n)?
       → IsEqualTerm Γ (.indNat A z s 𝓈(n)) (s⌈(ₛidₚ), n, (.indNat A z s n)⌉) (A⌈𝓈(n)⌉₀)
     | iden_comp :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
@@ -224,12 +219,11 @@ mutual
     | sigma_intro_eq :
       IsEqualTerm Γ a a' A → IsEqualTerm Γ b b' (B⌈a⌉₀) → IsType (Γ ⬝ A) B
       → IsEqualTerm Γ (a&b) (a'&b') (ΣA;B)
-    | sigma_first_eq :
-      IsEqualTerm Γ p p' (ΣA;B)
-      → IsEqualTerm Γ (π₁ p) (π₁ p') A
-    | sigma_second_eq :
-      IsEqualTerm Γ p p' (ΣA;B)
-      → IsEqualTerm Γ (π₂ p) (π₂ p') (B⌈π₁ p⌉₀)
+    | sigma_elim_eq :
+      IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ p p' (ΣA;B)
+      → IsEqualType (Γ ⬝ ΣA;B) C C'
+      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
+      → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A' B' C' c' p') (C⌈p⌉₀)
     | nat_zero_intro_eq :
       IsCtx Γ
       → IsEqualTerm Γ 𝓏 𝓏 𝒩

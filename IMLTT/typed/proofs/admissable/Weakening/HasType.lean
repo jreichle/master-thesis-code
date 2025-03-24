@@ -429,33 +429,52 @@ theorem weakening_pi_elim :
       · apply ihaA
         apply hS
 
-theorem weakening_sigma_first : 
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
+theorem weakening_sigma_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
     (Γ ⊢ p ∶ ΣA;B) →
-      (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-          get_sub_context Γ l leq ⊢ B_1 type → insert_into_ctx leq Γ B_1 ⊢ p⌊weaken_from n l⌋ ∶ (ΣA;B)⌊weaken_from n l⌋) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ π₁ p⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋ :=
+      (Γ ⬝ ΣA;B) ⊢ C type →
+        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+          (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
+              get_sub_context Γ l leq ⊢ B_1 type →
+                insert_into_ctx leq Γ B_1 ⊢ p⌊weaken_from n l⌋ ∶ (ΣA;B)⌊weaken_from n l⌋) →
+            (∀ (l : Nat) {leq : l ≤ n + 1} {B_1 : Tm l},
+                get_sub_context (Γ ⬝ ΣA;B) l leq ⊢ B_1 type →
+                  insert_into_ctx leq (Γ ⬝ ΣA;B) B_1 ⊢ C⌊weaken_from (n + 1) l⌋ type) →
+              (∀ (l : Nat) {leq : l ≤ n + 1 + 1} {B_1 : Tm l},
+                  get_sub_context (Γ ⬝ A ⬝ B) l leq ⊢ B_1 type →
+                    insert_into_ctx leq (Γ ⬝ A ⬝ B) B_1 ⊢ c⌊weaken_from (n + 1 + 1) l⌋ ∶
+                      C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉⌊weaken_from (n + 1 + 1) l⌋) →
+                ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
+                  get_sub_context Γ l leq ⊢ B_1 type →
+                    insert_into_ctx leq Γ B_1 ⊢ A.indSigma B C c p⌊weaken_from n l⌋ ∶ C⌈p⌉₀⌊weaken_from n l⌋ :=
   by
-    intro n Γ p A B hpSi ihpSi l hleq S hS
-    apply HasType.sigma_first
-    apply ihpSi
-    apply hS
-
-theorem weakening_sigma_second :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B) →
-    (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-        get_sub_context Γ l leq ⊢ B_1 type → insert_into_ctx leq Γ B_1 ⊢ p⌊weaken_from n l⌋ ∶ (ΣA;B)⌊weaken_from n l⌋) →
-      ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-        get_sub_context Γ l leq ⊢ B_1 type →
-          insert_into_ctx leq Γ B_1 ⊢ π₂ p⌊weaken_from n l⌋ ∶ B⌈π₁ p⌉₀⌊weaken_from n l⌋ :=
-  by
-    intro n Γ p A B hpSi ihpSi l hleq S hS
+    intro n Γ A B p C c hpSi hC hcC ihpSi ihC ihcC l hleq S hS
     rw [weak_sub_zero]
-    apply HasType.sigma_second
-    apply ihpSi
-    apply hS
+    apply HasType.sigma_elim
+    · apply ihpSi
+      apply hS
+    · simp [lift_weak_n]
+      rw [lift_weaken_from]
+      · rw (config := {occs := .pos [1]}) [←lift_weaken_from]
+        · rw [←weakening_sigma]
+          rw [extend_insert_into_context]
+          apply ihC
+          rw [extend_get_sub_context]
+          apply hS
+        · exact hleq
+      · exact hleq
+    · simp [lift_weak_n]
+      rw [lift_weaken_from]
+      · rw [lift_weaken_from]
+        · rw [weak_subst_sigma_C]
+          · simp [extend_insert_into_context]
+            apply ihcC
+            rw [extend_get_sub_context]
+            rw [extend_get_sub_context]
+            apply hS
+          · exact hleq
+        · omega
+      · omega
 
 theorem weakening_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},

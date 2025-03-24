@@ -903,30 +903,64 @@ theorem defeq_refl_pi_elim :
       · apply And.right (And.right ihaA)
         repeat' rfl
 
-theorem defeq_refl_sigma_first :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B) →
-      ((∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
-          (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-            ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B_1 : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ a ≡ a ∶ A_1) →
-        (∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ π₁ p = a → eqM ▸ A = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
-          (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-            ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ π₁ p = a → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a ≡ a ∶ A_1 :=
+theorem defeq_refl_sigma_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
+  (Γ ⊢ p ∶ ΣA;B) →
+    (Γ ⬝ ΣA;B) ⊢ C type →
+      (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+        ((∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
+            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B_1 : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ a ≡ a ∶ A_1) →
+          ((∀ (eqM : n + 1 = 0) (A_1 : Tm 0), (eqM ▸ Γ ⬝ ΣA;B) = ε → eqM ▸ C = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
+              (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (B_1 : Tm m),
+                  (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ B_1 ⊗ Δ → Γ_1 ⊢ B_1 ≡ B_1 type) ∧
+                ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 = z) (A_1 : Tm z) (B_1 : Tm m),
+                  (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ C = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ A_1 ≡ A_1 type) →
+            ((∀ (eqM : n + 1 + 1 = 0) (a A_1 : Tm 0),
+                  eqM ▸ Γ ⬝ A ⬝ B = ε → eqM ▸ c = a → eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
+                (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 + 1 = z) (B_1 : Tm m),
+                    eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ B_1 ⊗ Δ → Γ_1 ⊢ B_1 ≡ B_1 type) ∧
+                  ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n + 1 + 1 = z) (a A_1 : Tm z) (B_1 : Tm m),
+                    eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ B_1 ⊗ Δ →
+                      eqM ▸ c = a → eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ a ≡ a ∶ A_1) →
+              (∀ (eqM : n = 0) (a A_1 : Tm 0),
+                  eqM ▸ Γ = ε → eqM ▸ A.indSigma B C c p = a → eqM ▸ C⌈p⌉₀ = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
+                (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
+                  ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B_1 : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ →
+                      eqM ▸ A.indSigma B C c p = a → eqM ▸ C⌈p⌉₀ = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ a ≡ a ∶ A_1 :=
   by
-    intro n Γ' p A B hpSi ihpSi
+    intro n Γ' A B p C c hpSi hC hcC ihpSi ihC ihcC
     repeat' apply And.intro
     · intro heqM t T heqΓ heqt heqT
       cases heqM
       cases heqΓ
       cases heqt
       cases heqT
-      apply IsEqualTerm.sigma_first_eq
-      apply And.left ihpSi
-      repeat' rfl
+      apply IsEqualTerm.sigma_elim_eq
+      · rw [←empty_expand_context (Γ := ε)]
+        apply And.left (And.right ihcC)
+        rotate_left
+        · apply 2
+        · apply CtxGen.start ⊙ B
+        repeat' rfl
+      · rw [←empty_expand_context (Γ := ε ⬝ A)]
+        apply And.left (And.right ihcC)
+        rotate_left
+        · apply 2
+        · apply CtxGen.start
+        repeat' rfl
+      · apply And.left ihpSi
+        repeat' rfl
+      · rw [←empty_expand_context (Γ := ε ⬝ (ΣA;B))]
+        apply And.right (And.right ihC)
+        repeat' rfl
+      · rw [←empty_expand_context (Γ := ε ⬝ A ⬝ B)]
+        apply And.right (And.right ihcC)
+        repeat' rfl
     · intro m z Γ Δ heqM S heqΓ
       cases heqM
       cases heqΓ
@@ -940,50 +974,25 @@ theorem defeq_refl_sigma_first :
       cases heqΓ
       cases heqt
       cases heqT
-      apply IsEqualTerm.sigma_first_eq
-      apply And.right (And.right ihpSi)
-      repeat' rfl
-
-theorem defeq_refl_sigma_second :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B) →
-      ((∀ (eqM : n = 0) (a A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → ε ⊢ a ≡ a ∶ A_1) ∧
-          (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-            ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A_1 : Tm z) (B_1 : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ p = a → (eqM ▸ ΣA;B) = A_1 → Γ_1 ⬝ B_1 ⊗ Δ ⊢ a ≡ a ∶ A_1) →
-        (∀ (eqM : n = 0) (a A : Tm 0), eqM ▸ Γ = ε → eqM ▸ π₂ p = a → eqM ▸ B⌈π₁ p⌉₀ = A → ε ⊢ a ≡ a ∶ A) ∧
-          (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-            ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a A : Tm z) (B_1 : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ B_1 ⊗ Δ → eqM ▸ π₂ p = a → eqM ▸ B⌈π₁ p⌉₀ = A → Γ_1 ⬝ B_1 ⊗ Δ ⊢ a ≡ a ∶ A :=
-  by
-    intro n Γ p A B hpSi ihpSi
-    repeat' apply And.intro
-    · intro heqM t T heqΓ heqt heqT
-      cases heqM
-      cases heqΓ
-      cases heqt
-      cases heqT
-      apply IsEqualTerm.sigma_second_eq
-      apply And.left ihpSi
-      repeat' rfl
-    · intro m z Γ Δ heqM S heqΓ
-      cases heqM
-      cases heqΓ
-      apply And.left (And.right ihpSi)
-      rotate_left
-      · apply n
-      · apply Δ
-      repeat' rfl
-    · intro m z Γ Δ heqM t T S heqΓ heqt heqT
-      cases heqM
-      cases heqΓ
-      cases heqt
-      cases heqT
-      apply IsEqualTerm.sigma_second_eq
-      apply And.right (And.right ihpSi)
-      repeat' rfl
+      apply IsEqualTerm.sigma_elim_eq
+      · apply And.left (And.right ihcC)
+        rotate_left
+        · apply n + 2
+        · apply CtxGen.start ⊙ B
+        repeat' rfl
+      · apply And.left (And.right ihcC)
+        rotate_left
+        · apply n + 2
+        · apply CtxGen.start
+        repeat' rfl
+      · apply And.right (And.right ihpSi)
+        repeat' rfl
+      · rw [extend_expand_context]
+        apply And.right (And.right ihC)
+        repeat' rfl
+      · simp [extend_expand_context]
+        apply And.right (And.right ihcC)
+        repeat' rfl
 
 theorem defeq_refl_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},

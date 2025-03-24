@@ -14,7 +14,7 @@ import IMLTT.typed.proofs.boundary.IsEqualTerm
 
 import Aesop
 
-theorem boundary_type_term :
+theorem boundary_types_terms :
     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A : Tm n}, (Γ ⊢ A type) → Γ ⊢ A type) ∧
     (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ A type) ∧
@@ -61,10 +61,8 @@ theorem boundary_type_term :
       apply boundary_empty_elim
     case HasTypePiElim =>
       apply boundary_pi_elim
-    case HasTypeSigmaFirst =>
-      apply boundary_sigma_first
-    case HasTypeSigmaSecond =>
-      apply boundary_sigma_second
+    case HasTypeSigmaElim =>
+      apply boundary_sigma_elim
     case HasTypeNatElim =>
       apply boundary_nat_elim
     case HasTypeIdenElim =>
@@ -99,10 +97,8 @@ theorem boundary_type_term :
       apply boundary_unit_comp
     case IsEqualTermPiComp =>
       apply boundary_pi_comp
-    case IsEqualTermSigmaFirstComp =>
-      apply boundary_sigma_first_comp
-    case IsEqualTermSigmaSecondComp =>
-      apply boundary_sigma_second_comp
+    case IsEqualTermSigmaComp =>
+      apply boundary_sigma_comp
     case IsEqualTermNatZeroComp =>
       apply boundary_nat_zero_comp
     case IsEqualTermNatSuccComp =>
@@ -121,10 +117,8 @@ theorem boundary_type_term :
       apply boundary_pi_elim_eq
     case IsEqualTermSigmaIntroEq =>
       apply boundary_sigma_intro_eq
-    case IsEqualTermSigmaFirstEq =>
-      apply boundary_sigma_first_eq
-    case IsEqualTermSigmaSecondEq =>
-      apply boundary_sigma_second_eq
+    case IsEqualTermSigmaElimEq =>
+      apply boundary_sigma_elim_eq
     case IsEqualTermNatZeroIntroEq =>
       apply boundary_nat_zero_intro_eq
     case IsEqualTermNatSuccIntroEq =>
@@ -154,3 +148,43 @@ theorem boundary_type_term :
     case IsEqualTermTermTrans =>
       apply boundary_term_trans
     any_goals aesop
+
+--     (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ A type) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, (Γ ⊢ A ≡ A' type) → Γ ⊢ A type ∧ Γ ⊢ A' type) ∧
+--     (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ∶ A) ∧ (Γ ⊢ a' ∶ A) ∧ Γ ⊢ A type)
+
+theorem boundary_term_type :
+    (Γ ⊢ a ∶ A) → Γ ⊢ A type :=
+  by
+    intro haA
+    apply And.left (And.right (And.right boundary_types_terms)) haA
+
+theorem boundary_type_eq_type :
+    (Γ ⊢ A ≡ A' type) → Γ ⊢ A type :=
+  by
+    intro hAA
+    apply And.left (And.left (And.right (And.right (And.right boundary_types_terms))) hAA)
+
+theorem boundary_type_eq_type' :
+    (Γ ⊢ A ≡ A' type) → Γ ⊢ A' type :=
+  by
+    intro hAA
+    apply And.right (And.left (And.right (And.right (And.right boundary_types_terms))) hAA)
+
+theorem boundary_term_eq_term :
+    (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ∶ A :=
+  by
+    intro haaA
+    apply And.left (And.right (And.right (And.right (And.right boundary_types_terms))) haaA)
+
+theorem boundary_term_eq_term' :
+    (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a' ∶ A :=
+  by
+    intro haaA
+    apply And.left (And.right (And.right (And.right (And.right (And.right boundary_types_terms))) haaA))
+
+theorem boundary_term_eq_type :
+    (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ A type :=
+  by
+    intro haaA
+    apply And.right (And.right (And.right (And.right (And.right (And.right boundary_types_terms))) haaA))

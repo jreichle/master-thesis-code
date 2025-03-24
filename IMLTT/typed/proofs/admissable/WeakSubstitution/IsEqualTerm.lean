@@ -272,112 +272,88 @@ theorem weak_substitution_pi_comp :
       · apply hsS
       · rfl
 
-theorem weak_substitution_sigma_first_comp :
-    ∀ {n : Nat} {Γ : Ctx n} {a b A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ a ∶ A) →
-      (Γ ⊢ b ∶ B⌈a⌉₀) →
-        Γ ⊢ ΣA;B type →
-          (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-              (a_4 A_1 : Tm m),
+theorem weak_substitution_sigma_comp :
+    ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
+  (Γ ⊢ a ∶ A) →
+    (Γ ⊢ b ∶ B⌈a⌉₀) →
+      (Γ ⬝ ΣA;B) ⊢ C type →
+        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+          (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
+              (S : Tm l) (a_5 A_1 : Tm m),
               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                eqM ▸ a = a_4 →
+                eqM ▸ a = a_5 →
                   eqM ▸ A = A_1 →
-                    (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_4⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
+                    (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_5⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
             (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
-                (S : Tm l) (a_5 A : Tm m),
+                (S : Tm l) (a_6 A : Tm m),
                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                  eqM ▸ b = a_5 →
-                      eqM ▸ B⌈a⌉₀ = A →
-                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_5⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉) →
-              (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
-                  {S : Tm l} (A_1 : Tm m),
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                    (eqM ▸ ΣA;B) = A_1 →
-                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ A_1⌈s↑/ₙleq⌉ type) →
-                ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
-                  (S : Tm l) (a_7 a' A_1 : Tm m),
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                    eqM ▸ π₁ a&b = a_7 →
-                      eqM ▸ a = a' →
-                        eqM ▸ A = A_1 →
-                          (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
-                            Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_7⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉ :=
-  by
-    intro n Γ' a b A B haA hbB hSi ihaA ihbB ihSi m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
-    cases heqM
-    cases heqΓ
-    cases heqt
-    cases heqt'
-    cases heqT
-    apply IsEqualTerm.sigma_first_comp
-    rotate_right
-    · apply B⌈1ₙ⇑ₛ(s↑/ₙhleq)⌉
-    · apply ihaA
-      repeat' rfl
-      apply hsS
-    · simp [lift_subst_n]
-      simp [←substitution_zero_lift]
-      apply ihbB
-      repeat' rfl
-      apply hsS
-    · simp [lift_subst_n]
-      rw [←substitution_sigma]
-      apply ihSi
-      repeat' rfl
-      apply hsS
-
-theorem weak_substitution_sigma_second_comp :
-    ∀ {n : Nat} {Γ : Ctx n} {a b A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ a ∶ A) →
-      (Γ ⊢ b ∶ B⌈a⌉₀) →
-        Γ ⊢ ΣA;B type →
-          (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-              (a_4 A_1 : Tm m),
-              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                eqM ▸ a = a_4 →
-                  eqM ▸ A = A_1 →
-                    (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_4⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
-            (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
-                (S : Tm l) (a_5 A : Tm m),
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                  eqM ▸ b = a_5 →
+                  eqM ▸ b = a_6 →
                     eqM ▸ B⌈a⌉₀ = A →
-                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_5⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉) →
-              (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
+                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_6⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉) →
+              (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 = m) (s : Tm (l + 1))
                   {S : Tm l} (A_1 : Tm m),
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                    (eqM ▸ ΣA;B) = A_1 →
+                  (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ →
+                    eqM ▸ C = A_1 →
                       (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ A_1⌈s↑/ₙleq⌉ type) →
-                ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
-                  (S : Tm l) (a_7 a' A : Tm m),
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                    eqM ▸ π₂ a&b = a_7 →
-                      eqM ▸ b = a' →
-                        eqM ▸ B⌈π₁ a&b⌉₀ = A →
+                (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 = m)
+                    (s : Tm (l + 1)) (S : Tm l) (a A_1 : Tm m),
+                    eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
+                      eqM ▸ c = a →
+                        eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 →
                           (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
-                            Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_7⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉ :=
+                            Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
+                  ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
+                    (S : Tm l) (a_9 a' A_1 : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                      eqM ▸ A.indSigma B C c (a&b) = a_9 →
+                        eqM ▸ c⌈(ₛidₚ), a, b⌉ = a' →
+                          eqM ▸ C⌈a&b⌉₀ = A_1 →
+                            (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                              Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a_9⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉ :=
   by
-    intro n Γ' a b A B haA hbB hSi ihaA ihbB ihSi m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
+    intro n Γ' a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
     cases heqM
     cases heqΓ
     cases heqt
     cases heqt'
     cases heqT
     simp [substitution_zero_lift]
-    apply IsEqualTerm.sigma_second_comp
-    rotate_right
-    · apply A⌈(s↑/ₙhleq)⌉
+    rw [subst_subst_sigma_c]
+    apply IsEqualTerm.sigma_comp
     · apply ihaA
-      repeat' rfl
-      apply hsS
-    · simp [←substitution_zero_lift]
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      simp [←substitution_zero_lift]
       apply ihbB
-      repeat' rfl
-      apply hsS
-    · rw [←substitution_sigma]
-      apply ihSi
-      repeat' rfl
-      apply hsS
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [←substitution_sigma]
+      rw [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihC
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [subst_subst_sigma_C]
+      simp [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihcC
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem weak_substitution_nat_zero_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -983,75 +959,114 @@ theorem weak_substitution_sigma_intro_eq :
       · apply hsS
       · rfl
 
-theorem weak_substitution_sigma_first_eq :
-    ∀ {n : Nat} {Γ : Ctx n} {p p' A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ≡ p' ∶ ΣA;B) →
-      (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a a' A_1 : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ p = a →
-              eqM ▸ p' = a' →
-                (eqM ▸ ΣA;B) = A_1 →
-                  (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
-                    Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
-        ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a a' A_1 : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ π₁ p = a →
-              eqM ▸ π₁ p' = a' →
-                eqM ▸ A = A_1 →
-                  (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
-                    Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉ :=
+theorem weak_substitution_sigma_elim_eq :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
+  {c c' : Tm (n + 1 + 1)},
+  Γ ⊢ A ≡ A' type →
+    Γ ⬝ A ⊢ B ≡ B' type →
+      (Γ ⊢ p ≡ p' ∶ ΣA;B) →
+        (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
+          (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+            (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
+                (S : Tm l) (A_1 A'_1 : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ A = A_1 →
+                    eqM ▸ A' = A'_1 →
+                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                        Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ A_1⌈s↑/ₙleq⌉ ≡ A'_1⌈s↑/ₙleq⌉ type) →
+              (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 = m) (s : Tm (l + 1))
+                  (S : Tm l) (A_1 A' : Tm m),
+                  eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
+                    eqM ▸ B = A_1 →
+                      eqM ▸ B' = A' →
+                        (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                          Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ A_1⌈s↑/ₙleq⌉ ≡ A'⌈s↑/ₙleq⌉ type) →
+                (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
+                    (S : Tm l) (a a' A_1 : Tm m),
+                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                      eqM ▸ p = a →
+                        eqM ▸ p' = a' →
+                          (eqM ▸ ΣA;B) = A_1 →
+                            (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                              Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
+                  (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 = m)
+                      (s : Tm (l + 1)) (S : Tm l) (A_1 A' : Tm m),
+                      (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ →
+                        eqM ▸ C = A_1 →
+                          eqM ▸ C' = A' →
+                            (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                              Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ A_1⌈s↑/ₙleq⌉ ≡ A'⌈s↑/ₙleq⌉ type) →
+                    (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 = m)
+                        (s : Tm (l + 1)) (S : Tm l) (a a' A_1 : Tm m),
+                        eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
+                          eqM ▸ c = a →
+                            eqM ▸ c' = a' →
+                              eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 →
+                                (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                                  Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
+                      ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m)
+                        (s : Tm (l + 1)) (S : Tm l) (a a' A_1 : Tm m),
+                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                          eqM ▸ A.indSigma B C c p = a →
+                            eqM ▸ A'.indSigma B' C' c' p' = a' →
+                              eqM ▸ C⌈p⌉₀ = A_1 →
+                                (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
+                                  Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉ :=
   by
-    intro n Γ' p p' A B hppSi ihppSi m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
-    cases heqM
-    cases heqΓ
-    cases heqt
-    cases heqt'
-    cases heqT
-    apply IsEqualTerm.sigma_first_eq
-    rotate_right
-    · apply B⌈1ₙ⇑ₛ(s↑/ₙhleq)⌉
-    · simp [lift_subst_n]
-      rw [←substitution_sigma]
-      apply ihppSi
-      repeat' rfl
-      apply hsS
-
-theorem weak_substitution_sigma_second_eq :
-    ∀ {n : Nat} {Γ : Ctx n} {p p' A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ≡ p' ∶ ΣA;B) →
-      (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a a' A_1 : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ p = a →
-              eqM ▸ p' = a' →
-                (eqM ▸ ΣA;B) = A_1 →
-                  (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
-                    Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
-        ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a a' A : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ π₂ p = a →
-              eqM ▸ π₂ p' = a' →
-                eqM ▸ B⌈π₁ p⌉₀ = A →
-                  (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) →
-                    Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ≡ a'⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉ :=
-  by
-    intro n Γ' p p' A B hppSi ihppSi m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
+    intro n Γ' A B A' B' p p' C C' c c' hAA hBB hppSi hCC hccC ihAA ihBB ihppSi ihCC ihccC m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
     cases heqM
     cases heqΓ
     cases heqt
     cases heqt'
     cases heqT
     simp [substitution_zero_lift]
-    apply IsEqualTerm.sigma_second_eq
-    rotate_right
-    · apply A⌈(s↑/ₙhleq)⌉
-    · rw [←substitution_sigma]
+    apply IsEqualTerm.sigma_elim_eq
+    · apply ihAA
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihBB
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [←substitution_sigma]
       apply ihppSi
-      repeat' rfl
-      apply hsS
+      · rfl
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [←substitution_sigma]
+      rw [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihCC
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [subst_subst_sigma_C]
+      simp [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihccC
+      · rfl
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem weak_substitution_nat_zero_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n},

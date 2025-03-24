@@ -190,10 +190,8 @@ theorem functionality_typing :
       apply functionality_typing_empty_elim
     case HasTypePiElim =>
       apply functionality_typing_pi_elim
-    case HasTypeSigmaFirst =>
-      apply functionality_typing_sigma_first
-    case HasTypeSigmaSecond =>
-      apply functionality_typing_sigma_second
+    case HasTypeSigmaElim =>
+      apply functionality_typing_sigma_elim
     case HasTypeNatElim =>
       apply functionality_typing_nat_elim
     case HasTypeIdenElim =>
@@ -256,13 +254,9 @@ theorem functionality_typing :
       repeat' intro
       apply IsEqualTerm.pi_comp
       repeat' assumption
-    case IsEqualTermSigmaFirstComp =>
+    case IsEqualTermSigmaComp =>
       repeat' intro
-      apply IsEqualTerm.sigma_first_comp
-      repeat' assumption
-    case IsEqualTermSigmaSecondComp =>
-      repeat' intro
-      apply IsEqualTerm.sigma_second_comp
+      apply IsEqualTerm.sigma_comp
       repeat' assumption
     case IsEqualTermNatZeroComp =>
       repeat' intro
@@ -300,13 +294,9 @@ theorem functionality_typing :
       repeat' intro
       apply IsEqualTerm.sigma_intro_eq
       repeat' assumption
-    case IsEqualTermSigmaFirstEq =>
+    case IsEqualTermSigmaElimEq =>
       repeat' intro
-      apply IsEqualTerm.sigma_first_eq
-      repeat' assumption
-    case IsEqualTermSigmaSecondEq =>
-      repeat' intro
-      apply IsEqualTerm.sigma_second_eq
+      apply IsEqualTerm.sigma_elim_eq
       repeat' assumption
     case IsEqualTermNatZeroIntroEq =>
       repeat' intro

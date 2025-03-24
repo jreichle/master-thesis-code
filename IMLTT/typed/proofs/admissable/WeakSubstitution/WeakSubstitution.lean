@@ -206,10 +206,8 @@ theorem weak_substitution :
       apply weak_substitution_empty_elim
     case HasTypePiElim =>
       apply weak_substitution_pi_elim
-    case HasTypeSigmaFirst =>
-      apply weak_substitution_sigma_first
-    case HasTypeSigmaSecond =>
-      apply weak_substitution_sigma_second
+    case HasTypeSigmaElim =>
+      sorry
     case HasTypeNatElim =>
       apply weak_substitution_nat_elim
     case HasTypeIdenElim =>
@@ -244,10 +242,8 @@ theorem weak_substitution :
       apply weak_substitution_unit_comp
     case IsEqualTermPiComp =>
       apply weak_substitution_pi_comp
-    case IsEqualTermSigmaFirstComp =>
-      apply weak_substitution_sigma_first_comp
-    case IsEqualTermSigmaSecondComp =>
-      apply weak_substitution_sigma_second_comp
+    case IsEqualTermSigmaComp =>
+      apply weak_substitution_sigma_comp
     case IsEqualTermNatZeroComp =>
       apply weak_substitution_nat_zero_comp
     case IsEqualTermNatSuccComp =>
@@ -266,10 +262,8 @@ theorem weak_substitution :
       apply weak_substitution_pi_elim_eq
     case IsEqualTermSigmaIntroEq =>
       apply weak_substitution_sigma_intro_eq
-    case IsEqualTermSigmaFirstEq =>
-      apply weak_substitution_sigma_first_eq
-    case IsEqualTermSigmaSecondEq =>
-      apply weak_substitution_sigma_second_eq
+    case IsEqualTermSigmaElimEq =>
+      apply weak_substitution_sigma_elim_eq
     case IsEqualTermNatZeroIntroEq =>
       apply weak_substitution_nat_zero_intro_eq
     case IsEqualTermNatSuccIntroEq =>

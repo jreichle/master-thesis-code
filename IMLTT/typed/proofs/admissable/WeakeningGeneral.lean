@@ -109,10 +109,8 @@ theorem weakening :
       apply weakening_empty_elim
     case HasTypePiElim =>
       apply weakening_pi_elim
-    case HasTypeSigmaFirst =>
-      apply weakening_sigma_first
-    case HasTypeSigmaSecond =>
-      apply weakening_sigma_second
+    case HasTypeSigmaElim =>
+      apply weakening_sigma_elim
     case HasTypeNatElim =>
       apply weakening_nat_elim
     case HasTypeIdenElim =>
@@ -147,10 +145,8 @@ theorem weakening :
       apply weakening_unit_comp
     case IsEqualTermPiComp =>
       apply weakening_pi_comp
-    case IsEqualTermSigmaFirstComp =>
-      apply weakening_sigma_first_comp
-    case IsEqualTermSigmaSecondComp =>
-      apply weakening_sigma_second_comp
+    case IsEqualTermSigmaComp =>
+      apply weakening_sigma_comp
     case IsEqualTermNatZeroComp =>
       apply weakening_nat_zero_comp
     case IsEqualTermNatSuccComp =>
@@ -169,10 +165,8 @@ theorem weakening :
       apply weakening_pi_elim_eq
     case IsEqualTermSigmaIntroEq =>
       apply weakening_sigma_intro_eq
-    case IsEqualTermSigmaFirstEq =>
-      apply weakening_sigma_first_eq
-    case IsEqualTermSigmaSecondEq =>
-      apply weakening_sigma_second_eq
+    case IsEqualTermSigmaElimEq =>
+      apply weakening_sigma_elim_eq
     case IsEqualTermNatZeroIntroEq =>
       apply weakening_nat_zero_intro_eq
     case IsEqualTermNatSuccIntroEq =>

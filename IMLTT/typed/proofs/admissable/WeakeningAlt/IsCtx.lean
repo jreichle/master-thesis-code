@@ -20,7 +20,10 @@ theorem weakening_gen_empty :
     | start =>
       cases heqΓ
       rw [empty_expand_context_weaken_from]
-      sorry
+      simp [expand_ctx]
+      apply IsCtx.extend
+      · apply IsCtx.empty
+      · apply hS
 
 theorem weakening_gen_extend :
     ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
@@ -33,4 +36,23 @@ theorem weakening_gen_extend :
               ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l),
                 Γ_1 ⊢ S type → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
   by
-    sorry
+    intro n Γ' A hiC hA ihiC ihA m l Γ Δ heqM S hS heqΓ
+    cases heqM
+    cases Δ with
+    | start =>
+      cases heqΓ
+      rw [empty_expand_context_weaken_from]
+      apply IsCtx.extend
+      · apply boundary_ctx_type hS
+      · apply hS
+    | expand =>
+      cases heqΓ
+      simp [weaken_from_into_gen_ctx]
+      rw [expand_ctx]
+      apply IsCtx.extend
+      · apply ihiC
+        apply hS
+        repeat' rfl
+      · apply ihA
+        apply hS
+        repeat' rfl

@@ -822,65 +822,70 @@ theorem weak_substitution_pi_elim :
       · apply hsS
       · rfl
 
-theorem weak_substitution_sigma_first :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B) →
-      (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a A_1 : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ p = a →
-              (eqM ▸ ΣA;B) = A_1 →
-                (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
-        ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a A_1 : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ π₁ p = a →
-              eqM ▸ A = A_1 →
-                (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉ :=
+theorem weak_substitution_sigma_elim :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
+  (Γ ⊢ p ∶ ΣA;B) →
+    (Γ ⬝ ΣA;B) ⊢ C type →
+      (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+        (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
+            (a A_1 : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+              eqM ▸ p = a →
+                (eqM ▸ ΣA;B) = A_1 →
+                  (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
+          (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 = m) (s : Tm (l + 1))
+              {S : Tm l} (A_1 : Tm m),
+              (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ →
+                eqM ▸ C = A_1 →
+                  (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ A_1⌈s↑/ₙleq⌉ type) →
+            (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n + 1 + 1 = m) (s : Tm (l + 1))
+                (S : Tm l) (a A_1 : Tm m),
+                eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ c = a →
+                    eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 →
+                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
+              ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1))
+                (S : Tm l) (a A_1 : Tm m),
+                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+                  eqM ▸ A.indSigma B C c p = a →
+                    eqM ▸ C⌈p⌉₀ = A_1 →
+                      (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉ :=
   by
-    intro n Γ' p A B hpSi ihpSi m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
-    cases heqM
-    cases heqΓ
-    cases heqt
-    cases heqT
-    apply HasType.sigma_first
-    rotate_right
-    · apply B⌈1ₙ⇑ₛ(s↑/ₙhleq)⌉
-    · simp [lift_subst_n]
-      rw [←substitution_sigma]
-      apply ihpSi
-      repeat' rfl
-      apply hsS
-
-theorem weak_substitution_sigma_second :
-    ∀ {n : Nat} {Γ : Ctx n} {p A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ∶ ΣA;B) →
-      (∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a A_1 : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ p = a →
-              (eqM ▸ ΣA;B) = A_1 →
-                (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A_1⌈s↑/ₙleq⌉) →
-        ∀ (m l : Nat) {leq : l + 1 ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (s : Tm (l + 1)) (S : Tm l)
-          (a A : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ π₂ p = a →
-              eqM ▸ B⌈π₁ p⌉₀ = A →
-                (Γ_1 ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋) → Γ_1 ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1)) ⊢ a⌈s↑/ₙleq⌉ ∶ A⌈s↑/ₙleq⌉ :=
-  by
-    intro n Γ' p A B hpSi ihpSi m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
+    intro n Γ' A B p C c hpSi hC hcC ihpSi ihC ihcC m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
     cases heqΓ
     cases heqt
     cases heqT
     simp [substitution_zero_lift]
-    apply HasType.sigma_second
-    rotate_right
-    · apply A⌈(s↑/ₙhleq)⌉
-    · rw [←substitution_sigma]
+    apply HasType.sigma_elim
+    · simp [lift_subst_n]
+      rw [←substitution_sigma]
       apply ihpSi
-      repeat' rfl
-      apply hsS
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [←substitution_sigma]
+      rw [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihC
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
+    · simp [lift_subst_n]
+      rw [subst_subst_sigma_C]
+      simp [lift_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      rw [extend_expand_context_n_substitution_shift]
+      apply ihcC
+      · rfl
+      · rfl
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem weak_substitution_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},

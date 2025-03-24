@@ -86,69 +86,55 @@ theorem boundary_pi_comp :
       · apply haA
       · apply ihbB
 
-theorem boundary_sigma_first_comp :
-    ∀ {n : Nat} {Γ : Ctx n} {a b A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ a ∶ A)
-    → (Γ ⊢ b ∶ B⌈a⌉₀)
-    → Γ ⊢ ΣA;B type
-    → Γ ⊢ A type
-    → Γ ⊢ B⌈a⌉₀ type
-    → Γ ⊢ ΣA;B type 
-    → (Γ ⊢ π₁ a&b ∶ A) ∧ (Γ ⊢ a ∶ A) ∧ Γ ⊢ A type :=
+theorem lulululu {b : Tm n} :
+    c⌈⇑ₛ((ₛidₚ), a)⌉⌈b⌉₀
+    = c⌈b⌊↑ₚidₚ⌋⌉₀⌈(ₛidₚ), a⌉ :=
   by
-    intro n Γ a b A B haA hbB hSi ihaA ihbB ihSi
-    repeat' apply And.intro
-    · apply HasType.sigma_first
-      apply HasType.sigma_intro
-      · apply haA
-      · apply hbB
-      · have h := sigma_is_type_inversion hSi
-        apply And.right h
-    · apply haA
-    · apply ihaA
+    simp [substitute_zero]
+    simp [substitution_comp]
+    simp [comp_substitute_substitute]
+    simp [substitution_comp_σρ]
+    simp [comp_substitute_weaken]
+    simp [substitution_id]
 
-theorem boundary_sigma_second_comp :
-    ∀ {n : Nat} {Γ : Ctx n} {a b A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ a ∶ A)
-    → (Γ ⊢ b ∶ B⌈a⌉₀)
-    → Γ ⊢ ΣA;B type
-    → Γ ⊢ A type
-    → Γ ⊢ B⌈a⌉₀ type
-    → Γ ⊢ ΣA;B type
-    → (Γ ⊢ π₂ a&b ∶ B⌈π₁ a&b⌉₀) ∧ (Γ ⊢ b ∶ B⌈π₁ a&b⌉₀) ∧ Γ ⊢ B⌈π₁ a&b⌉₀ type :=
+theorem boundary_sigma_comp :
+    ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
+    (Γ ⊢ a ∶ A) → (Γ ⊢ b ∶ B⌈a⌉₀) → (Γ ⬝ ΣA;B) ⊢ C type →
+    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+    Γ ⊢ A type → Γ ⊢ B⌈a⌉₀ type → (Γ ⬝ ΣA;B) ⊢ C type →
+    Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type →
+    (Γ ⊢ A.indSigma B C c (a&b) ∶ C⌈a&b⌉₀) ∧ (Γ ⊢ c⌈(ₛidₚ), a, b⌉ ∶ C⌈a&b⌉₀) ∧ Γ ⊢ C⌈a&b⌉₀ type :=
   by
-    intro n Γ a b A B haA hbB hSi ihaA ihbB ihSi
+    intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC
     repeat' apply And.intro
-    · apply HasType.sigma_second
-      apply HasType.sigma_intro
-      · apply haA
-      · apply hbB
-      · have h := sigma_is_type_inversion hSi
-        apply And.right h
-    · apply HasType.ty_conv
-      · apply hbB
-      · have h := sigma_is_type_inversion hSi
-        apply functionality_typing_type
-        · apply And.right h
-        · apply IsEqualTerm.term_symm
-          apply IsEqualTerm.sigma_first_comp
-          · apply haA
-          · apply hbB
-          · apply hSi
-        · apply haA
-        · apply HasType.sigma_first
-          apply HasType.sigma_intro
-          · apply haA
-          · apply hbB
-          · apply And.right h
-    · have h := sigma_is_type_inversion hSi
-      apply substitution_type
-      · apply HasType.sigma_first
-        apply HasType.sigma_intro
+    · apply HasType.sigma_elim
+      · apply HasType.sigma_intro
         · apply haA
         · apply hbB
-        · apply And.right h
-      · apply And.right h
+        · apply ctx_extr (boundary_ctx_term hcC)
+      · apply hC
+      · apply hcC
+    · rw [←boundary_helper_sigma_elim]
+      simp [substitution_twice_zero]
+      rw [context_to_gen_ctx] at hcC
+      have h1 := (And.left (And.right (And.right substitution)) (leq := Nat.le_step (Nat.le_refl n))) hcC haA
+      simp [substitute_into_gen_ctx] at h1
+      simp [n_substitution_zero] at h1
+      simp [zero_substitution] at h1
+      simp [substitution_conv_zero] at h1
+      have h2 := substitution_term hbB h1
+      simp [←lift_n_substitution] at h2
+      rw (config := {occs := .pos [1]}) [substitute_zero]
+      simp [n_substitution_zero] at h2
+      simp [zero_substitution] at h2
+      simp [lulululu] at h2
+      apply h2
+    · apply substitution_type
+      · apply HasType.sigma_intro
+        · apply haA
+        · apply hbB
+        · apply ctx_extr (boundary_ctx_term hcC)
+      · apply hC
 
 theorem boundary_nat_zero_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -418,53 +404,142 @@ theorem boundary_sigma_intro_eq :
       · apply And.right (And.right ihaaA)
       · apply hB
 
-theorem boundary_sigma_first_eq :
-    ∀ {n : Nat} {Γ : Ctx n} {p p' A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ≡ p' ∶ ΣA;B)
-    → (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type
-    → (Γ ⊢ π₁ p ∶ A) ∧ (Γ ⊢ π₁ p' ∶ A) ∧ Γ ⊢ A type :=
+theorem test_this_no :
+    B⌊⇑ₚ↑ₚidₚ⌋⌊⇑ₚ↑ₚidₚ⌋⌈v(1)⌉₀ = B⌈(ₛ↑ₚ↑ₚidₚ), v(1)⌉ :=
   by
-    intro n Γ p p' A B hppSi ihppSi
-    repeat' apply And.intro
-    · apply HasType.sigma_first
-      apply And.left ihppSi
-    · apply HasType.sigma_first
-      apply And.left (And.right ihppSi)
-    · have h := sigma_is_type_inversion (And.right (And.right ihppSi))
-      apply And.left h
+    simp [substitute_zero]
+    simp [weakening_comp]
+    simp [comp_weaken]
+    simp [substitution_comp_σρ]
+    simp [comp_substitute_weaken]
+    simp [comp_weaken]
 
-theorem boundary_sigma_second_eq :
-    ∀ {n : Nat} {Γ : Ctx n} {p p' A : Tm n} {B : Tm (n + 1)},
-    (Γ ⊢ p ≡ p' ∶ ΣA;B)
-    → (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type
-    → (Γ ⊢ π₂ p ∶ B⌈π₁ p⌉₀) ∧ (Γ ⊢ π₂ p' ∶ B⌈π₁ p⌉₀) ∧ Γ ⊢ B⌈π₁ p⌉₀ type :=
+theorem lol :
+    B⌈(ₛ↑ₚ↑ₚidₚ), v(1)⌉ = B⌊↑ₚidₚ⌋ :=
   by
-    intro n Γ p p' A B hppSi ihppSi
+    rw [←substitution_id (t := B)]
+    simp [substitution_conv_shift_id]
+    simp [substitution_id]
+    apply substitution_var_substitute
+    intro x
+    cases x with
+    | mk i hFin =>
+      cases i with
+      | zero =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [shift_tm]
+        simp [weaken]
+        simp [weaken_var]
+        rfl
+      | succ i' =>
+        simp [substitute]
+        simp [substitute_var]
+        simp [shift_tm]
+        simp [weaken]
+        simp [weaken_var]
+
+theorem hahahahahaha : 
+    C⌊⇑ₚ↑ₚidₚ⌋⌊⇑ₚ↑ₚidₚ⌋⌈v(1)&v(0)⌉₀ = C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
+  by
+    simp [substitute_zero]
+    simp [weakening_comp]
+    simp [substitution_comp_σρ]
+    simp [comp_weaken]
+    simp [comp_substitute_weaken]
+    rfl
+
+theorem boundary_sigma_elim_eq :
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
+  {c c' : Tm (n + 1 + 1)},
+  Γ ⊢ A ≡ A' type →
+    Γ ⬝ A ⊢ B ≡ B' type →
+      (Γ ⊢ p ≡ p' ∶ ΣA;B) →
+        (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
+          (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+            Γ ⊢ A type ∧ Γ ⊢ A' type →
+              Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type →
+                (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type →
+                  (Γ ⬝ ΣA;B) ⊢ C type ∧ (Γ ⬝ ΣA;B) ⊢ C' type →
+                    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) ∧
+                        (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type →
+                      (Γ ⊢ A.indSigma B C c p ∶ C⌈p⌉₀) ∧ (Γ ⊢ A'.indSigma B' C' c' p' ∶ C⌈p⌉₀) ∧ Γ ⊢ C⌈p⌉₀ type :=
+  by
+    intro n Γ A B A' B' p p' C C' c c' hAA hBB hppSi hCC hccC ihAA ihBB ihppSi ihCC ihccC
     repeat' apply And.intro
-    · apply HasType.sigma_second
-      apply And.left ihppSi
+    · apply HasType.sigma_elim
+      · apply And.left ihppSi
+      · apply And.left ihCC
+      · apply And.left ihccC
     · apply HasType.ty_conv
-      · apply HasType.sigma_second
-        apply And.left (And.right ihppSi)
-      · have h := sigma_is_type_inversion (And.right (And.right ihppSi))
-        apply functionality_typing_type
-        · apply And.right h
-        · apply IsEqualTerm.term_symm
-          apply IsEqualTerm.sigma_first_eq
-          apply hppSi
-        · apply HasType.sigma_first
-          apply And.left (And.right ihppSi)
-        · apply HasType.sigma_first
-          apply And.left ihppSi
-    · have h := sigma_is_type_inversion (And.right (And.right ihppSi))
-      apply substitution_type
-      · apply HasType.sigma_first
-        apply And.left ihppSi
-      · apply And.right h
+      · apply HasType.sigma_elim
+        · apply HasType.ty_conv
+          · apply And.left (And.right ihppSi)
+          · apply IsEqualType.sigma_form_eq hAA hBB
+        · apply context_conversion_type
+          · apply IsType.sigma_form
+            · apply And.right ihAA
+            · apply context_conversion_type
+              · apply And.right ihAA
+              · apply hAA
+              · apply And.right ihBB
+          · apply IsEqualType.sigma_form_eq hAA hBB
+          · apply And.right ihCC
+        · rw [←empty_expand_context (Γ := Γ)]
+          rw [extend_expand_context]
+          rw [extend_expand_context]
+          rw [middle_expand_context]
+          apply And.left (And.right (And.right context_conversion))
+          rotate_left
+          · apply hAA
+          · apply And.left ihAA
+          · apply And.right ihAA
+          · simp [expand_ctx]
+            apply context_conversion_term
+            · apply And.right ihBB
+            · apply hBB
+            · apply HasType.ty_conv
+              · apply And.left (And.right ihccC)
+              · have h1 := weakening_second_type_eq hCC (And.left ihAA)
+                have h2 := weakening_second_type_eq h1 (And.left ihBB)
+                have ht : Γ ⬝ A ⬝ B ⊢ v(1)&v(0) ∶ (ΣA;B)⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋ :=
+                  by
+                    apply HasType.sigma_intro
+                    · rw [weakening_shift_vone]
+                      apply HasType.weak
+                      · apply HasType.var
+                        apply And.left ihAA
+                      · apply And.left ihBB
+                    · simp [lift_weak_n]
+                      simp [test_this_no]
+                      rw [lol]
+                      apply HasType.var
+                      apply And.left ihBB
+                    · apply weakening_second_type
+                      · apply weakening_second_type
+                        · apply And.left ihBB
+                        · apply And.left ihAA
+                      · apply And.left ihBB
+                have h3 := substitution_type_eq ht h2
+                simp [hahahahahaha] at h3
+                apply h3
+      · apply IsEqualType.type_symm
+        apply IsEqualType.type_trans
+        · apply functionality_typing_type
+          · apply And.left ihCC
+          · apply hppSi
+          · apply And.left ihppSi
+          · apply And.left (And.right ihppSi)
+        · apply substitution_type_eq
+          · apply And.left (And.right ihppSi)
+          · apply hCC
+    · apply substitution_type
+      · apply And.left ihppSi
+      · apply And.left ihCC
 
 theorem boundary_nat_zero_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n}, 
-    Γ ctx
+ Γ ctx
     → Γ ctx
     → (Γ ⊢ 𝓏 ∶ 𝒩) ∧ (Γ ⊢ 𝓏 ∶ 𝒩) ∧ Γ ⊢ 𝒩 type :=
   by
