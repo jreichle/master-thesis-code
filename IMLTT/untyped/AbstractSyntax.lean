@@ -38,10 +38,11 @@ notation:max "𝒰" => Tm.univ
 notation:max "v(" x ")" => Tm.var x
 notation:max "⋆" => Tm.tt
 notation:98 "λ" A "; " b => Tm.lam A b
-infixl:98 "◃" => Tm.app
+infixl:98 "◃" => Tm.app -- FIXME: add ()
 infixl:98 "&" => Tm.pairSigma -- FIXME: add ()
 notation:max "𝓏" => Tm.zeroNat
 notation:max "𝓈(" x ")" => Tm.succNat x
+
 
 notation:max "ε" => Ctx.empty
 infixl:94 " ⬝ " => Ctx.extend

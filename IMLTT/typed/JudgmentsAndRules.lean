@@ -180,7 +180,7 @@ mutual
       HasType (Γ ⬝ A) b B → HasType Γ a A
       → IsEqualTerm Γ ((λA; b)◃a) (b⌈a⌉₀) (B⌈a⌉₀)
     | sigma_comp :
-      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C -- FIXME: do I really need a and b or would p suffice?
+      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C
       → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
       → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ), a, b⌉) (C⌈a&b⌉₀)
     | nat_zero_comp :
@@ -193,7 +193,7 @@ mutual
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
       → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
-      → HasType Γ n 𝒩 -- FIXME: find a way with 𝓈(n)?
+      → HasType Γ n 𝒩
       → IsEqualTerm Γ (.indNat A z s 𝓈(n)) (s⌈(ₛidₚ), n, (.indNat A z s n)⌉) (A⌈𝓈(n)⌉₀)
     | iden_comp :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
@@ -276,7 +276,7 @@ mutual
 end
 
 postfix:90 " ctx" => IsCtx
-notation:90 Γ " ⊢ " A  " type" => IsType Γ A
+notation:90 Γ " ⊢ " A  " type" => IsType Γ A -- FIXME: interplay between istype and hastype is problem
 notation:90 Γ " ⊢ " s " ∶ " A => HasType Γ s A
 notation:90 Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
 notation:90 Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A

@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
 import IMLTT.typed.proofs.admissable.Weakening
 
 import IMLTT.typed.proofs.admissable.substitution.Helpers
@@ -157,13 +157,15 @@ theorem substitution_gen_weak : ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm
           have h := gen_ctx_leq Δ'
           omega
 
-theorem substitution_gen_unit_intro : ∀ {n : Nat} {Γ : Ctx n}, Γ ctx →
-      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ctx) →
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-          (a A : Tm (m + 1 - 1 + 1)),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ ⋆ = a → eqM ▸ 𝟙 = A → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
+theorem substitution_gen_unit_intro : 
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
+      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ ⋆ = a → eqM ▸ 𝟙 = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
@@ -187,7 +189,6 @@ theorem substitution_gen_unit_intro : ∀ {n : Nat} {Γ : Ctx n}, Γ ctx →
         omega
       | succ m' =>
         apply ihiC
-        · exact hleq
         · rfl
         · apply hsS
         · rfl
@@ -279,7 +280,7 @@ theorem substitution_gen_sigma_intro :
 theorem substitution_gen_nat_zero_intro :
     ∀ {n : Nat} {Γ : Ctx n},
     Γ ctx →
-    (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
         eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
         (a A : Tm (m + 1 - 1 + 1)),
@@ -306,7 +307,6 @@ theorem substitution_gen_nat_zero_intro :
         omega
       | succ m' =>
         apply ihiC
-        · exact hleq
         · rfl
         · apply hsS
         · rfl
@@ -374,13 +374,13 @@ theorem substitution_gen_iden_intro :  ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
       · rfl
 
 theorem substitution_gen_univ_unit : ∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx →
-      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ctx) →
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-          (a A : Tm (m + 1 - 1 + 1)),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ 𝟙 = a → eqM ▸ 𝒰 = A → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
+  Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
+      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ 𝟙 = a → eqM ▸ 𝒰 = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
@@ -391,19 +391,18 @@ theorem substitution_gen_univ_unit : ∀ {n : Nat} {Γ : Ctx n},
     simp [substitution_unit]
     apply HasType.univ_unit
     apply ihiC
-    · apply hleq
     · rfl
     · apply hsS
     · rfl
 
 theorem substitution_gen_univ_empty : ∀ {n : Nat} {Γ : Ctx n},
-   Γ ctx →
-     (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
-         eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ctx) →
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-         (a A : Tm (m + 1 - 1 + 1)),
-         eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-           eqM ▸ 𝟘 = a → eqM ▸ 𝒰 = A → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
+  Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
+      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ 𝟘 = a → eqM ▸ 𝒰 = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
@@ -414,7 +413,6 @@ theorem substitution_gen_univ_empty : ∀ {n : Nat} {Γ : Ctx n},
     simp [substitution_empty]
     apply HasType.univ_empty
     apply ihiC
-    · apply hleq
     · rfl
     · apply hsS
     · rfl
@@ -503,13 +501,13 @@ theorem substitution_gen_univ_sigma : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B :
 
 theorem substitution_gen_univ_nat :
     ∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx →
-      (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
-          (a A : Tm (m + 1 - 1 + 1)),
-          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-            eqM ▸ 𝒩 = a → eqM ▸ 𝒰 = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
+  Γ ctx →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx) →
+      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
+        (a A : Tm (m + 1 - 1 + 1)),
+        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
+          eqM ▸ 𝒩 = a → eqM ▸ 𝒰 = A → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC m l hleq Γ Δ heqM s S t T heqΓ heqt heqT hsS
     cases heqM
@@ -518,7 +516,6 @@ theorem substitution_gen_univ_nat :
     cases heqT
     apply HasType.univ_nat
     apply ihiC
-    · apply hleq
     · rfl
     · apply hsS
     · rfl

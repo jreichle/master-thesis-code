@@ -63,9 +63,6 @@ def weaken (ρ : Weak m n) (t : Tm n) : Tm m :=
 def shift_tm : Tm n → Tm (n + 1)
   | t => weaken (.shift .id) t
 
-theorem tst1 {l n : Nat} : l + 1 + n - l = n + 1 := by omega
-theorem tst2 {l n : Nat} : l + n - l = n := by omega
-
 def weaken_from (n : Nat) (l : Nat) : Weak (n + 1) n :=
   match n with
   | .zero => .shift .id

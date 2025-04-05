@@ -97,13 +97,27 @@ theorem lulululu {b : Tm n} :
     simp [comp_substitute_weaken]
     simp [substitution_id]
 
+theorem this_might_work :
+    A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋ =  A⌊↑ₚidₚ⌋⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
+  by
+    simp [substitution_comp_σρ]
+    simp [comp_substitute_weaken]
+    simp [weakening_comp]
+    simp [comp_weaken]
+    apply Eq.symm
+    apply conversion_sub_weak
+
 theorem boundary_sigma_comp :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
-    (Γ ⊢ a ∶ A) → (Γ ⊢ b ∶ B⌈a⌉₀) → (Γ ⬝ ΣA;B) ⊢ C type →
-    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
-    Γ ⊢ A type → Γ ⊢ B⌈a⌉₀ type → (Γ ⬝ ΣA;B) ⊢ C type →
-    Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type →
-    (Γ ⊢ A.indSigma B C c (a&b) ∶ C⌈a&b⌉₀) ∧ (Γ ⊢ c⌈(ₛidₚ), a, b⌉ ∶ C⌈a&b⌉₀) ∧ Γ ⊢ C⌈a&b⌉₀ type :=
+  (Γ ⊢ a ∶ A) →
+    (Γ ⊢ b ∶ B⌈a⌉₀) →
+      (Γ ⬝ ΣA;B) ⊢ C type →
+        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+          Γ ⊢ A type →
+            Γ ⊢ B⌈a⌉₀ type →
+              (Γ ⬝ ΣA;B) ⊢ C type →
+                Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type →
+                  (Γ ⊢ A.indSigma B C c (a&b) ∶ C⌈a&b⌉₀) ∧ (Γ ⊢ c⌈(ₛidₚ), a, b⌉ ∶ C⌈a&b⌉₀) ∧ Γ ⊢ C⌈a&b⌉₀ type :=
   by
     intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC
     repeat' apply And.intro
@@ -117,7 +131,7 @@ theorem boundary_sigma_comp :
     · rw [←boundary_helper_sigma_elim]
       simp [substitution_twice_zero]
       rw [context_to_gen_ctx] at hcC
-      have h1 := (And.left (And.right (And.right substitution)) (leq := Nat.le_step (Nat.le_refl n))) hcC haA
+      have h1 := (And.left (And.right (And.right substitution))) hcC haA
       simp [substitute_into_gen_ctx] at h1
       simp [n_substitution_zero] at h1
       simp [zero_substitution] at h1
@@ -189,7 +203,7 @@ theorem boundary_nat_succ_comp :
         · apply hsA
         · apply hsNat
       · rw [context_to_gen_ctx] at hsA
-        have h := (And.left (And.right (And.right substitution)) (leq := Nat.le_succ n)) hsA hsNat
+        have h := (And.left (And.right (And.right substitution))) hsA hsNat
         simp [substitute_into_gen_ctx] at h
         rw [←lift_n_substitution] at h
         simp [n_substitution_zero] at h
@@ -795,7 +809,6 @@ theorem boundary_iden_elim_eq :
           · rw [context_to_gen_ctx] at hBB
             have ht :=
                 And.left (And.right (And.right (And.right weak_substitution)))
-                  (leq := Nat.le_step (Nat.le_refl (n + 2)))
                   hBB
                   (by
                     apply HasType.weak
@@ -828,7 +841,6 @@ theorem boundary_iden_elim_eq :
             · rw [context_to_gen_ctx] at ihBB
               have ht :=
                   And.left (And.right (weak_substitution))
-                    (leq := Nat.le_step (Nat.le_refl (n + 2)))
                     (And.right ihBB)
                     (by
                       apply HasType.weak
@@ -924,14 +936,14 @@ theorem boundary_iden_elim_eq :
         · apply B'⌈(ₛidₚ), a₁, a₃, p⌉
         · rw [context_to_gen_ctx] at hBB
           rw [←middle_expand_context (Γ := Γ ⬝ A)] at hBB
-          have h := And.left (And.right (And.right (And.right substitution))) (leq := Nat.le_step (Nat.le_step (Nat.le_refl n))) hBB (And.left ihaaA)
+          have h := And.left (And.right (And.right (And.right substitution))) hBB (And.left ihaaA)
           simp [substitute_into_gen_ctx] at h
           rw [n_substitution_zero] at h
           rw [zero_substitution] at h
           rw [substitution_conv_zero] at h
           rw [substitution_shift_substitute_zero] at h
           rw [middle_expand_context] at h
-          have h2 := And.left (And.right (And.right (And.right substitution))) (leq := Nat.le_step (Nat.le_refl n)) h (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
+          have h2 := And.left (And.right (And.right (And.right substitution))) h (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
           simp [substitute_into_gen_ctx] at h2
           simp [expand_ctx] at h2
           rw [←lift_n_substitution] at h2
@@ -959,8 +971,7 @@ theorem boundary_iden_elim_eq :
             rw [substitution_conv_zero] at h1
             rw [substitution_shift_substitute_zero] at h1
             rw [middle_expand_context] at h1
-            have h2 := (And.left (And.right (And.right (And.right substitution))) 
-                        (leq := Nat.le_step (Nat.le_refl n)))
+            have h2 := (And.left (And.right (And.right (And.right substitution))))
                         h1 (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
             simp [substitute_into_gen_ctx] at h2
             simp [expand_ctx] at h2
@@ -981,8 +992,7 @@ theorem boundary_iden_elim_eq :
             · apply B'⌈(ₛidₚ), a₂, a₄, p⌉
             · rw [context_to_gen_ctx] at ihBB
               rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
-              have h1 := (And.left (And.right substitution)
-                          (leq := Nat.le_step (Nat.le_step (Nat.le_refl n))))
+              have h1 := (And.left (And.right substitution))
                           (And.right ihBB) (And.left (And.right ihaaA))
               simp [substitute_into_gen_ctx] at h1
               rw [n_substitution_zero] at h1
@@ -1014,8 +1024,7 @@ theorem boundary_iden_elim_eq :
               any_goals omega
             · rw [context_to_gen_ctx] at ihBB
               rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
-              have h1 := (And.left (And.right substitution)
-                          (leq := Nat.le_step (Nat.le_step (Nat.le_refl n))))
+              have h1 := (And.left (And.right substitution))
                           (And.right ihBB) (And.left (And.right ihaaA))
               simp [substitute_into_gen_ctx] at h1
               rw [n_substitution_zero] at h1
@@ -1023,8 +1032,7 @@ theorem boundary_iden_elim_eq :
               rw [substitution_conv_zero] at h1
               rw [substitution_shift_substitute_zero] at h1
               rw [middle_expand_context] at h1
-              have h2 := (And.left (And.right substitution)
-                          (leq := (Nat.le_step (Nat.le_refl n))))
+              have h2 := (And.left (And.right substitution))
                           (h1) (HasType.ty_conv (And.left (And.right ihaaA')) (IsEqualType.type_symm hAA))
               simp [substitute_into_gen_ctx] at h2
               simp [expand_ctx] at h2
@@ -1052,7 +1060,7 @@ theorem boundary_iden_elim_eq :
               any_goals omega
     · rw [context_to_gen_ctx] at ihBB
       rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
-      have h := And.left (And.right substitution) (leq := Nat.le_step (Nat.le_step (Nat.le_refl n))) 
+      have h := And.left (And.right substitution)
                   (And.left ihBB) (And.left ihaaA)
       simp [substitute_into_gen_ctx] at h
       rw [n_substitution_zero] at h
@@ -1060,7 +1068,7 @@ theorem boundary_iden_elim_eq :
       rw [substitution_conv_zero] at h
       rw [substitution_shift_substitute_zero] at h
       rw [middle_expand_context] at h
-      have h2 := And.left (And.right substitution) (leq := Nat.le_step (Nat.le_refl n)) 
+      have h2 := And.left (And.right substitution)
                   h (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
       simp [substitute_into_gen_ctx] at h2
       simp [expand_ctx] at h2

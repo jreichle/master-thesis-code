@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
 
 import IMLTT.typed.proofs.admissable.substitution.Helpers
 import IMLTT.typed.proofs.admissable.substitution.IsCtx
@@ -21,26 +21,30 @@ import IMLTT.typed.proofs.admissable.substitution.IsEqualTerm
 set_option pp.proofs true
 
 theorem substitution :
-  (∀ {n l : Nat} {leq : l ≤ n} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {s S : Tm l},
+  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {s S : Tm l},
     (Γ ⬝ S ⊗ Δ) ctx → (Γ ⊢ s ∶ S)
     → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ctx) ∧
-  (∀ {n l : Nat} {leq : l ≤ n} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)} {s S : Tm l},
+  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)} {s S : Tm l},
     (Γ ⬝ S ⊗ Δ) ⊢ A type → (Γ ⊢ s ∶ S)
-    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ A⌈s/ₙleq⌉ type) ∧
-  (∀ {n l : Nat} {leq : l ≤ n} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A a : Tm (n + 1)} {s S : Tm l},
+    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ A⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉ type) ∧
+  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A a : Tm (n + 1)} {s S : Tm l},
     ((Γ ⬝ S ⊗ Δ) ⊢ a ∶ A) → (Γ ⊢ s ∶ S)
-    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉) ∧
-  (∀ {n l : Nat} {leq : l ≤ n} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A A' : Tm (n + 1)} {s S : Tm l},
+    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉
+                                      ∶ A⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) ∧
+  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A A' : Tm (n + 1)} {s S : Tm l},
     (Γ ⬝ S ⊗ Δ) ⊢ A ≡ A' type → (Γ ⊢ s ∶ S)
-    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ A⌈s/ₙleq⌉ ≡ A'⌈s/ₙleq⌉ type) ∧
-  (∀ {n l : Nat} {leq : l ≤ n} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A a a' : Tm (n + 1)} {s S : Tm l},
+    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ A⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉
+                                      ≡ A'⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉ type) ∧
+  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A a a' : Tm (n + 1)} {s S : Tm l},
     ((Γ ⬝ S ⊗ Δ) ⊢ a ≡ a' ∶ A) → (Γ ⊢ s ∶ S)
-    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A⌈s/ₙleq⌉) :=
+    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉
+                                      ≡ a'⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉
+                                      ∶ A⌈s/ₙ(Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) :=
   by
     suffices h :
       (∀ {n : Nat} {Γ : Ctx n},
           Γ ctx →
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
+            ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ctx) ∧
       (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
         Γ ⊢ A type →
@@ -72,21 +76,20 @@ theorem substitution :
                         (Γ_1 ⊢ s ∶ S) → (Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ a_1⌈s/ₙleq⌉ ≡ a'_1⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉)
       by
         any_goals repeat' (apply And.intro)
-        · intro n l hleq Γ Δ s S hiC hsS
+        · intro n l Γ Δ s S hiC hsS
           apply (And.left h)
           · apply hiC
-          · apply hleq
           · rfl
           · apply hsS
           · rfl
-        · intro n l hleq Γ Δ A s S hA hsS
+        · intro n l Γ Δ A s S hA hsS
           apply And.left (And.right h)
           · apply hA
           · rfl
           · rfl
           · apply hsS
           · rfl
-        · intro n l hleq Γ Δ A a s S haA hsS
+        · intro n l Γ Δ A a s S haA hsS
           apply And.left (And.right (And.right h))
           · apply haA
           · rfl
@@ -94,7 +97,7 @@ theorem substitution :
           · rfl
           · apply hsS
           · rfl
-        · intro n l hleq Γ Δ A A' s S hAA hsS
+        · intro n l Γ Δ A A' s S hAA hsS
           apply And.left (And.right (And.right (And.right h)))
           · apply hAA
           · rfl
@@ -102,7 +105,7 @@ theorem substitution :
           · rfl
           · apply hsS
           · rfl
-        · intro n l hleq Γ Δ A a a' s S haaA hsS
+        · intro n l Γ Δ A a a' s S haaA hsS
           apply And.right (And.right (And.right (And.right h)))
           · apply haaA
           · rfl
@@ -113,7 +116,7 @@ theorem substitution :
           · rfl
     apply judgment_recursor
       (motive_1 := fun {n} Γ' _hiC =>
-        ∀ m l {leq : l ≤ m} (Γ : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) s S,
+        ∀ m l (Γ : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) s S,
         eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ)
         → (Γ ⊢ s ∶ S)
         → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ctx)

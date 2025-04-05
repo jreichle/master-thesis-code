@@ -10,11 +10,11 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
-import IMLTT.typed.proofs.admissable.weakeningalt.IsCtx
-import IMLTT.typed.proofs.admissable.weakeningalt.IsType
-import IMLTT.typed.proofs.admissable.weakeningalt.HasType
-import IMLTT.typed.proofs.admissable.weakeningalt.IsEqualType
-import IMLTT.typed.proofs.admissable.weakeningalt.IsEqualTerm
+import IMLTT.typed.proofs.admissable.weakening.IsCtx
+import IMLTT.typed.proofs.admissable.weakening.IsType
+import IMLTT.typed.proofs.admissable.weakening.HasType
+import IMLTT.typed.proofs.admissable.weakening.IsEqualType
+import IMLTT.typed.proofs.admissable.weakening.IsEqualTerm
 
 theorem weakening :
   (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {S : Tm l},

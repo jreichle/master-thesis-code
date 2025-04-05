@@ -129,11 +129,6 @@ def substitute_tail (σ : Subst m (n + 1)) : Subst m n :=
   | .extend σ' t =>
     σ'
 
--- -- If Γ ⊢ σ : Δ∙A then Γ ⊢ tail σ : Δ.
--- 
--- tail : Subst m (1+ n) → Subst m n
--- tail σ x = σ (x +1)
-
 def substitute_zero (a : Tm n) (t : Tm (n + 1)) : Tm n :=
   substitute (.extend (.weak .id) a) t
 
@@ -150,8 +145,6 @@ theorem substitute_n_helper {l n : Nat} :
     apply And.intro
     · apply h1
     · apply h2
-
-#check Subst
 
 def n_substitution {l n : Nat} (leq : l ≤ n) (a : Tm l) : Subst n (n + 1) :=
   match n with

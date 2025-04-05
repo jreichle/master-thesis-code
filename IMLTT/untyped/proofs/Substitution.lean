@@ -377,10 +377,19 @@ theorem substitution_pi : (ΠA;B)⌈σ⌉ = ΠA⌈σ⌉;B⌈⇑ₛσ⌉ :=
     simp [substitute]
     simp [lift_subst_n]
 
+theorem substitution_lambda : (λA;b)⌈σ⌉ = λA⌈σ⌉;b⌈⇑ₛσ⌉ := 
+  by
+    simp [substitute]
+    simp [lift_subst_n]
+
 theorem substitution_sigma : (ΣA;B)⌈σ⌉ = ΣA⌈σ⌉;B⌈⇑ₛσ⌉ := 
   by
     simp [substitute]
     simp [lift_subst_n]
+ 
+theorem substitution_pair : (a&b)⌈σ⌉ = (a⌈σ⌉)&(b⌈σ⌉) := 
+  by
+    simp [substitute]
 
 theorem substitution_nat : 𝒩 ⌈σ⌉ = 𝒩  := 
   by

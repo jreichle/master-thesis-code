@@ -249,14 +249,14 @@ theorem boundary_iden_elim :
     intro n Γ A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId
     rw [context_to_gen_ctx] at hB
     rw [←middle_expand_context (Γ := Γ ⬝ A)] at hB
-    have h := And.left (And.right substitution) (leq := Nat.le_step (Nat.le_step (Nat.le_refl n))) hB haA
+    have h := And.left (And.right substitution) hB haA
     simp [substitute_into_gen_ctx] at h
     rw [n_substitution_zero] at h
     rw [zero_substitution] at h
     rw [substitution_conv_zero] at h
     rw [substitution_shift_substitute_zero] at h
     rw [middle_expand_context] at h
-    have h2 := And.left (And.right substitution) (leq := Nat.le_step (Nat.le_refl n)) h haA'
+    have h2 := And.left (And.right substitution) h haA'
     simp [substitute_into_gen_ctx] at h2
     simp [expand_ctx] at h2
     rw [←lift_n_substitution] at h2

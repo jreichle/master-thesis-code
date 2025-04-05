@@ -426,3 +426,9 @@ theorem weakening_shift_vone {n : Nat} :
   by
     simp [weaken]
     simp [weaken_var]
+
+theorem weakening_shift_var {n : Nat} {x : Fin n} :
+    (v(x.succ) : Tm (n + 1)) = v(x)⌊↑ₚidₚ⌋ :=
+  by
+    simp [weaken]
+    simp [weaken_var]

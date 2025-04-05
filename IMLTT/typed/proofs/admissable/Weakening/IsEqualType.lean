@@ -8,178 +8,252 @@ import IMLTT.untyped.proofs.Mixture
 
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.admissable.weakening.Helpers
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 theorem weakening_unit_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx →
-      (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ 𝟙⌊weaken_from n l⌋ ≡ 𝟙⌊weaken_from n l⌋ type :=
+      Γ ctx →
+        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+            Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+          ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A A' : Tm m),
+            Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝟙 = A → eqM ▸ 𝟙 = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ hiC ihiC l hleq S hS
+    intro n Γ' hiC ihiC m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.unit_form_eq
     apply ihiC
     apply hS
+    repeat' rfl
 
 theorem weakening_empty_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},
     Γ ctx →
-      (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ 𝟘⌊weaken_from n l⌋ ≡ 𝟘⌊weaken_from n l⌋ type :=
+      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A A' : Tm m),
+          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝟘 = A → eqM ▸ 𝟘 = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ hiC ihiC l hleq S hS
+    intro n Γ' hiC ihiC m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.empty_form_eq
     apply ihiC
     apply hS
+    repeat' rfl
 
 theorem weakening_pi_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
     Γ ⊢ A ≡ A' type →
       Γ ⬝ A ⊢ B ≡ B' type →
-        (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-            get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) →
-          (∀ (l : Nat) {leq : l ≤ n + 1} {B_1 : Tm l},
-              get_sub_context (Γ ⬝ A) l leq ⊢ B_1 type →
-                insert_into_ctx leq (Γ ⬝ A) B_1 ⊢ B⌊weaken_from (n + 1) l⌋ ≡ B'⌊weaken_from (n + 1) l⌋ type) →
-            ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-              get_sub_context Γ l leq ⊢ B_1 type →
-                insert_into_ctx leq Γ B_1 ⊢ (ΠA;B)⌊weaken_from n l⌋ ≡ (ΠA';B')⌊weaken_from n l⌋ type :=
+        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+            Γ_1 ⊢ S type →
+              eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) →
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 A' : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ →
+                  eqM ▸ B = A_1 → eqM ▸ B' = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+            ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ = Γ_1 ⊗ Δ →
+                  (eqM ▸ ΠA;B) = A_1 → (eqM ▸ ΠA';B') = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ A A' B B' hAA hBB ihAA ihBB l hleq S hS
+    intro n Γ' A A' B B' hAA hBB ihAA ihBB m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.pi_form_eq
     · apply ihAA
       apply hS
-    · rw [extend_insert_into_context]
+      repeat' rfl
+    · rw [extend_expand_context_weaken_from]
       simp [lift_weak_n]
       rw [lift_weaken_from]
-      · apply ihBB
-        rw [extend_get_sub_context]
-        apply hS
-      · exact hleq
+      apply ihBB
+      apply hS
+      repeat' rfl
+      apply gen_ctx_leq Δ
 
 theorem weakening_sigma_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
     Γ ⊢ A ≡ A' type →
       Γ ⬝ A ⊢ B ≡ B' type →
-        (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-            get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) →
-          (∀ (l : Nat) {leq : l ≤ n + 1} {B_1 : Tm l},
-              get_sub_context (Γ ⬝ A) l leq ⊢ B_1 type →
-                insert_into_ctx leq (Γ ⬝ A) B_1 ⊢ B⌊weaken_from (n + 1) l⌋ ≡ B'⌊weaken_from (n + 1) l⌋ type) →
-            ∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-              get_sub_context Γ l leq ⊢ B_1 type →
-                insert_into_ctx leq Γ B_1 ⊢ (ΣA;B)⌊weaken_from n l⌋ ≡ (ΣA';B')⌊weaken_from n l⌋ type :=
+        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+            Γ_1 ⊢ S type →
+              eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) →
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 A' : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ →
+                  eqM ▸ B = A_1 → eqM ▸ B' = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+            ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ = Γ_1 ⊗ Δ →
+                  (eqM ▸ ΣA;B) = A_1 → (eqM ▸ ΣA';B') = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ A A' B B' hAA hBB ihAA ihBB l hleq S hS
+    intro n Γ' A A' B B' hAA hBB ihAA ihBB m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.sigma_form_eq
     · apply ihAA
       apply hS
-    · rw [extend_insert_into_context]
+      repeat' rfl
+    · rw [extend_expand_context_weaken_from]
       simp [lift_weak_n]
       rw [lift_weaken_from]
-      · apply ihBB
-        rw [extend_get_sub_context]
-        apply hS
-      · exact hleq
+      apply ihBB
+      apply hS
+      repeat' rfl
+      apply gen_ctx_leq Δ
 
 theorem weakening_nat_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},
     Γ ctx →
-    (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
-      ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-        get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ 𝒩⌊weaken_from n l⌋ ≡ 𝒩⌊weaken_from n l⌋ type :=
+      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A A' : Tm m),
+          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝒩 = A → eqM ▸ 𝒩 = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ hiC ihiC l hleq S hS
+    intro n Γ' hiC ihiC m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.nat_form_eq
     apply ihiC
     apply hS
+    repeat' rfl
 
 theorem weakening_iden_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {a₁ a₂ A a₃ a₄ A' : Tm n},
     Γ ⊢ A ≡ A' type →
       (Γ ⊢ a₁ ≡ a₂ ∶ A) →
         (Γ ⊢ a₃ ≡ a₄ ∶ A') →
-          (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-              get_sub_context Γ l leq ⊢ B type →
-                insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) →
-            (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-                get_sub_context Γ l leq ⊢ B type →
-                  insert_into_ctx leq Γ B ⊢ a₁⌊weaken_from n l⌋ ≡ a₂⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋) →
-              (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-                  get_sub_context Γ l leq ⊢ B type →
-                    insert_into_ctx leq Γ B ⊢ a₃⌊weaken_from n l⌋ ≡ a₄⌊weaken_from n l⌋ ∶ A'⌊weaken_from n l⌋) →
-                ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-                  get_sub_context Γ l leq ⊢ B type →
-                    insert_into_ctx leq Γ B ⊢ (a₁ ≃[A] a₃)⌊weaken_from n l⌋ ≡ (a₂ ≃[A'] a₄)⌊weaken_from n l⌋ type :=
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ = Γ_1 ⊗ Δ →
+                  eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) →
+            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A_1 : Tm m),
+                Γ_1 ⊢ S type →
+                  eqM ▸ Γ = Γ_1 ⊗ Δ →
+                    eqM ▸ a₁ = a →
+                      eqM ▸ a₂ = a' → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A : Tm m),
+                  Γ_1 ⊢ S type →
+                    eqM ▸ Γ = Γ_1 ⊗ Δ →
+                      eqM ▸ a₃ = a →
+                        eqM ▸ a₄ = a' → eqM ▸ A' = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+                ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+                  Γ_1 ⊢ S type →
+                    eqM ▸ Γ = Γ_1 ⊗ Δ →
+                      (eqM ▸ a₁ ≃[A] a₃) = A_1 →
+                        (eqM ▸ a₂ ≃[A'] a₄) = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA' l hleq S hS
+    intro n Γ' a₁ a₂ A a₃ a₄ A' hAA haaA haaA' ihAA ihaaA ihaaA' m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.iden_form_eq
     · apply ihAA
       apply hS
+      repeat' rfl
     · apply ihaaA
       apply hS
+      repeat' rfl
     · apply ihaaA'
       apply hS
+      repeat' rfl
 
 theorem weakening_univ_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},
     Γ ctx →
-      (∀ (l : Nat) {leq : l ≤ n} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ 𝒰⌊weaken_from n l⌋ ≡ 𝒰⌊weaken_from n l⌋ type :=
+      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A A' : Tm m),
+          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ 𝒰 = A → eqM ▸ 𝒰 = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ hiC ihiC l hleq S hS
+    intro n Γ' hiC ihiC m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.univ_form_eq
     apply ihiC
     apply hS
+    repeat' rfl
 
 theorem weakening_univ_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
     (Γ ⊢ A ≡ A' ∶ 𝒰) →
-      (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type →
-            insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ ∶ 𝒰⌊weaken_from n l⌋) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type :=
+      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A_1 : Tm m),
+          Γ_1 ⊢ S type →
+            eqM ▸ Γ = Γ_1 ⊗ Δ →
+              eqM ▸ A = a → eqM ▸ A' = a' → eqM ▸ 𝒰 = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+          Γ_1 ⊢ S type →
+            eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ A A' hAAU ihAAU l hleq S hS
+    intro n Γ A A' hAAU ihAAU m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.univ_elim_eq
+    rw [←weakening_univ]
     apply ihAAU
     apply hS
+    repeat' rfl
 
 theorem weakening_type_symm :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
     Γ ⊢ A ≡ A' type →
-      (∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A'⌊weaken_from n l⌋ ≡ A⌊weaken_from n l⌋ type :=
+      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+          Γ_1 ⊢ S type →
+            eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) →
+        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+          Γ_1 ⊢ S type →
+            eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A' = A_1 → eqM ▸ A = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ A A' hAA ihAA l hleq S hS
+    intro n Γ' A A' hAA ihAA m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.type_symm
     apply ihAA
     apply hS
+    repeat' rfl
 
 theorem weakening_type_trans :
-∀ {n : Nat} {Γ : Ctx n} {A B C : Tm n},
-Γ ⊢ A ≡ B type →
-  Γ ⊢ B ≡ C type →
-    (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-        get_sub_context Γ l leq ⊢ B_1 type →
-          insert_into_ctx leq Γ B_1 ⊢ A⌊weaken_from n l⌋ ≡ B⌊weaken_from n l⌋ type) →
-      (∀ (l : Nat) {leq : l ≤ n} {B_1 : Tm l},
-          get_sub_context Γ l leq ⊢ B_1 type →
-            insert_into_ctx leq Γ B_1 ⊢ B⌊weaken_from n l⌋ ≡ C⌊weaken_from n l⌋ type) →
-        ∀ (l : Nat) {leq : l ≤ n} {B : Tm l},
-          get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A⌊weaken_from n l⌋ ≡ C⌊weaken_from n l⌋ type :=
+    ∀ {n : Nat} {Γ : Ctx n} {A B C : Tm n},
+    Γ ⊢ A ≡ B type →
+      Γ ⊢ B ≡ C type →
+        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A' : Tm m),
+            Γ_1 ⊢ S type →
+              eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ B = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A A' : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ B = A → eqM ▸ C = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+            ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A' : Tm m),
+              Γ_1 ⊢ S type →
+                eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ C = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type :=
   by
-    intro n Γ A B C hAB hBC ihAB ihBC l hleq S hS
+    intro n Γ A B C hAB hBC ihAB ihBC m l Γ Δ heqM S T T' hS heqΓ heqT heqT'
+    cases heqM
+    cases heqΓ
+    cases heqT
+    cases heqT'
     apply IsEqualType.type_trans
     · apply ihAB
       apply hS
+      repeat' rfl
     · apply ihBC
       apply hS
-
+      repeat' rfl

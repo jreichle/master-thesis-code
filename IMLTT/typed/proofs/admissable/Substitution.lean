@@ -11,7 +11,7 @@ import aesop
 
 /- # Substitution Property -/
 
-theorem substitution_ctx : 
+theorem substitution_ctx :
     (Γ ⊢ b ∶ B) → Γ ⬝ B ⬝ A ctx → Γ ⬝ A⌈b⌉₀ ctx :=
   by
     intro hbB hiCBA
@@ -24,7 +24,6 @@ theorem substitution_ctx :
     apply And.left substitution
     · apply hiCBA
     · apply hbB
-    omega
 
 theorem substitution_type : (Γ ⊢ b ∶ B) → Γ ⬝ B ⊢ A type → Γ ⊢ A⌈b⌉₀ type :=
   by

@@ -8,44 +8,51 @@ import IMLTT.untyped.proofs.Mixture
 
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.admissable.weakening.Helpers
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
-theorem weakening_ctx_empty :
-    ∀ (l : Nat) {leq : l ≤ 0} {B : Tm l}, get_sub_context ε l leq ⊢ B type → insert_into_ctx leq ε B ctx :=
+theorem weakening_gen_empty :
+    ∀ (m l : Nat) (Γ : Ctx l) (Δ : CtxGen l m) (eqM : 0 = m) (S : Tm l),
+      Γ ⊢ S type → eqM ▸ ε = Γ ⊗ Δ → (Γ ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
   by
-    intro l hleq B hB
-    simp [empty_insert_into_context]
-    simp [insert_into_ctx]
-    have hiCB := IsCtx.extend (boundary_ctx_type hB) hB
-    have heq : l = 0 := by omega
-    have B' : Tm 0 := heq ▸ B
-    aesop
-
-theorem weakening_extend :
-    ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
-    Γ ctx →
-      Γ ⊢ A type →
-        (∀ (l : Nat) {leq : l ≤ x} {B : Tm l}, get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ctx) →
-          (∀ (l : Nat) {leq : l ≤ x} {B : Tm l},
-              get_sub_context Γ l leq ⊢ B type → insert_into_ctx leq Γ B ⊢ A⌊weaken_from x l⌋ type) →
-            ∀ (l : Nat) {leq : l ≤ x + 1} {B : Tm l},
-              get_sub_context (Γ ⬝ A) l leq ⊢ B type → insert_into_ctx leq (Γ ⬝ A) B ctx :=
-  by
-    intro n Γ A hiC hA ihiC ihA l hLeq B hB
-    cases hLeq
-    case refl =>
-      simp [insert_into_ctx]
-      rw [head_get_sub_context] at hB
+    intro m l Γ Δ heqM S hS heqΓ
+    cases heqM
+    cases Δ with
+    | start =>
+      cases heqΓ
+      rw [empty_expand_context_weaken_from]
+      simp [expand_ctx]
       apply IsCtx.extend
-      · apply boundary_ctx_type hB
-        apply rfl
-      · apply hB
-    case step h =>
-      rw [extend_get_sub_context (leq := h)] at hB
-      · rw [←extend_insert_into_context]
-        apply IsCtx.extend
-        · apply ihiC
-          apply hB
-        · apply ihA
-          apply hB
+      · apply IsCtx.empty
+      · apply hS
+
+theorem weakening_gen_extend :
+    ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
+      Γ ctx →
+        Γ ⊢ A type →
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l),
+              Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
+            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A_1 : Tm m),
+                Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l),
+                Γ_1 ⊢ S type → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
+  by
+    intro n Γ' A hiC hA ihiC ihA m l Γ Δ heqM S hS heqΓ
+    cases heqM
+    cases Δ with
+    | start =>
+      cases heqΓ
+      rw [empty_expand_context_weaken_from]
+      apply IsCtx.extend
+      · apply boundary_ctx_type hS
+      · apply hS
+    | expand =>
+      cases heqΓ
+      simp [weaken_from_into_gen_ctx]
+      rw [expand_ctx]
+      apply IsCtx.extend
+      · apply ihiC
+        apply hS
+        repeat' rfl
+      · apply ihA
+        apply hS
+        repeat' rfl

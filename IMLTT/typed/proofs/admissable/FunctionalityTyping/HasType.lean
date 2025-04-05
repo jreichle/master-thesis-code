@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
 import IMLTT.typed.proofs.admissable.SubstitutionGeneral
 import IMLTT.typed.proofs.admissable.Substitution
 
@@ -321,7 +321,6 @@ theorem functionality_typing_unit_intro :
           apply And.left substitution
           · apply hiC
           · apply hsS
-          · omega
 
 theorem functionality_typing_pi_intro :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)},
@@ -555,7 +554,6 @@ theorem functionality_typing_nat_zero_intro :
           apply And.left substitution
           · apply hiC
           · apply hsS
-          · omega
  
 theorem functionality_typing_nat_succ_intro :
     ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
@@ -739,7 +737,6 @@ theorem functionality_typing_univ_unit :
       apply And.left substitution
       · apply hiC
       · apply hsS
-      · apply hleq
 
 theorem functionality_typing_univ_empty :
   ∀ {n : Nat} {Γ : Ctx n},
@@ -789,7 +786,6 @@ theorem functionality_typing_univ_empty :
       apply And.left substitution
       · apply hiC
       · apply hsS
-      · apply hleq
 
 theorem functionality_typing_univ_pi :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
@@ -1000,7 +996,6 @@ theorem functionality_typing_univ_nat :
       apply And.left substitution
       · apply hiC
       · apply hsS
-      · apply hleq
 
 theorem functionality_typing_univ_iden :
   ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},

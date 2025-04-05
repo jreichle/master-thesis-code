@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
 import IMLTT.typed.proofs.admissable.SubstitutionGeneral
 import IMLTT.typed.proofs.admissable.Substitution
 
@@ -60,7 +60,6 @@ theorem functionality_typing_unit_form :
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.unit_form_eq hiC
       · apply hsS
-      · exact hleq
 
 theorem functionality_typing_empty_form :
   ∀ {n : Nat} {Γ : Ctx n},
@@ -108,7 +107,6 @@ theorem functionality_typing_empty_form :
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.empty_form_eq hiC
       · apply hsS
-      · exact hleq
 
 theorem functionality_typing_pi_form :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
@@ -320,7 +318,6 @@ theorem functionality_typing_nat_form :
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.nat_form_eq hiC
       · apply hsS
-      · exact hleq
 
 theorem functionality_typing_iden_form :
  ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
@@ -480,7 +477,6 @@ theorem functionality_typing_univ_form :
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.univ_form_eq hiC
       · apply hsS
-      · exact hleq
 
 theorem functionality_typing_univ_elim :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
