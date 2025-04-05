@@ -8,7 +8,7 @@ import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.admissable.WeakSubstitution.WeakSubstitution
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.FunctionalityTyping
-import IMLTT.typed.proofs.admissable.ContextConv
+import IMLTT.typed.proofs.admissable.ContextConversion
 
 import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
 

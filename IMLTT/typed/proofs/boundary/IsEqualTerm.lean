@@ -5,10 +5,10 @@ import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
-import IMLTT.typed.proofs.admissable.WeakSubstitution.WeakSubstitution
+import IMLTT.typed.proofs.admissable.WeakSubstitution
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.FunctionalityTyping
-import IMLTT.typed.proofs.admissable.ContextConv
+import IMLTT.typed.proofs.admissable.ContextConversion
 
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.boundary.Helpers
@@ -80,11 +80,11 @@ theorem boundary_pi_comp :
         apply hbB
       · apply haA
     · apply substitution_term
-      · apply haA
       · apply hbB
-    · apply substitution_type
       · apply haA
+    · apply substitution_type
       · apply ihbB
+      · apply haA
 
 theorem lulululu {b : Tm n} :
     c⌈⇑ₛ((ₛidₚ), a)⌉⌈b⌉₀
@@ -136,7 +136,7 @@ theorem boundary_sigma_comp :
       simp [n_substitution_zero] at h1
       simp [zero_substitution] at h1
       simp [substitution_conv_zero] at h1
-      have h2 := substitution_term hbB h1
+      have h2 := substitution_term h1 hbB
       simp [←lift_n_substitution] at h2
       rw (config := {occs := .pos [1]}) [substitute_zero]
       simp [n_substitution_zero] at h2
@@ -144,11 +144,11 @@ theorem boundary_sigma_comp :
       simp [lulululu] at h2
       apply h2
     · apply substitution_type
+      · apply hC
       · apply HasType.sigma_intro
         · apply haA
         · apply hbB
         · apply ctx_extr (boundary_ctx_term hcC)
-      · apply hC
 
 theorem boundary_nat_zero_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -171,8 +171,8 @@ theorem boundary_nat_zero_comp :
       · apply hzNat
     · apply hzA
     · apply substitution_type
-      · apply hzNat
       · apply hA
+      · apply hzNat
 
 theorem boundary_nat_succ_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -197,11 +197,6 @@ theorem boundary_nat_succ_comp :
     · rw [substitution_separate]
       rw [←substitution_shift_substitute_zero (A := A⌈𝓈(x)⌉₀)]
       apply substitution_term
-      · apply HasType.nat_elim
-        · apply hA
-        · apply hzA
-        · apply hsA
-        · apply hsNat
       · rw [context_to_gen_ctx] at hsA
         have h := (And.left (And.right (And.right substitution))) hsA hsNat
         simp [substitute_into_gen_ctx] at h
@@ -212,9 +207,14 @@ theorem boundary_nat_succ_comp :
         simp [substitute_zero]
         apply h
         any_goals omega
+      · apply HasType.nat_elim
+        · apply hA
+        · apply hzA
+        · apply hsA
+        · apply hsNat
     · apply substitution_type
-      · apply HasType.nat_succ_intro hsNat
       · apply hA
+      · apply HasType.nat_succ_intro hsNat
 
 theorem boundary_iden_comp :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a : Tm n},
@@ -240,12 +240,12 @@ theorem boundary_iden_comp :
         · apply haA
     · rw [←old_test_hahah]
       apply substitution_term
-      · apply haA
       · apply hbB
+      · apply haA
     · rw [←old_test_hahah]
       apply substitution_type
-      · apply haA
       · apply ihbB
+      · apply haA
 
 theorem boundary_unit_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n}, Γ ctx
@@ -280,10 +280,10 @@ theorem boundary_unit_elim_eq :
         · apply HasType.ty_conv
           · apply And.left (And.right ihaaA)
           · apply substitution_type_eq
-            · apply HasType.unit_intro (boundary_ctx_term_eq haaA)
             · apply hAA
+            · apply HasType.unit_intro (boundary_ctx_term_eq haaA)
         · apply And.left (And.right ihbb1)
-      · have hAA' := substitution_type_eq (And.left (And.right ihbb1)) (hAA)
+      · have hAA' := substitution_type_eq (hAA) (And.left (And.right ihbb1))
         apply IsEqualType.type_trans
         · apply IsEqualType.type_symm hAA'
         · apply functionality_typing_type
@@ -292,8 +292,8 @@ theorem boundary_unit_elim_eq :
           · apply And.left (And.right ihbb1)
           · apply And.left ihbb1
     · apply substitution_type
-      · apply And.left ihbb1
       · apply And.left ihAA
+      · apply And.left ihbb1
 
 theorem boundary_empty_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm (n + 1)} {b b' : Tm n},
@@ -314,7 +314,7 @@ theorem boundary_empty_elim_eq :
         · apply HasType.ty_conv
           · apply And.left (And.right ihbb0)
           · apply IsEqualType.empty_form_eq (boundary_ctx_term_eq hbb0)
-      · have hAA' := substitution_type_eq (And.left (And.right ihbb0)) (hAA)
+      · have hAA' := substitution_type_eq (hAA) (And.left (And.right ihbb0))
         apply IsEqualType.type_trans
         · apply IsEqualType.type_symm hAA'
         · apply functionality_typing_type
@@ -323,8 +323,8 @@ theorem boundary_empty_elim_eq :
           · apply And.left (And.right ihbb0)
           · apply And.left ihbb0
     · apply substitution_type
-      · apply And.left ihbb0
       · apply And.left ihAA
+      · apply And.left ihbb0
 
 theorem boundary_pi_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {b b' B : Tm (n + 1)},
@@ -379,9 +379,9 @@ theorem boundary_pi_elim_eq :
         · apply And.left (And.right ihaaA)
         · apply And.left (ihaaA)
     · apply substitution_type
-      · apply And.left ihaaA
       · have hPiInv := pi_is_type_inversion (And.right (And.right ihffPi))
         apply And.right hPiInv
+      · apply And.left ihaaA
 
 theorem boundary_sigma_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n} {a a' A b b' : Tm n} {B : Tm (n + 1)},
@@ -534,7 +534,7 @@ theorem boundary_sigma_elim_eq :
                         · apply And.left ihBB
                         · apply And.left ihAA
                       · apply And.left ihBB
-                have h3 := substitution_type_eq ht h2
+                have h3 := substitution_type_eq h2 ht
                 simp [hahahahahaha] at h3
                 apply h3
       · apply IsEqualType.type_symm
@@ -545,11 +545,11 @@ theorem boundary_sigma_elim_eq :
           · apply And.left ihppSi
           · apply And.left (And.right ihppSi)
         · apply substitution_type_eq
-          · apply And.left (And.right ihppSi)
           · apply hCC
+          · apply And.left (And.right ihppSi)
     · apply substitution_type
-      · apply And.left ihppSi
       · apply And.left ihCC
+      · apply And.left ihppSi
 
 theorem boundary_nat_zero_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n}, 
@@ -603,16 +603,16 @@ theorem boundary_nat_elim_eq :
         · apply HasType.ty_conv
           · apply And.left (And.right ihzzA)
           · apply substitution_type_eq
+            · apply hAA
             · apply HasType.nat_zero_intro
               apply boundary_ctx_term_eq hzzA
-            · apply hAA
         · apply context_conversion_term
           · apply And.right ihAA
           · apply hAA
           · apply HasType.ty_conv
             · apply And.left (And.right ihssA)
             · have h1 := HasType.nat_succ_intro (And.left ihxxNat)
-              have h2 := substitution_type_eq h1 hAA
+              have h2 := substitution_type_eq hAA h1
               have hVar := HasType.nat_succ_intro (HasType.var (ctx_extr (boundary_ctx_type_eq hAA)))
               simp [lol111] at h2
               apply weakening_type_eq
@@ -630,16 +630,16 @@ theorem boundary_nat_elim_eq :
         rotate_right
         · apply A'⌈x⌉₀
         · apply substitution_type_eq
-          · apply And.left ihxxNat
           · apply hAA
+          · apply And.left ihxxNat
         · apply functionality_typing_type
           · apply And.right ihAA
           · apply hxxNat
           · apply And.left ihxxNat
           · apply And.left (And.right ihxxNat)
     · apply substitution_type
-      · apply And.left ihxxNat
       · apply And.left ihAA
+      · apply And.left ihxxNat
 
 theorem boundary_iden_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' a a' : Tm n},
@@ -832,10 +832,10 @@ theorem boundary_iden_elim_eq :
                    · apply HasType.var (And.left ihAA)
                    · apply weakening_type (And.left ihAA) (And.left ihAA)
             apply IsEqualType.type_trans
-            · have hnow := substitution_type_eq hrefl ht
+            · have hnow := substitution_type_eq ht hrefl
               simp [weaken] at hnow
               simp [weaken_var] at hnow
-              have hlol := substitution_type_eq (HasType.var (And.left ihAA)) hnow
+              have hlol := substitution_type_eq hnow (HasType.var (And.left ihAA))
               simp [even_new_test] at hlol
               apply hlol
             · rw [context_to_gen_ctx] at ihBB
@@ -917,7 +917,7 @@ theorem boundary_iden_elim_eq :
               have hnow := functionality_typing_type ht hrefleq hrefl hrefl'
               simp [weaken] at hnow
               simp [weaken_var] at hnow
-              have hlol := substitution_type_eq (HasType.var (And.left ihAA)) hnow
+              have hlol := substitution_type_eq hnow (HasType.var (And.left ihAA))
               simp [even_new_test] at hlol
               apply hlol
         · apply HasType.ty_conv
@@ -951,7 +951,7 @@ theorem boundary_iden_elim_eq :
           simp [zero_substitution] at h2
           simp [substitution_conv_zero] at h2
           simp [clean_this_mess_asap] at h2
-          have h3 := substitution_type_eq (And.left ihppId) h2
+          have h3 := substitution_type_eq h2 (And.left ihppId)
           simp [←lift_n_substitution] at h3
           simp [n_substitution_zero] at h3
           simp [zero_substitution] at h3
@@ -980,7 +980,7 @@ theorem boundary_iden_elim_eq :
             simp [zero_substitution] at h2
             simp [substitution_conv_zero] at h2
             simp [clean_this_mess_asap] at h2
-            have h3 := substitution_type_eq (And.left ihppId) h2
+            have h3 := substitution_type_eq h2 (And.left ihppId)
             simp [←lift_n_substitution] at h3
             simp [n_substitution_zero] at h3
             simp [zero_substitution] at h3
@@ -1015,7 +1015,7 @@ theorem boundary_iden_elim_eq :
               have hnew : Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A] a₄ type :=
                   IsEqualType.iden_form_eq (defeq_refl_type (And.left ihAA))
                       haaA (IsEqualTerm.ty_conv_eq haaA' (IsEqualType.type_symm hAA))
-              have h3 := substitution_type_eq (HasType.ty_conv (And.left ihppId) hnew) h2
+              have h3 := substitution_type_eq h2 (HasType.ty_conv (And.left ihppId) hnew)
               simp [←lift_n_substitution] at h3
               simp [n_substitution_zero] at h3
               simp [zero_substitution] at h3
@@ -1077,7 +1077,7 @@ theorem boundary_iden_elim_eq :
       simp [zero_substitution] at h2
       simp [substitution_conv_zero] at h2
       simp [clean_this_mess_asap] at h2
-      have h3 := substitution_type (And.left ihppId) h2
+      have h3 := substitution_type h2 (And.left ihppId)
       simp [←lift_n_substitution] at h3
       simp [n_substitution_zero] at h3
       simp [zero_substitution] at h3

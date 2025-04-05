@@ -9,7 +9,8 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.Weakening
+import IMLTT.typed.proofs.admissable.Substitution
 
 import IMLTT.typed.proofs.admissable.weaksubstitution.IsCtx
 import IMLTT.typed.proofs.admissable.weaksubstitution.IsType
@@ -292,3 +293,76 @@ theorem weak_substitution :
       apply weak_substitution_term_symm
     case IsEqualTermTermTrans =>
       apply weak_substitution_term_trans
+
+theorem weak_substitution_general_ctx {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {S : Tm l} {s : Tm (l + 1)} :
+    (Γ ⬝ S ⊗ Δ) ctx → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1))) ctx :=
+  by
+    intro hiC hsS
+    apply And.left weak_substitution hiC hsS
+
+theorem weak_substitution_general_type {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {A : Tm n} {S : Tm l} {s : Tm (l + 1)} :
+    (Γ ⬝ S ⊗ Δ) ⊢ A type → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1))) ⊢ A⌈s↑/ₙ(gen_ctx_leq Δ)⌉ type :=
+  by
+    intro hA hsS
+    apply And.left (And.right weak_substitution) hA hsS
+
+theorem weak_substitution_general_term {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n)} {A a : Tm (n)} {S : Tm l} {s : Tm (l + 1)} :
+    ((Γ ⬝ S ⊗ Δ) ⊢ a ∶ A) → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1))) ⊢ a⌈s↑/ₙ(gen_ctx_leq Δ)⌉ ∶ A⌈s↑/ₙ(gen_ctx_leq Δ)⌉ :=
+  by
+    intro haA hsS
+    apply And.left (And.right (And.right weak_substitution)) haA hsS
+
+theorem weak_substitution_general_type_eq {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n)} {A A' : Tm (n)} {S : Tm l} {s : Tm (l + 1)} :
+    (Γ ⬝ S ⊗ Δ) ⊢ A ≡ A' type → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1))) ⊢ A⌈s↑/ₙ(gen_ctx_leq Δ)⌉ ≡ A'⌈s↑/ₙ(gen_ctx_leq Δ)⌉ type :=
+  by
+    intro hAA hsS
+    apply And.left (And.right (And.right (And.right weak_substitution))) hAA hsS
+
+theorem weak_substitution_general_term_eq {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n)} {A a a' : Tm (n)} {S : Tm l} {s : Tm (l + 1)} :
+    ((Γ ⬝ S ⊗ Δ) ⊢ a ≡ a' ∶ A) → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S ⊗ ⌈s↑⌉(Δ w/Nat.le_refl (l + 1))) ⊢ a⌈s↑/ₙ(gen_ctx_leq Δ)⌉ ≡ a'⌈s↑/ₙ(gen_ctx_leq Δ)⌉
+                                                ∶ A⌈s↑/ₙ(gen_ctx_leq Δ)⌉ :=
+  by
+    intro haaA hsS
+    apply And.right (And.right (And.right (And.right weak_substitution))) haaA hsS
+
+theorem weak_substitution_type :
+    (Γ ⬝ S) ⊢ A type → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S) ⊢ A⌈s↑/ₙ(gen_ctx_leq .start)⌉ type :=
+  by
+    intro hA hsS
+    have hS : Γ ⊢ S type := ctx_extr (boundary_ctx_type hA)
+    have hWeak : Γ ⬝ S ⬝ S⌊↑ₚidₚ⌋ ⊢ A⌊⇑ₚ↑ₚidₚ⌋ type := weakening_second_type hA hS
+    have hSub := substitution_type hWeak hsS
+    rw [n_substitution_shift_zero]
+    have hSubEq : A⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = A⌈(ₛ↑ₚidₚ), s⌉ :=
+      by
+        rw [substitute_zero]
+        rw [substitution_comp_σρ]
+        simp [comp_substitute_weaken]
+        simp [comp_weaken]
+    rw [←hSubEq]
+    apply hSub
+
+theorem weak_substitution_term :
+    ((Γ ⬝ S) ⊢ a ∶ A) → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
+    → (Γ ⬝ S) ⊢ a⌈s↑/ₙ(gen_ctx_leq .start)⌉ ∶ A⌈s↑/ₙ(gen_ctx_leq .start)⌉ :=
+  by
+    intro haA hsS
+    have hS := ctx_extr (boundary_ctx_term haA)
+    have hWeak := weakening_second_term haA hS
+    have hSub := substitution_term hWeak hsS
+    rw [n_substitution_shift_zero]
+    have hSubEq : ∀t, t⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = t⌈(ₛ↑ₚidₚ), s⌉ :=
+      by
+        intro t
+        rw [substitute_zero]
+        rw [substitution_comp_σρ]
+        simp [comp_substitute_weaken]
+        simp [comp_weaken]
+    simp [←hSubEq]
+    apply hSub

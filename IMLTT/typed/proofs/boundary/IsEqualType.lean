@@ -6,7 +6,7 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.admissable.Inversion
-import IMLTT.typed.proofs.admissable.ContextConv
+import IMLTT.typed.proofs.admissable.ContextConversion
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 theorem boundary_unit_form_eq :

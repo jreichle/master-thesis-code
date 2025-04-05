@@ -9,8 +9,8 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
-import IMLTT.typed.proofs.admissable.SubstitutionGeneral
+import IMLTT.typed.proofs.admissable.Weakening
+import IMLTT.typed.proofs.admissable.Substitution
 
 import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsCtx
 import IMLTT.typed.proofs.admissable.FunctionalityTyping.IsType
@@ -354,6 +354,24 @@ theorem functionality_typing :
       repeat' intro
       apply IsEqualTerm.term_trans
       repeat' assumption
+
+theorem functionality_typing_general_type {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {T : Tm (n + 1)} {s s' S : Tm l} :
+    (Γ ⬝ S ⊗ Δ ⊢ T type)
+    → (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) ≡ (T⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) type :=
+  by
+    intro hT hssS hsS hsS'
+    apply And.left (And.right functionality_typing) hssS hsS hsS' hT
+
+theorem functionality_typing_general_term {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {t T : Tm (n + 1)} {s s' S : Tm l} :
+    (Γ ⬝ S ⊗ Δ ⊢ t ∶ T)
+    → (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+    → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢
+      (t⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) ≡ (t⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉)
+      ∶ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) :=
+  by
+    intro htT hssS hsS hsS'
+    apply And.left (And.right (And.right functionality_typing)) hssS hsS hsS' htT
 
   theorem functionality_typing_type {l : Nat} {Γ : Ctx l} {s s' S : Tm l} {T : Tm (l + 1)} :
       Γ ⬝ S ⊢ T type

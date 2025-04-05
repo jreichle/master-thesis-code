@@ -3,12 +3,14 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.RulesEquality
+
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
-import IMLTT.typed.proofs.admissable.WeakSubstitution.WeakSubstitution
+import IMLTT.typed.proofs.admissable.WeakSubstitution
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.FunctionalityTyping
-import IMLTT.typed.proofs.admissable.ContextConv
+import IMLTT.typed.proofs.admissable.ContextConversion
 
 import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
 
@@ -365,10 +367,10 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
     have hC :=
       by
         apply substitution_type
+        · apply hCpre
         · apply sigma_elim_proj_first
           · apply weakening_type hSi hSi
           · apply HasType.var hSi
-        · apply hCpre
     have hcCpre := sigma_elim_proj_second_pre hSi hpSi
     have hcC : Γ ⬝ A ⬝ B ⊢ v(0) ∶
                   B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma
@@ -398,10 +400,10 @@ theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n 
     have hC :=
       by
         apply substitution_type
+        · apply hCpre
         · apply sigma_elim_proj_first
           · apply weakening_type hSi hSi
           · apply HasType.var hSi
-        · apply hCpre
     have hcCpre := sigma_elim_proj_second_pre hSi hpSi
     have hcC : Γ ⬝ A ⬝ B ⊢ v(0) ∶
                   B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma

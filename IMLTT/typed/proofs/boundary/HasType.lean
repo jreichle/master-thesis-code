@@ -174,8 +174,8 @@ theorem boundary_unit_elim :
   by
     intro n Γ A a b hA haA hb1 ihA ihaA ihb1
     apply substitution_type
-    · apply hb1
     · apply hA
+    · apply hb1
 
 theorem boundary_empty_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {b : Tm n},
@@ -187,8 +187,8 @@ theorem boundary_empty_elim :
   by
     intro n Γ A b hA hb0 ihA ihb0
     apply substitution_type
-    · apply hb0
     · apply hA
+    · apply hb0
 
 theorem boundary_pi_elim :
     ∀ {n : Nat} {Γ : Ctx n} {f A : Tm n} {B : Tm (n + 1)} {a : Tm n},
@@ -200,8 +200,8 @@ theorem boundary_pi_elim :
   by
     intro n Γ f A B a hfPi haA ihfPi ihaA
     apply substitution_type
-    · apply haA
     · apply And.right (pi_is_type_inversion ihfPi)
+    · apply haA
 
 theorem boundary_sigma_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
@@ -212,8 +212,8 @@ theorem boundary_sigma_elim :
   by
     intro n Γ A B p C c hpSi hC hcC ihpSi ihC ihcC
     apply substitution_type
-    · apply hpSi
     · apply ihC
+    · apply hpSi
 
 theorem boundary_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -229,8 +229,8 @@ theorem boundary_nat_elim :
   by
     intro n Γ z x A s hA izA isA hxNat ihA ihzA ihsA ihxNat
     apply substitution_type
-    · apply hxNat
     · apply hA
+    · apply hxNat
 
 theorem boundary_iden_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
@@ -264,7 +264,7 @@ theorem boundary_iden_elim :
     simp [zero_substitution] at h2
     simp [substitution_conv_zero] at h2
     simp [clean_this_mess_asap] at h2
-    have h3 := substitution_type hpId h2
+    have h3 := substitution_type h2 hpId
     simp [←lift_n_substitution] at h3
     simp [n_substitution_zero] at h3
     simp [zero_substitution] at h3

@@ -9,8 +9,8 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
-import IMLTT.typed.proofs.admissable.SubstitutionGeneral
+import IMLTT.typed.proofs.admissable.Weakening
+import IMLTT.typed.proofs.admissable.Substitution
 
 theorem functionality_typing_var_eq :
    ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},

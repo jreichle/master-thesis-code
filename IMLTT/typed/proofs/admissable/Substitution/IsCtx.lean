@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.Weakening
 
 import IMLTT.typed.proofs.admissable.substitution.Helpers
 
@@ -31,7 +31,6 @@ theorem substitution_gen_extend :
             eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ → (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ctx :=
   by
     intro n Γ' A hiC hA ihiC ihA m l Γ Δ heqM s S heqΓ hsS
-    
     cases heqM
     cases Δ
     case refl.start =>

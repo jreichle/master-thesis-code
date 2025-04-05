@@ -10,30 +10,30 @@ import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
-import IMLTT.typed.proofs.admissable.weakening.IsCtx
-import IMLTT.typed.proofs.admissable.weakening.IsType
-import IMLTT.typed.proofs.admissable.weakening.HasType
-import IMLTT.typed.proofs.admissable.weakening.IsEqualType
-import IMLTT.typed.proofs.admissable.weakening.IsEqualTerm
+import IMLTT.typed.proofs.admissable.weakeningold.IsCtx
+import IMLTT.typed.proofs.admissable.weakeningold.IsType
+import IMLTT.typed.proofs.admissable.weakeningold.HasType
+import IMLTT.typed.proofs.admissable.weakeningold.IsEqualType
+import IMLTT.typed.proofs.admissable.weakeningold.IsEqualTerm
 
 theorem weakening :
-    (∀ {n : Nat} {Γ : Ctx n} (isCtx : Γ ctx)
+    (∀ {n : Nat} {Γ : Ctx n} (_isCtx : Γ ctx)
       (l : Nat) {leq : l ≤ n} {B : Tm l},
       get_sub_context (leq := leq) Γ l ⊢ B type
       → insert_into_ctx (leq := leq) Γ B ctx) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n} (isType : Γ ⊢ A type)
+    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n} (_isType : Γ ⊢ A type)
       (l : Nat) {leq : l ≤ n} {B : Tm l},
       get_sub_context (leq := leq) Γ l ⊢ B type
       → insert_into_ctx (leq := leq) Γ B ⊢ A⌊weaken_from n l⌋ type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n} (hasType : Γ ⊢ a ∶ A)
+    (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n} (_hasType : Γ ⊢ a ∶ A)
       (l : Nat) {leq : l ≤ n} {B : Tm l},
       get_sub_context (leq := leq) Γ l ⊢ B type
         → insert_into_ctx (leq := leq) Γ B ⊢ a⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} (isEqualType : Γ ⊢ A ≡ A' type)
+    (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} (_isEqualType : Γ ⊢ A ≡ A' type)
       (l : Nat) {leq : l ≤ n} {B : Tm l},
       get_sub_context (leq := leq) Γ l ⊢ B type
       → insert_into_ctx (leq := leq) Γ B ⊢ A⌊weaken_from n l⌋ ≡ A'⌊weaken_from n l⌋ type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n} (isEqualTerm : Γ ⊢ a ≡ a' ∶ A)
+    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n} (_isEqualTerm : Γ ⊢ a ≡ a' ∶ A)
       (l : Nat) {leq : l ≤ n} {B : Tm l},
       get_sub_context (leq := leq) Γ l ⊢ B type
       → insert_into_ctx (leq := leq) Γ B ⊢ a⌊weaken_from n l⌋ ≡ a'⌊weaken_from n l⌋ ∶ A⌊weaken_from n l⌋)

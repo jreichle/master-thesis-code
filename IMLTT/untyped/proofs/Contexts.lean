@@ -158,6 +158,17 @@ theorem context_to_gen_ctx :
   by
     rfl
 
+theorem context_shift_gen_ctx :
+    Γ ⬝ S ⊗ Δ = Γ ⊗ (concat_ctx (.start ⊙ S) Δ) :=
+  by
+    induction Δ with
+    | start =>
+      rfl
+    | expand Δ' S' ih =>
+      simp [expand_ctx]
+      rw [ih]
+      rfl
+
 theorem extend_expand_context_n_substitution' {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {A : Tm (n + 1)}:
     (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⬝ (A)⌈s/ₙ(gen_ctx_leq_sub Δ)⌉ =
     Γ ⊗ ⌈s⌉((Δ ⊙ A) w/Nat.le_refl l) :=

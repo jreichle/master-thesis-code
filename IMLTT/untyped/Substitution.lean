@@ -104,31 +104,6 @@ def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
     | .extend ξ t => .extend (comp_substitute_substitute ξ ξ') t
   | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute σ t)
 
--- helpers:
-def substitute_head (σ : Subst m (n + 1)) : Tm m :=
-  substitute σ v(0)
-
-def weaken_tail (ρ : Weak m (n + 1)) : Weak m n :=
-  match ρ with
-  | .id =>
-    sorry
-  | .shift ρ' =>
-    sorry
-  | .lift σ' =>
-    sorry
-
-def substitute_tail (σ : Subst m (n + 1)) : Subst m n :=
-  match σ with
-  | .weak ρ =>
-    sorry
-    -- .weak (weaken_tail ρ)
-  | .shift σ' =>
-    .shift (substitute_tail σ')
-  | .lift σ' =>
-    .shift σ'
-  | .extend σ' t =>
-    σ'
-
 def substitute_zero (a : Tm n) (t : Tm (n + 1)) : Tm n :=
   substitute (.extend (.weak .id) a) t
 

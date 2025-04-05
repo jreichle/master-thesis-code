@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.Weakening
 
 theorem helper_weak_subst_nat_elim {leq : l ≤ n} {s : Tm l} {A : Tm (n + 1)} :
     A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌈⇑ₛ⇑ₛ(s↑/ₙhleq)⌉

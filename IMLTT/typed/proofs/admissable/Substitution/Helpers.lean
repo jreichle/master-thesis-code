@@ -9,9 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
-
-import Mathlib.Tactic.ExtractGoal
+import IMLTT.typed.proofs.admissable.Weakening
 
 theorem subst_subst_sigma_c :
     c⌈(ₛidₚ), a, b⌉⌈σ⌉

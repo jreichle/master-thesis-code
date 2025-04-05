@@ -5,10 +5,10 @@ import IMLTT.untyped.Substitution
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
-import IMLTT.typed.proofs.admissable.WeakSubstitution.WeakSubstitution
+import IMLTT.typed.proofs.admissable.WeakSubstitution
 import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.FunctionalityTyping
-import IMLTT.typed.proofs.admissable.ContextConv
+import IMLTT.typed.proofs.admissable.ContextConversion
 
 import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
 
@@ -21,15 +21,15 @@ theorem pi_same_type_diff_val :
     intro hP haA haA'
     apply IsType.pi_form
     · apply substitution_type
-      · apply haA
       · apply hP
+      · apply haA
     · apply weakening_type
       · apply substitution_type
+        · apply hP
         · apply haA'
-        · apply hP
       · apply substitution_type
-        · apply haA
         · apply hP
+        · apply haA
 
 theorem how_to :
     P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉ = P⌈(ₛ↑ₚidₚ), v(0)⌉⌊⇑ₚ↑ₚidₚ⌋ :=

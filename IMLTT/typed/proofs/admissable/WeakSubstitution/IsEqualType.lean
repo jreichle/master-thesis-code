@@ -9,7 +9,7 @@ import IMLTT.untyped.proofs.Mixture
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.weakening.WeakeningGeneral
+import IMLTT.typed.proofs.admissable.Weakening
 
 theorem weak_substitution_unit_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},
