@@ -33,7 +33,7 @@ theorem pi_same_type_diff_val :
 
 theorem pi_same_type_diff_var_context {n : Nat} {Γ : Ctx n} {A : Tm n} {P : Tm (n + 1)}:
     (Γ ⬝ A ⊢ P type)
-    → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉⌊↑ₚidₚ⌋) type) :=
+    → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(0)⌉⌊↑ₚidₚ⌋) type) :=
   by
     intro hP
     have hA := ctx_extr (boundary_ctx_type hP)
@@ -58,7 +58,7 @@ theorem pi_same_type_diff_var_context {n : Nat} {Γ : Ctx n} {A : Tm n} {P : Tm 
 theorem pi_same_type_diff_var_context_iden_weak :
     (Γ ⬝ A ⊢ P type)
     → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) 
-              ⊢ (Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉⌊↑ₚidₚ⌋))⌊↑ₚidₚ⌋ type :=
+              ⊢ (Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(0)⌉⌊↑ₚidₚ⌋))⌊↑ₚidₚ⌋ type :=
   by
     intro hP
     have hA := ctx_extr (boundary_ctx_type hP)
@@ -91,7 +91,7 @@ theorem pi_same_type_diff_var_context_iden_weak :
 
 theorem inhabitant_pi_same_type_diff_val :
     (Γ ⬝ A ⊢ P type)
-    → (Γ ⬝ A ⊢ λP;v(0) ∶ (Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉⌊↑ₚidₚ⌋))⌈(ₛidₚ), v(0)⌉) :=
+    → (Γ ⬝ A ⊢ λP;v(0) ∶ (Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(0)⌉⌊↑ₚidₚ⌋))⌈(ₛidₚ)⋄ v(0)⌉) :=
   by
     intro hP
     have hA := ctx_extr (boundary_ctx_type hP)

@@ -235,7 +235,7 @@ theorem substitution_gen_sigma_comp :
   (Γ ⊢ a ∶ A) →
     (Γ ⊢ b ∶ B⌈a⌉₀) →
       (Γ ⬝ ΣA;B) ⊢ C type →
-        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
           (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
               (a_5 A_1 : Tm (m + 1 - 1 + 1)),
               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
@@ -254,13 +254,13 @@ theorem substitution_gen_sigma_comp :
                     (s S : Tm l) (a A_1 : Tm (m + 1 - 1 + 1)),
                     eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
                       eqM ▸ c = a →
-                        eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 →
+                        eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = A_1 →
                           (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
                   ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
                     (a_9 a' A_1 : Tm (m + 1 - 1 + 1)),
                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                       eqM ▸ A.indSigma B C c (a&b) = a_9 →
-                        eqM ▸ c⌈(ₛidₚ), a, b⌉ = a' →
+                        eqM ▸ c⌈(ₛidₚ)⋄ a⋄ b⌉ = a' →
                           eqM ▸ C⌈a&b⌉₀ = A_1 →
                             (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_9⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
   by
@@ -318,7 +318,7 @@ theorem substitution_gen_nat_zero_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
     Γ ⬝ 𝒩 ⊢ A type →
     (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
-      (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
         (Γ ⊢ 𝓏 ∶ 𝒩) →
           (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n + 1 = m + 1) {s S : Tm l}
               (A_1 : Tm (m + 1 - 1 + 1)),
@@ -333,7 +333,7 @@ theorem substitution_gen_nat_zero_comp :
                   (s_1 S : Tm l) (a A_1 : Tm (m + 1 - 1 + 1)),
                   eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ →
                     eqM ▸ s = a →
-                      eqM ▸ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 →
+                      eqM ▸ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 →
                         (Γ_1 ⊢ s_1 ∶ S) → Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ a⌈s_1/ₙleq⌉ ∶ A_1⌈s_1/ₙleq⌉) →
                 (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
                     (a A : Tm (m + 1 - 1 + 1)),
@@ -411,7 +411,7 @@ theorem substitution_gen_nat_succ_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
     Γ ⬝ 𝒩 ⊢ A type →
       (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
-        (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+        (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
           (Γ ⊢ x ∶ 𝒩) →
             (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n + 1 = m + 1) {s S : Tm l}
                 (A_1 : Tm (m + 1 - 1 + 1)),
@@ -426,7 +426,7 @@ theorem substitution_gen_nat_succ_comp :
                     (s_1 S : Tm l) (a A_1 : Tm (m + 1 - 1 + 1)),
                     eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ →
                       eqM ▸ s = a →
-                        eqM ▸ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 →
+                        eqM ▸ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 →
                           (Γ_1 ⊢ s_1 ∶ S) → Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ a⌈s_1/ₙleq⌉ ∶ A_1⌈s_1/ₙleq⌉) →
                   (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
                       (a A : Tm (m + 1 - 1 + 1)),
@@ -437,7 +437,7 @@ theorem substitution_gen_nat_succ_comp :
                       (s_1 S : Tm l) (a a' A_1 : Tm (m + 1 - 1 + 1)),
                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                         eqM ▸ A.indNat z s 𝓈(x) = a →
-                          eqM ▸ s⌈(ₛidₚ), x, A.indNat z s x⌉ = a' →
+                          eqM ▸ s⌈(ₛidₚ)⋄ x⋄ A.indNat z s x⌉ = a' →
                             eqM ▸ A⌈𝓈(x)⌉₀ = A_1 →
                               (Γ_1 ⊢ s_1 ∶ S) →
                                 Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ a⌈s_1/ₙleq⌉ ≡ a'⌈s_1/ₙleq⌉ ∶ A_1⌈s_1/ₙleq⌉ :=
@@ -502,7 +502,7 @@ theorem substitution_gen_nat_succ_comp :
 theorem substitution_gen_iden_comp : 
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a : Tm n},
   (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-    (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
+    (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
       (Γ ⊢ a ∶ A) →
           (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n + 1 + 1 + 1 = m + 1)
               {s S : Tm l} (A_1 : Tm (m + 1 - 1 + 1)),
@@ -512,7 +512,7 @@ theorem substitution_gen_iden_comp :
                 (a A_1 : Tm (m + 1 - 1 + 1)),
                 eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
                   eqM ▸ b = a →
-                    eqM ▸ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ = A_1 →
+                    eqM ▸ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ = A_1 →
                       (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
               (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
                   (a_7 A_1 : Tm (m + 1 - 1 + 1)),
@@ -524,7 +524,7 @@ theorem substitution_gen_iden_comp :
                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                       eqM ▸ A.j B b a a (A.refl a) = a_9 →
                         eqM ▸ b⌈a⌉₀ = a' →
-                          eqM ▸ B⌈(ₛidₚ), a, a, A.refl a⌉ = A_1 →
+                          eqM ▸ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉ = A_1 →
                             (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a_9⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
   by
     intro n Γ' A B b a hB hbB haA ihB ihbB ihaA m l hleq Γ Δ heqM s S t t' T heqΓ heqt heqt' heqT hsS
@@ -889,7 +889,7 @@ theorem substitution_gen_sigma_elim_eq : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {
       Γ ⬝ A ⊢ B ≡ B' type →
         (Γ ⊢ p ≡ p' ∶ ΣA;B) →
           (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
-            (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+            (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
               (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
                   (A_1 A'_1 : Tm (m + 1 - 1 + 1)),
                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
@@ -918,7 +918,7 @@ theorem substitution_gen_sigma_elim_eq : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {
                           eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
                             eqM ▸ c = a →
                               eqM ▸ c' = a' →
-                                eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ = A_1 →
+                                eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = A_1 →
                                   (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
                         ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1)
                           (s S : Tm l) (a a' A_1 : Tm (m + 1 - 1 + 1)),
@@ -1055,7 +1055,7 @@ theorem substitution_gen_nat_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {z z' x x' : Tm n} {A A' : Tm (n + 1)} {s s' : Tm (n + 2)},
     Γ ⬝ 𝒩 ⊢ A ≡ A' type →
     (Γ ⊢ z ≡ z' ∶ A⌈𝓏⌉₀) →
-      (Γ ⬝ 𝒩 ⬝ A ⊢ s ≡ s' ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
+      (Γ ⬝ 𝒩 ⬝ A ⊢ s ≡ s' ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
         (Γ ⊢ x ≡ x' ∶ 𝒩) →
           (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n + 1 = m + 1) (s S : Tm l)
               (A_1 A'_1 : Tm (m + 1 - 1 + 1)),
@@ -1074,7 +1074,7 @@ theorem substitution_gen_nat_elim_eq :
                   eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ →
                     eqM ▸ s = a →
                       eqM ▸ s' = a' →
-                        eqM ▸ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 →
+                        eqM ▸ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = A_1 →
                           (Γ_1 ⊢ s_1 ∶ S) →
                             Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ a⌈s_1/ₙleq⌉ ≡ a'⌈s_1/ₙleq⌉ ∶ A_1⌈s_1/ₙleq⌉) →
                 (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l)
@@ -1202,7 +1202,7 @@ theorem substitution_gen_iden_intro_eq : ∀ {n : Nat} {Γ : Ctx n} {A A' a a' :
 theorem substitution_gen_iden_elim_eq :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B B' : Tm (n + 1 + 1 + 1)} {b b' : Tm (n + 1)} {a₁ a₃ A' a₂ a₄ p p' : Tm n},
   (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B ≡ B' type →
-    (Γ ⬝ A ⊢ b ≡ b' ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
+    (Γ ⬝ A ⊢ b ≡ b' ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
       Γ ⊢ A ≡ A' type →
         (Γ ⊢ a₁ ≡ a₂ ∶ A) →
           (Γ ⊢ a₃ ≡ a₄ ∶ A') →
@@ -1218,7 +1218,7 @@ theorem substitution_gen_iden_elim_eq :
                         eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
                           eqM ▸ b = a →
                             eqM ▸ b' = a' →
-                              eqM ▸ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ = A_1 →
+                              eqM ▸ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ = A_1 →
                                 (Γ_1 ⊢ s ∶ S) → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉) →
                       (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1)
                           (s S : Tm l) (A_1 A'_1 : Tm (m + 1 - 1 + 1)),
@@ -1255,7 +1255,7 @@ theorem substitution_gen_iden_elim_eq :
                                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
                                       eqM ▸ A.j B b a₁ a₃ p = a →
                                         eqM ▸ A'.j B' b' a₂ a₄ p' = a' →
-                                          eqM ▸ B⌈(ₛidₚ), a₁, a₃, p⌉ = A_1 →
+                                          eqM ▸ B⌈(ₛidₚ)⋄ a₁⋄ a₃⋄ p⌉ = A_1 →
                                             (Γ_1 ⊢ s ∶ S) →
                                               Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ a⌈s/ₙleq⌉ ≡ a'⌈s/ₙleq⌉ ∶ A_1⌈s/ₙleq⌉ :=
   by

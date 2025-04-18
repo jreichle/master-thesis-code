@@ -340,7 +340,7 @@ theorem weak_substitution_type :
     have hWeak : Γ ⬝ S ⬝ S⌊↑ₚidₚ⌋ ⊢ A⌊⇑ₚ↑ₚidₚ⌋ type := weakening_second_type hA hS
     have hSub := substitution_type hWeak hsS
     rw [n_substitution_shift_zero]
-    have hSubEq : A⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = A⌈(ₛ↑ₚidₚ), s⌉ :=
+    have hSubEq : A⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = A⌈(ₛ↑ₚidₚ)⋄ s⌉ :=
       by
         rw [substitute_zero]
         rw [substitution_comp_σρ]
@@ -357,7 +357,7 @@ theorem weak_substitution_term :
     have hWeak := weakening_second_term haA hS
     have hSub := substitution_term hWeak hsS
     rw [n_substitution_shift_zero]
-    have hSubEq : ∀t, t⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = t⌈(ₛ↑ₚidₚ), s⌉ :=
+    have hSubEq : ∀t, t⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = t⌈(ₛ↑ₚidₚ)⋄ s⌉ :=
       by
         intro t
         rw [substitute_zero]

@@ -108,21 +108,21 @@ mutual
       HasType Γ f (ΠA;B) → HasType Γ a A
       → HasType Γ (f◃a) (B⌈a⌉₀)
     | sigma_elim :
-      HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
+      HasType Γ p (ΣA;B) → IsType (Γ ⬝ ΣA;B) C → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉)
       → HasType Γ (.indSigma A B C c p) (C⌈p⌉₀)
     | nat_elim :
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
-      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
       -- Π ℕ ▹ (F ▹▹ F [ suc (var x0) ]↑)
       → HasType Γ n 𝒩
       → HasType Γ (.indNat A z s n) (A⌈n⌉₀)
     | iden_elim :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
-      → HasType (Γ ⬝ A) b (B⌈(ₛidₚ), v(0), .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
+      → HasType (Γ ⬝ A) b (B⌈(ₛidₚ)⋄ v(0)⋄ .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
       → HasType Γ a A → HasType Γ a' A
       → HasType Γ p (a ≃[A] a')
-      → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ), a, a', p⌉)
+      → HasType Γ (.j A B b a a' p) (B⌈(ₛidₚ)⋄ a⋄ a'⋄ p⌉)
       -- conversion
     | ty_conv :
       HasType Γ a A → IsEqualType Γ A B
@@ -181,25 +181,25 @@ mutual
       → IsEqualTerm Γ ((λA; b)◃a) (b⌈a⌉₀) (B⌈a⌉₀)
     | sigma_comp :
       HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ ΣA;B) C
-      → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
-      → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ), a, b⌉) (C⌈a&b⌉₀)
+      → HasType (Γ ⬝ A ⬝ B) c (C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉)
+      → IsEqualTerm Γ (.indSigma A B C c (a&b)) (c⌈(ₛidₚ)⋄ a⋄ b⌉) (C⌈a&b⌉₀)
     | nat_zero_comp :
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
-      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
       → HasType Γ 𝓏 𝒩
       → IsEqualTerm Γ (.indNat A z s 𝓏) z (A⌈𝓏⌉₀)
     | nat_succ_comp :
       IsType (Γ ⬝ 𝒩) A
       → HasType Γ z (A⌈𝓏⌉₀)
-      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      → HasType (Γ ⬝ 𝒩 ⬝ A) s (A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
       → HasType Γ n 𝒩
-      → IsEqualTerm Γ (.indNat A z s 𝓈(n)) (s⌈(ₛidₚ), n, (.indNat A z s n)⌉) (A⌈𝓈(n)⌉₀)
+      → IsEqualTerm Γ (.indNat A z s 𝓈(n)) (s⌈(ₛidₚ)⋄ n⋄ (.indNat A z s n)⌉) (A⌈𝓈(n)⌉₀)
     | iden_comp :
       IsType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B
-      → HasType (Γ ⬝ A) b (B⌈(ₛidₚ), v(0), .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
+      → HasType (Γ ⬝ A) b (B⌈(ₛidₚ)⋄ v(0)⋄ .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
       → HasType Γ a A
-      → IsEqualTerm Γ (.j A B b a a (.refl A a)) (b⌈a⌉₀) (B⌈(ₛidₚ), a, a, .refl A a⌉)
+      → IsEqualTerm Γ (.j A B b a a (.refl A a)) (b⌈a⌉₀) (B⌈(ₛidₚ)⋄ a⋄ a⋄ .refl A a⌉)
     -- congruence rules (introduction and elimination)
     | unit_intro_eq :
       IsCtx Γ
@@ -222,7 +222,7 @@ mutual
     | sigma_elim_eq :
       IsEqualType Γ A A' → IsEqualType (Γ ⬝ A) B B' → IsEqualTerm Γ p p' (ΣA;B)
       → IsEqualType (Γ ⬝ ΣA;B) C C'
-      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉)
+      → IsEqualTerm (Γ ⬝ A ⬝ B) c c' (C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉)
       → IsEqualTerm Γ (.indSigma A B C c p) (.indSigma A' B' C' c' p') (C⌈p⌉₀)
     | nat_zero_intro_eq :
       IsCtx Γ
@@ -233,7 +233,7 @@ mutual
     | nat_elim_eq :
       IsEqualType (Γ ⬝ 𝒩) A A'
       → IsEqualTerm Γ z z' (A⌈𝓏⌉₀)
-      → IsEqualTerm (Γ ⬝ 𝒩 ⬝ A) s s' (A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      → IsEqualTerm (Γ ⬝ 𝒩 ⬝ A) s s' (A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
       → IsEqualTerm Γ n n' 𝒩
       → IsEqualTerm Γ (.indNat A z s n) (.indNat A' z' s' n') (A⌈n⌉₀)
     | iden_intro_eq :
@@ -241,10 +241,10 @@ mutual
       → IsEqualTerm Γ (.refl A a) (.refl A' a') (.iden A a a)
     | iden_elim_eq :
       IsEqualType (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) B B'
-      → IsEqualTerm (Γ ⬝ A) b b' (B⌈(ₛidₚ), v(0), .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
+      → IsEqualTerm (Γ ⬝ A) b b' (B⌈(ₛidₚ)⋄ v(0)⋄ .refl (A⌊↑ₚidₚ⌋) v(0)⌉)
       → IsEqualType Γ A A' → IsEqualTerm Γ a₁ a₂ A → IsEqualTerm Γ a₃ a₄ A'
       → IsEqualTerm Γ p p' (a₁ ≃[A] a₃)
-      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') (B⌈(ₛidₚ), a₁, a₃, p⌉)
+      → IsEqualTerm Γ (.j A B b a₁ a₃ p) (.j A' B' b' a₂ a₄ p') (B⌈(ₛidₚ)⋄ a₁⋄ a₃⋄ p⌉)
     | univ_unit_eq :
       IsCtx Γ
       → IsEqualTerm Γ 𝟙 𝟙 𝒰

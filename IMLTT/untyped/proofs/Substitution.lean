@@ -432,7 +432,7 @@ theorem substitution_unit_sub :
 
 @[simp]
 theorem substitution_id_shift_var :
-    A⌈(ₛ(↑ₚidₚ)), v(0)⌉ = A :=
+    A⌈(ₛ(↑ₚidₚ))⋄ v(0)⌉ = A :=
   by
     rw (config := {occs := .pos [2]}) [←substitution_id (t := A)]
     apply substitution_var_substitute
@@ -451,6 +451,6 @@ theorem lift_n_substitution_shift {n : Nat} {leq : l ≤ n} {s : Tm l} :
 
 @[simp]
 theorem n_substitution_shift_zero {n : Nat} {s : Tm (n + 1)} :
-    (s↑/ₙ (Nat.le_refl (n + 1))) = .extend (.weak (.shift .id)) (s) :=
+    (s↑/ₙ(Nat.le_refl (n + 1))) = (ₛ↑ₚidₚ)⋄ s :=
   by
     simp [n_substitution_shift]

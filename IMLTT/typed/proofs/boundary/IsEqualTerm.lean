@@ -91,12 +91,12 @@ theorem boundary_sigma_comp :
   (Γ ⊢ a ∶ A) →
     (Γ ⊢ b ∶ B⌈a⌉₀) →
       (Γ ⬝ ΣA;B) ⊢ C type →
-        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
           Γ ⊢ A type →
             Γ ⊢ B⌈a⌉₀ type →
               (Γ ⬝ ΣA;B) ⊢ C type →
-                Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type →
-                  (Γ ⊢ A.indSigma B C c (a&b) ∶ C⌈a&b⌉₀) ∧ (Γ ⊢ c⌈(ₛidₚ), a, b⌉ ∶ C⌈a&b⌉₀) ∧ Γ ⊢ C⌈a&b⌉₀ type :=
+                Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
+                  (Γ ⊢ A.indSigma B C c (a&b) ∶ C⌈a&b⌉₀) ∧ (Γ ⊢ c⌈(ₛidₚ)⋄ a⋄ b⌉ ∶ C⌈a&b⌉₀) ∧ Γ ⊢ C⌈a&b⌉₀ type :=
   by
     intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC
     repeat' apply And.intro
@@ -134,11 +134,11 @@ theorem boundary_nat_zero_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
     Γ ⬝ 𝒩 ⊢ A type
     → (Γ ⊢ z ∶ A⌈𝓏⌉₀)
-    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
     → (Γ ⊢ 𝓏 ∶ 𝒩)
     → Γ ⬝ 𝒩 ⊢ A type
     → Γ ⊢ A⌈𝓏⌉₀ type
-    → Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
+    → Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
     → Γ ⊢ 𝒩 type
     → (Γ ⊢ A.indNat z s 𝓏 ∶ A⌈𝓏⌉₀) ∧ (Γ ⊢ z ∶ A⌈𝓏⌉₀) ∧ Γ ⊢ A⌈𝓏⌉₀ type :=
   by
@@ -158,13 +158,13 @@ theorem boundary_nat_succ_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
     Γ ⬝ 𝒩 ⊢ A type
     → (Γ ⊢ z ∶ A⌈𝓏⌉₀)
-    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
     → (Γ ⊢ x ∶ 𝒩)
     → Γ ⬝ 𝒩 ⊢ A type
     → Γ ⊢ A⌈𝓏⌉₀ type
-    → Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
+    → Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
     → Γ ⊢ 𝒩 type
-    → (Γ ⊢ A.indNat z s 𝓈(x) ∶ A⌈𝓈(x)⌉₀) ∧ (Γ ⊢ s⌈(ₛidₚ), x, A.indNat z s x⌉ ∶ A⌈𝓈(x)⌉₀)
+    → (Γ ⊢ A.indNat z s 𝓈(x) ∶ A⌈𝓈(x)⌉₀) ∧ (Γ ⊢ s⌈(ₛidₚ)⋄ x⋄ A.indNat z s x⌉ ∶ A⌈𝓈(x)⌉₀)
       ∧ Γ ⊢ A⌈𝓈(x)⌉₀ type :=
   by
     intro n Γ z x A s hA hzA hsA hsNat ihA ihzA ihsA ihsNat
@@ -201,13 +201,13 @@ theorem boundary_nat_succ_comp :
 theorem boundary_iden_comp :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a : Tm n},
     (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type
-    → (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉)
+    → (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉)
     → (Γ ⊢ a ∶ A)
     → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type
-    → Γ ⬝ A ⊢ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ type
+    → Γ ⬝ A ⊢ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ type
     → Γ ⊢ A type
-    → (Γ ⊢ A.j B b a a (A.refl a) ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) ∧
-      (Γ ⊢ b⌈a⌉₀ ∶ B⌈(ₛidₚ), a, a, A.refl a⌉) ∧ Γ ⊢ B⌈(ₛidₚ), a, a, A.refl a⌉ type
+    → (Γ ⊢ A.j B b a a (A.refl a) ∶ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉) ∧
+      (Γ ⊢ b⌈a⌉₀ ∶ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉) ∧ Γ ⊢ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉ type
  :=
   by
     intro n Γ A B b a hB hbB haA ihB ihbB ihaA
@@ -411,13 +411,13 @@ theorem boundary_sigma_elim_eq :
     Γ ⬝ A ⊢ B ≡ B' type →
       (Γ ⊢ p ≡ p' ∶ ΣA;B) →
         (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
-          (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) →
+          (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
             Γ ⊢ A type ∧ Γ ⊢ A' type →
               Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type →
                 (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type →
                   (Γ ⬝ ΣA;B) ⊢ C type ∧ (Γ ⬝ ΣA;B) ⊢ C' type →
-                    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) ∧
-                        (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ type →
+                    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧
+                        (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
                       (Γ ⊢ A.indSigma B C c p ∶ C⌈p⌉₀) ∧ (Γ ⊢ A'.indSigma B' C' c' p' ∶ C⌈p⌉₀) ∧ Γ ⊢ C⌈p⌉₀ type :=
   by
     intro n Γ A B A' B' p p' C C' c c' hAA hBB hppSi hCC hccC ihAA ihBB ihppSi ihCC ihccC
@@ -533,12 +533,12 @@ theorem boundary_nat_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {z z' x x' : Tm n} {A A' : Tm (n + 1)} {s s' : Tm (n + 2)},
     Γ ⬝ 𝒩 ⊢ A ≡ A' type
     → (Γ ⊢ z ≡ z' ∶ A⌈𝓏⌉₀)
-    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ≡ s' ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ≡ s' ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
     → (Γ ⊢ x ≡ x' ∶ 𝒩)
     → Γ ⬝ 𝒩 ⊢ A type ∧ Γ ⬝ 𝒩 ⊢ A' type
     → (Γ ⊢ z ∶ A⌈𝓏⌉₀) ∧ (Γ ⊢ z' ∶ A⌈𝓏⌉₀) ∧ Γ ⊢ A⌈𝓏⌉₀ type
-    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋) ∧ (Γ ⬝ 𝒩 ⬝ A ⊢ s' ∶ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
-      ∧ Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
+    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋) ∧ (Γ ⬝ 𝒩 ⬝ A ⊢ s' ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+      ∧ Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
     → (Γ ⊢ x ∶ 𝒩) ∧ (Γ ⊢ x' ∶ 𝒩) ∧ Γ ⊢ 𝒩 type
     → (Γ ⊢ A.indNat z s x ∶ A⌈x⌉₀) ∧ (Γ ⊢ A'.indNat z' s' x' ∶ A⌈x⌉₀) ∧ Γ ⊢ A⌈x⌉₀ type :=
   by
@@ -625,23 +625,23 @@ theorem boundary_iden_intro_eq :
 theorem boundary_iden_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B B' : Tm (n + 1 + 1 + 1)} {b b' : Tm (n + 1)} {a₁ a₃ A' a₂ a₄ p p' : Tm n},
     (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B ≡ B' type
-    → (Γ ⬝ A ⊢ b ≡ b' ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉)
+    → (Γ ⬝ A ⊢ b ≡ b' ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉)
     → Γ ⊢ A ≡ A' type
     → (Γ ⊢ a₁ ≡ a₂ ∶ A)
     → (Γ ⊢ a₃ ≡ a₄ ∶ A')
     → (Γ ⊢ p ≡ p' ∶ a₁ ≃[A] a₃)
     → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type
       ∧ (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B' type
-    → (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉)
-      ∧ (Γ ⬝ A ⊢ b' ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉)
-      ∧ Γ ⬝ A ⊢ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ type
+    → (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉)
+      ∧ (Γ ⬝ A ⊢ b' ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉)
+      ∧ Γ ⬝ A ⊢ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ type
     → Γ ⊢ A type ∧ Γ ⊢ A' type
     → (Γ ⊢ a₁ ∶ A) ∧ (Γ ⊢ a₂ ∶ A) ∧ Γ ⊢ A type
     → (Γ ⊢ a₃ ∶ A') ∧ (Γ ⊢ a₄ ∶ A') ∧ Γ ⊢ A' type
     → (Γ ⊢ p ∶ a₁ ≃[A] a₃) ∧ (Γ ⊢ p' ∶ a₁ ≃[A] a₃) ∧ Γ ⊢ a₁ ≃[A] a₃ type
-    → (Γ ⊢ A.j B b a₁ a₃ p ∶ B⌈(ₛidₚ), a₁, a₃, p⌉)
-      ∧ (Γ ⊢ A'.j B' b' a₂ a₄ p' ∶ B⌈(ₛidₚ), a₁, a₃, p⌉)
-      ∧ Γ ⊢ B⌈(ₛidₚ), a₁, a₃, p⌉ type
+    → (Γ ⊢ A.j B b a₁ a₃ p ∶ B⌈(ₛidₚ)⋄ a₁⋄ a₃⋄ p⌉)
+      ∧ (Γ ⊢ A'.j B' b' a₂ a₄ p' ∶ B⌈(ₛidₚ)⋄ a₁⋄ a₃⋄ p⌉)
+      ∧ Γ ⊢ B⌈(ₛidₚ)⋄ a₁⋄ a₃⋄ p⌉ type
  :=
   by
     intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' hBB hbbB hAA haaA haaA' hppId ihBB ihbbB ihAA ihaaA ihaaA' ihppId
@@ -816,7 +816,7 @@ theorem boundary_iden_elim_eq :
       · apply IsEqualType.type_symm
         apply IsEqualType.type_trans
         rotate_right
-        · apply B'⌈(ₛidₚ), a₁, a₃, p⌉
+        · apply B'⌈(ₛidₚ)⋄ a₁⋄ a₃⋄ p⌉
         · rw [context_to_gen_ctx] at hBB
           rw [←middle_expand_context (Γ := Γ ⬝ A)] at hBB
           have h := substitution_general_type_eq hBB (And.left ihaaA)
@@ -851,7 +851,7 @@ theorem boundary_iden_elim_eq :
           · apply h3
         · apply IsEqualType.type_trans
           rotate_right
-          · apply B'⌈(ₛidₚ), a₂, a₃, p⌉
+          · apply B'⌈(ₛidₚ)⋄ a₂⋄ a₃⋄ p⌉
           · rw [context_to_gen_ctx] at ihBB
             rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
             have h1 := (And.left (And.right functionality_typing))
@@ -888,7 +888,7 @@ theorem boundary_iden_elim_eq :
             · apply h3
           · apply IsEqualType.type_trans
             rotate_right
-            · apply B'⌈(ₛidₚ), a₂, a₄, p⌉
+            · apply B'⌈(ₛidₚ)⋄ a₂⋄ a₄⋄ p⌉
             · rw [context_to_gen_ctx] at ihBB
               rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
               have h1 := (And.left (And.right substitution))

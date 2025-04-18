@@ -185,18 +185,18 @@ theorem weak_sub_zero :
     substitution_norm
 
 theorem weak_sub_shift :
-    t⌈(ₛ↑ₚidₚ), a⌉⌊⇑ₚρ⌋ = t⌊⇑ₚρ⌋⌈(ₛ↑ₚidₚ), (a⌊⇑ₚρ⌋)⌉ :=
+    t⌈(ₛ↑ₚidₚ)⋄ a⌉⌊⇑ₚρ⌋ = t⌊⇑ₚρ⌋⌈(ₛ↑ₚidₚ)⋄ (a⌊⇑ₚρ⌋)⌉ :=
   by
     substitution_norm
 
 theorem substitution_var_single_comp :
-    v(x)⌈(ₛidₚ), a ₛ∘ₛ⇑ₛσ⌉ = v(x)⌈σ, a⌉ :=
+    v(x)⌈(ₛidₚ)⋄ a ₛ∘ₛ⇑ₛσ⌉ = v(x)⌈σ⋄ a⌉ :=
   by
     substitution_norm
 
 @[simp]
 theorem substitution_single_comp :
-    t⌈(ₛidₚ), a ₛ∘ₛ⇑ₛσ⌉ = t⌈σ, a⌉ :=
+    t⌈(ₛidₚ)⋄ a ₛ∘ₛ⇑ₛσ⌉ = t⌈σ⋄ a⌉ :=
   by
     substitution_norm
 
@@ -250,12 +250,12 @@ theorem substitution_comp_ρσ_id :
 
 @[simp]
 theorem substitution_extend :
-    t⌈⇑ₛσ⌉⌈a⌉₀ = t⌈σ, a⌉ :=
+    t⌈⇑ₛσ⌉⌈a⌉₀ = t⌈σ⋄ a⌉ :=
   by
     substitution_norm
 
 theorem substitution_extend_lift :
-    t⌈⇑ₛσ⌉⌊⇑ₚρ⌋⌈a⌉₀ = t⌈ρ ₚ∘ₛσ, a⌉ :=
+    t⌈⇑ₛσ⌉⌊⇑ₚρ⌋⌈a⌉₀ = t⌈ρ ₚ∘ₛσ⋄ a⌉ :=
   by
     substitution_norm
 
@@ -272,7 +272,7 @@ theorem idWkLiftSubstLemma :
     substitution_norm
 
 theorem singleSubstLift :
-    t⌈(ₛ↑ₚidₚ), a⌉⌈⇑ₛσ⌉ = t⌈⇑ₛσ⌉⌈(ₛ↑ₚidₚ), (a⌈⇑ₛσ⌉)⌉ :=
+    t⌈(ₛ↑ₚidₚ)⋄ a⌉⌈⇑ₛσ⌉ = t⌈⇑ₛσ⌉⌈(ₛ↑ₚidₚ)⋄ (a⌈⇑ₛσ⌉)⌉ :=
   by
     substitution_norm
 
@@ -289,23 +289,23 @@ theorem substitution_shift_substitute_zero :
 
 @[simp]
 theorem substitution_shift_substitute_zero_simp :
-    A⌊↑ₚidₚ⌋⌈(ₛidₚ), s⌉ = A :=
+    A⌊↑ₚidₚ⌋⌈(ₛidₚ)⋄ s⌉ = A :=
   by
     substitution_norm
 
 theorem substitution_twice_zero {n : Nat} {T : Tm (n + 2)} {b : Tm (n)} {a : Tm (n)} :
-    T⌈(ₛidₚ), a, b⌉ = T⌈b⌊↑ₚidₚ⌋⌉₀⌈a⌉₀ :=
+    T⌈(ₛidₚ)⋄ a⋄ b⌉ = T⌈b⌊↑ₚidₚ⌋⌉₀⌈a⌉₀ :=
   by
     substitution_norm
 
 theorem substitution_separate {n m : Nat} {t : Tm (n + 1)} {s : Tm m} {σ : Subst m n} :
-    t⌈σ, s⌉ = t⌈⇑ₛσ⌉⌈s⌉₀ :=
+    t⌈σ⋄ s⌉ = t⌈⇑ₛσ⌉⌈s⌉₀ :=
   by
     substitution_norm
 
 @[simp]
 theorem substitution_weak_id : -- TODO: can be generalized to v(i)
-    B⌈(ₛ↑ₚ↑ₚidₚ), v(1)⌉ = B⌊↑ₚidₚ⌋ :=
+    B⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)⌉ = B⌊↑ₚidₚ⌋ :=
   by
     rw (config := {occs := .pos [2]}) [←substitution_id (t := B)]
     substitution_to_composition

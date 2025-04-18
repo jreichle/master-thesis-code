@@ -155,8 +155,7 @@ prefix:96 "ₛ" => Subst.weak
 prefix:97 "↑ₛ" => Subst.shift
 prefix:97 "⇑ₛ" => Subst.lift
 infixl:97 "ₙ⇑ₛ" => lift_subst_n
-infixl:96 ", " => Subst.extend
--- FIXME: change , (interferences with pattern matching), or try low precedence
+infixl:96 "⋄  " => Subst.extend
 infixl:96 "ₚ∘ₛ" => comp_weaken_substitute
 infixl:96 "ₛ∘ₚ" => comp_substitute_weaken
 infixl:96 "ₛ∘ₛ" => comp_substitute_substitute

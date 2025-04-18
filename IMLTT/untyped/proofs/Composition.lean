@@ -265,7 +265,7 @@ theorem substitution_var_shift_comp_ρσ {x : Fin n} :
         simp []
 
 theorem substitution_shift_extend_comp :
-    x⌈↑ₚρ ₚ∘ₛ(σ, s)⌉ᵥ = x⌈↑ₚρ ₚ∘ₛσ, (s⌊↑ₚρ⌋)⌉ᵥ :=
+    x⌈↑ₚρ ₚ∘ₛ(σ⋄ s)⌉ᵥ = x⌈↑ₚρ ₚ∘ₛσ⋄ (s⌊↑ₚρ⌋)⌉ᵥ :=
   by
     simp [comp_weaken_substitute]
     cases x with
@@ -287,7 +287,7 @@ theorem substitution_shift_extend_comp :
           simp [←substitution_var_shift_comp_ρσ]
 
 theorem substitution_var_comp_shift_extend_ρσ {x : Fin (n + 1)}:
-    x⌈↑ₛ(ρ ₚ∘ₛ(σ, s))⌉ᵥ = x⌈↑ₛ(ρ ₚ∘ₛσ, (s⌊ρ⌋))⌉ᵥ :=
+    x⌈↑ₛ(ρ ₚ∘ₛ(σ⋄ s))⌉ᵥ = x⌈↑ₛ(ρ ₚ∘ₛσ⋄ (s⌊ρ⌋))⌉ᵥ :=
   by
     induction ρ with
     | id =>

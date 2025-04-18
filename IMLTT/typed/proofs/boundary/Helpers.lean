@@ -6,9 +6,8 @@ import IMLTT.untyped.proofs.Substitution
 import IMLTT.untyped.proofs.Contexts
 import IMLTT.untyped.proofs.Mixture
 
--- vone_to_vtwo
 theorem id_vone_to_vtwo :
-    (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))⌈(ₛ↑ₚidₚ), (v(0)⌊↑ₚidₚ⌋)⌉
+    (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))⌈(ₛ↑ₚidₚ)⋄ (v(0)⌊↑ₚidₚ⌋)⌉
     = v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
   by
     substitution_step

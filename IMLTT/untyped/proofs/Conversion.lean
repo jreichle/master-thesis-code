@@ -10,12 +10,12 @@ theorem substitution_conv_var :
     simp [substitute]
 
 theorem substitution_conv_zero :
-    t⌈(ₛidₚ), σ⌉ = t⌈σ⌉₀ :=
+    t⌈(ₛidₚ)⋄ σ⌉ = t⌈σ⌉₀ :=
   by
     simp [substitute_zero]
 
 theorem zero_substitution_conv :
-    t⌈(ₛidₚ), σ⌉ = t⌈σ/₀⌉ :=
+    t⌈(ₛidₚ)⋄ σ⌉ = t⌈σ/₀⌉ :=
   by
     simp [zero_substitution]
 
@@ -382,7 +382,7 @@ theorem substitution_conv_shift_id_conv :
       simp [substitute]
 
 theorem substitution_conv_shift_comp_ρσ :
-    ↑ₚρ ₚ∘ₛ (σ, t) = ↑ₛ(ρ ₚ∘ₛ σ, (t⌊ρ⌋)) :=
+    ↑ₚρ ₚ∘ₛ (σ⋄ t) = ↑ₛ(ρ ₚ∘ₛ σ⋄ (t⌊ρ⌋)) :=
   by
     simp [comp_weaken_substitute]
 

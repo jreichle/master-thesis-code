@@ -48,7 +48,7 @@ theorem sigma_comp_proj_first :
     have hA := And.left hSiInv
     have hB := And.right hSiInv
     have hC := weakening_type hA hSi
-    have hcC : Γ ⬝ A ⬝ B ⊢ v(0)⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
+    have hcC : Γ ⬝ A ⬝ B ⊢ v(0)⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ :=
       by
         have h := weakening_term (HasType.var hA) hB
         replace_by_conclusion h
@@ -141,7 +141,7 @@ theorem sigma_elim_proj_second_pre :
     Γ ⊢ ΣA;B type → (Γ ⊢ p ∶ ΣA;B)
     → Γ ⬝ A ⬝ B ⊢ v(0) ∶
         B⌊⇑ₚ↑ₚidₚ⌋
-          ⌈A⌊↑ₚidₚ⌋.indSigma (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉
+          ⌈A⌊↑ₚidₚ⌋.indSigma (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉
  :=
   by
     intro hSi hpSi
@@ -184,7 +184,7 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
     have hcCpre := sigma_elim_proj_second_pre hSi hpSi
     have hcC : Γ ⬝ A ⬝ B ⊢ v(0) ∶
                   B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma
-                    (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
+                    (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ :=
       by
         apply sigma_elim_proj_second_pre
         · apply hSi
@@ -229,7 +229,7 @@ theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n 
     have hcCpre := sigma_elim_proj_second_pre hSi hpSi
     have hcC : Γ ⬝ A ⬝ B ⊢ v(0) ∶
                   B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma
-                    (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
+                    (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ :=
       by
         apply sigma_elim_proj_second_pre
         · apply hSi
