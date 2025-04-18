@@ -3,6 +3,7 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.RulesEquality
 import IMLTT.typed.proofs.admissable.Weakening
 import IMLTT.typed.proofs.admissable.Substitution
 import IMLTT.typed.proofs.admissable.Inversion
@@ -233,7 +234,7 @@ theorem boundary_nat_elim :
     · apply hxNat
 
 theorem boundary_iden_elim :
-    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
+  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
   (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type
   → (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉)
   → (Γ ⊢ a ∶ A)
@@ -249,28 +250,44 @@ theorem boundary_iden_elim :
     intro n Γ A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId
     rw [context_to_gen_ctx] at hB
     rw [←middle_expand_context (Γ := Γ ⬝ A)] at hB
-    have h := And.left (And.right substitution) hB haA
-    simp [substitute_into_gen_ctx] at h
-    rw [n_substitution_zero] at h
-    rw [zero_substitution] at h
-    rw [substitution_conv_zero] at h
-    rw [substitution_shift_substitute_zero] at h
-    rw [middle_expand_context] at h
-    have h2 := And.left (And.right substitution) h haA'
-    simp [substitute_into_gen_ctx] at h2
-    simp [expand_ctx] at h2
-    rw [←lift_n_substitution] at h2
-    simp [n_substitution_zero] at h2
-    simp [zero_substitution] at h2
-    simp [substitution_conv_zero] at h2
-    simp [clean_this_mess_asap] at h2
-    have h3 := substitution_type h2 hpId
-    simp [←lift_n_substitution] at h3
-    simp [n_substitution_zero] at h3
-    simp [zero_substitution] at h3
-    rw [clean_this_mess_too] at h3
-    apply h3
-    any_goals omega
+    have h1 := substitution_general_type hB haA
+    simp only [substitute_into_gen_ctx] at h1
+    rw [middle_expand_context] at h1
+    have h2 : Γ ⊗ ⌈a'⌉(.start ⊙ (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))⌈a/ₙ(by omega)⌉ w/ (by omega)) 
+              ⊢ B⌈a/ₙ(by omega)⌉⌈a'/ₙ(by omega)⌉ type :=
+      by
+        apply substitution_general_type
+        · replace_by_conclusion h1
+          case a.prf =>
+            apply h1
+          · apply congr
+            apply congr
+            · rfl
+            · substitution_step
+            · substitution_step
+        · replace_by_conclusion haA'
+          · substitution_step
+          · apply haA'
+    simp only [substitute_into_gen_ctx] at h2 -- FIXME: add def if into context things?
+    have h3 : Γ ⊢ B⌈a/ₙ(by omega)⌉⌈a'/ₙ(by omega)⌉⌈p⌉₀ type :=
+      by
+        apply substitution_type
+        rotate_left
+        · apply hpId
+        · replace_by_conclusion h2
+          · apply congr
+            apply congr
+            · rfl
+            · substitution_step
+              substitution_step
+            · substitution_step
+          · apply h2
+    replace_by_conclusion h3
+    · apply congr
+      · rfl
+      · substitution_step
+        substitution_step
+    · apply h3
 
 theorem boundary_ty_conv :
     ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n},

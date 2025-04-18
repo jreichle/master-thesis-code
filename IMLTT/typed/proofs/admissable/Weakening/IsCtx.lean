@@ -19,8 +19,7 @@ theorem weakening_gen_empty :
     cases Δ with
     | start =>
       cases heqΓ
-      rw [empty_expand_context_weaken_from]
-      simp [expand_ctx]
+      simp []
       apply IsCtx.extend
       · apply IsCtx.empty
       · apply hS
@@ -41,14 +40,13 @@ theorem weakening_gen_extend :
     cases Δ with
     | start =>
       cases heqΓ
-      rw [empty_expand_context_weaken_from]
+      simp []
       apply IsCtx.extend
       · apply boundary_ctx_type hS
       · apply hS
     | expand =>
       cases heqΓ
-      simp [weaken_from_into_gen_ctx]
-      rw [expand_ctx]
+      simp []
       apply IsCtx.extend
       · apply ihiC
         apply hS

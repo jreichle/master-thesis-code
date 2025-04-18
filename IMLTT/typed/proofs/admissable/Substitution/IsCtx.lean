@@ -34,20 +34,17 @@ theorem substitution_gen_extend :
     cases heqM
     cases Δ
     case refl.start =>
-      simp [substitute_into_gen_ctx]
-      simp [expand_ctx]
-      simp [expand_ctx] at heqΓ
-      rw [←And.left heqΓ]
+      cases heqΓ
+      simp []
       exact hiC
     case refl.expand Δ' T =>
+      cases heqΓ
       cases n with
       | zero =>
         have h1 := gen_ctx_leq Δ'
         omega
       | succ n' =>
-        cases heqΓ
         simp [substitute_into_gen_ctx]
-        simp [expand_ctx]
         apply IsCtx.extend
         · apply ihiC
           · rfl

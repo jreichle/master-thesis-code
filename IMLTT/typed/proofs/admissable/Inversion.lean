@@ -38,7 +38,7 @@ theorem pi_is_type_inversion :
       · apply IsType.univ_elim (And.left hAUBU)
       · apply IsType.univ_elim (And.right hAUBU)
 
-theorem sigma_has_type_inversion : 
+theorem sigma_has_type_inversion :
     (Γ ⊢ ΣA;B ∶ V) → (Γ ⊢ A ∶ 𝒰) ∧ Γ ⬝ A ⊢ B ∶ 𝒰 :=
   by
     intro hSiV
@@ -56,6 +56,11 @@ theorem sigma_has_type_inversion :
       have heql := And.left heq
       have heqr := And.right heq
       cases heql
+    case weak_eq =>
+      intro n Γ i A B hvvA hB ihvvA ihB
+      apply IsEqualTerm.weak_eq
+      · apply hvvA
+      · apply hB
     any_goals aesop
 
 theorem sigma_is_type_inversion : 
@@ -98,6 +103,11 @@ theorem iden_has_type_inversion :
       have heql := And.left heq
       have heqr := And.right heq
       cases heql
+    case weak_eq =>
+      intro n Γ i A B hvvA hB ihvvA ihB
+      apply IsEqualTerm.weak_eq
+      · apply hvvA
+      · apply hB
     any_goals aesop
 
 theorem iden_is_type_inversion :

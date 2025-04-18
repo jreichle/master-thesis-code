@@ -9,6 +9,7 @@ inductive Subst : Nat → Nat → Type where
   | lift : Subst m n → Subst (m + 1) (n + 1)
   | extend : Subst m n → Tm m → Subst m (n + 1)
 
+@[simp]
 def substitute_var (σ : Subst m n) (x : Fin n) : Tm m :=
   match σ with
   | .weak ρ => weaken ρ x
@@ -22,11 +23,13 @@ def substitute_var (σ : Subst m n) (x : Fin n) : Tm m :=
     | ⟨0, _⟩ => t
     | ⟨x' + 1, h⟩ => substitute_var σ' (.mk x' (Nat.lt_of_succ_lt_succ h))
 
+@[simp]
 def lift_subst_n (i : Nat) (σ : Subst m n) : Subst (m + i) (n + i) :=
   match i with
   | 0 => σ
   | i' + 1 => .lift (lift_subst_n i' σ)
 
+@[simp]
 def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
   match t with
   | .unit => .unit
@@ -55,6 +58,7 @@ def substitute (σ : Subst m n) (t : Tm n) : Tm m :=
                         (substitute (lift_subst_n 1 σ) b) (substitute σ a) (substitute σ a')
                         (substitute σ p)
 
+@[simp]
 def comp_substitute_weaken (σ : Subst l m) (ρ : Weak m n) : Subst l n :=
   match ρ with
   | .id => σ
@@ -71,6 +75,7 @@ def comp_substitute_weaken (σ : Subst l m) (ρ : Weak m n) : Subst l n :=
     | .lift σ' => .lift (comp_substitute_weaken σ' ρ')
     | .extend σ' t => .extend (comp_substitute_weaken σ' ρ') t
 
+@[simp]
 def comp_weaken_substitute (ρ : Weak l m) (σ : Subst m n) : Subst l n :=
   match ρ with
   | .id => σ
@@ -87,6 +92,7 @@ def comp_weaken_substitute (ρ : Weak l m) (σ : Subst m n) : Subst l n :=
     | .lift σ' => .lift (comp_weaken_substitute ρ' σ')
     | .extend σ' t => .extend (comp_weaken_substitute (.lift ρ') σ') (weaken (.lift ρ') t)
 
+@[simp]
 def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
   match σ' with
   | .weak ρ' => comp_substitute_weaken σ ρ'
@@ -104,10 +110,11 @@ def comp_substitute_substitute (σ : Subst l m) (σ' : Subst m n) : Subst l n :=
     | .extend ξ t => .extend (comp_substitute_substitute ξ ξ') t
   | .extend ξ' t => .extend (comp_substitute_substitute σ ξ') (substitute σ t)
 
+@[simp]
 def substitute_zero (a : Tm n) (t : Tm (n + 1)) : Tm n :=
   substitute (.extend (.weak .id) a) t
 
---- FIXME: change everything to only use this
+@[simp]
 def zero_substitution (a : Tm n) : Subst n (n + 1) :=
   .extend (.weak .id) a
 
@@ -148,7 +155,8 @@ prefix:96 "ₛ" => Subst.weak
 prefix:97 "↑ₛ" => Subst.shift
 prefix:97 "⇑ₛ" => Subst.lift
 infixl:97 "ₙ⇑ₛ" => lift_subst_n
-infixl:96 ", " => Subst.extend -- FIXME: change , (interferences with pattern matching)
+infixl:96 ", " => Subst.extend
+-- FIXME: change , (interferences with pattern matching), or try low precedence
 infixl:96 "ₚ∘ₛ" => comp_weaken_substitute
 infixl:96 "ₛ∘ₚ" => comp_substitute_weaken
 infixl:96 "ₛ∘ₛ" => comp_substitute_substitute

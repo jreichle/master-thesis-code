@@ -76,27 +76,25 @@ theorem functionality_typing_var :
       cases heqT
       cases n with
       | zero =>
-        simp [substitute]
-        simp [n_substitution]
-        simp [substitute_var]
+        simp only [substitute]
+        simp only [n_substitution]
+        simp only [substitute_var]
         rw [substitution_conv_zero]
         rw [substitution_shift_substitute_zero]
         cases Δ with
         | start =>
           cases heqΓ
-          simp [substitute_into_gen_ctx]
-          simp [expand_ctx]
           apply hssS
         | expand Δ' T =>
           have h1 := gen_ctx_leq Δ'
           omega
       | succ n' =>
-        simp [substitute]
-        simp [n_substitution]
+        simp only [substitute]
+        simp only [n_substitution]
         split
         case isTrue hT =>
-          simp [substitute_var]
-          simp [substitution_shift_id_lift]
+          simp only [substitute_var]
+          simp only [substitution_shift_id_lift]
           cases Δ with
           | start =>
             omega
@@ -108,9 +106,7 @@ theorem functionality_typing_var :
             · apply hA
             · apply hsS
         case isFalse hF =>
-          simp [substitute_var]
-          rw [substitution_conv_zero]
-          rw [substitution_shift_substitute_zero]
+          simp []
           split
           case h_1 =>
             cases Δ with
@@ -121,16 +117,7 @@ theorem functionality_typing_var :
               have h1 := gen_ctx_leq Δ'
               omega
           case h_2 h =>
-            cases Δ with
-            | start =>
-              cases heqΓ
-              simp [substitute_into_gen_ctx]
-              simp [expand_ctx]
-              simp [weakening_id]
-              cases h
-            | expand Δ' T =>
-              have h1 := gen_ctx_leq Δ'
-              omega
+            cases h
 
 theorem functionality_typing_weak :
   ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x},
@@ -211,9 +198,9 @@ theorem functionality_typing_weak :
       simp_all
       cases n
       case zero =>
-        simp [n_substitution]
-        simp [substitution_conv_zero]
-        simp [substitution_shift_substitute_zero]
+        simp only [n_substitution]
+        simp only [substitution_conv_zero]
+        simp only [substitution_shift_substitute_zero]
         cases Δ with
         | start =>
           simp [expand_ctx]
@@ -226,18 +213,18 @@ theorem functionality_typing_weak :
         simp [n_substitution]
         split
         case isTrue hT =>
-          simp [substitution_shift_id_lift]
+          simp only [substitution_shift_id_lift]
           cases Δ with
           | start =>
             omega
           | expand Δ' T =>
             cases heqΓ
             have h := gen_ctx_leq Δ'
-            simp_all
-            simp [substitute_into_gen_ctx]
-            simp [expand_ctx]
+            simp only [substitute_into_gen_ctx]
+            simp only [expand_ctx]
             apply weakening_term_eq
-            · apply And.right ihvA
+            · simp only [←substitution_conv_var]
+              apply And.right ihvA
               · apply hssS
               · apply hsS
               · apply hsS'
@@ -249,8 +236,8 @@ theorem functionality_typing_weak :
               · apply hB
               · apply hsS
         case isFalse hF =>
-          simp [substitution_conv_zero]
-          simp [substitution_shift_substitute_zero]
+          rw [substitution_conv_zero]
+          rw [substitution_shift_substitute_zero]
           cases Δ with
           | start =>
             cases heqΓ
@@ -301,25 +288,15 @@ theorem functionality_typing_unit_intro :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitution_tt]
-      simp [substitution_unit]
       apply IsEqualTerm.unit_intro_eq
       simp_all
       cases Δ
       case start =>
-        simp [substitute_into_gen_ctx]
-        simp [expand_ctx]
-        simp [expand_ctx] at ihiC
         exact ctx_decr hiC
       case expand Δ' T =>
-        cases m with
-        | zero =>
-          have h := gen_ctx_leq Δ'
-          omega
-        | succ m' =>
-          apply And.left substitution
-          · apply hiC
-          · apply hsS
+        apply And.left substitution
+        · apply hiC
+        · apply hsS
 
 theorem functionality_typing_pi_intro :
   ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)},
@@ -371,9 +348,8 @@ theorem functionality_typing_pi_intro :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitute]
       apply IsEqualTerm.pi_intro_eq
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [lift_n_substitution]
         rw [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
@@ -472,21 +448,20 @@ theorem functionality_typing_sigma_intro :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitute]
       apply IsEqualTerm.sigma_intro_eq
       · apply And.right ihaA
         · apply hssS
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
-        simp [←substitution_zero_lift]
+      · simp only [lift_subst_n]
+        rw [←substitution_zero_lift]
         apply And.right ihbB
         · apply hssS
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.left (And.right substitution)
@@ -535,24 +510,14 @@ theorem functionality_typing_nat_zero_intro :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitute]
       apply IsEqualTerm.nat_zero_intro_eq
-      simp_all
       cases Δ
       case start =>
-        simp [substitute_into_gen_ctx]
-        simp [expand_ctx]
-        simp [expand_ctx] at ihiC
         exact ctx_decr hiC
       case expand Δ' T =>
-        cases m with
-        | zero =>
-          have h := gen_ctx_leq Δ'
-          omega
-        | succ m' =>
-          apply And.left substitution
-          · apply hiC
-          · apply hsS
+        apply And.left substitution
+        · apply hiC
+        · apply hsS
  
 theorem functionality_typing_nat_succ_intro :
     ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
@@ -730,8 +695,6 @@ theorem functionality_typing_univ_unit :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitution_univ]
-      simp [substitution_unit]
       apply IsEqualTerm.univ_unit_eq
       apply And.left substitution
       · apply hiC
@@ -779,8 +742,6 @@ theorem functionality_typing_univ_empty :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitution_univ]
-      simp [substitution_empty]
       apply IsEqualTerm.univ_empty_eq
       apply And.left substitution
       · apply hiC
@@ -856,7 +817,7 @@ theorem functionality_typing_univ_pi :
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [lift_n_substitution]
         rw [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
@@ -937,7 +898,7 @@ theorem functionality_typing_univ_sigma :
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [lift_n_substitution]
         rw [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
@@ -1174,11 +1135,10 @@ theorem functionality_typing_unit_elim :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitute]
-      simp [substitution_zero_lift]
+      simp only [substitution_zero_lift]
       apply IsEqualTerm.unit_elim_eq
-      · simp [lift_subst_n]
-        simp [lift_n_substitution]
+      · simp only [lift_subst_n]
+        simp only [lift_n_substitution]
         rw [←substitution_unit]
         rw [extend_expand_context_n_substitution]
         apply And.right ihA
@@ -1186,7 +1146,7 @@ theorem functionality_typing_unit_elim :
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [←substitution_tt]
         rw [←substitution_zero_lift]
         apply And.right ihaA
@@ -1265,11 +1225,10 @@ theorem functionality_typing_empty_elim :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitute]
-      simp [substitution_zero_lift]
+      simp only [substitution_zero_lift]
       apply IsEqualTerm.empty_elim_eq
-      · simp [lift_subst_n]
-        simp [lift_n_substitution]
+      · simp only [lift_subst_n]
+        simp only [lift_n_substitution]
         rw [←substitution_empty]
         rw [extend_expand_context_n_substitution]
         apply And.right ihA
@@ -1349,7 +1308,7 @@ theorem functionality_typing_pi_elim :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitution_zero_lift]
+      simp only [substitution_zero_lift]
       apply IsEqualTerm.pi_elim_eq
       · rw [←substitution_pi]
         apply And.right ihfPi
@@ -1446,7 +1405,7 @@ theorem functionality_typing_sigma_elim :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitution_zero_lift]
+      simp only [substitution_zero_lift]
       apply IsEqualTerm.sigma_elim_eq
       · apply And.left ihcC
         · apply hssS
@@ -1457,8 +1416,8 @@ theorem functionality_typing_sigma_elim :
         · apply CtxGen.start ⊙ B
         · rfl
         · rfl
-      · simp [lift_subst_n]
-        simp [lift_n_substitution]
+      · simp only [lift_subst_n]
+        simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.left ihcC
         · apply hssS
@@ -1486,9 +1445,9 @@ theorem functionality_typing_sigma_elim :
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [subst_subst_sigma_C]
-        simp [lift_n_substitution]
+        simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.right ihcC
@@ -1599,8 +1558,8 @@ theorem functionality_typing_nat_elim :
       cases heqT
       rw [substitution_zero_lift]
       apply IsEqualTerm.nat_elim_eq
-      · simp [lift_subst_n]
-        simp [lift_n_substitution]
+      · simp only [lift_subst_n]
+        simp only [lift_n_substitution]
         rw [←substitution_nat]
         rw [extend_expand_context_n_substitution]
         apply And.right ihA
@@ -1608,7 +1567,7 @@ theorem functionality_typing_nat_elim :
         · apply hsS
         · apply hsS'
         repeat' rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [←substitution_var_zero]
         rw [←substitution_zero_lift]
         apply And.right ihzA
@@ -1618,16 +1577,15 @@ theorem functionality_typing_nat_elim :
         repeat' rfl
       · rw [←substitution_nat]
         rw [extend_expand_context_n_substitution]
-        simp [lift_subst_n]
+        simp only [lift_subst_n]
         rw [←helper_subst_nat_elim]
-        simp [lift_n_substitution]
+        simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.right ihsA
         · apply hssS
         · apply hsS
         · apply hsS'
         repeat' rfl
-        apply hleq
       · rw [←substitution_nat]
         apply And.right ihxNat
         · apply hssS
@@ -1754,22 +1712,20 @@ theorem functionality_typing_iden_elim :
       cases heqΓ
       cases heqt
       cases heqT
-      simp [substitute]
       rw [subst_subst_iden_elim]
       apply IsEqualTerm.iden_elim_eq
-      · simp [lift_subst_n]
-        simp [lift_n_substitution]
-        simp [←substitution_shift_id_lift]
-        simp [lift_n_substitution]
+      · simp only [lift_subst_n]
+        simp only [lift_n_substitution]
+        simp only [←substitution_shift_id_lift]
+        simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         rw [extend_expand_context_n_substitution]
-        simp_all
         rw (config := {occs := .pos [2]}) [←weakening_shift_id]
         rw [←substitution_shift_id_lift]
         rw [←substitution_shift_id_lift]
         rw [weakening_shift_id]
         rw [←helper_subst_iden_propagate_subst]
-        simp [lift_n_substitution]
+        simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.right ihB
         · apply hssS

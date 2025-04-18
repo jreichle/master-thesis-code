@@ -37,8 +37,7 @@ theorem conversion_var_lift_n :
     intro h x
     cases l with
     | zero =>
-      simp [lift_subst_n]
-      apply h
+      aesop
     | succ i' =>
       cases x with
       | mk i hFin =>
@@ -46,11 +45,13 @@ theorem conversion_var_lift_n :
         | zero =>
           rfl
         | succ i' =>
-          simp [lift_subst_n]
+          rw [lift_subst_n]
+          rw [lift_weak_n]
           apply conversion_var_lift
           apply conversion_var_lift_n
           apply h
 
+@[aesop safe apply]
 theorem conversion_var_substitute {σ σ' : Subst m n} :
     (∀x, v(x)⌈σ⌉ = v(x)⌊ρ⌋) → ∀t, t⌈σ⌉ = t⌊ρ⌋ :=
   by
@@ -58,13 +59,10 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
     match t with
     | .unit =>
       simp [substitute]
-      simp [weaken]
     | .empty =>
       simp [substitute]
-      simp [weaken]
     | .pi A B =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -74,7 +72,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         · apply conversion_var_lift_n h
     | .sigma A B =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -84,10 +81,8 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         · apply conversion_var_lift_n h
     | .nat =>
       simp [substitute]
-      simp [weaken]
     | .iden A a a' =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -98,15 +93,12 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
           assumption
     | .univ =>
       simp [substitute]
-      simp [weaken]
     | .var x =>
       apply h
     | .tt =>
       simp [substitute]
-      simp [weaken]
     | .indUnit A b a =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute
         · have ξ := lift_subst_n 1 σ
@@ -119,7 +111,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
           assumption
     | .indEmpty A b =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute
         · have ξ := lift_subst_n 1 σ
@@ -129,7 +120,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         assumption
     | .lam A b => 
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -139,7 +129,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         · apply conversion_var_lift_n h
     | .app f a => 
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -147,7 +136,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         assumption
     | .pairSigma a b =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -155,7 +143,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         assumption
     | .indSigma A B C c p =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -178,15 +165,12 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
               assumption
     | .zeroNat =>
       simp [substitute]
-      simp [weaken]
     | .succNat i =>
       simp [substitute]
-      simp [weaken]
       apply conversion_var_substitute h
       assumption
     | .indNat A z s i =>
       simp [substitute]
-      simp [weaken]
       repeat' apply And.intro
       · apply conversion_var_substitute
         · have ξ := lift_subst_n 1 σ
@@ -202,7 +186,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         assumption
     | .refl A a =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -210,7 +193,6 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
         assumption
     | .j A B b a a' p => 
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute h
         assumption
@@ -233,25 +215,23 @@ theorem conversion_var_substitute {σ σ' : Subst m n} :
               · apply conversion_var_substitute h
                 assumption
 
+@[simp]
 theorem conversion_var_sub_weak :
     v(x)⌈ₛρ⌉ = v(x)⌊ρ⌋ :=
   by
     simp [substitute]
-    simp [substitute_var]
 
+@[simp]
 theorem conversion_sub_weak :
     t⌈ₛρ⌉ = t⌊ρ⌋ :=
   by
     cases t with
     | unit =>
       simp [substitute]
-      simp [weaken]
     | empty =>
       simp [substitute]
-      simp [weaken]
     | pi A B =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_var_substitute
@@ -260,7 +240,6 @@ theorem conversion_sub_weak :
           apply conversion_var_sub_weak
     | sigma A B =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_var_substitute
@@ -269,10 +248,8 @@ theorem conversion_sub_weak :
           apply conversion_var_sub_weak
     | nat =>
       simp [substitute]
-      simp [weaken]
     | iden A a a' =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply And.intro
@@ -280,15 +257,12 @@ theorem conversion_sub_weak :
         · apply conversion_sub_weak
     | univ =>
       simp [substitute]
-      simp [weaken]
     | var x =>
       apply conversion_var_sub_weak
     | tt =>
       simp [substitute]
-      simp [weaken]
     | indUnit A b a =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute
         · apply lift_subst_n 1 (.weak ρ)
@@ -299,7 +273,6 @@ theorem conversion_sub_weak :
         · apply conversion_sub_weak
     | indEmpty A b =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_var_substitute
         · apply lift_subst_n 1 (.weak ρ)
@@ -308,7 +281,6 @@ theorem conversion_sub_weak :
       · apply conversion_sub_weak
     | lam A b =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_var_substitute
@@ -317,19 +289,16 @@ theorem conversion_sub_weak :
           apply conversion_var_sub_weak
     | app f a =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_sub_weak
     | pairSigma a b =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_sub_weak
     | indSigma A B C c p =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply And.intro
@@ -350,14 +319,11 @@ theorem conversion_sub_weak :
             · apply conversion_sub_weak
     | zeroNat =>
       simp [substitute]
-      simp [weaken]
     | succNat i =>
       simp [substitute]
-      simp [weaken]
       apply conversion_sub_weak
     | indNat A z s i =>
       simp [substitute]
-      simp [weaken]
       repeat' apply And.intro
       · apply conversion_var_substitute
         · apply lift_subst_n 1 (.weak ρ)
@@ -371,13 +337,11 @@ theorem conversion_sub_weak :
       · apply conversion_sub_weak
     | refl A a =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply conversion_sub_weak
     | j A B b a a' p =>
       simp [substitute]
-      simp [weaken]
       apply And.intro
       · apply conversion_sub_weak
       · apply And.intro
@@ -400,8 +364,6 @@ theorem substitution_conv_shift :
     x⌈ₛ↑ₚρ⌉ᵥ = x⌈↑ₛ(ₛρ)⌉ᵥ :=
   by
     simp [substitute_var]
-    simp [shift_tm]
-    rfl
 
 theorem substitution_conv_shift_term :
     t⌈ₛ↑ₚρ⌉ = t⌈↑ₛ(ₛρ)⌉ :=
@@ -409,10 +371,8 @@ theorem substitution_conv_shift_term :
     apply substitution_var_substitute
     intro x
     simp [substitute]
-    simp [substitute_var]
-    simp [shift_tm]
-    rfl
 
+@[simp]
 theorem substitution_conv_shift_id_conv :
     t⌈ₛ↑ₚidₚ⌉ = t⌊↑ₚidₚ⌋ :=
   by
@@ -420,7 +380,6 @@ theorem substitution_conv_shift_id_conv :
     · apply ₛ↑ₚidₚ
     · intro x
       simp [substitute]
-      simp [substitute_var]
 
 theorem substitution_conv_shift_comp_ρσ :
     ↑ₚρ ₚ∘ₛ (σ, t) = ↑ₛ(ρ ₚ∘ₛ σ, (t⌊ρ⌋)) :=
@@ -431,7 +390,6 @@ theorem substitution_var_conv_shift_id {σ : Subst m n} {x : Fin n} :
     x⌈σ⌉ᵥ⌊↑ₚidₚ⌋ = x⌈↑ₛσ⌉ᵥ :=
   by
     simp [substitute_var]
-    rfl
 
 theorem substitution_conv_comp_ρρ :
     x⌊ρ ₚ∘ₚ ρ'⌋ᵥ = x⌈ρ ₚ∘ₛ (ₛρ')⌉ᵥ :=
@@ -439,16 +397,24 @@ theorem substitution_conv_comp_ρρ :
     cases ρ with
     | id =>
       simp [comp_weaken_substitute]
-      simp [comp_weaken]
-      simp [substitute_var]
-      simp [weaken]
     | shift ξ =>
       simp [comp_weaken_substitute]
-      simp [comp_weaken]
-      simp [substitute_var]
-      simp [weaken]
     | lift ξ =>
       simp [comp_weaken_substitute]
-      simp [comp_weaken]
-      simp [substitute_var]
-      simp [weaken]
+
+
+theorem conversion_var_lift_n_sub_weak :
+    x⌈lift_subst_n n (ₛρ)⌉ᵥ = x⌊lift_weak_n n ρ⌋ᵥ :=
+  by
+    induction n with
+    | zero =>
+      simp []
+    | succ n' ih =>
+      simp []
+      cases x
+      case mk i hFin =>
+        cases i with
+        | zero =>
+          simp []
+        | succ i' =>
+          simp [ih]

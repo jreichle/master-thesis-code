@@ -31,16 +31,6 @@ theorem pi_same_type_diff_val :
         · apply hP
         · apply haA
 
-theorem how_to :
-    P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉ = P⌈(ₛ↑ₚidₚ), v(0)⌉⌊⇑ₚ↑ₚidₚ⌋ :=
-  by
-    rw [substitution_comp_ρσ]
-    simp [comp_weaken_substitute]
-    simp [comp_weaken]
-    simp [weaken]
-    simp [weaken_var]
-    rfl
-
 theorem pi_same_type_diff_var_context {n : Nat} {Γ : Ctx n} {A : Tm n} {P : Tm (n + 1)}:
     (Γ ⬝ A ⊢ P type)
     → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉⌊↑ₚidₚ⌋) type) :=
@@ -52,11 +42,15 @@ theorem pi_same_type_diff_var_context {n : Nat} {Γ : Ctx n} {A : Tm n} {P : Tm 
       · apply hP
       · apply weakening_type hA hA
     · apply weakening_type
-      · rw [how_to]
-        apply weakening_second_type
-        · rw [substitution_id_shift_var]
-          apply hP
-        · apply hA
+      · replace_by_conclusion weakening_second_type
+        rotate_left
+        · apply weakening_second_type hP hA
+        · apply congr
+          · rfl
+          · rw [←substitution_id (t := P)]
+            substitution_to_composition
+            substitution_var_sub
+            any_goals substitution_step
       · apply weakening_type
         · apply hP
         · apply weakening_type hA hA
@@ -95,74 +89,24 @@ theorem pi_same_type_diff_var_context_iden_weak :
         · apply hA
         · apply hA
 
-theorem this_works_aaaaah :
-    P⌈↑ₛ((ₛ↑ₚ↑ₚidₚ), (v(0)⌊idₚ⌋))⌉⌈1ₙ⇑ₛ((ₛidₚ), v(0))⌉
-    = P⌊↑ₚidₚ⌋ :=
-  by
-    rw [←substitution_conv_shift_id]
-    rw [weakening_id]
-    rw [how_to]
-    rw [substitution_id_shift_var]
-    simp [lift_subst_n]
-    simp [weakening_comp]
-    simp [substitution_comp_σρ]
-    simp [comp_weaken]
-    simp [comp_substitute_weaken]
-    rw [←substitution_conv_shift_id]
-    simp [comp_weaken]
-    rw [substitution_id_shift_var]
-
 theorem inhabitant_pi_same_type_diff_val :
     (Γ ⬝ A ⊢ P type)
     → (Γ ⬝ A ⊢ λP;v(0) ∶ (Π(P⌊↑ₚidₚ⌋);(P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉⌊↑ₚidₚ⌋))⌈(ₛidₚ), v(0)⌉) :=
   by
     intro hP
     have hA := ctx_extr (boundary_ctx_type hP)
-    simp [substitute]
-    rw [substitution_comp_ρσ]
-    rw [substitution_comp_σρ]
-    simp [comp_weaken_substitute]
-    simp [comp_substitute_weaken]
-    simp [substitution_id]
-    apply HasType.pi_intro
-    rw [this_works_aaaaah]
-    apply HasType.var
-    apply hP
+    have h := HasType.pi_intro (HasType.var hP)
+    replace_by_conclusion h
+    · apply congr
+      · rfl
+      · substitution_step
+        rw [←substitution_id (t := P)]
+        substitution_to_composition
+        substitution_var_sub
+        any_goals substitution_step
+    · apply h
 
-theorem rewrite_keep_sub :
-    B⌈(ₛidₚ), v(0)⌉ =
-    B⌊↑ₚidₚ⌋⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉ :=
-  by
-    simp [substitution_comp_σρ]
-    simp [comp_substitute_weaken]
-
-theorem rewrite_elim :
-    (ΠP⌊↑ₚidₚ⌋;P⌈(ₛ↑ₚ↑ₚidₚ), v(0)⌉⌊↑ₚidₚ⌋)⌊↑ₚidₚ⌋⌈(ₛidₚ), a, a', p⌉
-    = (ΠP⌈(ₛidₚ), a⌉;P⌈(ₛidₚ), a'⌉⌊↑ₚidₚ⌋) :=
-  by
-    simp [weaken]
-    simp [substitute]
-    rw [substitution_comp_ρσ]
-    rw [substitution_comp_σρ]
-    simp [comp_weaken_substitute]
-    simp [comp_substitute_weaken]
-    simp [weakening_id]
-    simp [lift_weak_n]
-    apply And.intro
-    · rw [substitution_comp_σρ]
-      simp [comp_substitute_weaken]
-    · rw [substitution_comp_σρ]
-      simp [lift_subst_n]
-      simp [comp_substitute_weaken]
-      simp [substitution_comp]
-      simp [comp_substitute_substitute]
-      simp [comp_substitute_weaken]
-      simp [substitute]
-      simp [substitute_var]
-      rw [←substitution_conv_shift_id]
-      aesop
-
-theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {B : Tm (n + 3)} {h' P : Tm (n + 1)} :
+theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {P : Tm (n + 1)} :
     (Γ ⬝ A ⊢ P type)
     → (Γ ⊢ p ∶ a ≃[A] a')
     → (Γ ⊢ h ∶ P⌈a⌉₀)
@@ -176,42 +120,36 @@ theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {B : Tm (n 
     apply Exists.intro
     have hB := pi_same_type_diff_var_context_iden_weak hP
     have hbB := inhabitant_pi_same_type_diff_val hP
-    rw [rewrite_keep_sub] at hbB
-    have hElimId := HasType.iden_elim hB hbB (And.left (And.right hIdInv)) (And.right (And.right hIdInv)) hpId
-    rw [rewrite_elim] at hElimId
-    have hElimPi := HasType.pi_elim hElimId hhP
-    rw [substitution_shift_substitute_zero] at hElimPi
-    apply hElimPi
-
-theorem helper_prop_eq_trans_id_subst_left :
-    (a₁ ≃[A] a₂) =
-    (v(0) ≃[A⌊↑ₚidₚ⌋] a₂⌊↑ₚidₚ⌋)⌈(ₛidₚ), a₁⌉ :=
-  by
-    rw [substitute]
-    simp
-    repeat' apply And.intro
-    · rw [substitution_conv_zero]
-      rw [substitution_shift_substitute_zero]
-    · simp [substitute]
-      simp [substitute_var]
-      rfl
-    · rw [substitution_conv_zero]
-      rw [substitution_shift_substitute_zero]
-
-theorem helper_prop_eq_trans_id_subst_right :
-    (a₁ ≃[A] a₂) =
-    (a₁⌊↑ₚidₚ⌋ ≃[A⌊↑ₚidₚ⌋] v(0))⌈(ₛidₚ), a₂⌉ :=
-  by
-    rw [substitute]
-    simp
-    repeat' apply And.intro
-    · rw [substitution_conv_zero]
-      rw [substitution_shift_substitute_zero]
-    · rw [substitution_conv_zero]
-      rw [substitution_shift_substitute_zero]
-    · simp [substitute]
-      simp [substitute_var]
-      rfl
+    have hElimId := HasType.iden_elim hB
+                    (by
+                      replace_by_conclusion hbB
+                      · apply congr
+                        · rfl
+                        · substitution_step
+                      · apply hbB)
+                    (And.left (And.right hIdInv)) (And.right (And.right hIdInv)) hpId
+    have hElimPi :=
+      by
+        apply HasType.pi_elim
+        rotate_left
+        · apply hhP
+        rotate_right
+        · replace_by_conclusion hElimId
+          · apply congr
+            apply congr
+            · rfl
+            · substitution_step
+            · substitution_step
+              substitution_step
+          · apply hElimId
+    · replace_by_conclusion hElimPi
+      · apply congr
+        apply congr
+        · rfl
+        · substitution_step
+        · substitution_step
+          substitution_step
+      · apply hElimPi
 
 theorem propositional_equality_symm :
     (Γ ⊢ p ∶ a ≃[A] a')
@@ -235,14 +173,31 @@ theorem propositional_equality_symm :
         · apply And.left (And.right hIdInv)
     have hB := pi_same_type_diff_var_context_iden_weak hP
     have hbB := inhabitant_pi_same_type_diff_val hP
-    rw [rewrite_keep_sub] at hbB
-    have hElimId := HasType.iden_elim hB hbB (And.left (And.right hIdInv)) (And.right (And.right hIdInv)) hpId
-    rw [rewrite_elim] at hElimId
-    rw [helper_prop_eq_trans_id_subst_left] at hreflId
-    have hElimPi := HasType.pi_elim hElimId hreflId
-    rw [substitution_shift_substitute_zero] at hElimPi
-    rw [←helper_prop_eq_trans_id_subst_left] at hElimPi
-    apply hElimPi
+    have hElimId := HasType.iden_elim hB
+                    (by
+                      replace_by_conclusion hbB
+                      · apply congr
+                        · rfl
+                        · substitution_step
+                      · apply hbB)
+                    (And.left (And.right hIdInv)) (And.right (And.right hIdInv)) hpId
+    have hElimPi :=
+      by
+        apply HasType.pi_elim hElimId -- hreflId
+        · replace_by_conclusion hreflId
+          · apply congr
+            · rfl
+            · substitution_step
+          · apply hreflId
+    · replace_by_conclusion hElimPi
+      · apply congr
+        apply congr
+        · rfl
+        · substitution_step
+        · substitution_step
+          substitution_step
+          substitution_step
+      · apply hElimPi
 
 theorem propositional_equality_trans :
     (Γ ⊢ p₁ ∶ a₁ ≃[A] a₂)
@@ -264,11 +219,28 @@ theorem propositional_equality_trans :
         · apply HasType.var hA
     have hB := pi_same_type_diff_var_context_iden_weak hP
     have hbB := inhabitant_pi_same_type_diff_val hP
-    rw [rewrite_keep_sub] at hbB
-    have hElimId := HasType.iden_elim hB hbB (And.left (And.right hIdInv')) (And.right (And.right hIdInv')) hpId'
-    rw [rewrite_elim] at hElimId
-    rw [←helper_prop_eq_trans_id_subst_right] at hElimId
-    have hElimPi := HasType.pi_elim hElimId hpId
-    rw [substitution_shift_substitute_zero] at hElimPi
-    rw [←helper_prop_eq_trans_id_subst_right] at hElimPi
-    apply hElimPi
+    have hElimId := HasType.iden_elim hB
+                    (by
+                      replace_by_conclusion hbB
+                      · apply congr
+                        · rfl
+                        · substitution_step
+                      · apply hbB)
+                    (And.left (And.right hIdInv')) (And.right (And.right hIdInv')) hpId'
+    have hElimPi :=
+      by
+        apply HasType.pi_elim hElimId
+        · replace_by_conclusion hpId
+          · apply congr
+            · rfl
+            · substitution_step
+          · apply hpId
+    · replace_by_conclusion hElimPi
+      · apply congr
+        apply congr
+        · rfl
+        · substitution_step
+        · substitution_step
+          substitution_step
+          substitution_step
+      · apply hElimPi

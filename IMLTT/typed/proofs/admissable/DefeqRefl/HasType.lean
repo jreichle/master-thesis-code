@@ -1067,7 +1067,8 @@ theorem defeq_refl_nat_elim :
         repeat' rfl
       · apply And.right (And.right ihzA)
         repeat' rfl
-      · simp [extend_expand_context]
+      · rw [extend_expand_context]
+        rw [extend_expand_context]
         apply And.right (And.right ihsA)
         repeat' rfl
       · apply And.right (And.right ihxNat)

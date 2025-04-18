@@ -7,9 +7,9 @@ import IMLTT.untyped.proofs.Contexts
 import IMLTT.untyped.proofs.Mixture
 
 import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.RulesEquality
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.Weakening
 
 import IMLTT.typed.proofs.admissable.substitution.Helpers
 
@@ -27,23 +27,14 @@ theorem substitution_gen_unit_form :
     cases heqΓ
     cases heqT
     apply IsType.unit_form
-    simp_all
     cases Δ
     case start =>
-      simp [substitute_into_gen_ctx]
-      simp [expand_ctx]
-      simp [expand_ctx] at hiC
-      exact ctx_decr hiC
+      apply ctx_decr hiC
     case expand Δ' T =>
-      cases m with
-      | zero =>
-        have h := gen_ctx_leq Δ'
-        omega
-      | succ m' =>
-        apply ihiC
-        · rfl
-        · apply hsS
-        · rfl
+      apply ihiC
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem substitution_gen_empty_form : ∀ {n : Nat} {Γ : Ctx n},
   Γ ctx →
@@ -58,23 +49,14 @@ theorem substitution_gen_empty_form : ∀ {n : Nat} {Γ : Ctx n},
     cases heqΓ
     cases heqT
     apply IsType.empty_form
-    simp_all
     cases Δ
     case start =>
-      simp [substitute_into_gen_ctx]
-      simp [expand_ctx]
-      simp [expand_ctx] at hiC
-      exact ctx_decr hiC
+      apply ctx_decr hiC
     case expand Δ' T =>
-      cases m with
-      | zero =>
-        have h := gen_ctx_leq Δ'
-        omega
-      | succ m' =>
-        apply ihiC
-        · rfl
-        · apply hsS
-        · rfl
+      apply ihiC
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem substitution_gen_pi_form {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} (hA : Γ ⊢ A type) (hB : Γ ⬝ A ⊢ B type) :
   (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) {s S : Tm l}
@@ -98,14 +80,16 @@ theorem substitution_gen_pi_form {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 
       · rfl
       · apply hsS
       · rfl
-    · simp [lift_subst_n]
-      rw [lift_n_substitution]
-      rw [extend_expand_context_n_substitution]
-      apply ihB
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
+    · replace_by_conclusion ihB
+      · apply congr
+        apply congr
+        · rfl
+        · substitution_step
+        · rw [lift_n_substitution]
+      · apply ihB
+        rw (config := {occs := .pos [1]}) [extend_expand_context]
+        repeat' rfl
+        apply hsS
 
 theorem substitution_gen_sigma_form {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} (a : Γ ⊢ A type) (a_1 : Γ ⬝ A ⊢ B type) :
   (∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) {s S : Tm l}
@@ -129,14 +113,16 @@ theorem substitution_gen_sigma_form {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n
       · rfl
       · apply hsS
       · rfl
-    · simp [lift_subst_n]
-      rw [lift_n_substitution]
-      rw [extend_expand_context_n_substitution]
-      apply ihB
-      · rfl
-      · rfl
-      · apply hsS
-      · rfl
+    · replace_by_conclusion ihB
+      · apply congr
+        apply congr
+        · rfl
+        · substitution_step
+        · rw [lift_n_substitution]
+      · apply ihB
+        rw (config := {occs := .pos [1]}) [extend_expand_context]
+        repeat' rfl
+        apply hsS
 
 theorem substitution_gen_nat_form :
     ∀ {n : Nat} {Γ : Ctx n},
@@ -152,23 +138,14 @@ theorem substitution_gen_nat_form :
     cases heqΓ
     cases heqT
     apply IsType.nat_form
-    simp_all
     cases Δ
     case start =>
-      simp [substitute_into_gen_ctx]
-      simp [expand_ctx]
-      simp [expand_ctx] at hiC
-      exact ctx_decr hiC
+      apply ctx_decr hiC
     case expand Δ' T =>
-      cases m with
-      | zero =>
-        have h := gen_ctx_leq Δ'
-        omega
-      | succ m' =>
-        apply ihiC
-        · rfl
-        · apply hsS
-        · rfl
+      apply ihiC
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem substitution_gen_iden_form :
   ∀ {n : Nat} {Γ : Ctx n} {a A a' : Tm n},
@@ -217,7 +194,7 @@ theorem substitution_gen_iden_form :
       · exact hsS
       · rfl
 
-theorem substitution_gen_univ_form : 
+theorem substitution_gen_univ_form :
     ∀ {n : Nat} {Γ : Ctx n},
     Γ ctx →
     (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (eqM : n = m + 1) (s S : Tm l),
@@ -231,23 +208,14 @@ theorem substitution_gen_univ_form :
     cases heqΓ
     cases heqT
     apply IsType.univ_form
-    simp_all
     cases Δ
     case start =>
-      simp [substitute_into_gen_ctx]
-      simp [expand_ctx]
-      simp [expand_ctx] at hiC
-      exact ctx_decr hiC
+      apply ctx_decr hiC
     case expand Δ' T =>
-      cases m with
-      | zero =>
-        have h := gen_ctx_leq Δ'
-        omega
-      | succ m' =>
-        apply ihiC
-        · rfl
-        · apply hsS
-        · rfl
+      apply ihiC
+      · rfl
+      · apply hsS
+      · rfl
 
 theorem substitution_gen_univ_elim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
   (Γ ⊢ A ∶ 𝒰) →

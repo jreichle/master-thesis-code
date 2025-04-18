@@ -320,9 +320,9 @@ theorem substitution_ctx :
     Γ ⬝ B ⬝ A ctx → (Γ ⊢ b ∶ B) → Γ ⬝ A⌈b⌉₀ ctx :=
   by
     intro hiCBA hbB
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     rw [extend_expand_context_n_substitution]
@@ -334,9 +334,9 @@ theorem substitution_type :
     Γ ⬝ B ⊢ A type → (Γ ⊢ b ∶ B) → Γ ⊢ A⌈b⌉₀ type :=
   by
     intro hA hbB
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     apply And.left (And.right substitution)
@@ -347,9 +347,9 @@ theorem substitution_term :
     (Γ ⬝ B ⊢ a ∶ A) → (Γ ⊢ b ∶ B) → Γ ⊢ a⌈b⌉₀ ∶ A⌈b⌉₀ :=
   by
     intro haA hbB
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     apply And.left (And.right (And.right substitution))
@@ -360,9 +360,9 @@ theorem substitution_type_eq :
     Γ ⬝ B ⊢ A ≡ A' type → (Γ ⊢ b ∶ B) → Γ ⊢ A⌈b⌉₀ ≡ A'⌈b⌉₀ type :=
   by
     intro hAA hbB
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     apply And.left (And.right (And.right (And.right substitution)))
@@ -374,9 +374,9 @@ theorem substitution_term_eq :
     (Γ ⬝ B ⊢ a ≡ a' ∶ A) → (Γ ⊢ b ∶ B) → Γ ⊢ a⌈b⌉₀ ≡ a'⌈b⌉₀ ∶ A⌈b⌉₀ :=
   by
     intro haaA hbB
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     apply And.right (And.right (And.right (And.right substitution)))

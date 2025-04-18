@@ -53,8 +53,7 @@ theorem functionality_typing_unit_form :
       cases heqM
       cases heqΓ
       cases heqT
-      simp_all
-      simp [substitute]
+      simp only [substitute]
       rw [←substitution_unit]
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.unit_form_eq hiC
@@ -101,7 +100,6 @@ theorem functionality_typing_empty_form :
       cases heqΓ
       cases heqT
       simp_all
-      simp [substitute]
       rw [←substitution_empty]
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.empty_form_eq hiC
@@ -168,7 +166,6 @@ theorem functionality_typing_pi_form :
       cases heqM
       cases heqΓ
       cases heqT
-      simp [substitute]
       apply IsEqualType.pi_form_eq
       · apply And.right ihA
         · apply hssS
@@ -177,7 +174,7 @@ theorem functionality_typing_pi_form :
         · rfl
         · rfl
         · rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [lift_n_substitution]
         rw [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
@@ -250,7 +247,6 @@ theorem functionality_typing_sigma_form :
       cases heqM
       cases heqΓ
       cases heqT
-      simp [substitute]
       apply IsEqualType.sigma_form_eq
       · apply And.right ihA
         · apply hssS
@@ -259,7 +255,7 @@ theorem functionality_typing_sigma_form :
         · rfl
         · rfl
         · rfl
-      · simp [lift_subst_n]
+      · simp only [lift_subst_n]
         rw [lift_n_substitution]
         rw [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
@@ -312,7 +308,6 @@ theorem functionality_typing_nat_form :
       cases heqΓ
       cases heqT
       simp_all
-      simp [substitute]
       rw [←substitution_nat]
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.nat_form_eq hiC
@@ -395,8 +390,6 @@ theorem functionality_typing_iden_form :
       cases heqM
       cases heqΓ
       cases heqT
-      simp_all
-      simp [substitute]
       apply IsEqualType.iden_form_eq
       · apply And.right ihA
         · apply hssS
@@ -471,7 +464,6 @@ theorem functionality_typing_univ_form :
       cases heqΓ
       cases heqT
       simp_all
-      simp [substitute]
       rw [←substitution_univ]
       apply And.left (And.right (And.right (And.right substitution)))
       · apply IsEqualType.univ_form_eq hiC

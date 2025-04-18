@@ -5,6 +5,7 @@ inductive Weak : Nat → Nat → Type where
   | shift : Weak m n → Weak (m + 1) n
   | lift : Weak m n → Weak (m + 1) (n + 1)
 
+@[simp]
 def comp_weaken (ρ : Weak l m) (ρ' : Weak m n) : Weak l n :=
   match ρ with
   | .id => ρ'
@@ -15,16 +16,19 @@ def comp_weaken (ρ : Weak l m) (ρ' : Weak m n) : Weak l n :=
     | .shift γ' => .shift (comp_weaken γ γ')
     | .lift γ' => .lift (comp_weaken γ γ')
 
+-- FIXME: safe to delete?
 def shift_weak_n (i : Nat) (ρ : Weak m n) : Weak (m + i) n :=
   match i with
   | 0 => ρ
   | i' + 1 => .shift (shift_weak_n i' ρ)
 
+@[simp]
 def lift_weak_n (i : Nat) (ρ : Weak m n) : Weak (m + i) (n + i) :=
   match i with
   | 0 => ρ
   | i' + 1 => .lift (lift_weak_n i' ρ)
 
+@[simp]
 def weaken_var (ρ : Weak m n) (x : Fin n) : Fin m :=
   match ρ with
   | .id => x
@@ -34,6 +38,7 @@ def weaken_var (ρ : Weak m n) (x : Fin n) : Fin m :=
     | ⟨0, _⟩ => 0
     | ⟨x' + 1, h⟩ => .succ (weaken_var ρ (Fin.mk x' (Nat.lt_of_succ_lt_succ h)))
 
+@[simp]
 def weaken (ρ : Weak m n) (t : Tm n) : Tm m :=
   match t with
   | .unit => .unit
@@ -60,6 +65,7 @@ def weaken (ρ : Weak m n) (t : Tm n) : Tm m :=
   | .j A B b a a' p => .j (weaken ρ A) (weaken (lift_weak_n 3 ρ) B) (weaken (lift_weak_n 1 ρ) b)
                         (weaken ρ a) (weaken ρ a') (weaken ρ p)
 
+@[simp]
 def shift_tm : Tm n → Tm (n + 1)
   | t => weaken (.shift .id) t
 

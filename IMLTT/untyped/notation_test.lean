@@ -1,14 +1,8 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
-import IMLTT.typed.JudgmentsAndRules
 
--- TODO: do terms
--- ind unit
--- ind empty
--- app
--- ind sigma
--- j
+import IMLTT.typed.JudgmentsAndRules
 
 theorem weakaa {n : Nat} {Γ : Ctx (n + 1)} {A : Tm n} :
   Γ ctx → Γ ⊢ weaken (.shift .id) A ≡ A⌈↑ₛ(ₛidₚ)⌉ type :=
@@ -19,7 +13,7 @@ theorem subsss {n : Nat} {Γ : Ctx (n + 1)} {A : Tm n} :
   sorry
 
 theorem id_id {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} :
-  Γ ⊢ A ≃[A] A type → Γ ⊢ A ◃ A type :=
+  Γ ⊢ A ≃[A] A type → (Γ ⊢ A ∶ (A ≃[A] A)) → (Γ ⊢ A ∶ (A ≃[A] A)) → Γ ⊢ A ◃ A type :=
   by
     intro hPi
     sorry

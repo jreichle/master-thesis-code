@@ -379,9 +379,9 @@ theorem functionality_typing_general_term {n l : Nat} {Γ : Ctx l} {Δ : CtxGen 
       → (Γ ⊢ T⌈s⌉₀ ≡ T⌈s'⌉₀ type) :=
   by
     intro hT hssS hsS hsS'
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     apply And.left (And.right functionality_typing)
@@ -390,15 +390,20 @@ theorem functionality_typing_general_term {n l : Nat} {Γ : Ctx l} {Δ : CtxGen 
     · apply hsS'
     · apply hT
 
+    -- (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {T : Tm (n + 1)} {s s' S : Tm l},
+    --   (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+    --   → (Γ ⬝ S ⊗ Δ ⊢ T type)
+    --   → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) ≡ (T⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) type
+    -- ) ∧
 theorem functionality_typing_term {l : Nat} {Γ : Ctx l} {s s' S : Tm l} {t T : Tm (l + 1)} :
       (Γ ⬝ S ⊢ t ∶ T)
       → (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
       → (Γ ⊢  t⌈s⌉₀ ≡ t⌈s'⌉₀ ∶ T⌈s⌉₀) :=
   by
     intro htT hssS hsS hsS'
-    simp [substitute_zero]
-    simp [zero_substitution_conv]
-    simp [←n_substitution_zero]
+    simp only [substitute_zero]
+    simp only [zero_substitution_conv]
+    simp only [←n_substitution_zero]
     rw [←empty_expand_context (Γ := Γ)]
     rw [←empty_extend_expand_context_n_substitution]
     apply And.left (And.right (And.right functionality_typing))

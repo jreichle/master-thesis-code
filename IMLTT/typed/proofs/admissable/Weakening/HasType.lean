@@ -7,6 +7,7 @@ import IMLTT.untyped.proofs.Contexts
 import IMLTT.untyped.proofs.Mixture
 
 import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.RulesEquality
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
@@ -28,25 +29,26 @@ theorem weakening_var :
     cases Δ with
     | start =>
       cases heqΓ
-      simp [empty_expand_context_weaken_from]
-      simp [expand_ctx]
-      simp [weaken_from_zero]
-      apply HasType.weak
-      · apply HasType.var
-        apply ctx_extr (boundary_ctx_type hS)
-      · apply hS
+      replace_by_conclusion HasType.weak
+      · apply congr
+        · apply congr
+          · rfl
+          · substitution_step
+        · substitution_step
+          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+      · apply HasType.weak
+        · apply HasType.var hA
+        · apply hS
     | expand Δ' S' =>
       cases heqΓ
-      rw [←extend_expand_context_weaken_from]
-      rw [shift_weaken_from]
-      rw [←lift_weaken_from]
-      rw [weaken]
-      simp [weaken_var]
-      apply HasType.var
-      apply ihA
-      apply hS
-      repeat' rfl
-      any_goals apply gen_ctx_leq Δ'
+      replace_by_conclusion HasType.var
+      · apply congr
+        · substitution_step
+        · substitution_step
+      · apply HasType.var
+        apply ihA
+        apply hS
+        any_goals rfl
 
 theorem weakening_weak :
     ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x},
@@ -69,29 +71,37 @@ theorem weakening_weak :
     cases Δ with
     | start =>
       cases heqΓ
-      simp [empty_expand_context_weaken_from]
-      simp [expand_ctx]
-      simp [weaken_from_zero]
-      apply HasType.weak
-      · simp [←weakening_conv_var]
-        apply HasType.weak
-        · apply hvA
-        · apply ctx_extr (boundary_ctx_type hS)
-      · apply hS
+      replace_by_conclusion HasType.weak
+      · apply congr
+        · substitution_step
+        · substitution_step
+          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+      · apply HasType.weak
+        · replace_by_conclusion HasType.weak
+          · substitution_step
+          · apply HasType.weak
+            · apply hvA
+            · apply hB
+        · apply hS
     | expand Δ' S' =>
       cases heqΓ
-      rw [←extend_expand_context_weaken_from]
-      rw [shift_weaken_from]
-      rw [shift_weaken_from]
-      apply HasType.weak
-      · rw [←weakening_conv_var]
-        apply ihvA
-        apply hS
-        repeat' rfl
-      · apply ihB
-        apply hS
-        repeat' rfl
-      any_goals apply gen_ctx_leq Δ'
+      replace_by_conclusion HasType.weak
+      · apply congr
+        · substitution_step
+        · substitution_step
+          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+      · apply HasType.weak
+        · replace_by_conclusion ihvA
+          · apply congr
+            · substitution_step
+              rw [←weakening_conv_var]
+            · substitution_step
+          · apply ihvA
+            apply hS
+            repeat' rfl
+        · apply ihB
+          apply hS
+          repeat' rfl
 
 theorem weakening_unit_intro :
     ∀ {n : Nat} {Γ : Ctx n},
@@ -127,13 +137,15 @@ theorem weakening_pi_intro :
     cases heqt
     cases heqT
     apply HasType.pi_intro
-    rw [extend_expand_context_weaken_from]
-    simp [lift_weak_n]
-    rw [lift_weaken_from]
-    apply ihbB
-    apply hS
-    repeat' rfl
-    apply gen_ctx_leq Δ
+    replace_by_conclusion ihbB
+    · apply congr
+      apply congr
+      · rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
+      · substitution_step
+      · substitution_step
+    · apply ihbB
+      apply hS
+      repeat' rfl
 
 theorem weakening_sigma_intro :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B : Tm (n + 1)},
@@ -162,18 +174,21 @@ theorem weakening_sigma_intro :
     · apply ihaA
       apply hS
       repeat' rfl
-    · simp [lift_weak_n]
-      simp [←weak_sub_zero]
-      apply ihbB
-      apply hS
-      repeat' rfl
-    · simp [lift_weak_n]
-      rw [lift_weaken_from]
-      rw [extend_expand_context_weaken_from]
-      apply ihB
-      apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
+    · replace_by_conclusion ihbB
+      rotate_left
+      · apply ihbB
+        apply hS
+        repeat' rfl
+        rfl
+      · apply congr
+        substitution_norm
+    · replace_by_conclusion ihB
+      · apply congr
+        rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
+        substitution_norm
+      · apply ihB
+        apply hS
+        repeat' rfl
 
 theorem weakening_nat_zero_intro :
     ∀ {n : Nat} {Γ : Ctx n},
@@ -299,14 +314,16 @@ theorem weakening_univ_pi :
       apply ihAU
       apply hS
       repeat' rfl
-    · rw [←weakening_univ]
-      rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      apply ihBU
-      apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
+    · replace_by_conclusion ihBU
+      · apply congr
+        apply congr
+        rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
+        substitution_step
+        rw [←weakening_univ]
+      · apply ihBU
+        apply hS
+        rw [extend_expand_context]
+        repeat' rfl
 
 theorem weakening_univ_sigma :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
@@ -332,14 +349,15 @@ theorem weakening_univ_sigma :
       apply ihAU
       apply hS
       repeat' rfl
-    · rw [←weakening_univ]
-      rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      apply ihBU
-      apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
+    · replace_by_conclusion ihBU
+      · apply congr
+        apply congr
+        rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
+        substitution_step
+        rw [←weakening_univ]
+      · apply ihBU
+        apply hS
+        repeat' rfl
 
 theorem weakening_univ_nat :
     ∀ {n : Nat} {Γ : Ctx n},
@@ -420,20 +438,23 @@ theorem weakening_unit_elim :
     cases heqT
     rw [weak_sub_zero]
     apply HasType.unit_elim
-    · rw [←weakening_unit]
-      rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      apply ihA
-      apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
-    · rw [←weakening_tt]
-      simp [lift_weak_n]
-      rw [←weak_sub_zero]
-      apply ihaA
-      apply hS
-      repeat' rfl
+    · replace_by_conclusion ihA
+      · apply congr
+        rw [←weakening_unit]
+        rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
+        substitution_step
+      · apply ihA
+        apply hS
+        repeat' rfl
+    · replace_by_conclusion ihaA
+      rotate_left
+      · apply ihaA
+        apply hS
+        repeat' rfl
+        rfl
+      · apply congr
+        substitution_step
+        substitution_step
     · rw [←weakening_unit]
       apply ihb1
       apply hS
@@ -461,12 +482,11 @@ theorem weakening_empty_elim :
     apply HasType.empty_elim
     · rw [←weakening_empty]
       rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
+      apply use_equality_type
       apply ihA
       apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
+      rw [extend_expand_context]
+      substitution_norm
     · rw [←weakening_empty]
       apply ihb0
       apply hS
@@ -527,29 +547,21 @@ theorem weakening_sigma_elim :
     cases heqT
     rw [weak_sub_zero]
     apply HasType.sigma_elim
-    · simp [lift_weak_n]
-      rw [←weakening_sigma]
+    · apply use_equality_term
       apply ihpSi
       apply hS
-      repeat' rfl
-    · simp [lift_weak_n]
-      rw [←weakening_sigma]
-      rw [lift_weaken_from]
-      rw [extend_expand_context_weaken_from]
+      substitution_norm
+    · apply use_equality_type
       apply ihC
       apply hS
-      repeat' rfl
-      apply  gen_ctx_leq Δ
-    · have h := gen_ctx_leq Δ
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      rw [lift_weaken_from]
-      simp [extend_expand_context_weaken_from]
-      rw [weak_subst_sigma_C]
+      rw [extend_expand_context]
+      substitution_norm
+    · apply use_equality_term
       apply ihcC
       apply hS
-      repeat' rfl
-      any_goals omega
+      simp only [extend_expand_context]
+      any_goals substitution_step
+      any_goals substitution_step
 
 theorem weakening_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -582,32 +594,23 @@ theorem weakening_nat_elim :
     cases heqT
     rw [weak_sub_zero]
     apply HasType.nat_elim
-    · rw [←weakening_nat]
-      rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
+    · apply use_equality_type
       apply ihA
       apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
-    · rw [←weakening_nat_zero]
-      simp [lift_weak_n]
-      rw [←weak_sub_zero]
+      simp only [extend_expand_context]
+      any_goals substitution_step
+    · apply use_equality_term
       apply ihzA
       apply hS
-      repeat' rfl
-    · have h := gen_ctx_leq Δ
-      rw [←weakening_nat]
-      rw [←helper_weak_nat_succ]
-      rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      rw [lift_weaken_from]
-      rw [extend_expand_context_weaken_from]
+      simp only [extend_expand_context]
+      any_goals substitution_step
+      any_goals substitution_step
+    · apply use_equality_term
       apply ihsA
       apply hS
-      repeat' rfl
-      any_goals omega
+      simp only [extend_expand_context]
+      any_goals substitution_step
+      any_goals substitution_step
     · rw [←weakening_nat]
       apply ihxA
       apply hS
@@ -655,33 +658,18 @@ theorem weakening_iden_elim :
     cases heqT
     rw [weak_subst_iden_elim]
     apply HasType.iden_elim
-    · have h := gen_ctx_leq Δ
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      rw [lift_weaken_from]
-      rw [lift_weaken_from]
-      rw [←shift_weaken_from]
-      rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-      rw [←shift_weaken_from]
-      rw [←shift_weaken_from]
-      rw [weakening_shift_id]
-      rw [←helper_weak_iden_propagate_weak]
-      rw [extend_expand_context_weaken_from]
-      rw [extend_expand_context_weaken_from]
-      rw [extend_expand_context_weaken_from]
+    · apply use_equality_type
       apply ihB
       apply hS
-      repeat' rfl
-      any_goals omega
-    · have h := gen_ctx_leq Δ
-      rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      rw [helper_weak_refl_propagate_weak]
+      simp only [extend_expand_context]
+      any_goals substitution_step
+      any_goals substitution_step
+    · apply use_equality_term
       apply ihbB
       apply hS
-      repeat' rfl
-      any_goals omega
+      simp only [extend_expand_context]
+      any_goals substitution_step
+      any_goals substitution_step
     · apply ihaA
       apply hS
       repeat' rfl

@@ -7,6 +7,7 @@ import IMLTT.untyped.proofs.Contexts
 import IMLTT.untyped.proofs.Mixture
 
 import IMLTT.typed.JudgmentsAndRules
+import IMLTT.typed.RulesEquality
 import IMLTT.typed.proofs.Recursor
 import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
@@ -71,13 +72,14 @@ theorem weakening_pi_form_eq :
     · apply ihAA
       apply hS
       repeat' rfl
-    · rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      apply ihBB
-      apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
+    · replace_by_conclusion ihBB
+      rotate_left
+      · apply ihBB
+        apply hS
+        repeat' rfl
+        rw [extend_expand_context]
+      · apply congr
+        substitution_norm
 
 theorem weakening_sigma_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
@@ -104,13 +106,14 @@ theorem weakening_sigma_form_eq :
     · apply ihAA
       apply hS
       repeat' rfl
-    · rw [extend_expand_context_weaken_from]
-      simp [lift_weak_n]
-      rw [lift_weaken_from]
-      apply ihBB
-      apply hS
-      repeat' rfl
-      apply gen_ctx_leq Δ
+    · replace_by_conclusion ihBB
+      rotate_left
+      · apply ihBB
+        apply hS
+        repeat' rfl
+        rw [extend_expand_context]
+      · apply congr
+        substitution_norm
 
 theorem weakening_nat_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},

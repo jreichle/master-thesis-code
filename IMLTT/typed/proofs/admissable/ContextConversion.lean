@@ -327,3 +327,27 @@ theorem context_conversion_term_eq :
     · apply hAA
     · apply ctx_extr (boundary_ctx_term_eq hbbB)
     · apply hA'
+
+theorem context_conversion_general_type :
+    (Γ ⬝ S ⊗ Δ) ⊢ A type → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ A type :=
+  by
+    apply And.left (And.right context_conversion)
+
+theorem context_conversion_general_term :
+    ((Γ ⬝ S ⊗ Δ) ⊢ a ∶ A) → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ a ∶ A :=
+  by
+    apply And.left (And.right (And.right context_conversion))
+
+theorem context_conversion_general_type_eq :
+    (Γ ⬝ S ⊗ Δ) ⊢ A ≡ A' type → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ A ≡ A' type :=
+  by
+    apply And.left (And.right (And.right (And.right context_conversion)))
+
+theorem context_conversion_general_term_eq :
+    ((Γ ⬝ S ⊗ Δ) ⊢ a ≡ a' ∶ A) → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ a ≡ a' ∶ A :=
+  by
+    apply And.right (And.right (And.right (And.right context_conversion)))

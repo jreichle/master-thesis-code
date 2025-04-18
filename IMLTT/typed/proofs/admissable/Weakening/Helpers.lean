@@ -13,250 +13,45 @@ import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 theorem shift_weaken_from {hl : l ≤ n} :
     A⌊↑ₚidₚ⌋⌊weaken_from (n + 1) l⌋ = A⌊weaken_from n l⌋⌊↑ₚidₚ⌋ :=
   by
-    simp [weaken_from]
-    split
-    case isTrue hT =>
-      simp [weakening_comp]
-      simp [comp_weaken]
-      rw [←weakening_shift_id]
-      rw [←weakening_comp]
-      rw [weakening_id]
-      rw [weakening_shift_id]
-    case isFalse hF =>
-      omega
+    substitution_nat_relation_lemmatas
+    substitution_step
 
 theorem weak_subst_sigma_C {leq : l ≤ n}:
     C⌊weaken_from (n + 1) l⌋⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ =
     C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉⌊weaken_from (n + 1 + 1) l⌋ :=
   by
-    simp [substitution_comp_ρσ]
-    simp [substitution_comp_σρ]
-    rw [←lift_weaken_from]
-    · apply substitution_var_substitute
-      intro x
-      cases x with
-      | mk i hFin =>
-        cases i with
-        | zero =>
-          rw [←lift_weaken_from]
-          · rw [←lift_weaken_from]
-            · simp [comp_weaken_substitute]
-              simp [comp_substitute_weaken]
-              simp [substitute]
-              simp [substitute_var]
-              simp [weaken]
-              simp [weaken_var]
-              aesop
-            · omega
-          · omega
-        | succ i' =>
-          rw [←lift_weaken_from]
-          · rw [←lift_weaken_from]
-            · simp [comp_weaken_substitute]
-              simp [comp_substitute_weaken]
-              simp [substitute]
-              simp [substitute_var]
-              simp [←substitution_conv_var]
-              rw [←substitution_comp_σρ]
-              simp [comp_weaken]
-              rw [←weakening_shift_id]
-              rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-              rw [←weakening_comp]
-              rw [weakening_id]
-              rw (config := {occs := .pos [1]}) [weakening_shift_id]
-              rfl
-            · omega
-          · omega
-    · exact leq
+    substitution_nat_relation_lemmatas
+    substitution_step
+    substitution_step
 
 theorem weak_subst_sigma_c :
     c⌈(ₛidₚ), a, b⌉⌊ρ⌋
-    = c⌊lift_weak_n 2 ρ⌋⌈(ₛidₚ), (a⌊ρ⌋), (b⌊ρ⌋)⌉ :=
+    = c⌊2ₙ⇑ₚρ⌋⌈(ₛidₚ), (a⌊ρ⌋), (b⌊ρ⌋)⌉ :=
   by
-    rw [substitution_comp_ρσ]
-    rw [substitution_comp_σρ]
-    apply substitution_var_substitute
-    intro x
-    cases ρ with
-    | id =>
-      simp [comp_weaken_substitute]
-      simp [←substitution_comp_σρ]
-      simp [weaken]
-      simp [weakening_var_lift_n_id]
-      simp [←weakening_conv_var]
-      simp [weakening_id]
-    | shift ρ' =>
-      simp [comp_weaken_substitute]
-      apply substitution_var_substitute
-      intro x
-      rw [←substitution_conv_shift_id]
-      cases x with
-      | mk i hFin =>
-        induction i with
-        | zero =>
-          simp [substitute]
-          simp [substitute_var]
-          rw [←weakening_shift_id]
-          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-          simp [weakening_id]
-          simp [lift_weak_n]
-          simp [comp_substitute_weaken]
-          simp [substitute_var]
-          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-          rfl
-        | succ i' hInd =>
-          simp [substitute]
-          simp [substitute_var]
-          cases i' with
-          | zero =>
-            simp [←substitution_conv_var]
-            rw [←substitution_comp_ρσ]
-            simp [substitute]
-            simp [substitute_var]
-            simp [weakening_shift_id]
-            rfl
-          | succ j =>
-            simp [lift_weak_n]
-            simp [comp_substitute_weaken]
-            simp [comp_weaken]
-            simp [substitute_var]
-            cases j with
-            | zero =>
-              simp [←substitution_conv_var]
-              rw [←substitution_comp_ρσ]
-              simp [substitute]
-              simp [substitute_var]
-              simp [weakening_shift_id]
-              rfl
-            | succ j' =>
-              simp [←substitution_conv_var]
-              rw [←substitution_comp_ρσ]
-              simp [substitute]
-              simp [substitute_var]
-              simp [weakening_shift_id]
-              rfl
-    | lift ρ' =>
-      simp [lift_weak_n]
-      simp [comp_weaken_substitute]
-      simp [comp_substitute_weaken]
-      simp [comp_weaken]
+    substitution_step
+    aesop
 
 theorem weak_subst_iden_elim :
     B⌈(ₛidₚ), a, b, c⌉⌊ρ⌋
     = B⌊lift_weak_n 3 ρ⌋⌈(ₛidₚ), (a⌊ρ⌋), (b⌊ρ⌋), (c⌊ρ⌋)⌉ :=
   by
-    rw [substitution_comp_ρσ]
-    rw [substitution_comp_σρ]
-    apply substitution_var_substitute
-    intro x
-    cases ρ with
-    | id =>
-      simp [comp_weaken_substitute]
-      simp [←substitution_comp_σρ]
-      simp [weaken]
-      simp [weakening_var_lift_n_id]
-      simp [←weakening_conv_var]
-      simp [weakening_id]
-    | shift ρ' =>
-      simp [comp_weaken_substitute]
-      simp [lift_weak_n]
-      simp [comp_substitute_weaken]
-      simp [comp_weaken]
-      apply substitution_var_substitute
-      intro x
-      rw [←substitution_conv_shift_id]
-      cases x with
-      | mk i hFin =>
-        induction i with
-        | zero =>
-          simp [substitute]
-          simp [substitute_var]
-          rw [←weakening_shift_id]
-          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-          simp [weakening_id]
-          rfl
-        | succ i' hInd =>
-          simp [substitute]
-          simp [substitute_var]
-          cases i' with
-          | zero =>
-            simp [←substitution_conv_var]
-            rw [←substitution_comp_ρσ]
-            simp [substitute]
-            simp [substitute_var]
-            simp [weakening_shift_id]
-            rfl
-          | succ j =>
-            simp [substitute_var]
-            cases j with
-            | zero =>
-              simp [←substitution_conv_var]
-              rw [←substitution_comp_ρσ]
-              simp [substitute]
-              simp [substitute_var]
-              simp [weakening_shift_id]
-              rfl
-            | succ j' =>
-              simp [←substitution_conv_var]
-              rw [←substitution_comp_ρσ]
-              simp [substitute]
-              simp [substitute_var]
-              simp [weakening_shift_id]
-              rfl
-    | lift ρ' =>
-      simp [comp_weaken_substitute]
-      simp [lift_weak_n]
-      simp [comp_substitute_weaken]
-      simp [comp_weaken]
+    substitution_step
+    aesop
 
 theorem helper_weak_iden_propagate_weak {leq : l ≤ n} :
     (v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0))⌊weaken_from (n + 1 + 1) l⌋
     = v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋⌊weaken_from (n + 1 + 1) l⌋] v(0) :=
   by
-    rw [←lift_weaken_from]
-    · rw [←lift_weaken_from]
-      · simp [weaken]
-        simp [weaken_var]
-        apply And.intro
-        · rfl
-        · rfl
-      · omega
-    · omega
+    substitution_nat_relation_lemmatas
+    substitution_step
+    substitution_step
 
 theorem helper_weak_refl_propagate_weak {leq : l ≤ n} :
     B⌊⇑ₚ⇑ₚ↑₁n + 1↬l⌋⌈(ₛidₚ), v(0), (A⌊↑₁n↬l⌋⌊↑ₚidₚ⌋.refl v(0))⌉
     = B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉⌊↑₁n + 1↬l⌋ :=
   by
-    simp [substitution_comp_σρ]
-    simp [substitution_comp_ρσ]
-    simp [comp_substitute_weaken]
-    apply substitution_var_substitute
-    intro x
-    simp [←substitution_comp_ρσ]
-    cases x
-    case a.mk i hFin =>
-      cases i with
-      | zero =>
-        simp [substitute]
-        simp [substitute_var]
-        rw [←shift_weaken_from]
-        simp [weaken]
-        rw [←lift_weaken_from]
-        simp [weaken_var]
-        any_goals omega
-        rfl
-      | succ i' =>
-        simp [substitute]
-        simp [substitute_var]
-        simp [←substitution_conv_var]
-        simp [←substitution_comp_σρ]
-        simp [substitution_id]
-        simp [weakening_id]
-        rw [←lift_weaken_from]
-        simp [weaken]
-        simp [weaken_var]
-        any_goals omega
-        aesop
+    substitution_nat_relation_lemmatas
+    substitution_step
 
 theorem tleq {l : Nat} :
     l + 1 ≤ 0 -> False :=
@@ -270,39 +65,9 @@ theorem helper_weak_1 :
     intro h1 h2
     omega
 
-
 theorem helper_weak_nat_succ {leq : l ≤ n} :
     A⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌊weaken_from (n + 1 + 1) l⌋
     = A⌊1ₙ⇑ₚweaken_from n l⌋⌈(ₛ↑ₚidₚ), 𝓈(v(0))⌉⌊↑ₚidₚ⌋ :=
   by
-    simp [lift_weak_n]
-    simp [substitution_comp_σρ]
-    simp [substitution_comp_ρσ]
-    simp [comp_weaken_substitute]
-    apply substitution_var_substitute
-    intro x
-    simp [←substitution_comp_ρσ]
-    cases x
-    case a.mk i hFin =>
-      cases i with
-      | zero =>
-        simp [substitute]
-        simp [substitute_var]
-        simp [shift_tm]
-        simp [weakening_id]
-        rw [shift_weaken_from]
-        rw [←lift_weaken_from]
-        simp [weaken]
-        simp [weaken_var]
-        rfl
-        any_goals omega
-      | succ i' =>
-        simp [substitute]
-        simp [substitute_var]
-        simp [shift_tm]
-        simp [←substitution_conv_var]
-        simp [←substitution_comp_σρ]
-        rw [shift_weaken_from]
-        rw [shift_weaken_from]
-        rfl
-        any_goals omega
+    substitution_step
+    substitution_step

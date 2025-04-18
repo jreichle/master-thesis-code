@@ -86,27 +86,6 @@ theorem boundary_pi_comp :
       · apply ihbB
       · apply haA
 
-theorem lulululu {b : Tm n} :
-    c⌈⇑ₛ((ₛidₚ), a)⌉⌈b⌉₀
-    = c⌈b⌊↑ₚidₚ⌋⌉₀⌈(ₛidₚ), a⌉ :=
-  by
-    simp [substitute_zero]
-    simp [substitution_comp]
-    simp [comp_substitute_substitute]
-    simp [substitution_comp_σρ]
-    simp [comp_substitute_weaken]
-    simp [substitution_id]
-
-theorem this_might_work :
-    A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋ =  A⌊↑ₚidₚ⌋⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
-  by
-    simp [substitution_comp_σρ]
-    simp [comp_substitute_weaken]
-    simp [weakening_comp]
-    simp [comp_weaken]
-    apply Eq.symm
-    apply conversion_sub_weak
-
 theorem boundary_sigma_comp :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
   (Γ ⊢ a ∶ A) →
@@ -128,21 +107,22 @@ theorem boundary_sigma_comp :
         · apply ctx_extr (boundary_ctx_term hcC)
       · apply hC
       · apply hcC
-    · rw [←boundary_helper_sigma_elim]
-      simp [substitution_twice_zero]
-      rw [context_to_gen_ctx] at hcC
-      have h1 := (And.left (And.right (And.right substitution))) hcC haA
-      simp [substitute_into_gen_ctx] at h1
-      simp [n_substitution_zero] at h1
-      simp [zero_substitution] at h1
-      simp [substitution_conv_zero] at h1
+    · rw [context_to_gen_ctx] at hcC
+      have h1 := substitution_general_term hcC haA
+      simp only [substitute_into_gen_ctx] at h1
+      simp only [n_substitution_zero] at h1
+      simp only [zero_substitution] at h1
+      simp only [substitution_conv_zero] at h1
       have h2 := substitution_term h1 hbB
-      simp [←lift_n_substitution] at h2
-      rw (config := {occs := .pos [1]}) [substitute_zero]
-      simp [n_substitution_zero] at h2
-      simp [zero_substitution] at h2
-      simp [lulululu] at h2
-      apply h2
+      replace_by_conclusion h2
+      · apply congr
+        apply congr
+        · rfl
+        · substitution_step
+          substitution_step
+        · substitution_step
+          substitution_step
+      · apply h2
     · apply substitution_type
       · apply hC
       · apply HasType.sigma_intro
@@ -198,20 +178,22 @@ theorem boundary_nat_succ_comp :
       rw [←substitution_shift_substitute_zero (A := A⌈𝓈(x)⌉₀)]
       apply substitution_term
       · rw [context_to_gen_ctx] at hsA
-        have h := (And.left (And.right (And.right substitution))) hsA hsNat
-        simp [substitute_into_gen_ctx] at h
-        rw [←lift_n_substitution] at h
-        simp [n_substitution_zero] at h
-        simp [zero_substitution] at h
-        simp [←insane] at h
-        simp [substitute_zero]
-        apply h
-        any_goals omega
-      · apply HasType.nat_elim
-        · apply hA
-        · apply hzA
-        · apply hsA
-        · apply hsNat
+        have h := substitution_general_term hsA hsNat
+        replace_by_conclusion h
+        · apply congr
+          apply congr
+          · substitution_step
+          · substitution_step
+          · substitution_step
+        · apply h
+      · have h := HasType.nat_elim hA hzA hsA hsNat
+        replace_by_conclusion h
+        · apply congr
+          apply congr
+          · substitution_step
+          · substitution_step
+          · substitution_step
+        · apply h
     · apply substitution_type
       · apply hA
       · apply HasType.nat_succ_intro hsNat
@@ -238,14 +220,18 @@ theorem boundary_iden_comp :
       · apply HasType.iden_intro
         · apply ihaA
         · apply haA
-    · rw [←old_test_hahah]
-      apply substitution_term
-      · apply hbB
-      · apply haA
-    · rw [←old_test_hahah]
-      apply substitution_type
-      · apply ihbB
-      · apply haA
+    · have h := substitution_term hbB haA
+      replace_by_conclusion h
+      · apply congr
+        · rfl
+        · substitution_norm
+      · apply h
+    · have h := substitution_type ihbB haA
+      replace_by_conclusion h
+      · apply congr
+        · rfl
+        · substitution_norm
+      · apply h
 
 theorem boundary_unit_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n}, Γ ctx
@@ -418,51 +404,6 @@ theorem boundary_sigma_intro_eq :
       · apply And.right (And.right ihaaA)
       · apply hB
 
-theorem test_this_no :
-    B⌊⇑ₚ↑ₚidₚ⌋⌊⇑ₚ↑ₚidₚ⌋⌈v(1)⌉₀ = B⌈(ₛ↑ₚ↑ₚidₚ), v(1)⌉ :=
-  by
-    simp [substitute_zero]
-    simp [weakening_comp]
-    simp [comp_weaken]
-    simp [substitution_comp_σρ]
-    simp [comp_substitute_weaken]
-    simp [comp_weaken]
-
-theorem lol :
-    B⌈(ₛ↑ₚ↑ₚidₚ), v(1)⌉ = B⌊↑ₚidₚ⌋ :=
-  by
-    rw [←substitution_id (t := B)]
-    simp [substitution_conv_shift_id]
-    simp [substitution_id]
-    apply substitution_var_substitute
-    intro x
-    cases x with
-    | mk i hFin =>
-      cases i with
-      | zero =>
-        simp [substitute]
-        simp [substitute_var]
-        simp [shift_tm]
-        simp [weaken]
-        simp [weaken_var]
-        rfl
-      | succ i' =>
-        simp [substitute]
-        simp [substitute_var]
-        simp [shift_tm]
-        simp [weaken]
-        simp [weaken_var]
-
-theorem hahahahahaha : 
-    C⌊⇑ₚ↑ₚidₚ⌋⌊⇑ₚ↑ₚidₚ⌋⌈v(1)&v(0)⌉₀ = C⌈(ₛ↑ₚ↑ₚidₚ), v(1)&v(0)⌉ :=
-  by
-    simp [substitute_zero]
-    simp [weakening_comp]
-    simp [substitution_comp_σρ]
-    simp [comp_weaken]
-    simp [comp_substitute_weaken]
-    rfl
-
 theorem boundary_sigma_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
   {c c' : Tm (n + 1 + 1)},
@@ -503,7 +444,7 @@ theorem boundary_sigma_elim_eq :
           rw [extend_expand_context]
           rw [extend_expand_context]
           rw [middle_expand_context]
-          apply And.left (And.right (And.right context_conversion))
+          apply context_conversion_general_term
           rotate_left
           · apply hAA
           · apply And.left ihAA
@@ -524,19 +465,30 @@ theorem boundary_sigma_elim_eq :
                       · apply HasType.var
                         apply And.left ihAA
                       · apply And.left ihBB
-                    · simp [lift_weak_n]
-                      simp [test_this_no]
-                      rw [lol]
-                      apply HasType.var
-                      apply And.left ihBB
+                    · have h3 := HasType.var (And.left ihBB)
+                      replace_by_conclusion h3
+                      · apply congr
+                        apply congr
+                        · substitution_step
+                        · substitution_step
+                        · substitution_step
+                          substitution_step
+                      · apply h3
                     · apply weakening_second_type
                       · apply weakening_second_type
                         · apply And.left ihBB
                         · apply And.left ihAA
                       · apply And.left ihBB
                 have h3 := substitution_type_eq h2 ht
-                simp [hahahahahaha] at h3
-                apply h3
+                replace_by_conclusion h3
+                · apply congr
+                  apply congr
+                  · substitution_step
+                  · substitution_step
+                    substitution_step
+                  · substitution_step
+                    substitution_step
+                · apply h3
       · apply IsEqualType.type_symm
         apply IsEqualType.type_trans
         · apply functionality_typing_type
@@ -611,15 +563,12 @@ theorem boundary_nat_elim_eq :
           · apply hAA
           · apply HasType.ty_conv
             · apply And.left (And.right ihssA)
-            · have h1 := HasType.nat_succ_intro (And.left ihxxNat)
-              have h2 := substitution_type_eq hAA h1
-              have hVar := HasType.nat_succ_intro (HasType.var (ctx_extr (boundary_ctx_type_eq hAA)))
-              simp [lol111] at h2
+            · have hVar := HasType.nat_succ_intro (HasType.var (ctx_extr (boundary_ctx_type_eq hAA)))
               apply weakening_type_eq
               · rw [←empty_expand_context (Γ := Γ ⬝ 𝒩 )]
                 rw [←n_substitution_shift_zero]
                 rw [←empty_extend_expand_context_n_substitution_shift]
-                apply And.left (And.right (And.right (And.right weak_substitution)))
+                apply weak_substitution_general_type_eq
                 · apply hAA
                 · rw (config := {occs := .pos [2]}) [←weakening_nat] at hVar
                   apply hVar
@@ -696,6 +645,27 @@ theorem boundary_iden_elim_eq :
  :=
   by
     intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' hBB hbbB hAA haaA haaA' hppId ihBB ihbbB ihAA ihaaA ihaaA' ihppId
+    have h1 := weakening_type ihAA.left ihAA.left
+    have h2 := weakening_type ihAA.right ihAA.right
+    have h3 := weakening_type ihAA.right ihAA.left
+    have h4 := weakening_type_eq hAA ihAA.left
+    have h5 := HasType.weak (HasType.var (And.left ihAA)) h1
+    have h6 := weakening_type h1 h1
+    have h7 := HasType.weak (HasType.var (And.left ihAA)) h1
+    have h8 := weakening_type h3 h1
+    have h9 : Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ A'⌊↑ₚ↑ₚidₚ⌋ ≡ A⌊↑ₚ↑ₚidₚ⌋ type :=
+      by
+        rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+        rw (config := {occs := .pos [4]}) [←weakening_shift_id]
+        apply IsEqualType.type_symm
+        apply weakening_type_eq h4 h1
+    have h10 : Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ v(1) ≡ v(1) ∶ A⌊↑ₚ↑ₚidₚ⌋ :=
+      by
+        rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+        rw [weakening_shift_vone]
+        apply IsEqualTerm.weak_eq
+        · apply IsEqualTerm.var_eq (And.left ihAA)
+        · apply weakening_type (And.left ihAA) (And.left ihAA)
     repeat' apply And.intro
     · apply HasType.iden_elim
       · apply And.left ihBB
@@ -709,34 +679,22 @@ theorem boundary_iden_elim_eq :
       · apply HasType.iden_elim
         · rw [context_to_gen_ctx]
           rw [←middle_expand_context]
-          apply And.left (And.right context_conversion)
+          apply context_conversion_general_type
           rotate_left
           · apply hAA
           · apply And.left ihAA
           · apply And.right ihAA
           · rw [middle_expand_context]
-            apply And.left (And.right context_conversion)
+            apply context_conversion_general_type
             rotate_left
-            · apply weakening_type_eq
-              · apply hAA
-              · apply And.left ihAA
-            · apply weakening_type
-              · apply And.left ihAA
-              · apply And.left ihAA
-            · apply weakening_type
-              · apply And.right ihAA
-              · apply And.left ihAA
+            · apply h4
+            · apply h1
+            · apply h3
             · simp [expand_ctx]
               apply context_conversion_type
               · apply IsType.iden_form
                 · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                  apply weakening_type
-                  · apply weakening_type
-                    · apply And.right ihAA
-                    · apply And.left ihAA
-                  · apply weakening_type
-                    · apply And.left ihAA
-                    · apply And.left ihAA
+                  apply h8
                 · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
                   rw [weakening_shift_vone]
                   apply HasType.weak
@@ -745,13 +703,9 @@ theorem boundary_iden_elim_eq :
                     · apply IsEqualType.type_symm hAA
                     · apply HasType.var
                       apply And.right ihAA
-                  · apply weakening_type
-                    · apply And.left ihAA
-                    · apply And.left ihAA
+                  · apply h1
                 · apply context_conversion_term
-                  · apply weakening_type
-                    · apply And.left ihAA
-                    · apply And.left ihAA
+                  · apply h1
                   · apply weakening_type_eq
                     · apply IsEqualType.type_symm hAA
                     · apply And.left ihAA
@@ -760,9 +714,7 @@ theorem boundary_iden_elim_eq :
                     apply context_conversion_type
                     · apply And.left ihAA
                     · apply IsEqualType.type_symm hAA
-                    · apply weakening_type
-                      · apply And.right ihAA
-                      · apply And.right ihAA
+                    · apply h2
               · apply IsEqualType.iden_form_eq
                 rotate_right
                 rotate_right
@@ -772,154 +724,85 @@ theorem boundary_iden_elim_eq :
                 · apply v(0)
                 · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
                   rw (config := {occs := .pos [4]}) [←weakening_shift_id]
-                  apply weakening_type_eq
-                  · apply weakening_type_eq
-                    · apply hAA
-                    · apply And.left ihAA
-                  · apply weakening_type
-                    · apply And.left ihAA
-                    · apply And.left ihAA
-                · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                  simp [weakening_shift_vone]
-                  apply IsEqualTerm.weak_eq
-                  · apply IsEqualTerm.var_eq
-                    apply And.left ihAA
-                  · apply weakening_type
-                    · apply And.left ihAA
-                    · apply And.left ihAA
+                  apply weakening_type_eq h4 h1
+                · have h := IsEqualTerm.weak_eq (IsEqualTerm.var_eq ihAA.left) h1
+                  replace_by_conclusion h
+                  · substitution_step
+                  · apply h
                 · apply IsEqualTerm.ty_conv_eq
-                  · apply IsEqualTerm.var_eq
-                    apply weakening_type
-                    · apply And.left ihAA
-                    · apply And.left ihAA
+                  · apply IsEqualTerm.var_eq h1
                   · rw (config := {occs := .pos [4]}) [←weakening_shift_id]
-                    apply weakening_type_eq
-                    · apply weakening_type_eq
-                      · apply hAA
-                      · apply And.left ihAA
-                    · apply weakening_type
-                      · apply And.left ihAA
-                      · apply And.left ihAA
+                    apply weakening_type_eq h4 h1
               · apply And.right ihBB
-        · apply context_conversion_term
-          · apply And.right ihAA
-          · apply hAA
+        · apply context_conversion_term ihAA.right hAA
           apply HasType.ty_conv
           · apply And.left (And.right ihbbB)
           · rw [context_to_gen_ctx] at hBB
-            have ht :=
-                And.left (And.right (And.right (And.right weak_substitution)))
-                  hBB
-                  (by
-                    apply HasType.weak
-                    · apply HasType.var (And.left ihAA)
-                    · apply weakening_type (And.left ihAA) (And.left ihAA)
-                  )
-            simp [substitute_shift_into_gen_ctx] at ht
-            simp [n_substitution_shift_zero] at ht
-            simp [vone_to_vtwo] at ht
-            simp [expand_ctx] at ht
-            simp [←lift_n_substitution_shift] at ht
             have hrefl : Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ (.refl (A⌊↑ₚ↑ₚidₚ⌋) v(1)) ∶ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
               by apply HasType.iden_intro
-                 · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                   apply weakening_type
-                   · apply weakening_type (And.left ihAA) (And.left ihAA)
-                   · apply weakening_type (And.left ihAA) (And.left ihAA)
-                 · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                   rw [weakening_shift_vone]
-                   apply HasType.weak
-                   · apply HasType.var (And.left ihAA)
-                   · apply weakening_type (And.left ihAA) (And.left ihAA)
+                 · replace_by_conclusion h6
+                   · substitution_step
+                   · apply h6
+                 · replace_by_conclusion h5
+                   · substitution_step
+                   · apply h5
             apply IsEqualType.type_trans
-            · have hnow := substitution_type_eq ht hrefl
-              simp [weaken] at hnow
-              simp [weaken_var] at hnow
-              have hlol := substitution_type_eq hnow (HasType.var (And.left ihAA))
-              simp [even_new_test] at hlol
-              apply hlol
+            · have h := weak_substitution_general_type_eq hBB h7
+              simp only [substitute_shift_into_gen_ctx] at h
+              simp only [n_substitution_shift_zero] at h
+              simp only [id_vone_to_vtwo] at h
+              simp only [expand_ctx] at h
+              have hleft := substitution_type_eq (substitution_type_eq h hrefl) (HasType.var (And.left ihAA))
+              replace_by_conclusion hleft
+              · apply congr
+                apply congr
+                apply congr
+                any_goals substitution_norm
+              · apply hleft
             · rw [context_to_gen_ctx] at ihBB
-              have ht :=
-                  And.left (And.right (weak_substitution))
-                    (And.right ihBB)
+              have h := weak_substitution_general_type ihBB.right
                     (by
                       apply HasType.weak
                       · apply HasType.var (And.left ihAA)
                       · apply weakening_type (And.left ihAA) (And.left ihAA)
                     )
-              simp [substitute_shift_into_gen_ctx] at ht
-              simp [n_substitution_shift_zero] at ht
-              simp [vone_to_vtwo] at ht
-              simp [expand_ctx] at ht
-              simp [←lift_n_substitution_shift] at ht
-              have hrefl : Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ (.refl (A⌊↑ₚ↑ₚidₚ⌋) v(1)) ∶ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
-                by apply HasType.iden_intro
-                   · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                     apply weakening_type
-                     · apply weakening_type (And.left ihAA) (And.left ihAA)
-                     · apply weakening_type (And.left ihAA) (And.left ihAA)
-                   · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                     rw [weakening_shift_vone]
-                     apply HasType.weak
-                     · apply HasType.var (And.left ihAA)
-                     · apply weakening_type (And.left ihAA) (And.left ihAA)
+              simp only [substitute_shift_into_gen_ctx] at h
+              simp only [n_substitution_shift_zero] at h
+              simp only [id_vone_to_vtwo] at h
+              simp only [expand_ctx] at h
               have hrefl' : Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ (.refl (A'⌊↑ₚ↑ₚidₚ⌋) v(1)) ∶ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
                 by
                   apply HasType.ty_conv
                   · apply HasType.iden_intro
                     · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                      apply weakening_type
-                      · apply weakening_type (And.right ihAA) (And.left ihAA)
-                      · apply weakening_type (And.left ihAA) (And.left ihAA)
+                      apply h8
                     · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
                       rw [weakening_shift_vone]
                       apply HasType.weak
                       · apply HasType.ty_conv
                         · apply HasType.var (And.left ihAA)
-                        · apply weakening_type_eq
-                          · apply hAA
-                          · apply And.left ihAA
-                      · apply weakening_type (And.left ihAA) (And.left ihAA)
+                        · apply h4
+                      · apply h1
                   · apply IsEqualType.iden_form_eq
-                    rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                    rw (config := {occs := .pos [4]}) [←weakening_shift_id]
-                    · apply weakening_type_eq
-                      · apply weakening_type_eq
-                        · apply IsEqualType.type_symm hAA
-                        · apply And.left ihAA
-                      · apply weakening_type (And.left ihAA) (And.left ihAA)
-                    · simp [weakening_shift_vone]
-                      rw (config := {occs := .pos [4]}) [←weakening_shift_id]
-                      apply IsEqualTerm.weak_eq
-                      · apply IsEqualTerm.ty_conv_eq
-                        · apply IsEqualTerm.var_eq (And.left ihAA)
-                        · apply weakening_type_eq
-                          · apply hAA
-                          · apply And.left ihAA
-                      · apply weakening_type (And.left ihAA) (And.left ihAA)
-                    · simp [weakening_shift_vone]
-                      rw (config := {occs := .pos [4]}) [←weakening_shift_id]
-                      apply IsEqualTerm.weak_eq
-                      · apply IsEqualTerm.var_eq (And.left ihAA)
-                      · apply weakening_type (And.left ihAA) (And.left ihAA)
+                    · apply h9
+                    · apply IsEqualTerm.ty_conv_eq
+                      · apply h10
+                      · apply IsEqualType.type_symm h9
+                    · apply h10
               have hrefleq : Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⊢ (.refl (A⌊↑ₚ↑ₚidₚ⌋) v(1)) ≡ (.refl (A'⌊↑ₚ↑ₚidₚ⌋) v(1)) ∶ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
                 by apply IsEqualTerm.iden_intro_eq
-                   · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                     rw (config := {occs := .pos [4]}) [←weakening_shift_id]
-                     apply weakening_type_eq
-                     · apply weakening_type_eq hAA (And.left ihAA)
-                     · apply weakening_type (And.left ihAA) (And.left ihAA)
-                   · rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-                     rw [weakening_shift_vone]
-                     apply IsEqualTerm.weak_eq
-                     · apply IsEqualTerm.var_eq (And.left ihAA)
-                     · apply weakening_type (And.left ihAA) (And.left ihAA)
-              have hnow := functionality_typing_type ht hrefleq hrefl hrefl'
-              simp [weaken] at hnow
-              simp [weaken_var] at hnow
-              have hlol := substitution_type_eq hnow (HasType.var (And.left ihAA))
-              simp [even_new_test] at hlol
-              apply hlol
+                   · apply IsEqualType.type_symm h9
+                   · apply h10
+              have hpre := functionality_typing_type h hrefleq hrefl hrefl'
+              have hconc := substitution_type_eq hpre (HasType.var (And.left ihAA))
+              replace_by_conclusion hconc
+              · apply congr
+                apply congr
+                apply congr
+                any_goals substitution_step
+                any_goals substitution_step
+                substitution_step
+              · apply hconc
         · apply HasType.ty_conv
           · apply And.left (And.right ihaaA)
           · apply hAA
@@ -936,28 +819,36 @@ theorem boundary_iden_elim_eq :
         · apply B'⌈(ₛidₚ), a₁, a₃, p⌉
         · rw [context_to_gen_ctx] at hBB
           rw [←middle_expand_context (Γ := Γ ⬝ A)] at hBB
-          have h := And.left (And.right (And.right (And.right substitution))) hBB (And.left ihaaA)
-          simp [substitute_into_gen_ctx] at h
+          have h := substitution_general_type_eq hBB (And.left ihaaA)
+          simp only [substitute_into_gen_ctx] at h
           rw [n_substitution_zero] at h
           rw [zero_substitution] at h
           rw [substitution_conv_zero] at h
           rw [substitution_shift_substitute_zero] at h
           rw [middle_expand_context] at h
-          have h2 := And.left (And.right (And.right (And.right substitution))) h (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
-          simp [substitute_into_gen_ctx] at h2
-          simp [expand_ctx] at h2
-          rw [←lift_n_substitution] at h2
-          simp [n_substitution_zero] at h2
-          simp [zero_substitution] at h2
-          simp [substitution_conv_zero] at h2
-          simp [clean_this_mess_asap] at h2
-          have h3 := substitution_type_eq h2 (And.left ihppId)
-          simp [←lift_n_substitution] at h3
-          simp [n_substitution_zero] at h3
-          simp [zero_substitution] at h3
-          simp [clean_this_mess_too] at h3
-          apply h3
-          any_goals omega
+          have h2 := substitution_general_type_eq h (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
+          have h3 :=
+            by
+              apply substitution_type_eq
+              rotate_left
+              · apply (And.left ihppId)
+              rotate_right
+              · replace_by_conclusion h2
+                rotate_left
+                · apply h2
+                · apply congr
+                  apply congr
+                  apply congr
+                  · rfl
+                  · simp [substitute_into_gen_ctx]
+                    substitution_step
+                  any_goals substitution_step
+          replace_by_conclusion h3
+          · apply congr
+            apply congr
+            · rfl
+            any_goals substitution_norm
+          · apply h3
         · apply IsEqualType.type_trans
           rotate_right
           · apply B'⌈(ₛidₚ), a₂, a₃, p⌉
@@ -965,28 +856,36 @@ theorem boundary_iden_elim_eq :
             rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
             have h1 := (And.left (And.right functionality_typing))
                         haaA (And.left ihaaA) (And.left (And.right ihaaA)) (And.right ihBB)
-            simp [substitute_into_gen_ctx] at h1
+            simp only [substitute_into_gen_ctx] at h1
             rw [n_substitution_zero] at h1
             rw [zero_substitution] at h1
             rw [substitution_conv_zero] at h1
             rw [substitution_shift_substitute_zero] at h1
             rw [middle_expand_context] at h1
-            have h2 := (And.left (And.right (And.right (And.right substitution))))
+            have h2 := substitution_general_type_eq
                         h1 (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
-            simp [substitute_into_gen_ctx] at h2
-            simp [expand_ctx] at h2
-            rw [←lift_n_substitution] at h2
-            simp [n_substitution_zero] at h2
-            simp [zero_substitution] at h2
-            simp [substitution_conv_zero] at h2
-            simp [clean_this_mess_asap] at h2
-            have h3 := substitution_type_eq h2 (And.left ihppId)
-            simp [←lift_n_substitution] at h3
-            simp [n_substitution_zero] at h3
-            simp [zero_substitution] at h3
-            simp [clean_this_mess_too] at h3
-            apply h3
-            any_goals omega
+            have h3 :=
+              by
+                apply substitution_type_eq
+                rotate_left
+                · apply (And.left ihppId)
+                rotate_right
+                · replace_by_conclusion h2
+                  rotate_left
+                  · apply h2
+                  · apply congr
+                    apply congr
+                    apply congr
+                    · rfl
+                    · simp [substitute_into_gen_ctx]
+                      substitution_step
+                    any_goals substitution_step
+            replace_by_conclusion h3
+            · apply congr
+              apply congr
+              · rfl
+              any_goals substitution_norm
+            · apply h3
           · apply IsEqualType.type_trans
             rotate_right
             · apply B'⌈(ₛidₚ), a₂, a₄, p⌉
@@ -994,96 +893,117 @@ theorem boundary_iden_elim_eq :
               rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
               have h1 := (And.left (And.right substitution))
                           (And.right ihBB) (And.left (And.right ihaaA))
-              simp [substitute_into_gen_ctx] at h1
+              simp only [substitute_into_gen_ctx] at h1
               rw [n_substitution_zero] at h1
               rw [zero_substitution] at h1
               rw [substitution_conv_zero] at h1
               rw [substitution_shift_substitute_zero] at h1
               rw [middle_expand_context] at h1
-              have h2 := (And.left (And.right functionality_typing))
+              have h2 := functionality_typing_general_type h1
                           (IsEqualTerm.ty_conv_eq (IsEqualTerm.term_symm haaA') (IsEqualType.type_symm hAA))
                           (HasType.ty_conv (And.left (And.right ihaaA')) (IsEqualType.type_symm hAA))
                           (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA)) 
-                          h1
-              simp [substitute_into_gen_ctx] at h2
-              simp [expand_ctx] at h2
-              rw [←lift_n_substitution] at h2
-              simp [n_substitution_zero] at h2
-              simp [zero_substitution] at h2
-              simp [substitution_conv_zero] at h2
-              simp [clean_this_mess_asap] at h2
-              have hnew : Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A] a₄ type :=
+              have hIdEq : Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A] a₄ type :=
                   IsEqualType.iden_form_eq (defeq_refl_type (And.left ihAA))
                       haaA (IsEqualTerm.ty_conv_eq haaA' (IsEqualType.type_symm hAA))
-              have h3 := substitution_type_eq h2 (HasType.ty_conv (And.left ihppId) hnew)
-              simp [←lift_n_substitution] at h3
-              simp [n_substitution_zero] at h3
-              simp [zero_substitution] at h3
-              simp [clean_this_mess_too] at h3
-              apply (IsEqualType.type_symm h3)
-              any_goals omega
+              have h3 :=
+                by
+                  apply substitution_type_eq
+                  rotate_left
+                  · apply (HasType.ty_conv (And.left ihppId) hIdEq)
+                  rotate_right
+                  · replace_by_conclusion h2
+                    · apply congr
+                      apply congr
+                      apply congr
+                      · rfl
+                      · simp [substitute_into_gen_ctx]
+                        substitution_norm
+                      · rfl
+                      · rfl
+                    · apply h2
+              apply IsEqualType.type_symm
+              replace_by_conclusion h3
+              · apply congr
+                apply congr
+                apply congr
+                · rfl
+                · substitution_norm
+                · substitution_norm
+                · substitution_norm
+              · apply h3
             · rw [context_to_gen_ctx] at ihBB
               rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
-              have h1 := (And.left (And.right substitution))
-                          (And.right ihBB) (And.left (And.right ihaaA))
-              simp [substitute_into_gen_ctx] at h1
+              have h1 := substitution_general_type (And.right ihBB) (And.left (And.right ihaaA))
+              simp only [substitute_into_gen_ctx] at h1
               rw [n_substitution_zero] at h1
               rw [zero_substitution] at h1
               rw [substitution_conv_zero] at h1
               rw [substitution_shift_substitute_zero] at h1
               rw [middle_expand_context] at h1
-              have h2 := (And.left (And.right substitution))
-                          (h1) (HasType.ty_conv (And.left (And.right ihaaA')) (IsEqualType.type_symm hAA))
-              simp [substitute_into_gen_ctx] at h2
-              simp [expand_ctx] at h2
-              rw [←lift_n_substitution] at h2
-              simp [n_substitution_zero] at h2
-              simp [zero_substitution] at h2
-              simp [substitution_conv_zero] at h2
-              simp [clean_this_mess_asap] at h2
-              have hlol := ctx_extr (boundary_ctx_type h2)
-              have hnew : Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A] a₄ type :=
+              have h2 := substitution_general_type
+                          (h1)
+                          (HasType.ty_conv (And.left (And.right ihaaA')) (IsEqualType.type_symm hAA))
+              have hIdEq : Γ ⊢ a₁ ≃[A] a₃ ≡ a₂ ≃[A] a₄ type :=
                   IsEqualType.iden_form_eq (defeq_refl_type (And.left ihAA))
                       haaA (IsEqualTerm.ty_conv_eq haaA' (IsEqualType.type_symm hAA))
               have hnew_old := context_conversion_type
-                                (And.right (And.right ihppId)) (IsEqualType.type_symm hnew) h2
+                                (And.right (And.right ihppId)) (IsEqualType.type_symm hIdEq)
+                (by
+                  replace_by_conclusion h2
+                  rotate_left
+                  · apply h2
+                  · apply congr
+                    apply congr
+                    · rfl
+                    · simp [substitute_into_gen_ctx]
+                      substitution_norm
+                    · substitution_norm)
               have h3 := functionality_typing_type
                           hnew_old
                           (IsEqualTerm.term_symm hppId)
                           (And.left (And.right ihppId))
                           (And.left ihppId)
-              simp [←lift_n_substitution] at h3
-              simp [n_substitution_zero] at h3
-              simp [zero_substitution] at h3
-              simp [clean_this_mess_too] at h3
-              apply (IsEqualType.type_symm h3)
-              any_goals omega
+              apply IsEqualType.type_symm
+              replace_by_conclusion h3
+              · apply congr
+                apply congr
+                apply congr
+                · rfl
+                · substitution_norm
+                · substitution_norm
+                · substitution_norm
+              · apply h3
     · rw [context_to_gen_ctx] at ihBB
       rw [←middle_expand_context (Γ := Γ ⬝ A)] at ihBB
-      have h := And.left (And.right substitution)
+      have h := substitution_general_type
                   (And.left ihBB) (And.left ihaaA)
-      simp [substitute_into_gen_ctx] at h
+      simp only [substitute_into_gen_ctx] at h
       rw [n_substitution_zero] at h
       rw [zero_substitution] at h
       rw [substitution_conv_zero] at h
       rw [substitution_shift_substitute_zero] at h
       rw [middle_expand_context] at h
-      have h2 := And.left (And.right substitution)
+      have h2 := substitution_general_type
                   h (HasType.ty_conv (And.left ihaaA') (IsEqualType.type_symm hAA))
-      simp [substitute_into_gen_ctx] at h2
-      simp [expand_ctx] at h2
-      rw [←lift_n_substitution] at h2
-      simp [n_substitution_zero] at h2
-      simp [zero_substitution] at h2
-      simp [substitution_conv_zero] at h2
-      simp [clean_this_mess_asap] at h2
-      have h3 := substitution_type h2 (And.left ihppId)
-      simp [←lift_n_substitution] at h3
-      simp [n_substitution_zero] at h3
-      simp [zero_substitution] at h3
-      rw [clean_this_mess_too] at h3
-      apply h3
-      any_goals omega
+      have h3 : Γ ⊢ B⌈a₁/ₙ(by omega)⌉⌈a₃/ₙ(by omega)⌉⌈p⌉₀ type := 
+        by
+          apply substitution_type
+          rotate_left
+          · apply (And.left ihppId)
+          · replace_by_conclusion h2
+            · apply congr
+              apply congr
+              · rfl
+              · simp [substitute_into_gen_ctx]
+                substitution_norm
+              · substitution_norm
+            · apply h2
+      · replace_by_conclusion h3
+        · apply congr
+          · rfl
+          · substitution_norm
+        · apply h3
 
 theorem boundary_univ_unit_eq :
     ∀ {n : Nat} {Γ : Ctx n},

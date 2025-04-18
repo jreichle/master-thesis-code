@@ -34,6 +34,7 @@ theorem weakening_var_lift_n {ρ ρ' : Weak m n}:
       apply weakening_var_lift_n
       apply h
 
+@[aesop safe apply]
 theorem weakening_var_weaken :
     (∀ x, x⌊ρ⌋ᵥ = x⌊ρ'⌋ᵥ) → (∀ t, t⌊ρ⌋ = t⌊ρ'⌋) :=
   by
@@ -49,14 +50,14 @@ theorem weakening_var_weaken :
       · apply weakening_var_weaken h
       · apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n h
+        simp_all
     | .sigma A B =>
       simp [weaken]
       apply And.intro
       · apply weakening_var_weaken h
       · apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n h
+        simp_all
     | .nat =>
       simp [weaken]
     | .iden A a a' =>
@@ -183,6 +184,7 @@ theorem weakening_var_id :
   by
     simp [weaken_var]
 
+@[simp]
 theorem weakening_id :
     ∀ {t : Tm n}, t⌊idₚ⌋ = t :=
   by
@@ -200,7 +202,8 @@ theorem weakening_id :
         rw (config := {occs := .pos [2]}) [←h]
         apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n_id
+        simp_all
+        aesop
     | .sigma A B =>
       simp [weaken]
       apply And.intro
@@ -209,7 +212,8 @@ theorem weakening_id :
         rw (config := {occs := .pos [2]}) [←h]
         apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n_id
+        simp_all
+        aesop
     | .nat =>
       simp [weaken]
     | .iden A a a' =>
@@ -223,7 +227,6 @@ theorem weakening_id :
       simp [weaken]
     | .var x =>
       simp [weaken]
-      rfl
     | .tt =>
       simp [weaken]
     | .indUnit A b a =>
@@ -233,7 +236,8 @@ theorem weakening_id :
         rw (config := {occs := .pos [2]}) [←h]
         apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n_id
+        simp_all
+        aesop
       · apply And.intro
         · apply weakening_id
         · apply weakening_id
@@ -244,7 +248,8 @@ theorem weakening_id :
         rw (config := {occs := .pos [2]}) [←h]
         apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n_id
+        simp_all
+        aesop
       · apply weakening_id
     | .lam A b =>
       simp [weaken]
@@ -254,7 +259,8 @@ theorem weakening_id :
         rw (config := {occs := .pos [2]}) [←h]
         apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n_id
+        simp_all
+        aesop
     | .app f a =>
       simp [weaken]
       apply And.intro
@@ -266,7 +272,7 @@ theorem weakening_id :
       · apply weakening_id
       · apply weakening_id
     | .indSigma A B C c p =>
-      simp [weaken]
+      simp [-lift_weak_n]
       apply And.intro
       · apply weakening_id
       · apply And.intro
@@ -274,13 +280,12 @@ theorem weakening_id :
           rw (config := {occs := .pos [2]}) [←h]
           apply weakening_var_weaken
           intro i
-          apply weakening_var_lift_n_id
+          apply weakening_var_lift_id
         · apply And.intro
           · have h := weakening_id (t := C)
             rw (config := {occs := .pos [2]}) [←h]
             apply weakening_var_weaken
-            intro i
-            apply weakening_var_lift_n_id
+            apply weakening_var_lift_id
           · apply And.intro
             · have h := weakening_id (t := c)
               rw (config := {occs := .pos [2]}) [←h]
@@ -294,13 +299,14 @@ theorem weakening_id :
       simp [weaken]
       apply weakening_id
     | .indNat A z s i =>
-      simp [weaken]
+      simp [-lift_weak_n]
       repeat' apply And.intro
       · have h := weakening_id (t := A)
         rw (config := {occs := .pos [2]}) [←h]
         apply weakening_var_weaken
         intro i
-        apply weakening_var_lift_n_id
+        simp_all
+        aesop
       · apply weakening_id
       · have h := weakening_id (t := s)
         rw (config := {occs := .pos [2]}) [←h]
@@ -314,7 +320,7 @@ theorem weakening_id :
       · apply weakening_id
       · apply weakening_id
     | .j A B b a a' p =>
-      simp [weaken]
+      simp [-lift_weak_n]
       apply And.intro
       · apply weakening_id
       · apply And.intro
@@ -328,13 +334,15 @@ theorem weakening_id :
             rw (config := {occs := .pos [2]}) [←h]
             apply weakening_var_weaken
             intro i
-            apply weakening_var_lift_n_id
+            simp_all
+            aesop
           · apply And.intro
             · apply weakening_id
             · apply And.intro
               · apply weakening_id
               · apply weakening_id
 
+@[simp]
 theorem weakening_lift_id {t : Tm (n + 1)} : 
     t⌊⇑ₚidₚ⌋ = t :=
   by
@@ -367,14 +375,12 @@ theorem weakening_empty {ρ : Weak m n} :
 theorem weakening_pi {ρ : Weak m n} :
     (ΠA;B)⌊ρ⌋ = Π(A⌊ρ⌋);(B⌊⇑ₚρ⌋) :=
   by
-    simp [weaken]
-    simp [lift_weak_n]
+    simp []
 
 theorem weakening_sigma {ρ : Weak m n} :
     (ΣA;B)⌊ρ⌋ = Σ(A⌊ρ⌋);(B⌊⇑ₚρ⌋) :=
   by
     simp [weaken]
-    simp [lift_weak_n]
 
 theorem weakening_nat {ρ : Weak m n} :
     𝒩 ⌊ρ⌋ = 𝒩 :=
@@ -421,14 +427,19 @@ theorem lift_weaken_from {n : Nat} {leq : l ≤ n} :
       apply False.elim
       omega
 
+@[simp]
+theorem lift_weaken_from_simp {n : Nat} {leq : l ≤ n} :
+     weaken_from (n + 1) l = ⇑ₚweaken_from n l :=
+  by
+    simp [weaken_from]
+    omega
+
 theorem weakening_shift_vone {n : Nat} :
     (v(1)) = (v(0) : Tm (n + 1))⌊↑ₚidₚ⌋ :=
   by
     simp [weaken]
-    simp [weaken_var]
 
 theorem weakening_shift_var {n : Nat} {x : Fin n} :
     (v(x.succ) : Tm (n + 1)) = v(x)⌊↑ₚidₚ⌋ :=
   by
     simp [weaken]
-    simp [weaken_var]

@@ -149,10 +149,6 @@ theorem boundary_types_terms :
       apply boundary_term_trans
     any_goals aesop
 
---     (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n}, (Γ ⊢ a ∶ A) → Γ ⊢ A type) ∧
---     (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, (Γ ⊢ A ≡ A' type) → Γ ⊢ A type ∧ Γ ⊢ A' type) ∧
---     (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ∶ A) ∧ (Γ ⊢ a' ∶ A) ∧ Γ ⊢ A type)
-
 theorem boundary_term_type :
     (Γ ⊢ a ∶ A) → Γ ⊢ A type :=
   by
