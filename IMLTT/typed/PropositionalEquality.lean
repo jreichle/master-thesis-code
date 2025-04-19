@@ -12,6 +12,8 @@ import IMLTT.typed.proofs.admissable.ContextConversion
 
 import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
 
+-- FIXME: redo but use only simplified types, not abominations
+
 theorem pi_same_type_diff_val :
     (Γ ⬝ A ⊢ P type)
     → (Γ ⊢ a ∶ A)
@@ -100,10 +102,7 @@ theorem inhabitant_pi_same_type_diff_val :
     · apply congr
       · rfl
       · substitution_step
-        rw [←substitution_id (t := P)]
-        substitution_to_composition
-        substitution_var_sub
-        any_goals substitution_step
+        substitution_step
     · apply h
 
 theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {P : Tm (n + 1)} :

@@ -132,7 +132,7 @@ theorem weakening_unit_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.unit_comp
     · replace_by_conclusion ihA
       rotate_left
@@ -172,8 +172,8 @@ theorem weakening_pi_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.pi_comp
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -218,7 +218,7 @@ theorem weakening_sigma_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     rw [weak_subst_sigma_c]
     apply IsEqualTerm.sigma_comp
     · apply ihaA
@@ -283,7 +283,7 @@ theorem weakening_nat_zero_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.nat_zero_comp
     · replace_by_conclusion ihA
       rotate_left
@@ -348,7 +348,7 @@ theorem weakening_nat_succ_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     rw [weak_subst_sigma_c]
     apply IsEqualTerm.nat_succ_comp
     · replace_by_conclusion ihA
@@ -412,7 +412,7 @@ theorem weakening_iden_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     rw [weak_subst_iden_elim]
     apply IsEqualTerm.iden_comp
     · replace_by_conclusion ihB
@@ -494,7 +494,7 @@ theorem weakening_unit_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.unit_elim_eq
     · replace_by_conclusion ihAA
       rotate_left
@@ -546,7 +546,7 @@ theorem weakening_empty_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.empty_elim_eq
     · replace_by_conclusion ihAA
       rotate_left
@@ -628,7 +628,7 @@ theorem weakening_pi_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.pi_elim_eq
     · rw [←weakening_pi]
       apply ihffPi
@@ -737,7 +737,7 @@ theorem weakening_sigma_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.sigma_elim_eq
     · apply ihAA
       apply hS
@@ -861,7 +861,7 @@ theorem weakening_nat_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply IsEqualTerm.nat_elim_eq
     · simp [lift_weak_n]
       rw [lift_weaken_from]

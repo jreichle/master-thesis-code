@@ -318,10 +318,6 @@ theorem substitution_id {t : Tm n} :
               · apply substitution_id
               · apply substitution_id
 
-theorem substitution_weakening {ρ : Weak m n} {x : Fin n} :
-    x⌈ₛρ⌉ᵥ = x⌊ρ⌋ᵥ :=
-  by
-    simp []
 
 theorem substitution_conv_lift_id :
     ∀ (x : Fin (n + 1)), v(x)⌈ₛ⇑ₚidₚ⌉ = v(x)⌈⇑ₛ(ₛidₚ)⌉ :=
@@ -454,3 +450,13 @@ theorem n_substitution_shift_zero {n : Nat} {s : Tm (n + 1)} :
     (s↑/ₙ(Nat.le_refl (n + 1))) = (ₛ↑ₚidₚ)⋄ s :=
   by
     simp [n_substitution_shift]
+
+theorem substitution_var_substitute_id :
+    (∀ (x : Fin n), x⌈σ⌉ᵥ = x) → ∀ (t : Tm n), t⌈σ⌉ = t :=
+  by
+    intro h t
+    rw (config := {occs := .pos [2]}) [←substitution_id (t := t)]
+    apply substitution_var_substitute
+    intro x
+    rw [substitution_id]
+    apply h

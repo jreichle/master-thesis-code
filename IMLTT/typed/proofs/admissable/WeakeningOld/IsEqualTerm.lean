@@ -124,7 +124,7 @@ theorem weakening_unit_comp :
                 insert_into_ctx leq Γ B ⊢ A.indUnit ⋆ a⌊weaken_from n l⌋ ≡ a⌊weaken_from n l⌋ ∶ A⌈⋆⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A a hA haA ihA ihaA l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.unit_comp
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -153,8 +153,8 @@ theorem weakening_pi_comp :
                 insert_into_ctx leq Γ B_1 ⊢ (λA; b)◃a⌊weaken_from n l⌋ ≡ b⌈a⌉₀⌊weaken_from n l⌋ ∶ B⌈a⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A b B a hbB haA ihbB ihaA l hleq S hS
-    rw [weak_sub_zero]
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.pi_comp
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -190,13 +190,13 @@ theorem weakening_sigma_comp :
                           c⌈(ₛidₚ), a, b⌉⌊weaken_from n l⌋ ∶ C⌈a&b⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     rw [weak_subst_sigma_c]
     apply IsEqualTerm.sigma_comp
     · apply ihaA
       apply hS
     · simp [lift_weak_n]
-      rw [←weak_sub_zero]
+      rw [←substitution_zero_weak]
       apply ihbB
       apply hS
     · simp [lift_weak_n]
@@ -246,7 +246,7 @@ theorem weakening_nat_zero_comp :
                         A⌈𝓏⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ z A s hA hzA hsA hzNat ihA ihzA ihsA ihzNat l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.nat_zero_comp
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -258,7 +258,7 @@ theorem weakening_nat_zero_comp :
       any_goals omega
     · simp [lift_weak_n]
       rw [←weakening_nat_zero]
-      rw [←weak_sub_zero]
+      rw [←substitution_zero_weak]
       apply ihzA
       apply hS
     · rw [←helper_weak_nat_succ]
@@ -300,7 +300,7 @@ theorem weakening_nat_succ_comp :
                         s⌈(ₛidₚ), x, A.indNat z s x⌉⌊weaken_from n l⌋ ∶ A⌈𝓈(x)⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ z x A s hA hzA hsA hsNat ihA ihzA ihsA ihsNat l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     rw [weak_subst_sigma_c]
     apply IsEqualTerm.nat_succ_comp
     · simp [lift_weak_n]
@@ -313,7 +313,7 @@ theorem weakening_nat_succ_comp :
       any_goals omega
     · simp [lift_weak_n]
       rw [←weakening_nat_zero]
-      rw [←weak_sub_zero]
+      rw [←substitution_zero_weak]
       apply ihzA
       apply hS
     · rw [←helper_weak_nat_succ]
@@ -350,7 +350,7 @@ theorem weakening_iden_comp :
                         B⌈(ₛidₚ), a, a, A.refl a⌉⌊↑₁n↬l⌋ :=
   by
     intro n Γ A B b a hB hbB haA ihB ihbB ihaA l hleq s hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     rw [weak_subst_iden_elim]
     apply IsEqualTerm.iden_comp
     · simp [lift_weak_n]
@@ -416,7 +416,7 @@ theorem weakening_unit_elim_eq :
                       A⌈b⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A A' a a' b b' hAA haaA hbb1 ihAA ihaaA ihbb1 l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.unit_elim_eq
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -449,7 +449,7 @@ theorem weakening_empty_elim_eq :
                   A⌈b⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A A' b b' hAA hbb0 ihAA ihbb0 l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.empty_elim_eq
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -507,7 +507,7 @@ theorem weakening_pi_elim_eq :
                 insert_into_ctx leq Γ B_1 ⊢ f◃a⌊weaken_from n l⌋ ≡ f'◃a'⌊weaken_from n l⌋ ∶ B⌈a⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ f f' A B a a' hffPi haaA ihffPi ihaaA l hleq s hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.pi_elim_eq
     · apply ihffPi
       apply hS
@@ -541,7 +541,7 @@ theorem weakening_sigma_intro_eq :
       · simp [weaken_from]
         split
         case a.isTrue h =>
-          rw [←weak_sub_zero]
+          rw [←substitution_zero_weak]
           apply ihbbB
           apply hS
         case a.isFalse h =>
@@ -586,7 +586,7 @@ theorem weakening_sigma_elim_eq :
                               A'.indSigma B' C' c' p'⌊weaken_from n l⌋ ∶ C⌈p⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A B A' B' p p' C C' c c' hAA hBB hppSi hCC hccC ihAA ihBB ihppSi ihCC ihccC l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.sigma_elim_eq
     · apply ihAA
       apply hS
@@ -675,7 +675,7 @@ theorem weakening_nat_elim_eq :
                         A⌈x⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ z z' x x' A A' s s' hAA hzzA hssA hxxNat ihAA ihzzA ihssA ihxxNat l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply IsEqualTerm.nat_elim_eq
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -687,7 +687,7 @@ theorem weakening_nat_elim_eq :
       any_goals omega
     · simp [lift_weak_n]
       rw [←weakening_nat_zero]
-      rw [←weak_sub_zero]
+      rw [←substitution_zero_weak]
       apply ihzzA
       apply hS
     · rw [←helper_weak_nat_succ]
@@ -759,7 +759,7 @@ theorem weakening_iden_elim_eq :
                                       insert_into_ctx leq Γ B_1 ⊢ A.j B b a₁ a₃ p⌊↑₁n↬l⌋ ≡ A'.j B' b' a₂ a₄ p'⌊↑₁n↬l⌋ ∶
                                         B⌈(ₛidₚ), a₁, a₃, p⌉⌊↑₁n↬l⌋ :=
   by
-    intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p' 
+    intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p'
     intro hBB hbbB hAA haaA haaA' hppId ihBB ihbbB ihAA ihaaA ihaaA' ihppId l hleq S hS
     rw [weak_subst_iden_elim]
     apply IsEqualTerm.iden_elim_eq

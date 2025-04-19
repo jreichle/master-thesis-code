@@ -14,6 +14,8 @@ import IMLTT.typed.proofs.admissable.ContextConversion
 
 import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
 
+-- FIXME: redo but use only simplified types, not abominations
+
 theorem sigma_elim_proj_first :
     Γ ⊢ ΣA;B type → (Γ ⊢ p ∶ ΣA;B) →  Γ ⊢ A.indSigma B (A⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) p  ∶ A :=
   by
@@ -152,14 +154,6 @@ theorem sigma_elim_proj_second_pre :
       · substitution_step
         substitution_step
         any_goals substitution_step
-        · rw [←substitution_id (t := B)]
-          substitution_to_composition
-          substitution_var_sub
-          any_goals substitution_step
-        · rw [←substitution_id (t := A)]
-          substitution_to_composition
-          substitution_var_sub
-          any_goals substitution_step
     · apply h
 
 theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 1)} :
@@ -193,16 +187,11 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
     replace_by_conclusion hElim
     · apply congr
       · rfl
-      · substitution_step
-        substitution_step
-        · rw [←substitution_id (t := B)]
-          substitution_to_composition
-          substitution_var_sub
-          any_goals substitution_step
-        · rw [←substitution_id (t := A)]
-          substitution_to_composition
-          substitution_var_sub
-          any_goals substitution_step
+      · substitution_norm
+        rw [←substitution_id (t := B)]
+        substitution_to_composition
+        substitution_var_sub
+        any_goals substitution_step
     · apply hElim
 
 theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n + 1)} :
@@ -238,16 +227,11 @@ theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n 
     replace_by_conclusion hComp
     · apply congr
       · rfl
-      · substitution_step
-        substitution_step
-        · rw [←substitution_id (t := B)]
-          substitution_to_composition
-          substitution_var_sub
-          any_goals substitution_step
-        · rw [←substitution_id (t := A)]
-          substitution_to_composition
-          substitution_var_sub
-          any_goals substitution_step
+      · substitution_norm
+        rw [←substitution_id (t := B)]
+        substitution_to_composition
+        substitution_var_sub
+        any_goals substitution_step
     · apply hComp
 
 def π₁ : Tm n :=

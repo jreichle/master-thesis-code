@@ -30,6 +30,7 @@ theorem substitution_gen_var :
     cases heqT
     cases Δ with
     | start =>
+      cases heqΓ
       replace_by_conclusion hsS
       · substitution_step
       · apply hsS

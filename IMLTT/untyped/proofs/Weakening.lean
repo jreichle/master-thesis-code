@@ -179,11 +179,6 @@ theorem weakening_var_lift_n_id {n m : Nat} {x : Fin (n + m)} :
           rw [weakening_var_lift_n_id]
           rfl
 
-theorem weakening_var_id :
-    ∀ {x: Fin n}, weaken_var .id x = x :=
-  by
-    simp [weaken_var]
-
 @[simp]
 theorem weakening_id :
     ∀ {t : Tm n}, t⌊idₚ⌋ = t :=
@@ -437,9 +432,18 @@ theorem lift_weaken_from_simp {n : Nat} {leq : l ≤ n} :
 theorem weakening_shift_vone {n : Nat} :
     (v(1)) = (v(0) : Tm (n + 1))⌊↑ₚidₚ⌋ :=
   by
-    simp [weaken]
+    simp []
 
 theorem weakening_shift_var {n : Nat} {x : Fin n} :
     (v(x.succ) : Tm (n + 1)) = v(x)⌊↑ₚidₚ⌋ :=
   by
-    simp [weaken]
+    simp []
+
+theorem weakening_var_weaken_id :
+    (∀ (x : Fin n), x⌊ρ⌋ᵥ = x) → ∀ (t : Tm n), t⌊ρ⌋ = t :=
+  by
+    intro h t
+    rw (config := {occs := .pos [2]}) [←weakening_id (t := t)]
+    apply weakening_var_weaken
+    intro x
+    apply h

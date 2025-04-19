@@ -169,7 +169,7 @@ theorem weakening_sigma_intro :
       · simp [weaken_from]
         split
         case a.isTrue h =>
-          rw [←weak_sub_zero]
+          rw [←substitution_zero_weak]
           apply ihbB
           apply hS
         case a.isFalse h =>
@@ -365,7 +365,7 @@ theorem weakening_unit_elim :
                     insert_into_ctx leq Γ B ⊢ A.indUnit b a⌊weaken_from n l⌋ ∶ A⌈b⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A a b hA haA hb1 ihA ihaA ihb1 l hleq B hB
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply HasType.unit_elim
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -395,7 +395,7 @@ theorem weakening_empty_elim :
                 insert_into_ctx leq Γ B ⊢ A.indEmpty b⌊weaken_from n l⌋ ∶ A⌈b⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A b hA hb0 ihA ihb0 l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply HasType.empty_elim
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -422,7 +422,7 @@ theorem weakening_pi_elim :
                 insert_into_ctx leq Γ B_1 ⊢ f◃a⌊weaken_from n l⌋ ∶ B⌈a⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ f A B a hfPi haA ihfPi ihaA l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     · apply HasType.pi_elim
       · apply ihfPi
         apply hS
@@ -449,7 +449,7 @@ theorem weakening_sigma_elim :
                     insert_into_ctx leq Γ B_1 ⊢ A.indSigma B C c p⌊weaken_from n l⌋ ∶ C⌈p⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ A B p C c hpSi hC hcC ihpSi ihC ihcC l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply HasType.sigma_elim
     · apply ihpSi
       apply hS
@@ -499,7 +499,7 @@ theorem weakening_nat_elim :
                       insert_into_ctx leq Γ B ⊢ A.indNat z s x⌊weaken_from n l⌋ ∶ A⌈x⌉₀⌊weaken_from n l⌋ :=
   by
     intro n Γ z i A s hA hzA hsA hiNat ihA ihzA ihsA ihiNat l hleq S hS
-    rw [weak_sub_zero]
+    rw [←substitution_zero_weak]
     apply HasType.nat_elim
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -511,7 +511,7 @@ theorem weakening_nat_elim :
       any_goals omega
     · simp [lift_weak_n]
       rw [←weakening_nat_zero]
-      rw [←weak_sub_zero]
+      rw [←substitution_zero_weak]
       apply ihzA
       apply hS
     · rw [←helper_weak_nat_succ]

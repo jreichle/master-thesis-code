@@ -161,27 +161,13 @@ theorem weakening_shift_id_lift {ρ : Weak m n} {t : Tm n} :
     rw [←weakening_lift_shift_comp]
     rfl
 
-theorem weakening_shift_id_outside {ρ : Weak m n} {t : Tm n} :
-    t⌊ρ⌋⌊↑ₚidₚ⌋ = t⌊↑ₚidₚ⌋⌊⇑ₚρ⌋ :=
-  by
-    rw [weakening_shift_id_lift]
-    rw [weakening_comp]
-    simp [comp_weaken]
 
-theorem weakening_shift_double {S : Tm n} {ρ : Weak m n} : 
-    S⌊↑ₚ↑ₚρ⌋ = S⌊↑ₚρ⌋⌊↑ₚidₚ⌋ :=
-  by
-    rw [←weakening_shift_id]
-
-theorem weakening_comp_shift {S : Tm n} {ρ : Weak m n} :
-    S⌊↑ₚidₚ ₚ∘ₚ ρ⌋ = S⌊ρ⌋⌊↑ₚidₚ⌋ :=
-  by
-    simp [comp_weaken]
+-- comp_weaken_substitute
 
 theorem substitution_lift_comp_ρσ {t : Tm (n + 1)} :
     t⌈⇑ₚρ ₚ∘ₛ⇑ₛσ⌉ = t⌈⇑ₛ(ρ ₚ∘ₛσ)⌉ :=
   by
-    simp [comp_weaken_substitute]
+    simp []
 
 theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (z + n + 1)} :
     v(x)⌈⇑ₚ n ₙ⇑ₚρ ₚ∘ₛ⇑ₛ n ₙ⇑ₛσ⌉ = v(x)⌈⇑ₛ n ₙ⇑ₛ(ρ ₚ∘ₛσ)⌉ :=
@@ -192,7 +178,7 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (z + n + 1)} :
       | .mk i hFin =>
         match i with
         | .zero => 
-          simp [comp_weaken_substitute]
+          simp []
           rfl
         | .succ i' =>
           simp_all
@@ -201,7 +187,7 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (z + n + 1)} :
       | .mk i hFin =>
         match i with
         | .zero =>
-          simp [comp_weaken_substitute]
+          simp []
           rfl
         | .succ i' =>
           rw [comp_weaken_substitute]
@@ -356,7 +342,7 @@ theorem substitution_var_comp_ρσ {ρ : Weak l m} {σ : Subst m n} {x : Fin n} 
       cases σ with
       | weak γ => 
         simp only [comp_weaken_substitute]
-        simp only [substitution_weakening]
+        simp only [substitution_weakening_var]
         rw [weaken]
         simp only [weakening_var_comp]
       | shift σ' =>
@@ -515,6 +501,8 @@ theorem substitution_comp_ρσ {t : Tm n} :
               · apply substitution_comp_ρσ
               · apply substitution_comp_ρσ
 
+-- comp_substitute_weaken
+
 theorem substitution_lift_comp_σρ {t : Tm (n + 1)} :
     t⌈⇑ₛσ ₛ∘ₚ⇑ₚρ⌉ = t⌈⇑ₛ(σ ₛ∘ₚρ)⌉ :=
   by
@@ -583,11 +571,11 @@ theorem substitution_var_comp_σρ {x : Fin n} :
         simp []
       | shift ρ' =>
         simp only [comp_substitute_weaken]
-        simp only [substitution_weakening]
+        simp only [substitution_weakening_var]
         simp [←weakening_var_comp]
       | lift ρ' =>
         simp only [comp_substitute_weaken]
-        simp only [substitution_weakening]
+        simp only [substitution_weakening_var]
         simp [←weakening_var_comp]
     | shift σ' ih =>
       cases ρ with
@@ -765,6 +753,8 @@ theorem substitution_shift_id_lift :
   by
     simp [substitution_conv_shift_id]
     simp [substitution_comp_σρ]
+
+-- comp_substitute_substitute
 
 theorem substitution_lift_comp :
     t⌈⇑ₛσ ₛ∘ₛ⇑ₛσ'⌉ = t⌈⇑ₛ(σ ₛ∘ₛσ')⌉ :=

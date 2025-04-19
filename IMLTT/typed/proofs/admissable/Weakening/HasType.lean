@@ -436,7 +436,7 @@ theorem weakening_unit_elim :
     cases heqΓ
     cases heqt
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply HasType.unit_elim
     · replace_by_conclusion ihA
       · apply congr
@@ -478,7 +478,7 @@ theorem weakening_empty_elim :
     cases heqΓ
     cases heqt
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply HasType.empty_elim
     · rw [←weakening_empty]
       rw [extend_expand_context_weaken_from]
@@ -511,7 +511,7 @@ theorem weakening_pi_elim :
     cases heqΓ
     cases heqt
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply HasType.pi_elim
     · rw [←weakening_pi]
       apply ihfPi
@@ -545,7 +545,7 @@ theorem weakening_sigma_elim :
     cases heqΓ
     cases heqt
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply HasType.sigma_elim
     · apply use_equality_term
       apply ihpSi
@@ -592,7 +592,7 @@ theorem weakening_nat_elim :
     cases heqΓ
     cases heqt
     cases heqT
-    rw [weak_sub_zero]
+    rw [substitution_zero_weak]
     apply HasType.nat_elim
     · apply use_equality_type
       apply ihA
@@ -706,4 +706,3 @@ theorem weakening_ty_conv :
     · apply ihAB
       apply hS
       repeat' rfl
-

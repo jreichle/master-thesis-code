@@ -12,7 +12,9 @@ import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 
 theorem weakening_gen_empty :
     ∀ (m l : Nat) (Γ : Ctx l) (Δ : CtxGen l m) (eqM : 0 = m) (S : Tm l),
-      Γ ⊢ S type → eqM ▸ ε = Γ ⊗ Δ → (Γ ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
+    Γ ⊢ S type
+    → eqM ▸ ε = Γ ⊗ Δ
+    → (Γ ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
   by
     intro m l Γ Δ heqM S hS heqΓ
     cases heqM
@@ -26,14 +28,21 @@ theorem weakening_gen_empty :
 
 theorem weakening_gen_extend :
     ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
-      Γ ctx →
-        Γ ⊢ A type →
-          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l),
-              Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) →
-            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A_1 : Tm m),
-                Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
-              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l),
-                Γ_1 ⊢ S type → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
+    Γ ctx
+    → Γ ⊢ A type
+    → (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l),
+      Γ_1 ⊢ S type
+      → eqM ▸ Γ = Γ_1 ⊗ Δ
+      → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx)
+    → (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A_1 : Tm m),
+      Γ_1 ⊢ S type
+      → eqM ▸ Γ = Γ_1 ⊗ Δ
+      → eqM ▸ A = A_1
+      → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type)
+    → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l),
+      Γ_1 ⊢ S type
+      → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ
+      → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
   by
     intro n Γ' A hiC hA ihiC ihA m l Γ Δ heqM S hS heqΓ
     cases heqM

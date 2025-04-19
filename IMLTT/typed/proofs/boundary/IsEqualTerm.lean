@@ -174,7 +174,9 @@ theorem boundary_nat_succ_comp :
       · apply hzA
       · apply hsA
       · apply HasType.nat_succ_intro hsNat
-    · rw [substitution_separate]
+    · rw [substitute_zero]
+      rw [←substitution_separate]
+      simp only [substitution_conv_zero]
       rw [←substitution_shift_substitute_zero (A := A⌈𝓈(x)⌉₀)]
       apply substitution_term
       · rw [context_to_gen_ctx] at hsA
