@@ -16,7 +16,7 @@ open Lean.Elab.Tactic
 open Lean.TSyntax
 
 -- macros for easier usage of de bruijn abstractions
--- FIXME: extract macros to other file
+-- XXX: extract macros to other file?
 
 macro "context_info_nat_relations" : tactic =>
   `(tactic|
@@ -169,7 +169,7 @@ macro "substitution_split" : tactic =>
      ))
 
 -- meta cases tactic
-def cases (id : FVarId) : TacticM Unit := -- XXX: from interactive theorem proving repo
+def cases (id : FVarId) : TacticM Unit :=
   do
     liftMetaTactic (fun goal ↦
       do
