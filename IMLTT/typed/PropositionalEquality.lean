@@ -137,7 +137,7 @@ theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {P : Tm (n 
           · apply congr
             apply congr
             · rfl
-            · substitution_step
+            · substitution_step_meta
             · substitution_step
               substitution_step
           · apply hElimId
@@ -145,7 +145,7 @@ theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {P : Tm (n 
       · apply congr
         apply congr
         · rfl
-        · substitution_step
+        · substitution_step_meta
         · substitution_step
           substitution_step
       · apply hElimPi
@@ -192,7 +192,7 @@ theorem propositional_equality_symm :
       · apply congr
         apply congr
         · rfl
-        · substitution_step
+        · substitution_step_meta
         · substitution_step
           substitution_step
           substitution_step
@@ -238,7 +238,7 @@ theorem propositional_equality_trans :
       · apply congr
         apply congr
         · rfl
-        · substitution_step
+        · substitution_step_meta
         · substitution_step
           substitution_step
           substitution_step

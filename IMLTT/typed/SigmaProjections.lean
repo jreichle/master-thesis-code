@@ -188,10 +188,6 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
     · apply congr
       · rfl
       · substitution_norm
-        rw [←substitution_id (t := B)]
-        substitution_to_composition
-        substitution_var_sub
-        any_goals substitution_step
     · apply hElim
 
 theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n + 1)} :
@@ -228,10 +224,6 @@ theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n 
     · apply congr
       · rfl
       · substitution_norm
-        rw [←substitution_id (t := B)]
-        substitution_to_composition
-        substitution_var_sub
-        any_goals substitution_step
     · apply hComp
 
 def π₁ : Tm n :=

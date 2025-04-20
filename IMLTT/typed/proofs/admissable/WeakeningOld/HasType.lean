@@ -556,7 +556,7 @@ theorem weakening_iden_elim :
                                   insert_into_ctx leq Γ B_1 ⊢ A.j B b a a' p⌊↑₁n↬l⌋ ∶ B⌈(ₛidₚ), a, a', p⌉⌊↑₁n↬l⌋ :=
   by
     intro n Γ A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId l hleq S hS
-    rw [weak_subst_iden_elim]
+    rw [helper_weakening_iden_elim_B]
     apply HasType.iden_elim
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -580,7 +580,7 @@ theorem weakening_iden_elim :
     · rw [extend_insert_into_context]
       simp [lift_weak_n]
       rw [lift_weaken_from]
-      rw [helper_weak_refl_propagate_weak]
+      rw [helper_weakening_iden_elim_B_refl]
       apply ihbB
       rw [extend_get_sub_context]
       apply hS

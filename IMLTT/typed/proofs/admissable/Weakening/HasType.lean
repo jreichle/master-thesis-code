@@ -33,8 +33,8 @@ theorem weakening_var :
       · apply congr
         · apply congr
           · rfl
-          · substitution_step
-        · substitution_step
+          · substitution_step_meta
+        · substitution_step_meta
           rw (config := {occs := .pos [2]}) [←weakening_shift_id]
       · apply HasType.weak
         · apply HasType.var hA
@@ -43,7 +43,7 @@ theorem weakening_var :
       cases heqΓ
       replace_by_conclusion HasType.var
       · apply congr
-        · substitution_step
+        · substitution_step_meta
         · substitution_step
       · apply HasType.var
         apply ihA
@@ -73,12 +73,12 @@ theorem weakening_weak :
       cases heqΓ
       replace_by_conclusion HasType.weak
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
           rw (config := {occs := .pos [2]}) [←weakening_shift_id]
       · apply HasType.weak
         · replace_by_conclusion HasType.weak
-          · substitution_step
+          · substitution_step_meta
           · apply HasType.weak
             · apply hvA
             · apply hB
@@ -87,15 +87,15 @@ theorem weakening_weak :
       cases heqΓ
       replace_by_conclusion HasType.weak
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
           rw (config := {occs := .pos [2]}) [←weakening_shift_id]
       · apply HasType.weak
         · replace_by_conclusion ihvA
           · apply congr
-            · substitution_step
+            · substitution_step_meta
               rw [←weakening_conv_var]
-            · substitution_step
+            · substitution_step_meta
           · apply ihvA
             apply hS
             repeat' rfl
@@ -141,8 +141,8 @@ theorem weakening_pi_intro :
     · apply congr
       apply congr
       · rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
-      · substitution_step
-      · substitution_step
+      · substitution_step_meta
+      · substitution_step_meta
     · apply ihbB
       apply hS
       repeat' rfl
@@ -318,7 +318,7 @@ theorem weakening_univ_pi :
       · apply congr
         apply congr
         rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
-        substitution_step
+        substitution_step_meta
         rw [←weakening_univ]
       · apply ihBU
         apply hS
@@ -353,7 +353,7 @@ theorem weakening_univ_sigma :
       · apply congr
         apply congr
         rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
-        substitution_step
+        substitution_step_meta
         rw [←weakening_univ]
       · apply ihBU
         apply hS
@@ -442,7 +442,7 @@ theorem weakening_unit_elim :
       · apply congr
         rw [←weakening_unit]
         rw (config := {occs := .pos [2]}) [extend_expand_context_weaken_from]
-        substitution_step
+        substitution_step_meta
       · apply ihA
         apply hS
         repeat' rfl
@@ -453,8 +453,7 @@ theorem weakening_unit_elim :
         repeat' rfl
         rfl
       · apply congr
-        substitution_step
-        substitution_step
+        substitution_norm
     · rw [←weakening_unit]
       apply ihb1
       apply hS
@@ -486,7 +485,8 @@ theorem weakening_empty_elim :
       apply ihA
       apply hS
       rw [extend_expand_context]
-      substitution_norm
+      substitution_step_meta
+      substitution_step_meta
     · rw [←weakening_empty]
       apply ihb0
       apply hS
@@ -550,18 +550,20 @@ theorem weakening_sigma_elim :
     · apply use_equality_term
       apply ihpSi
       apply hS
-      substitution_norm
+      substitution_step_meta
     · apply use_equality_type
       apply ihC
       apply hS
       rw [extend_expand_context]
-      substitution_norm
+      substitution_step_meta
+      substitution_step_meta
     · apply use_equality_term
       apply ihcC
       apply hS
       simp only [extend_expand_context]
-      any_goals substitution_step
-      any_goals substitution_step
+      any_goals substitution_step_meta
+      any_goals substitution_step_meta
+      substitution_norm
 
 theorem weakening_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -598,19 +600,20 @@ theorem weakening_nat_elim :
       apply ihA
       apply hS
       simp only [extend_expand_context]
-      any_goals substitution_step
+      any_goals substitution_step_meta
     · apply use_equality_term
       apply ihzA
       apply hS
       simp only [extend_expand_context]
-      any_goals substitution_step
-      any_goals substitution_step
+      any_goals substitution_step_meta
+      any_goals substitution_norm
     · apply use_equality_term
       apply ihsA
       apply hS
       simp only [extend_expand_context]
-      any_goals substitution_step
-      any_goals substitution_step
+      any_goals substitution_step_meta
+      any_goals substitution_step_meta
+      substitution_norm
     · rw [←weakening_nat]
       apply ihxA
       apply hS
@@ -656,20 +659,19 @@ theorem weakening_iden_elim :
     cases heqΓ
     cases heqt
     cases heqT
-    rw [weak_subst_iden_elim]
+    rw [helper_weakening_iden_elim_B]
     apply HasType.iden_elim
     · apply use_equality_type
       apply ihB
       apply hS
       simp only [extend_expand_context]
-      any_goals substitution_step
-      any_goals substitution_step
+      any_goals substitution_step_meta
+      any_goals substitution_norm
     · apply use_equality_term
       apply ihbB
       apply hS
       simp only [extend_expand_context]
-      any_goals substitution_step
-      any_goals substitution_step
+      any_goals substitution_step_meta
     · apply ihaA
       apply hS
       repeat' rfl

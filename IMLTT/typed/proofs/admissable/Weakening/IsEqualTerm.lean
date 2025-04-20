@@ -37,7 +37,7 @@ theorem weakening_var_eq :
         apply congr
         apply congr
         rfl
-        substitution_step
+        substitution_step_meta
         rw (config := {occs := .pos [2]}) [←weakening_shift_id]
       · apply IsEqualTerm.weak_eq
         · apply IsEqualTerm.var_eq hA
@@ -81,12 +81,12 @@ theorem weakening_weak_eq :
       cases heqΓ
       replace_by_conclusion IsEqualTerm.weak_eq
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
           rw (config := {occs := .pos [2]}) [←weakening_shift_id]
       · apply IsEqualTerm.weak_eq
         · replace_by_conclusion IsEqualTerm.weak_eq
-          · substitution_step
+          · substitution_step_meta
           · apply IsEqualTerm.weak_eq
             · apply hvvA
             · apply hB
@@ -95,15 +95,15 @@ theorem weakening_weak_eq :
       cases heqΓ
       replace_by_conclusion IsEqualTerm.weak_eq
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
           rw (config := {occs := .pos [2]}) [←weakening_shift_id]
       · apply IsEqualTerm.weak_eq
         · replace_by_conclusion ihvvA
           · apply congr
-            · substitution_step
+            · substitution_step_meta
               rw [←weakening_conv_var]
-            · substitution_step
+            · substitution_step_meta
           · apply ihvvA
             apply hS
             repeat' rfl
@@ -140,7 +140,7 @@ theorem weakening_unit_comp :
         apply hS
         repeat' rfl
         rw [extend_expand_context]
-      · substitution_step
+      · substitution_step_meta
     · replace_by_conclusion ihaA
       rotate_left
       · apply ihaA
@@ -219,7 +219,7 @@ theorem weakening_sigma_comp :
     cases heqt'
     cases heqT
     rw [substitution_zero_weak]
-    rw [weak_subst_sigma_c]
+    rw [helper_weakening_sigma_elim_c]
     apply IsEqualTerm.sigma_comp
     · apply ihaA
       apply hS
@@ -246,7 +246,7 @@ theorem weakening_sigma_comp :
       rw [lift_weaken_from]
       rw [extend_expand_context_weaken_from]
       rw [extend_expand_context_weaken_from]
-      rw [weak_subst_sigma_C]
+      rw [helper_weakening_sigma_elim_C]
       apply ihcC
       apply hS
       repeat' rfl
@@ -309,7 +309,9 @@ theorem weakening_nat_zero_comp :
         rw [extend_expand_context]
         rw [extend_expand_context]
       · apply congr
-        substitution_norm
+        apply congr
+        apply congr
+        any_goals substitution_norm
     · rw [←weakening_nat]
       rw [←weakening_nat_zero]
       apply ihzNat
@@ -349,7 +351,7 @@ theorem weakening_nat_succ_comp :
     cases heqt'
     cases heqT
     rw [substitution_zero_weak]
-    rw [weak_subst_sigma_c]
+    rw [helper_weakening_sigma_elim_c]
     apply IsEqualTerm.nat_succ_comp
     · replace_by_conclusion ihA
       rotate_left
@@ -413,7 +415,7 @@ theorem weakening_iden_comp :
     cases heqt'
     cases heqT
     rw [substitution_zero_weak]
-    rw [weak_subst_iden_elim]
+    rw [helper_weakening_iden_elim_B]
     apply IsEqualTerm.iden_comp
     · replace_by_conclusion ihB
       rotate_left
@@ -425,9 +427,8 @@ theorem weakening_iden_comp :
       · apply congr
         apply congr
         · rfl
-        · substitution_step
-          any_goals substitution_step
-        · substitution_step
+        · substitution_norm
+        · substitution_norm
     · replace_by_conclusion ihbB
       rotate_left
       · apply ihbB
@@ -436,8 +437,8 @@ theorem weakening_iden_comp :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
     · apply ihaA
       apply hS
       repeat' rfl
@@ -504,8 +505,8 @@ theorem weakening_unit_elim_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
     · replace_by_conclusion ihaaA
       rotate_left
       · apply ihaaA
@@ -514,7 +515,7 @@ theorem weakening_unit_elim_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
+        · substitution_step_meta
         · substitution_norm
     · rw [←weakening_unit]
       apply ihbb1
@@ -556,8 +557,8 @@ theorem weakening_empty_elim_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
     · rw [←weakening_empty]
       apply ihbb0
       apply hS
@@ -596,8 +597,8 @@ theorem weakening_pi_intro_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
     · apply ihAA
       apply hS
       repeat' rfl
@@ -680,7 +681,7 @@ theorem weakening_sigma_intro_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
+        · substitution_step_meta
         · substitution_norm
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -984,7 +985,7 @@ theorem weakening_iden_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [weak_subst_iden_elim]
+    rw [helper_weakening_iden_elim_B]
     apply IsEqualTerm.iden_elim_eq
     · replace_by_conclusion ihBB
       rotate_left
@@ -997,10 +998,9 @@ theorem weakening_iden_elim_eq :
         apply congr
         apply congr
         · rfl
-        · substitution_step
-          any_goals substitution_step
-        · substitution_step
-        · substitution_step
+        · substitution_norm
+        · substitution_step_meta
+        · substitution_step_meta
     · replace_by_conclusion ihbbB
       rotate_left
       · apply ihbbB
@@ -1009,8 +1009,8 @@ theorem weakening_iden_elim_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
     · apply ihAA
       apply hS
       repeat' rfl
@@ -1104,8 +1104,8 @@ theorem weakening_univ_pi_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
 
 theorem weakening_univ_sigma_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
@@ -1144,8 +1144,8 @@ theorem weakening_univ_sigma_eq :
         simp only [extend_expand_context]
         rfl
       · apply congr
-        · substitution_step
-        · substitution_step
+        · substitution_step_meta
+        · substitution_step_meta
 
 theorem weakening_univ_nat_eq :
     ∀ {n : Nat} {Γ : Ctx n},

@@ -25,7 +25,7 @@ theorem weak_subst_sigma_c :
     substitution_step
     aesop
 
-theorem weak_subst_iden_elim :
+theorem helper_weakening_iden_elim_B :
     B⌈(ₛidₚ), a, b, c⌉⌊ρ⌋
     = B⌊lift_weak_n 3 ρ⌋⌈(ₛidₚ), (a⌊ρ⌋), (b⌊ρ⌋), (c⌊ρ⌋)⌉ :=
   by
@@ -39,7 +39,7 @@ theorem helper_weak_iden_propagate_weak {leq : l ≤ n} :
     substitution_step
     substitution_step
 
-theorem helper_weak_refl_propagate_weak {leq : l ≤ n} :
+theorem helper_weakening_iden_elim_B_refl {leq : l ≤ n} :
     B⌊⇑ₚ⇑ₚ↑₁n + 1↬l⌋⌈(ₛidₚ), v(0), (A⌊↑₁n↬l⌋⌊↑ₚidₚ⌋.refl v(0))⌉
     = B⌈(ₛidₚ), v(0), (A⌊↑ₚidₚ⌋.refl v(0))⌉⌊↑₁n + 1↬l⌋ :=
   by

@@ -351,7 +351,7 @@ theorem weakening_iden_comp :
   by
     intro n Γ A B b a hB hbB haA ihB ihbB ihaA l hleq s hS
     rw [←substitution_zero_weak]
-    rw [weak_subst_iden_elim]
+    rw [helper_weakening_iden_elim_B]
     apply IsEqualTerm.iden_comp
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -375,7 +375,7 @@ theorem weakening_iden_comp :
     · rw [extend_insert_into_context]
       simp [lift_weak_n]
       rw [lift_weaken_from]
-      rw [helper_weak_refl_propagate_weak]
+      rw [helper_weakening_iden_elim_B_refl]
       apply ihbB
       rw [extend_get_sub_context]
       apply hS
@@ -761,7 +761,7 @@ theorem weakening_iden_elim_eq :
   by
     intro n Γ A B B' b b' a₁ a₃ A' a₂ a₄ p p'
     intro hBB hbbB hAA haaA haaA' hppId ihBB ihbbB ihAA ihaaA ihaaA' ihppId l hleq S hS
-    rw [weak_subst_iden_elim]
+    rw [helper_weakening_iden_elim_B]
     apply IsEqualTerm.iden_elim_eq
     · simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -785,7 +785,7 @@ theorem weakening_iden_elim_eq :
     · rw [extend_insert_into_context]
       simp [lift_weak_n]
       rw [lift_weaken_from]
-      rw [helper_weak_refl_propagate_weak]
+      rw [helper_weakening_iden_elim_B_refl]
       apply ihbbB
       rw [extend_get_sub_context]
       apply hS

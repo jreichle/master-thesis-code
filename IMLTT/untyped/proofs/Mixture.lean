@@ -16,7 +16,7 @@ open Lean.Elab.Tactic
 open Lean.TSyntax
 
 -- macros for easier usage of de bruijn abstractions
--- FIXME: extraxt macros to other file
+-- FIXME: extract macros to other file
 
 macro "context_info_nat_relations" : tactic =>
   `(tactic|
@@ -201,6 +201,7 @@ macro "split_and_cases" : tactic =>
       (split
        any_goals use_cases))
 
+
 macro "substitution_step" : tactic =>
   `(tactic|
       (
@@ -211,14 +212,10 @@ macro "substitution_step" : tactic =>
         try weakening_var_weak
         try conversion_var_sub
         try conversion_var_sub_symm
-        -- FIXME: when t = t⌈σ⌉ or with ρ,
-        --        problems when either side of eq is placeholder
-        --        divide into two major macros, one with and one without?
-        --
-        -- try substitution_var_substitute_id
-        -- try substitution_var_substitute_id_symm
-        -- try weakening_var_weaken_id
-        -- try weakening_var_weaken_id_symm
+        try substitution_var_substitute_id
+        try substitution_var_substitute_id_symm
+        try weakening_var_weaken_id
+        try weakening_var_weaken_id_symm
         try substitution_from_composition
         try simp []
         try split_and_cases
@@ -229,14 +226,29 @@ macro "substitution_step" : tactic =>
 
 macro "substitution_norm" : tactic =>
   `(tactic|
-      (
+      ( -- not stopping early enough, maybe because substitution_var_sub works mostly
         repeat' (fail_if_no_progress substitution_step)
         ))
 
+-- to be used, when either part of the equation contains metavariables
+macro "substitution_step_meta" : tactic =>
+  `(tactic|
+      (
+        try substitution_to_composition
+        try substitution_nat_relation_lemmatas
+        try simp []
+        try substitution_from_composition
+        try simp []
+        try split_and_cases
+        try simp []
+        try repeat' apply And.intro
+        try any_goals rfl
+        ))
 
--- FIXME:
--- - change all theorems to not use ⌈-⌉₀ anymore? or add simp ones
--- - name changes -> also in helper files
+theorem shift_weaken_from {hl : l ≤ n} :
+    A⌊↑ₚidₚ⌋⌊weaken_from (n + 1) l⌋ = A⌊weaken_from n l⌋⌊↑ₚidₚ⌋ :=
+  by
+    substitution_norm
 
 theorem substitution_zero_weak :
     t⌈a⌉₀⌊ρ⌋ = t⌊⇑ₚρ⌋⌈a⌊ρ⌋⌉₀ :=
@@ -420,9 +432,7 @@ theorem weak_substitution_eq_weakening_substitution_gen_context {l n : Nat} {s :
   by
     induction Δ with
     | start =>
-      simp [weaken_from_into_gen_ctx]
-      simp [substitute_into_gen_ctx]
-      simp [substitute_shift_into_gen_ctx]
+      substitution_norm
     | expand Δ' S' ih =>
       simp [weaken_from_into_gen_ctx]
       simp [substitute_into_gen_ctx]
@@ -430,14 +440,3 @@ theorem weak_substitution_eq_weakening_substitution_gen_context {l n : Nat} {s :
       apply And.intro
       · rw [ih]
       · rw [weak_substitution_eq_weakening_substitution]
-
--- theorem test_id_thing_lol :
---     B⌈⇑ₛ(ₛidₚ)⌉ = B :=
---   by
---     substitution_norm
---
--- theorem test_id_complicated_thing_lol :
---     B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈a&b⌉₀
---     = B⌈A.indSigma B (A⌊↑ₚidₚ⌋) v(1) (a&b)⌉₀ :=
---   by
---     substitution_norm

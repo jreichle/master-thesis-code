@@ -518,7 +518,7 @@ theorem functionality_typing_nat_zero_intro :
         apply And.left substitution
         · apply hiC
         · apply hsS
- 
+
 theorem functionality_typing_nat_succ_intro :
     ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
     (Γ ⊢ x ∶ 𝒩) →
@@ -1446,7 +1446,7 @@ theorem functionality_typing_sigma_elim :
         · apply hsS'
         repeat' rfl
       · simp only [lift_subst_n]
-        rw [subst_subst_sigma_C]
+        rw [helper_substitution_sigma_elim_C]
         simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         rw [extend_expand_context_n_substitution]
@@ -1578,7 +1578,7 @@ theorem functionality_typing_nat_elim :
       · rw [←substitution_nat]
         rw [extend_expand_context_n_substitution]
         simp only [lift_subst_n]
-        rw [←helper_subst_nat_elim]
+        rw [←helper_substitution_nat_elim]
         simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.right ihsA
@@ -1712,7 +1712,7 @@ theorem functionality_typing_iden_elim :
       cases heqΓ
       cases heqt
       cases heqT
-      rw [subst_subst_iden_elim]
+      rw [helper_substitution_iden_B]
       apply IsEqualTerm.iden_elim_eq
       · simp only [lift_subst_n]
         simp only [lift_n_substitution]
@@ -1724,7 +1724,7 @@ theorem functionality_typing_iden_elim :
         rw [←substitution_shift_id_lift]
         rw [←substitution_shift_id_lift]
         rw [weakening_shift_id]
-        rw [←helper_subst_iden_propagate_subst]
+        rw [←helper_substitution_iden_propagate_subst]
         simp only [lift_n_substitution]
         rw [extend_expand_context_n_substitution]
         apply And.right ihB
@@ -1733,7 +1733,7 @@ theorem functionality_typing_iden_elim :
         · apply hsS'
         repeat' rfl
       · rw [←substitution_shift_id_lift]
-        rw [subst_subst_iden_refl]
+        rw [helper_substitution_iden_B_refl]
         rw [extend_expand_context_n_substitution]
         simp [lift_subst_n]
         rw [lift_n_substitution]
@@ -1840,4 +1840,3 @@ theorem functionality_typing_ty_conv :
       · apply And.left (And.right (And.right (And.right substitution)))
         · apply hAB
         · apply hsS
-

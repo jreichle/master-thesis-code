@@ -16,12 +16,6 @@ def comp_weaken (ρ : Weak l m) (ρ' : Weak m n) : Weak l n :=
     | .shift γ' => .shift (comp_weaken γ γ')
     | .lift γ' => .lift (comp_weaken γ γ')
 
--- FIXME: safe to delete?
-def shift_weak_n (i : Nat) (ρ : Weak m n) : Weak (m + i) n :=
-  match i with
-  | 0 => ρ
-  | i' + 1 => .shift (shift_weak_n i' ρ)
-
 @[simp]
 def lift_weak_n (i : Nat) (ρ : Weak m n) : Weak (m + i) (n + i) :=
   match i with

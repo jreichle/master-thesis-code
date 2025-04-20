@@ -119,7 +119,6 @@ theorem boundary_sigma_comp :
         apply congr
         · rfl
         · substitution_step
-          substitution_step
         · substitution_step
           substitution_step
       · apply h2

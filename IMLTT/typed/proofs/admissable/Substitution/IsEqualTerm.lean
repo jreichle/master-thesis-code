@@ -230,7 +230,7 @@ theorem substitution_gen_pi_comp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : 
       · apply hsS
       · rfl
 
-theorem substitution_gen_sigma_comp : 
+theorem substitution_gen_sigma_comp :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
   (Γ ⊢ a ∶ A) →
     (Γ ⊢ b ∶ B⌈a⌉₀) →
@@ -271,7 +271,7 @@ theorem substitution_gen_sigma_comp :
     cases heqt'
     cases heqT
     rw [substitution_zero_lift]
-    rw [subst_subst_sigma_c]
+    rw [helper_substitution_sigma_elim_c]
     apply IsEqualTerm.sigma_comp
     · apply ihaA
       · rfl
@@ -304,7 +304,7 @@ theorem substitution_gen_sigma_comp :
           rw [extend_expand_context_n_substitution]
         · substitution_step
         · simp only [lift_subst_n]
-          rw [subst_subst_sigma_C]
+          rw [helper_substitution_sigma_elim_C]
           rw [lift_n_substitution]
           rw [lift_n_substitution]
       · apply ihcC
@@ -391,7 +391,7 @@ theorem substitution_gen_nat_zero_comp :
         · substitution_step
         · context_info_nat_relations
           simp only [lift_subst_n]
-          rw [←helper_subst_nat_elim]
+          rw [←helper_substitution_nat_elim]
           simp only [lift_n_substitution]
           rfl
       · apply ihsA
@@ -449,7 +449,7 @@ theorem substitution_gen_nat_succ_comp :
     cases heqt'
     cases heqT
     rw [substitution_zero_lift]
-    rw [subst_subst_sigma_c]
+    rw [helper_substitution_sigma_elim_c]
     apply IsEqualTerm.nat_succ_comp
     · replace_by_conclusion ihA
       · apply congr
@@ -485,7 +485,7 @@ theorem substitution_gen_nat_succ_comp :
         · substitution_step
         · context_info_nat_relations
           simp only [lift_subst_n]
-          rw [←helper_subst_nat_elim]
+          rw [←helper_substitution_nat_elim]
           simp only [lift_n_substitution]
           rfl
       · apply ihsA
@@ -499,7 +499,7 @@ theorem substitution_gen_nat_succ_comp :
       · apply hsS
       · rfl
 
-theorem substitution_gen_iden_comp : 
+theorem substitution_gen_iden_comp :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a : Tm n},
   (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
     (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
@@ -533,7 +533,7 @@ theorem substitution_gen_iden_comp :
     cases heqt
     cases heqt'
     cases heqT
-    rw [subst_subst_iden_elim]
+    rw [helper_substitution_iden_B]
     rw [substitution_zero_lift]
     apply IsEqualTerm.iden_comp
     · context_info_nat_relations
@@ -547,7 +547,7 @@ theorem substitution_gen_iden_comp :
       rw [←substitution_shift_id_lift]
       rw [←substitution_shift_id_lift]
       rw [weakening_shift_id]
-      rw [←helper_subst_iden_propagate_subst]
+      rw [←helper_substitution_iden_propagate_subst]
       simp only [lift_n_substitution]
       rw [extend_expand_context_n_substitution]
       apply ihB
@@ -556,7 +556,7 @@ theorem substitution_gen_iden_comp :
       · apply hsS
       · rfl
     · rw [←substitution_shift_id_lift]
-      rw [subst_subst_iden_refl]
+      rw [helper_substitution_iden_B_refl]
       rw [extend_expand_context_n_substitution]
       simp [lift_subst_n]
       rw [lift_n_substitution]
@@ -982,7 +982,7 @@ theorem substitution_gen_sigma_elim_eq : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {
         · substitution_step
         · substitution_step
         · simp only [lift_subst_n]
-          rw [subst_subst_sigma_C]
+          rw [helper_substitution_sigma_elim_C]
           context_info_nat_relations
           simp only [lift_n_substitution]
           rfl
@@ -1139,7 +1139,7 @@ theorem substitution_gen_nat_elim_eq :
         · substitution_step
         · context_info_nat_relations
           simp only [lift_subst_n]
-          rw [←helper_subst_nat_elim]
+          rw [←helper_substitution_nat_elim]
           simp only [lift_n_substitution]
           rfl
       · apply ihssA
@@ -1266,7 +1266,7 @@ theorem substitution_gen_iden_elim_eq :
     cases heqt
     cases heqt'
     cases heqT
-    rw [subst_subst_iden_elim]
+    rw [helper_substitution_iden_B]
     apply IsEqualTerm.iden_elim_eq
     · context_info_nat_relations
       simp only [lift_subst_n]
@@ -1279,7 +1279,7 @@ theorem substitution_gen_iden_elim_eq :
       rw [←substitution_shift_id_lift]
       rw [←substitution_shift_id_lift]
       rw [weakening_shift_id]
-      rw [←helper_subst_iden_propagate_subst]
+      rw [←helper_substitution_iden_propagate_subst]
       simp only [lift_n_substitution]
       rw [extend_expand_context_n_substitution]
       apply ihBB
@@ -1289,7 +1289,7 @@ theorem substitution_gen_iden_elim_eq :
       · apply hsS
       · rfl
     · rw [←substitution_shift_id_lift]
-      rw [subst_subst_iden_refl]
+      rw [helper_substitution_iden_B_refl]
       rw [extend_expand_context_n_substitution]
       simp [lift_subst_n]
       rw [lift_n_substitution]

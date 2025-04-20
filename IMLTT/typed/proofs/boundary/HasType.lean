@@ -268,7 +268,7 @@ theorem boundary_iden_elim :
         · replace_by_conclusion haA'
           · substitution_step
           · apply haA'
-    simp only [substitute_into_gen_ctx] at h2 -- FIXME: add def if into context things?
+    simp only [substitute_into_gen_ctx] at h2
     have h3 : Γ ⊢ B⌈a/ₙ(by omega)⌉⌈a'/ₙ(by omega)⌉⌈p⌉₀ type :=
       by
         apply substitution_type
@@ -286,7 +286,6 @@ theorem boundary_iden_elim :
     · apply congr
       · rfl
       · substitution_step
-        substitution_step
     · apply h3
 
 theorem boundary_ty_conv :
