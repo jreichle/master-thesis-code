@@ -88,25 +88,25 @@ theorem boundary_pi_comp :
 
 theorem boundary_sigma_comp :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
-  (Γ ⊢ a ∶ A) →
-    (Γ ⊢ b ∶ B⌈a⌉₀) →
-      (Γ ⬝ ΣA;B) ⊢ C type →
-        (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-          Γ ⊢ A type →
-            Γ ⊢ B⌈a⌉₀ type →
-              (Γ ⬝ ΣA;B) ⊢ C type →
-                Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
+  (Γ ⬝ ΣA;B) ⊢ C type →
+    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
+      (Γ ⊢ a ∶ A) →
+        (Γ ⊢ b ∶ B⌈a⌉₀) →
+          (Γ ⬝ ΣA;B) ⊢ C type →
+            Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
+              Γ ⊢ A type →
+                Γ ⊢ B⌈a⌉₀ type →
                   (Γ ⊢ A.indSigma B C c (a&b) ∶ C⌈a&b⌉₀) ∧ (Γ ⊢ c⌈(ₛidₚ)⋄ a⋄ b⌉ ∶ C⌈a&b⌉₀) ∧ Γ ⊢ C⌈a&b⌉₀ type :=
   by
-    intro n Γ a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC
+    intro n Γ a A b B C c hC hcC haA hbB ihC ihcC ihaA ihbB
     repeat' apply And.intro
     · apply HasType.sigma_elim
+      · apply hC
+      · apply hcC
       · apply HasType.sigma_intro
         · apply haA
         · apply hbB
         · apply ctx_extr (boundary_ctx_term hcC)
-      · apply hC
-      · apply hcC
     · rw [context_to_gen_ctx] at hcC
       have h1 := substitution_general_term hcC haA
       simp only [substitute_into_gen_ctx] at h1
@@ -408,30 +408,27 @@ theorem boundary_sigma_intro_eq :
 theorem boundary_sigma_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
   {c c' : Tm (n + 1 + 1)},
-  Γ ⊢ A ≡ A' type →
-    Γ ⬝ A ⊢ B ≡ B' type →
-      (Γ ⊢ p ≡ p' ∶ ΣA;B) →
-        (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
-          (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-            Γ ⊢ A type ∧ Γ ⊢ A' type →
-              Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type →
-                (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type →
-                  (Γ ⬝ ΣA;B) ⊢ C type ∧ (Γ ⬝ ΣA;B) ⊢ C' type →
-                    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧
-                        (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
+  (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
+    (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
+      Γ ⊢ A ≡ A' type →
+        Γ ⬝ A ⊢ B ≡ B' type →
+          (Γ ⊢ p ≡ p' ∶ ΣA;B) →
+            (Γ ⬝ ΣA;B) ⊢ C type ∧ (Γ ⬝ ΣA;B) ⊢ C' type →
+              (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧
+                  (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
+                Γ ⊢ A type ∧ Γ ⊢ A' type →
+                  Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type →
+                    (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type →
                       (Γ ⊢ A.indSigma B C c p ∶ C⌈p⌉₀) ∧ (Γ ⊢ A'.indSigma B' C' c' p' ∶ C⌈p⌉₀) ∧ Γ ⊢ C⌈p⌉₀ type :=
   by
-    intro n Γ A B A' B' p p' C C' c c' hAA hBB hppSi hCC hccC ihAA ihBB ihppSi ihCC ihccC
+    intro n Γ A B A' B' p p' C C' c c' hCC hccC hAA hBB hppSi ihCC ihccC ihAA ihBB ihppSi
     repeat' apply And.intro
     · apply HasType.sigma_elim
-      · apply And.left ihppSi
       · apply And.left ihCC
       · apply And.left ihccC
+      · apply And.left ihppSi
     · apply HasType.ty_conv
       · apply HasType.sigma_elim
-        · apply HasType.ty_conv
-          · apply And.left (And.right ihppSi)
-          · apply IsEqualType.sigma_form_eq hAA hBB
         · apply context_conversion_type
           · apply IsType.sigma_form
             · apply And.right ihAA
@@ -490,6 +487,9 @@ theorem boundary_sigma_elim_eq :
                   · substitution_step
                     substitution_step
                 · apply h3
+        · apply HasType.ty_conv
+          · apply And.left (And.right ihppSi)
+          · apply IsEqualType.sigma_form_eq hAA hBB
       · apply IsEqualType.type_symm
         apply IsEqualType.type_trans
         · apply functionality_typing_type

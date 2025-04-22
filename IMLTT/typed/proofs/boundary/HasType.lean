@@ -206,12 +206,11 @@ theorem boundary_pi_elim :
 
 theorem boundary_sigma_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
-    (Γ ⊢ p ∶ ΣA;B) →
-    (Γ ⬝ ΣA;B) ⊢ C type →
+  (Γ ⬝ ΣA;B) ⊢ C type →
     (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-    Γ ⊢ ΣA;B type → (Γ ⬝ ΣA;B) ⊢ C type → Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type → Γ ⊢ C⌈p⌉₀ type :=
+      (Γ ⊢ p ∶ ΣA;B) → (Γ ⬝ ΣA;B) ⊢ C type → Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type → Γ ⊢ ΣA;B type → Γ ⊢ C⌈p⌉₀ type :=
   by
-    intro n Γ A B p C c hpSi hC hcC ihpSi ihC ihcC
+    intro n Γ A B p C c hC hcC hpSi ihC ihcC ihpSi
     apply substitution_type
     · apply ihC
     · apply hpSi

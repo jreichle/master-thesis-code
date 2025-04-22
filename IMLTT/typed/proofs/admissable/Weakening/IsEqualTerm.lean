@@ -188,31 +188,31 @@ theorem weakening_pi_comp :
 
 theorem weakening_sigma_comp :
     ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
-    (Γ ⊢ a ∶ A) →
-      (Γ ⊢ b ∶ B⌈a⌉₀) →
-        (Γ ⬝ ΣA;B) ⊢ C type →
-          (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_5 A_1 : Tm m),
+  (Γ ⬝ ΣA;B) ⊢ C type →
+    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
+      (Γ ⊢ a ∶ A) →
+        (Γ ⊢ b ∶ B⌈a⌉₀) →
+          (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 : Tm m),
+              Γ_1 ⊢ S type → (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⊗ Δ → eqM ▸ C = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
+            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 + 1 = m) (S : Tm l) (a A_1 : Tm m),
                 Γ_1 ⊢ S type →
-                  eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_5 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_5⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
-              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_6 A : Tm m),
+                  eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⊗ Δ →
+                    eqM ▸ c = a → eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_7 A_1 : Tm m),
                   Γ_1 ⊢ S type →
-                    eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ b = a_6 → eqM ▸ B⌈a⌉₀ = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_6⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
-                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 : Tm m),
-                    Γ_1 ⊢ S type → (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⊗ Δ → eqM ▸ C = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
-                  (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 + 1 = m) (S : Tm l) (a A_1 : Tm m),
-                      Γ_1 ⊢ S type →
-                        eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⊗ Δ →
-                          eqM ▸ c = a →
-                            eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
-                    ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_9 a' A_1 : Tm m),
-                      Γ_1 ⊢ S type →
-                        eqM ▸ Γ = Γ_1 ⊗ Δ →
-                          eqM ▸ A.indSigma B C c (a&b) = a_9 →
-                            eqM ▸ c⌈(ₛidₚ)⋄ a⋄ b⌉ = a' →
-                              eqM ▸ C⌈a&b⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_9⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋ :=
+                    eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_7 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_7⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_8 A : Tm m),
+                    Γ_1 ⊢ S type →
+                      eqM ▸ Γ = Γ_1 ⊗ Δ →
+                        eqM ▸ b = a_8 → eqM ▸ B⌈a⌉₀ = A → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_8⌊↑₁m↬l⌋ ∶ A⌊↑₁m↬l⌋) →
+                  ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_9 a' A_1 : Tm m),
+                    Γ_1 ⊢ S type →
+                      eqM ▸ Γ = Γ_1 ⊗ Δ →
+                        eqM ▸ A.indSigma B C c (a&b) = a_9 →
+                          eqM ▸ c⌈(ₛidₚ)⋄ a⋄ b⌉ = a' →
+                            eqM ▸ C⌈a&b⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_9⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋ :=
   by
-    intro n Γ' a A b B C c haA hbB hC hcC ihaA ihbB ihC ihcC m l Γ Δ heqM S t t' T hS heqΓ heqt heqt' heqT
+    intro n Γ' a A b B C c hC hcC haA hbB ihC ihcC ihaA ihbB m l Γ Δ heqM S t t' T hS heqΓ heqt heqt' heqT
     cases heqM
     cases heqΓ
     cases heqt
@@ -221,17 +221,6 @@ theorem weakening_sigma_comp :
     rw [substitution_zero_weak]
     rw [helper_weakening_sigma_elim_c]
     apply IsEqualTerm.sigma_comp
-    · apply ihaA
-      apply hS
-      repeat' rfl
-    · replace_by_conclusion ihbB
-      rotate_left
-      · apply ihbB
-        apply hS
-        repeat' rfl
-        rfl
-      · apply congr
-        substitution_norm
     · simp [lift_weak_n]
       rw [←weakening_sigma]
       rw [extend_expand_context_weaken_from]
@@ -251,6 +240,17 @@ theorem weakening_sigma_comp :
       apply hS
       repeat' rfl
       any_goals omega
+    · apply ihaA
+      apply hS
+      repeat' rfl
+    · replace_by_conclusion ihbB
+      rotate_left
+      · apply ihbB
+        apply hS
+        repeat' rfl
+        rfl
+      · apply congr
+        substitution_norm
 
 theorem weakening_nat_zero_comp :
     ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
@@ -693,45 +693,45 @@ theorem weakening_sigma_intro_eq :
 
 theorem weakening_sigma_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
-    {c c' : Tm (n + 1 + 1)},
-    Γ ⊢ A ≡ A' type →
-      Γ ⬝ A ⊢ B ≡ B' type →
-        (Γ ⊢ p ≡ p' ∶ ΣA;B) →
-           (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
-            (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+  {c c' : Tm (n + 1 + 1)},
+  (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
+    (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
+      Γ ⊢ A ≡ A' type →
+        Γ ⬝ A ⊢ B ≡ B' type →
+          (Γ ⊢ p ≡ p' ∶ ΣA;B) →
+            (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 A' : Tm m),
+                Γ_1 ⊢ S type →
+                  (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⊗ Δ →
+                    eqM ▸ C = A_1 → eqM ▸ C' = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+              (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 + 1 = m) (S : Tm l) (a a' A_1 : Tm m),
                   Γ_1 ⊢ S type →
-                    eqM ▸ Γ = Γ_1 ⊗ Δ →
-                      eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) →
-                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 A' : Tm m),
+                    eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⊗ Δ →
+                      eqM ▸ c = a →
+                        eqM ▸ c' = a' →
+                          eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = A_1 →
+                            (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+                (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
                     Γ_1 ⊢ S type →
-                      eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ →
-                        eqM ▸ B = A_1 → eqM ▸ B' = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
-                  (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A_1 : Tm m),
+                      eqM ▸ Γ = Γ_1 ⊗ Δ →
+                        eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) →
+                  (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 A' : Tm m),
                       Γ_1 ⊢ S type →
-                        eqM ▸ Γ = Γ_1 ⊗ Δ →
-                          eqM ▸ p = a →
-                            eqM ▸ p' = a' →
-                              (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
-                    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 = m) (S : Tm l) (A_1 A' : Tm m),
+                        eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ →
+                          eqM ▸ B = A_1 → eqM ▸ B' = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
+                    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A_1 : Tm m),
                         Γ_1 ⊢ S type →
-                          (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⊗ Δ →
-                            eqM ▸ C = A_1 → eqM ▸ C' = A' → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'⌊↑₁m↬l⌋ type) →
-                      (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n + 1 + 1 = m) (S : Tm l) (a a' A_1 : Tm m),
-                          Γ_1 ⊢ S type →
-                            eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⊗ Δ →
-                              eqM ▸ c = a →
-                                eqM ▸ c' = a' →
-                                  eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = A_1 →
-                                    (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
-                        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A_1 : Tm m),
-                          Γ_1 ⊢ S type →
-                            eqM ▸ Γ = Γ_1 ⊗ Δ →
-                              eqM ▸ A.indSigma B C c p = a →
-                                eqM ▸ A'.indSigma B' C' c' p' = a' →
-                                  eqM ▸ C⌈p⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋ :=
+                          eqM ▸ Γ = Γ_1 ⊗ Δ →
+                            eqM ▸ p = a →
+                              eqM ▸ p' = a' →
+                                (eqM ▸ ΣA;B) = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) →
+                      ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a a' A_1 : Tm m),
+                        Γ_1 ⊢ S type →
+                          eqM ▸ Γ = Γ_1 ⊗ Δ →
+                            eqM ▸ A.indSigma B C c p = a →
+                              eqM ▸ A'.indSigma B' C' c' p' = a' →
+                                eqM ▸ C⌈p⌉₀ = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a⌊↑₁m↬l⌋ ≡ a'⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋ :=
   by
-    intro n Γ A B A' B' p p' C C' c c' hAA hBB hppSi hCC hccC ihAA ihBB ihppSi ihCC ihccC
+    intro n Γ A B A' B' p p' C C' c c' hCC hccC hAA hBB hppSi ihCC ihccC ihAA ihBB ihppSi
     intro m l Γ Δ heqM S t t' T hS heqΓ heqt heqt' heqT
     cases heqM
     cases heqΓ
@@ -740,21 +740,6 @@ theorem weakening_sigma_elim_eq :
     cases heqT
     rw [substitution_zero_weak]
     apply IsEqualTerm.sigma_elim_eq
-    · apply ihAA
-      apply hS
-      repeat' rfl
-    · simp [lift_weak_n]
-      rw [lift_weaken_from]
-      rw [extend_expand_context_weaken_from]
-      apply ihBB
-      repeat' rfl
-      apply hS
-      apply gen_ctx_leq Δ
-    · simp [lift_weak_n]
-      rw [←weakening_sigma]
-      apply ihppSi
-      apply hS
-      repeat' rfl
     · have h := gen_ctx_leq Δ
       simp [lift_weak_n]
       rw [lift_weaken_from]
@@ -775,6 +760,21 @@ theorem weakening_sigma_elim_eq :
       · apply congr
         · substitution_norm
         · substitution_norm
+    · apply ihAA
+      apply hS
+      repeat' rfl
+    · simp [lift_weak_n]
+      rw [lift_weaken_from]
+      rw [extend_expand_context_weaken_from]
+      apply ihBB
+      repeat' rfl
+      apply hS
+      apply gen_ctx_leq Δ
+    · simp [lift_weak_n]
+      rw [←weakening_sigma]
+      apply ihppSi
+      apply hS
+      repeat' rfl
 
 theorem weakening_nat_zero_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n},

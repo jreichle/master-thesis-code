@@ -87,12 +87,14 @@ theorem judgment_recursor :
     → motive_3 Γ (.app f a) (substitute_zero a B) (HasType.pi_elim a_1 a_2))
   → (HasTypeSigmaElim : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} 
     {C : Tm (n + 1)} {c : Tm (n + 1 + 1)}
-    (a_1 : Γ ⊢ p ∶ (.sigma A B)) (a_2 : (Γ ⬝ (.sigma A B)) ⊢ C type)
-    (a_3 : (Γ ⬝ A ⬝ B) ⊢ c ∶ (substitute (Subst.weak (.shift (.shift .id))⋄ (.pairSigma v(1) v(0))) C)),
-    motive_3 Γ p (.sigma A B) a_1 → motive_2 (Γ ⬝ (.sigma A B)) C a_2
+    (a_2 : (Γ ⬝ (.sigma A B)) ⊢ C type)
+    (a_3 : (Γ ⬝ A ⬝ B) ⊢ c ∶ (substitute (Subst.weak (.shift (.shift .id))⋄ (.pairSigma v(1) v(0))) C))
+    (a_1 : Γ ⊢ p ∶ (.sigma A B)),
+    motive_2 (Γ ⬝ (.sigma A B)) C a_2
     → motive_3 (Γ ⬝ A ⬝ B) c
       (substitute (Subst.weak (.shift (.shift .id))⋄ (.pairSigma v(1) v(0))) C) a_3
-    → motive_3 Γ (.indSigma A B C c p) (substitute_zero p C) (HasType.sigma_elim a_1 a_2 a_3) )
+    → motive_3 Γ p (.sigma A B) a_1 
+    → motive_3 Γ (.indSigma A B C c p) (substitute_zero p C) (HasType.sigma_elim a_2 a_3 a_1))
   → (HasTypeNatElim : ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)}
     (a_1 : Γ ⬝ 𝒩  ⊢ A type) (a_2 : Γ ⊢ z ∶ A⌈𝓏⌉₀) 
     (a_3 : (Γ ⬝ 𝒩 ⬝ A) ⊢ s ∶ (A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋))
@@ -159,13 +161,16 @@ theorem judgment_recursor :
     → motive_5 Γ ((A.lam b).app a) (substitute_zero a b) (substitute_zero a B) 
       (IsEqualTerm.pi_comp a_1 a_2))
   → (IsEqualTermSigmaComp : ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B C : Tm (n + 1)} 
-    {c : Tm (n + 1 + 1)} (a_1 : Γ ⊢ a ∶ A)
-    (a_2 : Γ ⊢ b ∶ substitute_zero a B) (a_3 : (Γ ⬝ A.sigma B) ⊢ C type)
-    (a_4 : (Γ ⬝ A ⬝ B) ⊢ c ∶ substitute (Subst.weak Weak.id.shift.shift⋄ v(1).pairSigma v(0)) C),
-    motive_3 Γ a A a_1 → motive_3 Γ b (substitute_zero a B) a_2 → motive_2 (Γ ⬝ A.sigma B) C a_3 
+    {c : Tm (n + 1 + 1)}
+    (a_3 : (Γ ⬝ A.sigma B) ⊢ C type)
+    (a_4 : (Γ ⬝ A ⬝ B) ⊢ c ∶ substitute (Subst.weak Weak.id.shift.shift⋄ v(1).pairSigma v(0)) C)
+    (a_1 : Γ ⊢ a ∶ A)
+    (a_2 : Γ ⊢ b ∶ substitute_zero a B),
+    motive_2 (Γ ⬝ A.sigma B) C a_3 
     → motive_3 (Γ ⬝ A ⬝ B) c (substitute (Subst.weak Weak.id.shift.shift⋄ v(1).pairSigma v(0)) C) a_4 
+    → motive_3 Γ a A a_1 → motive_3 Γ b (substitute_zero a B) a_2 
     → motive_5 Γ (A.indSigma B C c (a.pairSigma b)) (substitute (Subst.weak Weak.id⋄ a⋄ b) c)
-      (substitute_zero (a.pairSigma b) C) (IsEqualTerm.sigma_comp a_1 a_2 a_3 a_4))
+      (substitute_zero (a.pairSigma b) C) (IsEqualTerm.sigma_comp a_3 a_4 a_1 a_2))
   → (IsEqualTermNatZeroComp : ∀ {n : Nat} {Γ : Ctx n} {z : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)}
     (a_1 : Γ ⬝ 𝒩  ⊢ A type) (a_2 : Γ ⊢ z ∶ A⌈𝓏⌉₀)
     (a_3 : (Γ ⬝ 𝒩 ⬝ A) ⊢ s ∶ (A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋))
@@ -217,14 +222,14 @@ theorem judgment_recursor :
     → motive_5 Γ (a.pairSigma b) (a'.pairSigma b') (A.sigma B) (IsEqualTerm.sigma_intro_eq a_1 a_2 a_3))
   → (IsEqualTermSigmaElimEq :  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} 
     {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)} {c c' : Tm (n + 1 + 1)} 
-    (a : Γ ⊢ A ≡ A' type) (a_4 : (Γ ⬝ A) ⊢ B ≡ B' type) (a_1 : Γ ⊢ p ≡ p' ∶ A.sigma B)
     (a_2 : (Γ ⬝ A.sigma B) ⊢ C ≡ C' type)
-    (a_3 : (Γ ⬝ A ⬝ B) ⊢ c ≡ c' ∶ substitute (Subst.weak Weak.id.shift.shift⋄ v(1).pairSigma v(0)) C),
-    motive_4 Γ A A' a → motive_4 (Γ ⬝ A) B B' a_4 → motive_5 Γ p p' (A.sigma B) a_1 
-    → motive_4 (Γ ⬝ A.sigma B) C C' a_2
+    (a_3 : (Γ ⬝ A ⬝ B) ⊢ c ≡ c' ∶ substitute (Subst.weak Weak.id.shift.shift⋄ v(1).pairSigma v(0)) C)
+    (a : Γ ⊢ A ≡ A' type) (a_4 : (Γ ⬝ A) ⊢ B ≡ B' type) (a_1 : Γ ⊢ p ≡ p' ∶ A.sigma B),
+    motive_4 (Γ ⬝ A.sigma B) C C' a_2
     → motive_5 (Γ ⬝ A ⬝ B) c c' (substitute (Subst.weak Weak.id.shift.shift⋄ v(1).pairSigma v(0)) C) a_3
+    → motive_4 Γ A A' a → motive_4 (Γ ⬝ A) B B' a_4 → motive_5 Γ p p' (A.sigma B) a_1 
     → motive_5 Γ (A.indSigma B C c p) (A'.indSigma B' C' c' p') (substitute_zero p C)
-      (IsEqualTerm.sigma_elim_eq a a_4 a_1 a_2 a_3))
+      (IsEqualTerm.sigma_elim_eq a_2 a_3 a a_4 a_1 ))
   → (IsEqualTermNatZeroIntroEq : ∀ {n : Nat} {Γ : Ctx n}
     (a : Γ ctx), motive_1 Γ a → motive_5 Γ 𝓏 𝓏 𝒩  (IsEqualTerm.nat_zero_intro_eq a))
   → (IsEqualTermNatSuccIntroEq : ∀ {n : Nat} {Γ : Ctx n} {x x' : Tm n}

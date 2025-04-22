@@ -12,7 +12,7 @@ import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.FunctionalityTyping
 import IMLTT.typed.proofs.admissable.ContextConversion
 
-import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
+-- import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
 
 -- FIXME: redo but use only simplified types, not abominations
 
@@ -31,13 +31,13 @@ theorem sigma_elim_proj_first :
     have ind :=
       by
         apply HasType.sigma_elim
-        · apply hpSi
         · apply C
         · replace_by_conclusion c
           · apply congr
             · rfl
             · substitution_step
           · apply c
+        · apply hpSi
     simp [] at ind
     apply ind
 
@@ -58,7 +58,7 @@ theorem sigma_comp_proj_first :
           · rfl
           · substitution_step
         · apply h
-    have hComp := IsEqualTerm.sigma_comp haA hbB hC hcC
+    have hComp := IsEqualTerm.sigma_comp hC hcC haA hbB
     simp [] at hComp
     apply hComp
 
@@ -183,7 +183,7 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
         apply sigma_elim_proj_second_pre
         · apply hSi
         · apply hpSi
-    have hElim := HasType.sigma_elim hpSi hC hcC
+    have hElim := HasType.sigma_elim hC hcC hpSi
     replace_by_conclusion hElim
     · apply congr
       · rfl
@@ -219,7 +219,7 @@ theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n 
         apply sigma_elim_proj_second_pre
         · apply hSi
         · apply hpSi
-    have hComp := IsEqualTerm.sigma_comp haA hbB hC hcC
+    have hComp := IsEqualTerm.sigma_comp hC hcC haA hbB
     replace_by_conclusion hComp
     · apply congr
       · rfl
@@ -300,9 +300,6 @@ theorem proj_one_type :
         · apply hSi
         · rfl
     apply HasType.sigma_elim
-    · apply useVarwithWeak
-      · apply hSi
-      · simp []
     · apply useWeakTypewithWeak (A := v(2))
       · apply hpSi
       · apply useWeakTypewithWeak
@@ -330,3 +327,6 @@ theorem proj_one_type :
             · rfl
       · rfl
       · rfl
+    · apply useVarwithWeak
+      · apply hSi
+      · simp []
