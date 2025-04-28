@@ -222,8 +222,7 @@ macro "substitution_step" : tactic =>
         try any_goals rfl
         ))
 
--- FIXME: change to target, not goal
-elab "fail_if_no_goal_change " tac:tacticSeq : tactic => do
+elab "fail_if_no_target_change " tac:tacticSeq : tactic => do
   let goalsBefore ← getGoals
   let goalTypesBefore ← goalsBefore.mapM fun g => g.getType
 
@@ -239,7 +238,7 @@ elab "fail_if_no_goal_change " tac:tacticSeq : tactic => do
     throwError "Tactic did not change the goal state."
 
 macro "substitution_norm" : tactic =>
-  `(tactic| (repeat' (fail_if_no_goal_change substitution_step)))
+  `(tactic| (repeat' (fail_if_no_target_change substitution_step)))
 
 -- to be used, when either part of the equation contains metavariables
 macro "substitution_step_meta" : tactic =>

@@ -14,7 +14,7 @@ theorem substitution_conv_zero :
   by
     simp [substitute_zero]
 
-theorem zero_substitution_conv : -- FIXME: name change
+theorem zero_substitution_conv :
     t⌈(ₛidₚ)⋄ σ⌉ = t⌈σ/₀⌉ :=
   by
     simp [zero_substitution]
