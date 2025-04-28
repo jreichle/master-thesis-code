@@ -98,12 +98,7 @@ theorem inhabitant_pi_same_type_diff_val :
     intro hP
     have hA := ctx_extr (boundary_ctx_type hP)
     have h := HasType.pi_intro (HasType.var hP)
-    replace_by_conclusion h
-    · apply congr
-      · rfl
-      · substitution_step
-        substitution_step
-    · apply h
+    replace_by_conclusion_resolve h
 
 theorem leibniz_principle {n : Nat} {Γ : Ctx n} {A p a a' h : Tm n} {P : Tm (n + 1)} :
     (Γ ⬝ A ⊢ P type)

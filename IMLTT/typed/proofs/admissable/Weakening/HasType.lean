@@ -15,8 +15,8 @@ import IMLTT.typed.proofs.admissable.weakening.Helpers
 
 theorem weakening_var :
     ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
-      Γ ⊢ A type →
-        (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A_1 : Tm m),
+    Γ ⊢ A type →
+    (∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x = m) (S : Tm l) (A_1 : Tm m),
             Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) →
           ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l) (a A_1 : Tm m),
             Γ_1 ⊢ S type →

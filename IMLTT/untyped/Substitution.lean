@@ -12,7 +12,7 @@ inductive Subst : Nat → Nat → Type where
 @[simp]
 def substitute_var (σ : Subst m n) (x : Fin n) : Tm m :=
   match σ with
-  | .weak ρ => weaken ρ x
+  | .weak ρ => weaken_var ρ x
   | .shift σ' => shift_tm (substitute_var σ' x)
   | .lift σ' =>
     match x with

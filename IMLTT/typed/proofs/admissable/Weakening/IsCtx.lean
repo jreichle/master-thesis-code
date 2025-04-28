@@ -40,9 +40,9 @@ theorem weakening_gen_extend :
       → eqM ▸ A = A_1
       → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type)
     → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : x + 1 = m) (S : Tm l),
-      Γ_1 ⊢ S type
-      → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ
-      → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
+    Γ_1 ⊢ S type
+    → eqM ▸ Γ ⬝ A = Γ_1 ⊗ Δ
+    → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx :=
   by
     intro n Γ' A hiC hA ihiC ihA m l Γ Δ heqM S hS heqΓ
     cases heqM

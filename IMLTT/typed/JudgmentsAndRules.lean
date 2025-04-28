@@ -58,7 +58,7 @@ mutual
       → HasType (Γ ⬝ A) v(0) (A⌊↑ₚidₚ⌋)
     | weak :
       HasType Γ v(i) A → IsType Γ B
-      → HasType (Γ ⬝ B) (v(i)⌊↑ₚidₚ⌋) (A⌊↑ₚidₚ⌋) -- XXX: change (v(i)⌊↑ₚidₚ⌋) to v(i.succ)?
+      → HasType (Γ ⬝ B) (v(i)⌊↑ₚidₚ⌋) (A⌊↑ₚidₚ⌋) -- XXX: change (v(i)⌊↑ₚidₚ⌋) to v(i.succ)? -> yes
     -- intro rules
     | unit_intro :
       IsCtx Γ
@@ -67,7 +67,7 @@ mutual
       HasType (Γ ⬝ A) b B
       → HasType Γ (λA;b) (ΠA;B)
     | sigma_intro :
-      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ A) B -- XXX: put Γ ⬝ A ⊢ B type to start?
+      HasType Γ a A → HasType Γ b (B⌈a⌉₀) → IsType (Γ ⬝ A) B
       → HasType Γ (a&b) (ΣA;B)
     | nat_zero_intro :
       IsCtx Γ
@@ -76,7 +76,7 @@ mutual
       HasType Γ n 𝒩
       → HasType Γ 𝓈(n) 𝒩
     | iden_intro :
-      IsType Γ A → HasType Γ a A -- XXX: put Γ ⊢ A type second (unusual addition for refl)
+      IsType Γ A → HasType Γ a A
       → HasType Γ (A.refl a) (a ≃[A] a)
     -- universe intro
     | univ_unit :
