@@ -320,10 +320,10 @@ theorem substitution_conv_shift_id_conv :
     intro x
     simp []
 
-theorem substitution_conv_shift_comp_ρσ :
-    ↑ₚρ ₚ∘ₛ (σ⋄ t) = ↑ₛ(ρ ₚ∘ₛ σ⋄ (t⌊ρ⌋)) :=
-  by
-    simp []
+-- theorem substitution_conv_shift_comp_ρσ :
+--     ↑ₚρ ₚ∘ₛ (σ⋄ t) = ↑ₛ(ρ ₚ∘ₛ σ⋄ (t⌊ρ⌋)) :=
+--   by
+--     simp []
 
 theorem substitution_var_conv_shift_id {σ : Subst m n} {x : Fin n} :
     x⌈σ⌉ᵥ⌊↑ₚidₚ⌋ = x⌈↑ₛσ⌉ᵥ :=

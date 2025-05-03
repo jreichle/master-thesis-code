@@ -3,6 +3,7 @@ import IMLTT.untyped.Weakening
 
 import Aesop
 
+-- FIXME: try to replace weak with id and implement implicit coercion of weak to subst
 inductive Subst : Nat → Nat → Type where
   | weak : Weak m n → Subst m n
   | shift : Subst m n → Subst (m + 1) n
@@ -84,7 +85,7 @@ def comp_weaken_substitute (ρ : Weak l m) (σ : Subst m n) : Subst l n :=
     | .weak ξ => .weak (comp_weaken (.shift ρ') ξ)
     | .shift σ' => .shift (comp_weaken_substitute ρ' (.shift σ'))
     | .lift σ' => .shift (comp_weaken_substitute ρ' (.lift σ'))
-    | .extend σ' t => .shift (.extend (comp_weaken_substitute ρ' σ') (weaken ρ' t))
+    | .extend σ' t => (.extend (comp_weaken_substitute (.shift ρ') σ') (weaken (.shift ρ') t))
   | .lift ρ' =>
     match σ with
     | .weak ξ => .weak (comp_weaken (.lift ρ') ξ)
