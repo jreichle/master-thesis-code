@@ -3,13 +3,15 @@ import IMLTT.untyped.Weakening
 
 import Aesop
 
--- FIXME: try to replace weak with id and implement implicit coercion of weak to subst
+-- FIXME: replace weak with id and implement coercion function
+-- or do I need it for termination
 inductive Subst : Nat → Nat → Type where
   | weak : Weak m n → Subst m n
   | shift : Subst m n → Subst (m + 1) n
   | lift : Subst m n → Subst (m + 1) (n + 1)
   | extend : Subst m n → Tm m → Subst m (n + 1)
 
+-- XXX: would this be nicer, no var function (same for weakening)
 @[simp]
 def substitute_var (σ : Subst m n) (x : Fin n) : Tm m :=
   match σ with

@@ -15,48 +15,65 @@ import IMLTT.typed.proofs.admissable.weakening.IsEqualTerm
 
 theorem weakening :
   (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {S : Tm l},
-    (Γ ⊗ Δ) ctx → (Γ ⊢ S type)
-    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ) ctx)) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A : Tm n} {S : Tm l},
-    (Γ ⊗ Δ) ⊢ A type → (Γ ⊢ S type)
-    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ type) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a : Tm n} {S : Tm l},
-    ((Γ ⊗ Δ) ⊢ a ∶ A) → (Γ ⊢ S type)
-    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ a⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A A' : Tm n} {S : Tm l},
-    (Γ ⊗ Δ) ⊢ A ≡ A' type → (Γ ⊢ S type)
-    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ ≡ A'⌊↑₁n↬l⌋ type) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a a' : Tm n} {S : Tm l},
-    ((Γ ⊗ Δ) ⊢ a ≡ a' ∶ A) → (Γ ⊢ S type)
+    (Γ ⊗ Δ) ctx
+    → (Γ ⊢ S type)
+    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ) ctx))
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A : Tm n} {S : Tm l},
+    (Γ ⊗ Δ) ⊢ A type
+    → (Γ ⊢ S type)
+    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ type)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a : Tm n} {S : Tm l},
+    ((Γ ⊗ Δ) ⊢ a ∶ A)
+    → (Γ ⊢ S type)
+    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ a⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A A' : Tm n} {S : Tm l},
+    (Γ ⊗ Δ) ⊢ A ≡ A' type
+    → (Γ ⊢ S type)
+    → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ ≡ A'⌊↑₁n↬l⌋ type)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a a' : Tm n} {S : Tm l},
+    ((Γ ⊗ Δ) ⊢ a ≡ a' ∶ A)
+    → (Γ ⊢ S type)
     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ a⌊↑₁n↬l⌋ ≡ a'⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋) :=
   by
     suffices h :
         (∀ {n : Nat} {Γ : Ctx n},
-      Γ ctx →
-        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
-          Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
-        Γ ⊢ A type →
-          ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 : Tm m),
-            Γ_1 ⊢ S type → eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type) ∧
-      (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
-          (Γ ⊢ a ∶ A) →
-            ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_1 A_1 : Tm m),
-              Γ_1 ⊢ S type →
-                eqM ▸ Γ = Γ_1 ⊗ Δ → eqM ▸ a = a_1 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_1⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋) ∧
-        (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
-            Γ ⊢ A ≡ A' type →
-              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
-                Γ_1 ⊢ S type →
-                  eqM ▸ Γ = Γ_1 ⊗ Δ →
-                    eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type) ∧
-          ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
-            (Γ ⊢ a ≡ a' ∶ A) →
-              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_1 a'_1 A_1 : Tm m),
-                Γ_1 ⊢ S type →
-                  eqM ▸ Γ = Γ_1 ⊗ Δ →
-                    eqM ▸ a = a_1 →
-                      eqM ▸ a' = a'_1 → eqM ▸ A = A_1 → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_1⌊↑₁m↬l⌋ ≡ a'_1⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
+          Γ ctx
+          → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l),
+          Γ_1 ⊢ S type
+          → eqM ▸ Γ = Γ_1 ⊗ Δ
+          → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ctx)
+        ∧ (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+          Γ ⊢ A type
+          → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 : Tm m),
+          Γ_1 ⊢ S type
+          → eqM ▸ Γ = Γ_1 ⊗ Δ
+          → eqM ▸ A = A_1
+          → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ type)
+        ∧ (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+          (Γ ⊢ a ∶ A)
+          → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_1 A_1 : Tm m),
+          Γ_1 ⊢ S type
+          → eqM ▸ Γ = Γ_1 ⊗ Δ
+          → eqM ▸ a = a_1
+          → eqM ▸ A = A_1
+          → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_1⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋)
+        ∧ (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
+          Γ ⊢ A ≡ A' type
+          → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (A_1 A'_1 : Tm m),
+          Γ_1 ⊢ S type
+          → eqM ▸ Γ = Γ_1 ⊗ Δ
+          → eqM ▸ A = A_1
+          → eqM ▸ A' = A'_1
+          → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ A_1⌊↑₁m↬l⌋ ≡ A'_1⌊↑₁m↬l⌋ type)
+        ∧ ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
+          (Γ ⊢ a ≡ a' ∶ A)
+          → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l m) (eqM : n = m) (S : Tm l) (a_1 a'_1 A_1 : Tm m),
+          Γ_1 ⊢ S type
+          → eqM ▸ Γ = Γ_1 ⊗ Δ
+          → eqM ▸ a = a_1
+          → eqM ▸ a' = a'_1
+          → eqM ▸ A = A_1
+          → (Γ_1 ⬝ S ⊗ ⌊↑₁↬l⌋Δ) ⊢ a_1⌊↑₁m↬l⌋ ≡ a'_1⌊↑₁m↬l⌋ ∶ A_1⌊↑₁m↬l⌋
       by
         any_goals repeat' (apply And.intro)
         · intro n l Γ Δ S hiC hS

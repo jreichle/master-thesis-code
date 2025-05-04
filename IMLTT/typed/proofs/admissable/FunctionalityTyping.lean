@@ -19,39 +19,49 @@ import IMLTT.typed.proofs.admissable.FunctionalityTyping.HasType
 set_option pp.proofs true
 
 theorem functionality_typing :
-    (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧
-    (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {T : Tm (n + 1)} {s s' S : Tm l},
-      (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+    (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx)
+    ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {T : Tm (n + 1)} {s s' S : Tm l},
+      (Γ ⊢ s ≡ s' ∶ S)
+      → (Γ ⊢ s ∶ S)
+      → (Γ ⊢ s' ∶ S)
       → (Γ ⬝ S ⊗ Δ ⊢ T type)
-      → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) ≡ (T⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) type
-    ) ∧
-    (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {t T : Tm (n + 1)} {s s' S : Tm l},
-      (Γ ⊢ s ≡ s' ∶ S) → (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S)
+      → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l))
+        ⊢ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉)
+        ≡ (T⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) type)
+    ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) (n + 1)} {t T : Tm (n + 1)} {s s' S : Tm l},
+      (Γ ⊢ s ≡ s' ∶ S)
+      → (Γ ⊢ s ∶ S)
+      → (Γ ⊢ s' ∶ S)
       → (Γ ⬝ S ⊗ Δ ⊢ t ∶ T)
-      → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l)) ⊢
-        (t⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) ≡ (t⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉) 
-        ∶ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉)
-    ) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A)) :=
+      → (Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l))
+        ⊢ (t⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉)
+        ≡ (t⌈s'/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉)
+        ∶ (T⌈s/ₙ (Nat.le_of_succ_le_succ (gen_ctx_leq Δ))⌉))
+    ∧ (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type)
+    ∧ (∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → (Γ ⊢ a ≡ a' ∶ A)) :=
   by
     suffices h :
-  (∀ {n : Nat} {Γ : Ctx n},
-      Γ ctx →
-        ∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+      (∀ {n : Nat} {Γ : Ctx n},
+        Γ ctx
+        → ∀ (m l k : Nat) {leq : l ≤ m} 
+          (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
-        Γ ⊢ A type →
-          (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-              (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
+          (Γ_1 ⊢ s ≡ s' ∶ S)
+          → (Γ_1 ⊢ s ∶ S)
+          → (Γ_1 ⊢ s' ∶ S)
+          → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+          → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+          Γ ⊢ A type
+          → (∀ (m l k : Nat) {leq : l ≤ m}
+            (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+            (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+            (Γ_1 ⊢ s ≡ s' ∶ S)
+            → (Γ_1 ⊢ s ∶ S)
+            → (Γ_1 ⊢ s' ∶ S)
+            → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+            → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+            ∧
             ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
               (eqM : n = m + 1),
               (Γ_1 ⊢ s ≡ s' ∶ S) →
