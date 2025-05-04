@@ -40,7 +40,7 @@ theorem judgment_recursor :
   → (HasTypeWeak : ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x}
     (a : Γ ⊢ v(i) ∶ A) (a1 : Γ ⊢ B type),
     motive_3 Γ v(i) A a → motive_2 Γ B a1
-    → motive_3 (Γ ⬝ B) (weaken (.shift .id) v(i)) (weaken (.shift .id) A) (HasType.weak a a1))
+    → motive_3 (Γ ⬝ B) (v(i.succ)) (weaken (.shift .id) A) (HasType.weak a a1))
   → (HasTypeUnitIntro : ∀ {n : Nat} {Γ : Ctx n}
     (a : Γ ctx), motive_1 Γ a → motive_3 Γ ⋆ 𝟙 (HasType.unit_intro a))
   → (HasTypePiIntro : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)} 
@@ -151,7 +151,7 @@ theorem judgment_recursor :
   → (IsEqualTermWeakEq : ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x}
     (a : Γ ⊢ v(i) ≡ v(i) ∶ A) (a1 : Γ ⊢ B type),
     motive_5 Γ v(i) v(i) A a → motive_2 Γ B a1
-    → motive_5 (Γ ⬝ B) (weaken (.shift .id) v(i)) (weaken (.shift .id) v(i)) (weaken (.shift .id) A) (IsEqualTerm.weak_eq a a1))
+    → motive_5 (Γ ⬝ B) (v(i.succ)) (v(i.succ)) (weaken (.shift .id) A) (IsEqualTerm.weak_eq a a1))
   → (IsEqualTermUnitComp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {a : Tm n} 
     (a_1 : (Γ ⬝ 𝟙) ⊢ A type) (a_2 : Γ ⊢ a ∶ substitute_zero ⋆ A),
     motive_2 (Γ ⬝ 𝟙) A a_1 → motive_3 Γ a (substitute_zero ⋆ A) a_2 

@@ -35,16 +35,14 @@ theorem weakening_var :
     cases Δ with
     | start =>
       cases heqΓ
-      replace_by_conclusion HasType.weak
+      have h := HasType.weak (HasType.var hA) hS
+      replace_by_conclusion h
       · apply congr
         · apply congr
           · rfl
-          · substitution_step_meta
+          · substitution_step
         · substitution_step_meta
-          rw (config := {occs := .pos [2]}) [←weakening_shift_id]
-      · apply HasType.weak
-        · apply HasType.var hA
-        · apply hS
+      · apply h
     | expand Δ' S' =>
       cases heqΓ
       replace_by_conclusion HasType.var

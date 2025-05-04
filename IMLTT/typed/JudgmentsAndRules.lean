@@ -58,7 +58,7 @@ mutual
       → HasType (Γ ⬝ A) v(0) (A⌊↑ₚidₚ⌋)
     | weak :
       HasType Γ v(i) A → IsType Γ B
-      → HasType (Γ ⬝ B) (v(i)⌊↑ₚidₚ⌋) (A⌊↑ₚidₚ⌋) -- XXX: change (v(i)⌊↑ₚidₚ⌋) to v(i.succ)? -> yes
+      → HasType (Γ ⬝ B) v(i.succ) (A⌊↑ₚidₚ⌋) -- XXX: change (v(i)⌊↑ₚidₚ⌋) to v(i.succ)? -> yes
     -- intro rules
     | unit_intro :
       IsCtx Γ
@@ -173,7 +173,7 @@ mutual
       → IsEqualTerm (Γ ⬝ A) v(0) v(0) (A⌊↑ₚidₚ⌋)
     | weak_eq :
       IsEqualTerm Γ v(i) v(i) A → IsType Γ B
-      → IsEqualTerm (Γ ⬝ B) (v(i)⌊↑ₚidₚ⌋) (v(i)⌊↑ₚidₚ⌋) (A⌊↑ₚidₚ⌋)
+      → IsEqualTerm (Γ ⬝ B) v(i.succ) v(i.succ) (A⌊↑ₚidₚ⌋)
     -- computation rules
     | unit_comp :
       IsType (Γ ⬝ 𝟙) A → HasType Γ a (A⌈⋆⌉₀)
@@ -286,5 +286,3 @@ notation:90 Γ " ⊢ " A  " type" => IsType Γ A -- FIXME: interplay between ist
 notation:90 Γ " ⊢ " s " ∶ " A => HasType Γ s A
 notation:90 Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
 notation:90 Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
-
-#check IsEqualTerm.weak_eq

@@ -43,7 +43,7 @@ theorem weakening_var_eq :
         apply congr
         rfl
         substitution_step_meta
-        rw (config := {occs := .pos [2]}) [←weakening_shift_id]
+        substitution_step_meta
       · apply IsEqualTerm.weak_eq
         · apply IsEqualTerm.var_eq hA
         · apply hS
