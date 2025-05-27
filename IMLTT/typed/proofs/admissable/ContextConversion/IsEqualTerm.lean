@@ -4,9 +4,7 @@ import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
 
-import IMLTT.typed.proofs.boundary.BoundaryIsCtx
 import IMLTT.typed.proofs.admissable.Weakening
-import IMLTT.typed.proofs.admissable.Substitution
 
 theorem context_conversion_var_eq :
     ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},

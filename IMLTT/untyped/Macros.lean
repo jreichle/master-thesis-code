@@ -15,6 +15,21 @@ open Lean.Meta
 open Lean.Elab.Tactic
 open Lean.TSyntax
 
+elab "fail_if_no_target_change" tac:tacticSeq : tactic => do
+  let goalsBefore ← getGoals
+  let goalTypesBefore ← goalsBefore.mapM fun g => g.getType
+
+  try
+    evalTactic tac
+  catch _ =>
+    throwError "Inner tactic failed."
+
+  let goalsAfter ← getGoals
+  let goalTypesAfter ← goalsAfter.mapM fun g => g.getType
+
+  if goalTypesBefore == goalTypesAfter then
+    throwError "Tactic did not change the target state."
+
 -- macros for easier usage of de bruijn abstractions
 
 macro "context_info_nat_relations" : tactic =>
@@ -182,13 +197,12 @@ partial def useCases : TacticM Unit :=
     (do
       let lctx ← getLCtx
       for ldecl in lctx do
-        if ! LocalDecl.isImplementationDetail ldecl then
-          if Expr.isAppOfArity (LocalDecl.type ldecl) ``Eq 3 then
-            try
+        if !LocalDecl.isImplementationDetail ldecl then
+          if (LocalDecl.type ldecl).isEq then
+            try -- FIXME: try catch into cases function?
               cases (LocalDecl.fvarId ldecl)
             catch _ =>
               logInfo m!"error on case: {ldecl.type}, stopping here"
-              return
     )
 
 elab "use_cases" : tactic =>
@@ -199,58 +213,50 @@ macro "split_and_cases" : tactic =>
       (split
        any_goals use_cases))
 
+macro "substitution_eq_term_var" : tactic =>
+  `(tactic| (
+    try substitution_var_sub                 -- t[σ] = t[σ'] to vᵢ[σ] = vᵢ[σ']
+    try weakening_var_weak                   -- t[ρ] = t[ρ'] to vᵢ[ρ] = vᵢ[ρ']
+    try conversion_var_sub                   -- t[σ] = t[ρ] to vᵢ[σ] = vᵢ[ρ]
+    try conversion_var_sub_symm              -- t[ρ] = t[σ] to vᵢ[ρ] = vᵢ[σ]
+    try substitution_var_substitute_id       -- t[σ] = t to vᵢ[σ] = vᵢ
+    try substitution_var_substitute_id_symm  -- t = t[σ] to vᵢ = vᵢ[σ]
+    try weakening_var_weaken_id              -- t[ρ] = t to vᵢ[ρ] = vᵢ
+    try weakening_var_weaken_id_symm         -- t = t[ρ] to vᵢ = vᵢ[ρ]
+  ))
 
 macro "substitution_step" : tactic =>
-  `(tactic|
-      (
-        try substitution_to_composition
-        try substitution_nat_relation_lemmatas
-        try simp []
-        try substitution_var_sub
-        try weakening_var_weak
-        try conversion_var_sub
-        try conversion_var_sub_symm
-        try substitution_var_substitute_id
-        try substitution_var_substitute_id_symm
-        try weakening_var_weaken_id
-        try weakening_var_weaken_id_symm
-        try substitution_from_composition
-        try simp []
-        try split_and_cases
-        try simp []
-        try repeat' apply And.intro
-        try any_goals rfl
-        ))
-
-elab "fail_if_no_target_change " tac:tacticSeq : tactic => do
-  let goalsBefore ← getGoals
-  let goalTypesBefore ← goalsBefore.mapM fun g => g.getType
-
-  try
-    evalTactic tac
-  catch _ =>
-    throwError "Inner tactic failed."
-
-  let goalsAfter ← getGoals
-  let goalTypesAfter ← goalsAfter.mapM fun g => g.getType
-
-  if goalTypesBefore == goalTypesAfter then
-    throwError "Tactic did not change the goal state."
+  `(tactic| (
+    try simp []
+    try substitution_nat_relation_lemmatas
+    try substitution_to_composition
+    try simp []
+    try substitution_eq_term_var
+    try substitution_from_composition
+    try simp []
+    try split_and_cases
+    try simp []
+    try repeat' apply And.intro
+    try any_goals rfl
+  ))
 
 macro "substitution_norm" : tactic =>
   `(tactic| (repeat' (fail_if_no_target_change substitution_step)))
 
 -- to be used, when either part of the equation contains metavariables
 macro "substitution_step_meta" : tactic =>
-  `(tactic|
-      (
-        try substitution_to_composition
-        try substitution_nat_relation_lemmatas
-        try simp []
-        try substitution_from_composition
-        try simp []
-        try split_and_cases
-        try simp []
-        try repeat' apply And.intro
-        try any_goals rfl
-        ))
+  `(tactic| (
+    try simp []
+    try substitution_nat_relation_lemmatas
+    try substitution_to_composition
+    try simp []
+    try substitution_from_composition
+    try simp []
+    try split_and_cases
+    try simp []
+    try repeat' apply And.intro
+    try any_goals rfl
+  ))
+
+macro "substitution_norm_meta" : tactic =>
+  `(tactic| (repeat' (fail_if_no_target_change substitution_step_meta)))

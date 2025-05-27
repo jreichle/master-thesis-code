@@ -136,31 +136,19 @@ theorem weakening_comp {ρ : Weak l m} {ρ' : Weak m n} {t : Tm n} :
               · apply weakening_comp
               · apply weakening_comp
 
-theorem weakening_lift_shift_comp {ρ : Weak m n} :
-    ↑ₚidₚ ₚ∘ₚ ρ = ⇑ₚρ ₚ∘ₚ ↑ₚidₚ :=
-  by
-    match ρ with
-    | .id =>
-      rfl
-    | .shift ρ' =>
-      apply congrArg Weak.shift (weakening_lift_shift_comp (ρ := ρ'))
-    | .lift ρ' =>
-      rfl
-
 @[simp]
 theorem weakening_shift_id {ρ : Weak m n} {t : Tm n} :
     t⌊ρ⌋⌊↑ₚidₚ⌋ = t⌊↑ₚρ⌋ :=
   by
-    apply weakening_comp
+    simp [weakening_comp]
 
 @[simp]
 theorem weakening_shift_id_lift {ρ : Weak m n} {t : Tm n} :
     t⌊↑ₚidₚ⌋⌊⇑ₚρ⌋ = t⌊↑ₚρ⌋ :=
   by
-    rw [weakening_comp]
-    rw [←weakening_lift_shift_comp]
-    rfl
-
+    simp [weakening_comp]
+    rw [←weakening_shift_id]
+    simp [←weakening_comp]
 
 -- comp_weaken_substitute
 
@@ -174,14 +162,7 @@ theorem substitution_var_lift_n_comp_ρσ {n : Nat} {x : Fin (z + n + 1)} :
   by
     match n with
     | .zero =>
-      match x with
-      | .mk i hFin =>
-        match i with
-        | .zero => 
-          simp []
-          rfl
-        | .succ i' =>
-          simp_all
+      simp []
     | .succ n' =>
       match x with
       | .mk i hFin =>
@@ -469,6 +450,14 @@ theorem substitution_comp_ρσ {t : Tm n} :
               · apply substitution_comp_ρσ
               · apply substitution_comp_ρσ
 
+@[simp]
+theorem substitution_conv_shift_id :
+    t⌈σ⌉⌊↑ₚidₚ⌋ = t⌈↑ₛσ⌉ :=
+  by
+    simp [substitution_comp_ρσ]
+    apply substitution_var_substitute
+    simp [←substitution_var_comp_ρσ]
+
 -- comp_substitute_weaken
 
 theorem substitution_lift_comp_σρ {t : Tm (n + 1)} :
@@ -507,14 +496,6 @@ theorem substitution_lift_n_comp_σρ {l : Nat} {t : Tm (n + l)} :
     | .succ l' =>
       apply substitution_var_substitute
       apply substitution_var_lift_n_comp_σρ
-
-@[simp]
-theorem substitution_conv_shift_id :
-    t⌈σ⌉⌊↑ₚidₚ⌋ = t⌈↑ₛσ⌉ :=
-  by
-    simp [substitution_comp_ρσ]
-    apply substitution_var_substitute
-    simp [←substitution_var_comp_ρσ]
 
 @[simp]
 theorem substitution_var_shift_id_lift :

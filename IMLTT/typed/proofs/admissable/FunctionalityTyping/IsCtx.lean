@@ -1,16 +1,9 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
-import IMLTT.untyped.proofs.Weakening
-import IMLTT.untyped.proofs.Substitution
-import IMLTT.untyped.proofs.Contexts
-import IMLTT.untyped.proofs.Mixture
+import IMLTT.untyped.Contexts
 
 import IMLTT.typed.JudgmentsAndRules
-import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.Weakening
-import IMLTT.typed.proofs.admissable.Substitution
 
 theorem functionality_typing_empty :
   ∀ (m l k : Nat) {leq : l ≤ m} (Γ : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1)) (eqM : 0 = k + 1)
@@ -19,10 +12,8 @@ theorem functionality_typing_empty :
       (Γ ⊢ s ∶ S) → (Γ ⊢ s' ∶ S) → eqM ▸ ε = Γ ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type
       :=
   by
-    intro m l hleq Γ Δ heqM 
+    intro m l hleq Γ Δ heqM
     omega
-
--- set_option pp.proofs true
 
 theorem functionality_typing_extend :
   ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},

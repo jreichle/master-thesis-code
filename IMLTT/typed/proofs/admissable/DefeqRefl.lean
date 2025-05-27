@@ -1,17 +1,15 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+import IMLTT.untyped.Contexts
+import IMLTT.untyped.proofs.Contexts
 
 import IMLTT.typed.JudgmentsAndRules
 import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.Weakening
 
 import IMLTT.typed.proofs.admissable.defeqrefl.IsCtx
 import IMLTT.typed.proofs.admissable.defeqrefl.IsType
 import IMLTT.typed.proofs.admissable.defeqrefl.HasType
-
-import aesop
 
 theorem defeq_refl :
     (∀ {n : Nat} {Γ : Ctx n}, Γ ctx → Γ ctx) ∧

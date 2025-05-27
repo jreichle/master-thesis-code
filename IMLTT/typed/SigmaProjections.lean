@@ -22,21 +22,12 @@ theorem sigma_elim_proj_first :
     intro hSi hpSi
     have h := sigma_is_type_inversion hSi
     have C := weakening_type (And.left h) hSi
-    have c : (Γ ⬝ A ⬝ B ⊢ v(0)⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) :=
-        by
-          apply HasType.weak
-          · apply HasType.var
-            apply And.left h
-          · apply And.right h
+    have c := HasType.weak (HasType.var h.left) (h.right)
     have ind :=
       by
         apply HasType.sigma_elim
         · apply C
-        · replace_by_conclusion c
-          · apply congr
-            · rfl
-            · substitution_step
-          · apply c
+        · apply_subst_eq c
         · apply hpSi
     simp [] at ind
     apply ind
@@ -51,22 +42,14 @@ theorem sigma_comp_proj_first :
     have hB := And.right hSiInv
     have hC := weakening_type hA hSi
     have hcC : Γ ⬝ A ⬝ B ⊢ v(0)⌊↑ₚidₚ⌋ ∶ A⌊↑ₚidₚ⌋⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ :=
-      by
-        have h := weakening_term (HasType.var hA) hB
-        replace_by_conclusion h
-        · apply congr
-          · rfl
-          · substitution_step
-        · apply h
+      by apply_subst_eq weakening_term (HasType.var hA) hB
     have hComp := IsEqualTerm.sigma_comp hC hcC haA hbB
-    simp [] at hComp
-    apply hComp
+    apply_subst_eq hComp
 
-theorem sigma_elim_proj_second_pre' :
+theorem sigma_elim_proj_second_pre :
     Γ ⊢ ΣA;B type → (Γ ⊢ p ∶ ΣA;B)
     → Γ ⬝ A ⬝ B ⊢ v(0) ∶
-        B⌊⇑ₚ↑ₚidₚ⌋⌊⇑ₚ↑ₚidₚ⌋
-        ⌈.indSigma (A⌊↑ₚ↑ₚidₚ⌋) (B⌊⇑ₚ↑ₚ↑ₚidₚ⌋) (A⌊↑ₚ↑ₚ↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) (v(1)&v(0))⌉₀ :=
+        B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ :=
   by
     intro hSi hpSi
     have hSiInv := sigma_is_type_inversion hSi
@@ -107,11 +90,7 @@ theorem sigma_elim_proj_second_pre' :
             · apply weakening_type
               · apply weakening_type hA hA
               · apply hB
-            · replace_by_conclusion h2
-              · apply congr
-                · rfl
-                · substitution_step
-              · apply h2
+            · apply_subst_eq h2
           · apply HasType.sigma_intro
             · apply useWeakwithWeak (i := 0) (A := A⌊↑ₚidₚ⌋)
               · apply HasType.var hA
@@ -137,24 +116,7 @@ theorem sigma_elim_proj_second_pre' :
       simp []
       apply HasType.var hB
     · apply IsEqualType.type_symm
-      apply h3
-
-theorem sigma_elim_proj_second_pre :
-    Γ ⊢ ΣA;B type → (Γ ⊢ p ∶ ΣA;B)
-    → Γ ⬝ A ⬝ B ⊢ v(0) ∶
-        B⌊⇑ₚ↑ₚidₚ⌋
-          ⌈A⌊↑ₚidₚ⌋.indSigma (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉
- :=
-  by
-    intro hSi hpSi
-    have h := sigma_elim_proj_second_pre' hSi hpSi
-    replace_by_conclusion h
-    · apply congr
-      · rfl
-      · substitution_step
-        substitution_step
-        any_goals substitution_step
-    · apply h
+      apply_subst_eq h3
 
 theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 1)} :
     Γ ⊢ ΣA;B type → (Γ ⊢ p ∶ ΣA;B)
@@ -175,7 +137,6 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
         · apply sigma_elim_proj_first
           · apply weakening_type hSi hSi
           · apply HasType.var hSi
-    have hcCpre := sigma_elim_proj_second_pre hSi hpSi
     have hcC : Γ ⬝ A ⬝ B ⊢ v(0) ∶
                   B⌊⇑ₚ↑ₚidₚ⌋⌈A⌊↑ₚidₚ⌋.indSigma
                     (B⌊1ₙ⇑ₚ(↑ₚidₚ)⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) v(0)⌉₀⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ :=
@@ -184,11 +145,7 @@ theorem sigma_elim_proj_second {n : Nat} {Γ : Ctx n} {A p : Tm n} {B : Tm (n + 
         · apply hSi
         · apply hpSi
     have hElim := HasType.sigma_elim hC hcC hpSi
-    replace_by_conclusion hElim
-    · apply congr
-      · rfl
-      · substitution_norm
-    · apply hElim
+    apply_subst_eq hElim
 
 theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n + 1)} :
     Γ ⊢ ΣA;B type → (Γ ⊢ a ∶ A) → (Γ ⊢ b ∶ B⌈a⌉₀)
@@ -220,11 +177,7 @@ theorem sigma_comp_proj_second {n : Nat} {Γ : Ctx n} {A a b : Tm n} {B : Tm (n 
         · apply hSi
         · apply hpSi
     have hComp := IsEqualTerm.sigma_comp hC hcC haA hbB
-    replace_by_conclusion hComp
-    · apply congr
-      · rfl
-      · substitution_norm
-    · apply hComp
+    apply_subst_eq hComp
 
 def π₁ : Tm n :=
   λ𝒰; λ(Πv(0);𝒰); λ(Σv(1);(Πv(2);𝒰)); (.indSigma v(2) (Πv(3);𝒰) (v(3)) (v(1)) (v(0)))
@@ -232,7 +185,6 @@ def π₁ : Tm n :=
 def π₂ : Tm n :=
   λ𝒰; λ(Πv(0);𝒰); λ(Σv(1);(Πv(2);𝒰)); (.indSigma v(2) (Πv(3);𝒰)
     ((Πv(3);𝒰)⌈π₁◃v(3)◃(Πv(3);𝒰)◃v(0)⌉₀)
-    -- (B⌊⇑ₚ↑ₚidₚ⌋⌈.indSigma (A⌊↑ₚidₚ⌋) (B⌊⇑ₚ↑ₚidₚ⌋) (A⌊↑ₚidₚ⌋⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) (v(0))⌉₀)
     (v(0)) (v(0)))
 
 theorem proj_one_type :

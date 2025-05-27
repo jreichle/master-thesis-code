@@ -7,11 +7,11 @@ import IMLTT.typed.JudgmentsAndRules
 set_option pp.proofs true
 
 theorem judgment_recursor :
-  ∀ {motive_1 : {n : Nat} → (Γ : Ctx n) → IsCtx Γ → Prop}
-    {motive_2 : {n : Nat} → (Γ : Ctx n) → (A : Tm n) → IsType Γ A → Prop}
-    {motive_3 : {n : Nat} → (Γ : Ctx n) → (a A : Tm n) → HasType Γ a A → Prop}
-    {motive_4 : {n : Nat} → (Γ : Ctx n) → (A A' : Tm n) → IsEqualType Γ A A' → Prop}
-    {motive_5 : {n : Nat} → (Γ : Ctx n) → (a a' A : Tm n) → IsEqualTerm Γ a a' A → Prop},
+  ∀ {motive_1 : {n : Nat} → (Γ : Ctx n) → Γ ctx → Prop}
+    {motive_2 : {n : Nat} → (Γ : Ctx n) → (A : Tm n) → (Γ ⊢ A type) → Prop}
+    {motive_3 : {n : Nat} → (Γ : Ctx n) → (a A : Tm n) → (Γ ⊢ a ∶ A) → Prop}
+    {motive_4 : {n : Nat} → (Γ : Ctx n) → (A A' : Tm n) → (Γ ⊢ A ≡ A' type) → Prop}
+    {motive_5 : {n : Nat} → (Γ : Ctx n) → (a a' A : Tm n) → (Γ ⊢ a ≡ a' ∶ A) → Prop},
   (IsCtxEmpty : motive_1 ε IsCtx.empty)
   → (IsCtxExtend : ∀ {x : Nat} {Γ : Ctx x} {A : Tm x} (a : Γ ctx) (a_1 : Γ ⊢ A type),
     motive_1 Γ a → motive_2 Γ A a_1 → motive_1 (Γ ⬝ A) (IsCtx.extend a a_1))

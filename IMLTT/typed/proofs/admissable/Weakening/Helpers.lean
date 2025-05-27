@@ -33,3 +33,9 @@ theorem helper_weakening_iden_elim_B_refl {leq : l ≤ n} :
     = B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉⌊↑₁n + 1↬l⌋ :=
   by
     substitution_norm
+
+theorem helper_weakkening_nat_elim_succ {leq : l ≤ n} :
+    A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋⌊⇑ₙn + 2⊖l↑₁⌋ = A⌊1ₙ⇑ₚ(⇑ₙn⊖l↑₁)⌋⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ :=
+  by
+    substitution_norm
+

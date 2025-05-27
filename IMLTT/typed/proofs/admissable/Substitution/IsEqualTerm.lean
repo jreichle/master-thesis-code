@@ -33,29 +33,18 @@ theorem substitution_gen_var_eq : ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
     cases heqT
     cases Δ with
     | start =>
-      have h := defeq_refl_term hsS
-      replace_by_conclusion h
-      · substitution_step
-      · apply h
+      cases heqΓ
+      apply_subst_eq defeq_refl_term hsS
     | expand Δ' S' =>
       cases heqΓ
       cases n with
       | zero =>
-        cases hleq
-        replace_by_conclusion hsS
-        · apply congr
-          · substitution_step
-          · substitution_step
-        · apply hsS
+        cases Δ'
       | succ n' =>
-        replace_by_conclusion IsEqualTerm.var_eq
-        · apply congr
-          · substitution_step
-          · substitution_step
-        · apply IsEqualTerm.var_eq
-          apply ihA
-          repeat' rfl
-          apply hsS
+        apply_subst_eq IsEqualTerm.var_eq
+        apply ihA
+        repeat' rfl
+        apply hsS
 
 theorem substitution_gen_weak_eq : ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x},
    (Γ ⊢ v(i) ≡ v(i) ∶ A) →
@@ -88,9 +77,7 @@ theorem substitution_gen_weak_eq : ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B :
       cases Δ with
       | start =>
         cases heqΓ
-        replace_by_conclusion hvvA
-        · substitution_step
-        · apply hvvA
+        apply_subst_eq hvvA
       | expand Δ' T =>
         have h := gen_ctx_neq Δ'
         omega
@@ -104,34 +91,26 @@ theorem substitution_gen_weak_eq : ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B :
         | expand Δ' T =>
           cases heqΓ
           have h := gen_ctx_leq Δ'
-          replace_by_conclusion weakening_term_eq
-          · apply congr
-            apply congr
+          apply_subst_eq weakening_term_eq
+          rw [substitution_shift_id_lift]
+          · rw [←substitution_conv_var]
+            apply ihvvA
             · rfl
-            · substitution_step
-            · substitution_step
-              rw [←substitution_conv_shift_id]
-          · apply weakening_term_eq
-            · rw [←substitution_conv_var]
-              apply ihvvA
-              · rfl
-              · rfl
-              · rfl
-              · rfl
-              · apply hsS
-              · rfl
-            · apply ihB
-              · rfl
-              · rfl
-              · apply hsS
-              · rfl
+            · rfl
+            · rfl
+            · rfl
+            · apply hsS
+            · rfl
+          · apply ihB
+            · rfl
+            · rfl
+            · apply hsS
+            · rfl
       case isFalse hF =>
         cases Δ with
         | start =>
           cases heqΓ
-          replace_by_conclusion hvvA
-          · substitution_step
-          · apply hvvA
+          apply_subst_eq hvvA
         | expand Δ' T =>
           have h := gen_ctx_leq Δ'
           omega
@@ -163,27 +142,19 @@ theorem substitution_gen_unit_comp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)}
     cases heqT
     rw [substitution_zero_lift]
     apply IsEqualTerm.unit_comp
-    · replace_by_conclusion ihA
-      · apply congr
-        apply congr
-        · rfl
-        · rw [←substitution_unit]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-      · apply ihA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihaA
-      · apply congr
-        apply congr
-        · rfl
-        · rfl
-        · simp only [lift_subst_n]
-          rw [←substitution_tt]
-          rw [←substitution_zero_lift]
-      · apply ihaA
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihA
+      rw [←substitution_unit]
+      rw [extend_expand_context_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihaA
+      · simp only [lift_subst_n]
+        rw [←substitution_tt]
+        rw [←substitution_zero_lift]
+      repeat' rfl
+      apply hsS
 
 theorem substitution_gen_pi_comp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)} {a : Tm n},
    (Γ ⬝ A ⊢ b ∶ B) →
@@ -214,15 +185,9 @@ theorem substitution_gen_pi_comp : ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : 
     rw [substitution_zero_lift]
     rw [substitution_zero_lift]
     apply IsEqualTerm.pi_comp
-    · replace_by_conclusion ihbB
-      · apply congr
-        apply congr
-        · rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · rw [lift_n_substitution]
-      · apply ihbB
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihbB
+      repeat' rfl
+      apply hsS
     · apply ihaA
       · rfl
       · rfl
@@ -282,23 +247,19 @@ theorem substitution_gen_sigma_comp :
       · rfl
       · apply hsS
       · rfl
-    · replace_by_conclusion ihcC
-      · apply congr
-        apply congr
-        · simp []
-          rw [lift_n_substitution]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · simp only [lift_subst_n]
-          rw [helper_substitution_sigma_elim_C]
-          rw [lift_n_substitution]
-          rw [lift_n_substitution]
-      · apply ihcC
-        · rfl
-        · rfl
-        · rfl
-        · apply hsS
-        · rfl
+    · apply_subst_eq ihcC
+      · simp []
+        rw [lift_n_substitution]
+        rw [extend_expand_context_n_substitution]
+      · simp []
+        simp only [lift_n_substitution]
+        rfl
+      · simp []
+        rw [helper_substitution_sigma_elim_C]
+        simp only [lift_n_substitution]
+        rfl
+      repeat' rfl
+      apply hsS
     · apply ihaA
       · rfl
       · rfl
@@ -357,46 +318,33 @@ theorem substitution_gen_nat_zero_comp :
     cases heqT
     rw [substitution_zero_lift]
     apply IsEqualTerm.nat_zero_comp
-    · replace_by_conclusion ihA
-      · apply congr
-        apply congr
-        · rfl
-        · rw [←substitution_nat]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-      · apply ihA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihzA
-      · apply congr
-        apply congr
-        · rfl
-        · substitution_step
-        · simp only [lift_subst_n]
-          rw [←substitution_var_zero]
-          rw [←substitution_zero_lift]
-      · apply ihzA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihsA
-      · apply congr
-        apply congr
-        apply congr
-        · rfl
-        · substitution_step
-          rw [lift_n_substitution]
-          rw [←substitution_nat]
-          rw [extend_expand_context_n_substitution]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · context_info_nat_relations
-          simp only [lift_subst_n]
-          rw [←helper_substitution_nat_elim]
-          simp only [lift_n_substitution]
-          rfl
-      · apply ihsA
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihA
+      rw [←substitution_nat]
+      rw [extend_expand_context_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihzA
+      simp only [lift_subst_n]
+      rw [←substitution_var_zero]
+      rw [substitution_zero_lift]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihsA
+      · simp []
+        rw [←substitution_nat]
+        rw [extend_expand_context_n_substitution]
+        rw [lift_n_substitution]
+        rw [extend_expand_context_n_substitution]
+      · substitution_norm
+      · context_info_nat_relations
+        simp only [lift_subst_n]
+        rw [←helper_substitution_nat_elim]
+        simp only [lift_n_substitution]
+        rfl
+      repeat' rfl
+      apply hsS
     · rw [←substitution_nat]
       rw [←substitution_var_zero]
       apply ihzNat
@@ -451,46 +399,33 @@ theorem substitution_gen_nat_succ_comp :
     rw [substitution_zero_lift]
     rw [helper_substitution_sigma_elim_c]
     apply IsEqualTerm.nat_succ_comp
-    · replace_by_conclusion ihA
-      · apply congr
-        apply congr
-        · rfl
-        · rw [←substitution_nat]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-      · apply ihA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihzA
-      · apply congr
-        apply congr
-        · rfl
-        · substitution_step
-        · simp only [lift_subst_n]
-          rw [←substitution_var_zero]
-          rw [←substitution_zero_lift]
-      · apply ihzA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihsA
-      · apply congr
-        apply congr
-        apply congr
-        · rfl
-        · substitution_step
-          rw [lift_n_substitution]
-          rw [←substitution_nat]
-          rw [extend_expand_context_n_substitution]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · context_info_nat_relations
-          simp only [lift_subst_n]
-          rw [←helper_substitution_nat_elim]
-          simp only [lift_n_substitution]
-          rfl
-      · apply ihsA
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihA
+      rw [←substitution_nat]
+      rw [extend_expand_context_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihzA
+      simp only [lift_subst_n]
+      rw [←substitution_var_zero]
+      rw [substitution_zero_lift]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihsA
+      · simp []
+        rw [←substitution_nat]
+        rw [extend_expand_context_n_substitution]
+        rw [lift_n_substitution]
+        rw [extend_expand_context_n_substitution]
+      · substitution_norm
+      · context_info_nat_relations
+        simp only [lift_subst_n]
+        rw [←helper_substitution_nat_elim]
+        simp only [lift_n_substitution]
+        rfl
+      repeat' rfl
+      apply hsS
     · rw [←substitution_nat]
       apply ihsNat
       · rfl
@@ -638,29 +573,21 @@ theorem substitution_gen_unit_elim_eq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm (n
     cases heqT
     rw [substitution_zero_lift]
     apply IsEqualTerm.unit_elim_eq
-    · replace_by_conclusion ihAA
-      · apply congr
-        apply congr
-        apply congr
-        · rfl
-        · rw [←substitution_unit]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · substitution_step
-      · apply ihAA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihaaA
-      · apply congr
-        apply congr
-        · rfl
-        · rfl
-        · simp only [lift_subst_n]
-          rw [←substitution_tt]
-          rw [←substitution_zero_lift]
-      · apply ihaaA
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihAA
+      rw [←substitution_unit]
+      rw [extend_expand_context_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihaaA
+      · simp only [lift_subst_n]
+        rw [←substitution_tt]
+        rw [←substitution_zero_lift]
+      repeat' rfl
+      apply hsS
     · rw [←substitution_unit]
       apply ihbb1
       repeat' rfl
@@ -696,18 +623,15 @@ theorem substitution_gen_empty_elim_eq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm (
     cases heqT
     rw [substitution_zero_lift]
     apply IsEqualTerm.empty_elim_eq
-    · replace_by_conclusion ihAA
-      · apply congr
-        apply congr
-        apply congr
-        · rfl
-        · rw [←substitution_empty]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · substitution_step
-      · apply ihAA
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihAA
+      rw [←substitution_empty]
+      rw [extend_expand_context_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      repeat' rfl
+      apply hsS
     · rw [←substitution_empty]
       apply ihbb0
       · rfl
@@ -747,17 +671,9 @@ theorem substitution_gen_pi_intro_eq : ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} 
     cases heqT
     simp [substitute]
     apply IsEqualTerm.pi_intro_eq
-    · replace_by_conclusion ihbbB
-      · apply congr
-        apply congr
-        apply congr
-        apply congr
-        · rfl
-        · substitution_step
-        any_goals rw [lift_n_substitution]
-      · apply ihbbB
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihbbB
+      repeat' rfl
+      apply hsS
     · apply ihPiPi
       · rfl
       · rfl
@@ -860,28 +776,13 @@ theorem substitution_gen_sigma_intro_eq :
       · rfl
       · apply hsS
       · rfl
-    · replace_by_conclusion ihbbB
-      · apply congr
-        apply congr
-        apply congr
-        apply congr
-        · rfl
-        · rfl
-        · rfl
-        · rfl
-        · rw [←substitution_zero_lift]
-      · apply ihbbB
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihB
-      · apply congr
-        apply congr
-        · rfl
-        · substitution_step
-        · rw [lift_n_substitution]
-      · apply ihB
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq  ihbbB
+      rw [substitution_zero_lift]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihB
+      repeat' rfl
+      apply hsS
 
 theorem substitution_gen_sigma_elim_eq : 
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
@@ -948,25 +849,22 @@ theorem substitution_gen_sigma_elim_eq :
       · rfl
       · apply hsS
       · rfl
-    · replace_by_conclusion ihccC
-      · apply congr
-        apply congr
-        apply congr
-        apply congr
-        · rfl
-        · substitution_step
-          rw [lift_n_substitution]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · substitution_step
-        · simp only [lift_subst_n]
-          rw [helper_substitution_sigma_elim_C]
-          context_info_nat_relations
-          simp only [lift_n_substitution]
-          rfl
-      · apply ihccC
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihccC
+      · simp []
+        rw [lift_n_substitution]
+        rw [extend_expand_context_n_substitution]
+      · simp []
+        simp only [lift_n_substitution]
+        rfl
+      · simp []
+        simp only [lift_n_substitution]
+        rfl
+      · simp []
+        rw [helper_substitution_sigma_elim_C]
+        simp only [lift_n_substitution]
+        rfl
+      repeat' rfl
+      apply hsS
     · apply ihAA
       · rfl
       · rfl
@@ -1103,50 +1001,36 @@ theorem substitution_gen_nat_elim_eq :
     cases heqT
     rw [substitution_zero_lift]
     apply IsEqualTerm.nat_elim_eq
-    · replace_by_conclusion ihAA
-      · apply congr
-        apply congr
-        apply congr
-        · rfl
-        · rw [←substitution_nat]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · substitution_step
-      · apply ihAA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihzzA
-      · apply congr
-        apply congr
-        · rfl
-        · substitution_step
-        · simp only [lift_subst_n]
-          rw [←substitution_var_zero]
-          rw [←substitution_zero_lift]
-      · apply ihzzA
-        repeat' rfl
-        apply hsS
-    · replace_by_conclusion ihssA
-      · apply congr
-        apply congr
-        apply congr
-        apply congr
-        · rfl
-        · substitution_step
-          rw [lift_n_substitution]
-          rw [←substitution_nat]
-          rw [extend_expand_context_n_substitution]
-          rw [extend_expand_context_n_substitution]
-        · substitution_step
-        · substitution_step
-        · context_info_nat_relations
-          simp only [lift_subst_n]
-          rw [←helper_substitution_nat_elim]
-          simp only [lift_n_substitution]
-          rfl
-      · apply ihssA
-        repeat' rfl
-        apply hsS
+    · apply_subst_eq ihAA
+      rw [←substitution_nat]
+      rw [extend_expand_context_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      simp_all
+      rw [lift_n_substitution]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihzzA
+      simp only [lift_subst_n]
+      rw [←substitution_var_zero]
+      rw [substitution_zero_lift]
+      repeat' rfl
+      apply hsS
+    · apply_subst_eq ihssA
+      · simp []
+        rw [←substitution_nat]
+        rw [extend_expand_context_n_substitution]
+        rw [lift_n_substitution]
+        rw [extend_expand_context_n_substitution]
+      · substitution_norm
+      · substitution_norm
+      · context_info_nat_relations
+        simp only [lift_subst_n]
+        rw [←helper_substitution_nat_elim]
+        simp only [lift_n_substitution]
+        rfl
+      repeat' rfl
+      apply hsS
     · rw [←substitution_nat]
       apply ihxxNat
       · rfl

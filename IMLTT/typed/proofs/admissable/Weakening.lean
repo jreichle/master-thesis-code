@@ -13,6 +13,7 @@ import IMLTT.typed.proofs.admissable.weakening.HasType
 import IMLTT.typed.proofs.admissable.weakening.IsEqualType
 import IMLTT.typed.proofs.admissable.weakening.IsEqualTerm
 
+-- ⇑ₙ↑id > weaken_from
 theorem weakening :
   (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {S : Tm l},
     (Γ ⊗ Δ) ctx
@@ -135,7 +136,7 @@ theorem weakening :
         (Γ ⊢ S type)
         → eqM ▸ Γ' = (Γ ⊗ Δ) → eqM ▸ C = A → eqM ▸ C' = A'
         → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ (A⌊↑₁m↬l⌋) ≡ (A'⌊↑₁m↬l⌋) type)
-      (motive_5 := fun {n} Γ' c c' C _haaA => 
+      (motive_5 := fun {n} Γ' c c' C _haaA =>
         ∀ m l (Γ : Ctx l) (Δ : CtxGen l m) (eqM : n = m) S a a' A,
         (Γ ⊢ S type)
         → eqM ▸ Γ' = (Γ ⊗ Δ) → eqM ▸ c = a → eqM ▸ c' = a' → eqM ▸ C = A
@@ -461,3 +462,220 @@ theorem useWeakTermwithWeak :
     cases heqA
     apply weakening_term
     repeat' assumption
+
+-- theorem test_new_weaken_from {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A : Tm n} {S : Tm l} :
+--     (Γ ⊗ Δ) ⊢ A type → (Γ ⊢ S type)
+--     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊lift_weak_n (n - l) (↑ₚ(idₚ : Weak l l))⌋ type :=
+--   by
+--     sorry
+
+-- mutual
+--   theorem weakening_general_context_t {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {S : Tm l} :
+--       (Γ ⊗ Δ) ctx → (Γ ⊢ S type)
+--       → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ) ctx) :=
+--     by
+--       intro hiC hS
+--       cases Δ with
+--       | start =>
+--         cases hiC with
+--         | empty =>
+--           simp []
+--           apply IsCtx.extend IsCtx.empty hS
+--         | extend hiC hA =>
+--           simp []
+--           apply IsCtx.extend
+--           · apply IsCtx.extend hiC hA
+--           · apply hS
+--       | expand Δ' A =>
+--         cases hiC with
+--         | extend hiC hA =>
+--           simp []
+--           apply IsCtx.extend
+--           · apply weakening_general_context_t
+--             apply hiC
+--             apply hS
+--           · apply weakening_general_type_t
+--             apply hA
+--             apply hS
+--     termination_by Γ
+-- 
+--   theorem weakening_general_type_t {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A : Tm n} {S : Tm l} :
+--       (Γ ⊗ Δ) ⊢ A type → (Γ ⊢ S type)
+--       → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ type :=
+--     by
+--       intro hA hS
+--       cases hA with
+--       | unit_form hiC =>
+--         apply IsType.unit_form
+--         apply weakening_general_context_t
+--         apply hiC
+--         apply hS
+--       | iden_form hA haA haA' =>
+--         apply IsType.iden_form
+--         · apply weakening_general_type_t
+--           apply hA
+--           apply hS
+--         · apply weakening_general_term_t
+--           apply haA
+--           apply hS
+--         · apply weakening_general_term_t
+--           apply haA'
+--           apply hS
+--       | _ => sorry
+--     termination_by Γ
+-- 
+--   theorem weakening_general_term_t {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a : Tm n} {S : Tm l} :
+--       ((Γ ⊗ Δ) ⊢ a ∶ A) → (Γ ⊢ S type)
+--       → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ a⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋ :=
+--     by
+--       intro haA hS
+--       cases Δ with
+--       | start =>
+--         cases haA with
+--         | var hA =>
+--           substitution_norm
+--           have h := HasType.weak (HasType.var hA) hS
+--           replace_by_conclusion h
+--           · substitution_norm
+--           · apply h
+--         | _ =>
+--           sorry
+--       | expand Δ A =>
+--         cases haA with
+--         | var hA =>
+--           substitution_norm
+--           simp [←weakening_shift_id]
+--           rw [weakening_id]
+--           apply HasType.var
+--           apply weakening_general_type_t
+--           apply hA
+--           apply hS
+--         | weak hvA hB =>
+--           substitution_norm
+--           simp [←weakening_shift_id]
+--           rw [weakening_id]
+--           apply HasType.weak
+--           · rw [←weakening_conv_var]
+--             apply weakening_general_term_t
+--             apply hvA
+--             apply hS
+--           · apply weakening_general_type_t
+--             apply hB
+--             apply hS
+--           | ty_conv haA hAB =>
+--             apply HasType.ty_conv
+--             · apply weakening_general_term_t
+--               apply haA
+--               apply hS
+--             · apply weakening_general_type_eq_t
+--               apply hAB
+--               apply hS
+--         | _ =>
+--           sorry
+--     termination_by Γ
+-- 
+--   theorem weakening_general_type_eq_t {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A A' : Tm n} {S : Tm l} :
+--       (Γ ⊗ Δ) ⊢ A ≡ A' type → (Γ ⊢ S type)
+--       → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ ≡ A'⌊↑₁n↬l⌋ type :=
+--     by
+--       intro hAA hS
+--       sorry
+--     termination_by Γ
+-- end
+
+-- theorem weakening' :
+--   (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {S : Tm l},
+--     (Γ ⊗ Δ) ctx
+--     → (Γ ⊢ S type)
+--     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ) ctx))
+--   ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A : Tm n} {S : Tm l},
+--     (Γ ⊗ Δ) ⊢ A type
+--     → (Γ ⊢ S type)
+--     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ type)
+--   ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a : Tm n} {S : Tm l},
+--     ((Γ ⊗ Δ) ⊢ a ∶ A)
+--     → (Γ ⊢ S type)
+--     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ a⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋)
+--   ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A A' : Tm n} {S : Tm l},
+--     (Γ ⊗ Δ) ⊢ A ≡ A' type
+--     → (Γ ⊢ S type)
+--     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A⌊↑₁n↬l⌋ ≡ A'⌊↑₁n↬l⌋ type)
+--   ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen l n} {A a a' : Tm n} {S : Tm l},
+--     ((Γ ⊗ Δ) ⊢ a ≡ a' ∶ A)
+--     → (Γ ⊢ S type)
+--     → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ a⌊↑₁n↬l⌋ ≡ a'⌊↑₁n↬l⌋ ∶ A⌊↑₁n↬l⌋) :=
+--   by
+--     suffices h :
+--         (∀ {n : Nat} {Γ : Ctx n},
+--             Γ ctx →
+--               ∀ (l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l n) (S : Tm l), Γ_1 ⊢ S type → Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊⇑ₙ↑₁l⌋Δ) ctx) ∧
+--           (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+--               Γ ⊢ A type →
+--                 ∀ (l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l n) (S : Tm l),
+--                   Γ_1 ⊢ S type → Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊⇑ₙ↑₁l⌋Δ) ⊢ A⌊⇑ₙn⊖l↑₁⌋ type) ∧
+--             (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+--                 (Γ ⊢ a ∶ A) →
+--                   ∀ (l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l n) (S : Tm l),
+--                     Γ_1 ⊢ S type → Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊⇑ₙ↑₁l⌋Δ) ⊢ a⌊⇑ₙn⊖l↑₁⌋ ∶ A⌊⇑ₙn⊖l↑₁⌋) ∧
+--               (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
+--                   Γ ⊢ A ≡ A' type →
+--                     ∀ (l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l n) (S : Tm l),
+--                       Γ_1 ⊢ S type → Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊⇑ₙ↑₁l⌋Δ) ⊢ A⌊⇑ₙn⊖l↑₁⌋ ≡ A'⌊⇑ₙn⊖l↑₁⌋ type) ∧
+--                 ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
+--                   (Γ ⊢ a ≡ a' ∶ A) →
+--                     ∀ (l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen l n) (S : Tm l),
+--                       Γ_1 ⊢ S type → Γ = Γ_1 ⊗ Δ → (Γ_1 ⬝ S ⊗ ⌊⇑ₙ↑₁l⌋Δ) ⊢ a⌊⇑ₙn⊖l↑₁⌋ ≡ a'⌊⇑ₙn⊖l↑₁⌋ ∶ a⌊⇑ₙn⊖l↑₁⌋
+--       by
+--         repeat' apply And.intro
+--         · intro n l Γ Δ S hiC hS
+--           apply And.left h
+--           apply hiC
+--           apply hS
+--           rfl
+--         · intro n l Γ Δ A S hA hS
+--           apply And.left (And.right h)
+--           apply hA
+--           apply hS
+--           rfl
+--         · intro n l Γ Δ A a S haA hS
+--           apply And.left (And.right (And.right h))
+--           apply haA
+--           apply hS
+--           rfl
+--         · intro n l Γ Δ A A' S hAA hS
+--           apply And.left (And.right (And.right (And.right h)))
+--           apply hAA
+--           apply hS
+--           rfl
+--         · intro n l Γ Δ A a A' S haaA hS
+--           apply And.right (And.right (And.right (And.right h)))
+--           apply haaA
+--           apply hS
+--           rfl
+--     apply judgment_recursor
+--       (motive_1 := fun {n} Γ' _hiC =>
+--         ∀ l (Γ : Ctx l) (Δ : CtxGen l n) S,
+--         (Γ ⊢ S type)
+--         → Γ' = (Γ ⊗ Δ)
+--         → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ctx)
+--       (motive_2 := fun {n} Γ' A' _hA =>
+--         ∀ l (Γ : Ctx l) (Δ : CtxGen l n) S,
+--         (Γ ⊢ S type)
+--         → Γ' = (Γ ⊗ Δ)
+--         → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ A'⌊↑₁n↬l⌋ type)
+--       (motive_3 := fun {n} Γ' a' A' haA =>
+--         ∀ l (Γ : Ctx l) (Δ : CtxGen l n) S,
+--         (Γ ⊢ S type)
+--         → Γ' = (Γ ⊗ Δ)
+--         → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ (a'⌊↑₁n↬l⌋) ∶ (A'⌊↑₁n↬l⌋))
+--       (motive_4 := fun {n} Γ' C C' _hCC =>
+--         ∀ l (Γ : Ctx l) (Δ : CtxGen l n) S,
+--         (Γ ⊢ S type)
+--         → Γ' = (Γ ⊗ Δ)
+--         → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ (C⌊↑₁n↬l⌋) ≡ (C'⌊↑₁n↬l⌋) type)
+--       (motive_5 := fun {n} Γ' c c' C _haaA =>
+--         ∀ l (Γ : Ctx l) (Δ : CtxGen l n) S,
+--         (Γ ⊢ S type)
+--         → Γ' = (Γ ⊗ Δ)
+--         → (Γ ⬝ S ⊗ (⌊↑₁↬l⌋Δ)) ⊢ (c⌊↑₁n↬l⌋) ≡ (c'⌊↑₁n↬l⌋) ∶ (c⌊↑₁n↬l⌋))
+--     any_goals sorry

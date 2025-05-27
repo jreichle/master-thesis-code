@@ -256,36 +256,16 @@ theorem boundary_iden_elim :
               ⊢ B⌈a/ₙ(by omega)⌉⌈a'/ₙ(by omega)⌉ type :=
       by
         apply substitution_general_type
-        · replace_by_conclusion h1
-          case a.prf =>
-            apply h1
-          · apply congr
-            apply congr
-            · rfl
-            · substitution_step
-            · substitution_step
-        · replace_by_conclusion haA'
-          · substitution_step
-          · apply haA'
+        · apply_subst_eq h1
+        · apply_subst_eq haA'
     simp only [substitute_into_gen_ctx] at h2
     have h3 : Γ ⊢ B⌈a/ₙ(by omega)⌉⌈a'/ₙ(by omega)⌉⌈p⌉₀ type :=
       by
         apply substitution_type
         rotate_left
         · apply hpId
-        · replace_by_conclusion h2
-          · apply congr
-            apply congr
-            · rfl
-            · substitution_step
-              substitution_step
-            · substitution_step
-          · apply h2
-    replace_by_conclusion h3
-    · apply congr
-      · rfl
-      · substitution_step
-    · apply h3
+        · apply_subst_eq h2
+    apply_subst_eq h3
 
 theorem boundary_ty_conv :
     ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n},

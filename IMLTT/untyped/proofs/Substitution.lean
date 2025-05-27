@@ -18,15 +18,10 @@ theorem substitution_var_lift_n {σ σ' : Subst m n} :
     | zero =>
       simp_all
     | succ i' =>
-      cases x with
-      | mk i hFin =>
-        cases i with
-        | zero =>
-          rfl
-        | succ i' =>
-          apply substitution_var_lift
-          apply substitution_var_lift_n
-          apply h
+      rw [lift_subst_n]
+      apply substitution_var_lift
+      apply substitution_var_lift_n
+      apply h
 
 @[aesop safe apply]
 theorem substitution_var_substitute {σ σ' : Subst m n} :
@@ -128,7 +123,7 @@ theorem substitution_var_substitute {σ σ' : Subst m n} :
       apply And.intro
       · apply substitution_var_substitute h
       · apply substitution_var_substitute h
-    | .j A B b a a' p => 
+    | .j A B b a a' p =>
       simp [substitute]
       apply And.intro
       · apply substitution_var_substitute h
@@ -165,7 +160,7 @@ theorem substitution_var_lift_n_id {n m : Nat} {x : Fin (n + m)} :
         | 0 => rfl
         | i' + 1 =>
           have h := substitution_var_lift_n_id (n := n) (x := .mk i' (Nat.lt_of_succ_lt_succ h))
-          apply congrArg shift_tm h
+          simp_all
 
 @[simp]
 theorem substitution_id {t : Tm n} :

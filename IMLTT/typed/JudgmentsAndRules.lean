@@ -58,7 +58,7 @@ mutual
       → HasType (Γ ⬝ A) v(0) (A⌊↑ₚidₚ⌋)
     | weak :
       HasType Γ v(i) A → IsType Γ B
-      → HasType (Γ ⬝ B) v(i.succ) (A⌊↑ₚidₚ⌋) -- XXX: change (v(i)⌊↑ₚidₚ⌋) to v(i.succ)? -> yes
+      → HasType (Γ ⬝ B) v(i.succ) (A⌊↑ₚidₚ⌋)
     -- intro rules
     | unit_intro :
       IsCtx Γ

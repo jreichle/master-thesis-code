@@ -1,14 +1,10 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+import IMLTT.untyped.Contexts
+import IMLTT.untyped.proofs.Contexts
 
 import IMLTT.typed.JudgmentsAndRules
-import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.admissable.Inversion
-import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.Weakening
-
-import aesop
 
 theorem defeq_refl_unit_form :
     ∀ {n : Nat} {Γ : Ctx n},
@@ -342,9 +338,6 @@ theorem defeq_refl_univ_form :
       cases heqΓ
       cases heqT
       apply IsEqualType.univ_form_eq hiC
-
-
-
 
 theorem defeq_refl_univ_elim :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n},

@@ -1,14 +1,10 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+import IMLTT.untyped.Contexts
+import IMLTT.untyped.proofs.Contexts
 
 import IMLTT.typed.JudgmentsAndRules
-import IMLTT.typed.proofs.Recursor
-import IMLTT.typed.proofs.admissable.Inversion
-import IMLTT.typed.proofs.boundary.BoundaryIsCtx
-import IMLTT.typed.proofs.admissable.Weakening
-
-import aesop
 
 theorem defeq_refl_empty :
    ∀ (m z : Nat) (Γ : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : 0 = z) (B : Tm m), 

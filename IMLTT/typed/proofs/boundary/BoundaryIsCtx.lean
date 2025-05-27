@@ -47,11 +47,11 @@ theorem boundary_ctx :
  :=
   by
     apply judgment_recursor
-      (motive_1 := fun Γ _hiC => IsCtx Γ)
-      (motive_2 := fun Γ _A _hA => IsCtx Γ)
-      (motive_3 := fun Γ _a _A _haA => IsCtx Γ)
-      (motive_4 := fun Γ _A _A' _hAA => IsCtx Γ)
-      (motive_5 := fun Γ _a _a' _A _haaA => IsCtx Γ)
+      (motive_1 := fun Γ _hiC => Γ ctx)
+      (motive_2 := fun Γ _A _hA => Γ ctx)
+      (motive_3 := fun Γ _a _A _haA => Γ ctx)
+      (motive_4 := fun Γ _A _A' _hAA => Γ ctx)
+      (motive_5 := fun Γ _a _a' _A _haaA => Γ ctx)
     case HasTypePiIntro =>
       intro n Γ A b B _ hiCA 
       apply ctx_decr hiCA

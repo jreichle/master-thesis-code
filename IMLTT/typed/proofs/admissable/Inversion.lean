@@ -3,7 +3,43 @@ import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
 import IMLTT.typed.JudgmentsAndRules
-import IMLTT.typed.proofs.admissable.Weakening
+
+-- theorem pi_has_type_inversion' :
+--     (Γ ⊢ ΠA;B ∶ 𝒰) → (Γ ⊢ A ∶ 𝒰) ∧ Γ ⬝ A ⊢ B ∶ 𝒰 :=
+--   by
+--     intro hPiV
+--     apply HasType.recOn
+--       (motive_1 := fun Γ _hiC => True)
+--       (motive_2 := fun Γ A _hA => True)
+--       (motive_3 := fun Γ x X _haA =>
+--          ∀ A, ∀ B,
+--          x = (.pi A B) ∧ X = 𝒰 → HasType Γ A 𝒰 ∧ HasType (Γ ⬝ A) B 𝒰)
+--       (motive_4 := fun Γ A A' _hAA => True)
+--       (motive_5 := fun Γ a a' A _haaA => True)
+--       hPiV
+--     case weak =>
+--       intro n Γ i A B hvA hB ihvA ihB A' B' heq
+--       have heql := And.left heq
+--       cases heql
+--     case univ_pi =>
+--       intro n Γ A B hAU hBU ihAU ihBU A B heq
+--       cases And.left heq
+--       cases And.right heq
+--       simp_all only [and_self]
+--       -- simp_all only [and_true]
+--     case ty_conv =>
+--       intro n Γ i A B hvA hB ihvA ihB A' B' heq
+--       cases And.left heq
+--       cases And.right heq
+--       apply And.intro
+--       · apply HasType.ty_conv
+--         rotate_left
+--         · apply hB
+--         · have h := ihvA A' B'
+--           sorry
+--         
+--       · sorry
+--     any_goals aesop?
 
 theorem pi_has_type_inversion :
     (Γ ⊢ ΠA;B ∶ V) → (Γ ⊢ A ∶ 𝒰) ∧ Γ ⬝ A ⊢ B ∶ 𝒰 :=
@@ -21,8 +57,15 @@ theorem pi_has_type_inversion :
     case weak =>
       intro n Γ i A B hvA hB ihvA ihB A' B' V heq
       have heql := And.left heq
-      have heqr := And.right heq
       cases heql
+    case ty_conv =>
+      intro n Γ a A B haA hAB ihaA ihAB A' B' V heq
+      cases And.left heq
+      cases And.right heq
+      apply ihaA
+      apply And.intro
+      · rfl
+      · rfl
     any_goals aesop
 
 theorem pi_is_type_inversion : 
@@ -54,7 +97,6 @@ theorem sigma_has_type_inversion :
     case weak =>
       intro n Γ i A B hvA hB ihvA ihB A' B' V heq
       have heql := And.left heq
-      have heqr := And.right heq
       cases heql
     case weak_eq =>
       intro n Γ i A B hvvA hB ihvvA ihB
@@ -101,7 +143,6 @@ theorem iden_has_type_inversion :
     case weak =>
       intro n Γ i A B hvA hB ihvA ihB A' a a' V heq
       have heql := And.left heq
-      have heqr := And.right heq
       cases heql
     case weak_eq =>
       intro n Γ i A B hvvA hB ihvvA ihB

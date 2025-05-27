@@ -140,10 +140,7 @@ theorem substitution_separate {n m : Nat} {t : Tm (n + 1)} {s : Tm m} {σ : Subs
 theorem substitution_weak_id_shift :
     B⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)⌉ = B⌊↑ₚidₚ⌋ :=
   by
-    rw (config := {occs := .pos [2]}) [←substitution_id (t := B)]
-    substitution_to_composition
-    substitution_var_sub
-    any_goals substitution_step
+    substitution_norm
 
 theorem weak_substitution_eq_weakening_substitution {l m : Nat} {leq : (l + 1) ≤ m} {S : Tm m} {s : Tm (l + 1)}:
     S⌊↑₁m↬l⌋⌈s/ₙ(leq)⌉ = S⌈s↑/ₙ(leq)⌉ :=
@@ -152,7 +149,7 @@ theorem weak_substitution_eq_weakening_substitution {l m : Nat} {leq : (l + 1) �
     | zero =>
       substitution_step
     | succ m' ih =>
-      substitution_step
+      any_goals substitution_norm
       · cases m' with
         | zero =>
           substitution_step
@@ -164,10 +161,7 @@ theorem weak_substitution_eq_weakening_substitution {l m : Nat} {leq : (l + 1) �
           case isFalse =>
             unfold n_substitution_shift
             split
-            case isTrue =>
-              substitution_step
-            case isFalse =>
-              substitution_step
+            any_goals substitution_norm
       · cases m' with
         | zero =>
           substitution_step
@@ -176,19 +170,12 @@ theorem weak_substitution_eq_weakening_substitution {l m : Nat} {leq : (l + 1) �
           split
           case isTrue =>
             substitution_step
-            · simp only [←substitution_conv_var]
-              rw [←ih]
-              substitution_step
-            · simp only [←substitution_conv_var]
-              rw [←ih]
-              substitution_step
+            simp only [←substitution_conv_var]
+            rw [←ih]
+            substitution_step
           case isFalse =>
             unfold n_substitution_shift
-            split
-            case isTrue =>
-              substitution_step
-            case isFalse =>
-              substitution_step
+            any_goals substitution_norm
 
 theorem weak_substitution_eq_weakening_substitution_gen_context {l n : Nat} {s : Tm (l + 1)} {Δ : CtxGen (l + 1) n} :
     ⌈s⌉(⌊↑₁↬l⌋Δ w/(Nat.le_refl (l + 1))) = ⌈s↑⌉(Δ w/(Nat.le_refl (l + 1))) :=
@@ -201,5 +188,25 @@ theorem weak_substitution_eq_weakening_substitution_gen_context {l n : Nat} {s :
       simp [substitute_into_gen_ctx]
       simp [substitute_shift_into_gen_ctx]
       apply And.intro
-      · rw [ih]
-      · rw [weak_substitution_eq_weakening_substitution]
+      · apply ih
+      · apply weak_substitution_eq_weakening_substitution
+
+
+
+theorem test_macro :
+    (v(0) ≃[A⌊↑ₚidₚ⌋] a⌊↑ₚidₚ⌋)⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(0)⌉⌊↑ₚidₚ⌋⌊1ₙ⇑ₚ(↑ₚidₚ)⌋⌈1ₙ⇑ₛ((ₛidₚ)⋄ a⋄ a'⋄ p)⌉⌈A.refl a⌉₀
+    = a' ≃[A] a :=
+  by
+    try simp []
+    try substitution_to_composition
+    try substitution_nat_relation_lemmatas
+    try simp []
+    try substitution_eq_term_var
+    try substitution_from_composition
+    try simp []
+    try split_and_cases
+    try simp []
+    try repeat' apply And.intro
+    try any_goals rfl
+
+

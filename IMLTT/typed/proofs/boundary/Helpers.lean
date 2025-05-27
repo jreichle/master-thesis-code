@@ -11,4 +11,3 @@ theorem id_vone_to_vtwo :
     = v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(1) :=
   by
     substitution_step
-    substitution_step

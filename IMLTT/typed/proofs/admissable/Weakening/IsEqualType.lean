@@ -91,14 +91,10 @@ theorem weakening_pi_form_eq :
     · apply ihAA
       apply hS
       repeat' rfl
-    · replace_by_conclusion ihBB
-      rotate_left
-      · apply ihBB
-        apply hS
-        repeat' rfl
-        rw [extend_expand_context]
-      · apply congr
-        substitution_norm
+    · apply_subst_eq ihBB
+      rw [←extend_expand_context_weaken_from]
+      apply hS
+      repeat' rfl
 
 theorem weakening_sigma_form_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n} {B B' : Tm (n + 1)},
@@ -133,14 +129,10 @@ theorem weakening_sigma_form_eq :
     · apply ihAA
       apply hS
       repeat' rfl
-    · replace_by_conclusion ihBB
-      rotate_left
-      · apply ihBB
-        apply hS
-        repeat' rfl
-        rw [extend_expand_context]
-      · apply congr
-        substitution_norm
+    · apply_subst_eq ihBB
+      rw [←extend_expand_context_weaken_from]
+      apply hS
+      repeat' rfl
 
 theorem weakening_nat_form_eq :
     ∀ {n : Nat} {Γ : Ctx n},
