@@ -199,10 +199,10 @@ partial def useCases : TacticM Unit :=
       for ldecl in lctx do
         if !LocalDecl.isImplementationDetail ldecl then
           if (LocalDecl.type ldecl).isEq then
-            try -- FIXME: try catch into cases function?
+            try
               cases (LocalDecl.fvarId ldecl)
             catch _ =>
-              logInfo m!"error on case: {ldecl.type}, stopping here"
+              logInfo m!"error on case: {ldecl.type}, continuing"
     )
 
 elab "use_cases" : tactic =>

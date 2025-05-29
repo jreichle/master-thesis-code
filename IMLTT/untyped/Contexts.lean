@@ -91,11 +91,10 @@ def weaken_from_into_gen_ctx (l : Nat) (Δ : CtxGen m n) : CtxGen (m + 1) (n + 1
 infixl:93 " ⊗ " => expand_ctx
 infixl:94 " ⊙ " => CtxGen.expand
 
--- FIXME: do [σ]Δ with arbitrary σ
 notation:95 "⌈" s "⌉(" Δ "w/" leq ")" => substitute_into_gen_ctx s Δ leq
 notation:95 "⌈" s "↑⌉(" Δ "w/" leq ")" => substitute_shift_into_gen_ctx s Δ leq
 notation:95 "⌊↑₁↬" l "⌋" Δ => weaken_from_into_gen_ctx l Δ
-notation:95 "⌊⇑ₙ↑₁" l "⌋" Δ => weaken_from_into_gen_ctx l Δ
+-- notation:95 "⌊⇑ₙ↑₁" l "⌋" Δ => weaken_from_into_gen_ctx l Δ
 
 
 

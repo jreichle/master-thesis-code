@@ -282,7 +282,7 @@ mutual
 end
 
 postfix:90 " ctx" => IsCtx
-notation:90 Γ " ⊢ " A  " type" => IsType Γ A -- FIXME: interplay between istype and hastype is problem
+notation:90 Γ " ⊢ " A  " type" => IsType Γ A
 notation:90 Γ " ⊢ " s " ∶ " A => HasType Γ s A
 notation:90 Γ " ⊢ " A " ≡ " B " type" => IsEqualType Γ A B
 notation:90 Γ " ⊢ " s " ≡ " t " ∶ " A => IsEqualTerm Γ s t A
