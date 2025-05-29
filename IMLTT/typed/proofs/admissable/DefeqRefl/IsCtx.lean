@@ -25,17 +25,18 @@ theorem defeq_refl_extend :
       eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ
       → Γ_1 ⊢ B ≡ B type)
     → ((∀ (eqM : x = 0) (A_1 : Tm 0),
-      eqM ▸ Γ = ε → eqM ▸ A = A_1
-      → ε ⊢ A_1 ≡ A_1 type) ∧
-        (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (B : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ
-          → Γ_1 ⊢ B ≡ B type) ∧
-        ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (A_1 : Tm z) (B : Tm m),
+        eqM ▸ Γ = ε
+        → eqM ▸ A = A_1
+        → ε ⊢ A_1 ≡ A_1 type)
+      ∧ (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (B : Tm m),
+        eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ
+        → Γ_1 ⊢ B ≡ B type)
+      ∧ ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x = z) (A_1 : Tm z) (B : Tm m),
         eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1
         → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type)
     → ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : x + 1 = z) (B : Tm m),
-        eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ
-        → Γ_1 ⊢ B ≡ B type :=
+    eqM ▸ Γ ⬝ A = Γ_1 ⬝ B ⊗ Δ
+    → Γ_1 ⊢ B ≡ B type :=
   by
     intro n Γ' A hiC hA ihiC ihA
     intro m z Γ Δ heqM S heqΓ

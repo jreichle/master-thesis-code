@@ -12,33 +12,38 @@ import IMLTT.typed.proofs.admissable.Substitution
 
 theorem functionality_typing_var :
   ∀ {x : Nat} {Γ : Ctx x} {A : Tm x},
-  Γ ⊢ A type →
-   ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : x = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-         (eqM : x = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-     (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : x + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-         (eqM : x + 1 = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                 eqM ▸ v(0) = t →
-                   eqM ▸ A⌊↑ₚidₚ⌋ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+  Γ ⊢ A type
+  → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : x = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+        (eqM : x = m + 1),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+      → eqM ▸ A = T
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+  → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : x + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+        (eqM : x + 1 = m + 1),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ
+      → eqM ▸ v(0) = t
+      → eqM ▸ A⌊↑ₚidₚ⌋ = T
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A hA ihA
     apply And.intro
@@ -118,48 +123,56 @@ theorem functionality_typing_var :
             cases h
 
 theorem functionality_typing_weak :
-  ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x},
-  (Γ ⊢ v(i) ∶ A) →
-   Γ ⊢ B type →
-     ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-           (eqM : x = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-         ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-           (eqM : x = m + 1),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ v(i) = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : x = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-             (eqM : x = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ B = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-         (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : x + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ B = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : x + 1 = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ B = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ v(i)⌊↑ₚidₚ⌋ = t →
-                       eqM ▸ A⌊↑ₚidₚ⌋ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {x : Nat} {i : Fin x} {Γ : Ctx x} {A B : Tm x},
+    (Γ ⊢ v(i) ∶ A)
+    → Γ ⊢ B type
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : x = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : x = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ v(i) = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : x = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : x = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ B = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : x + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ B = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : x + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ B = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ v(i)⌊↑ₚidₚ⌋ = t
+        → eqM ▸ A⌊↑ₚidₚ⌋ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n x Γ' A B hvA hB ihvA ihB
     apply And.intro
@@ -245,27 +258,31 @@ theorem functionality_typing_weak :
             omega
 
 theorem functionality_typing_unit_intro :
-  ∀ {n : Nat} {Γ : Ctx n},
-  Γ ctx →
-   (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-       (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-       (Γ_1 ⊢ s ≡ s' ∶ S) →
-         (Γ_1 ⊢ s ∶ S) →
-           (Γ_1 ⊢ s' ∶ S) →
-             eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-     (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
          (eqM : n = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                 eqM ▸ ⋆ = t → eqM ▸ 𝟙 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ ⋆ = t
+        → eqM ▸ 𝟙 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC
     apply And.intro
@@ -297,35 +314,40 @@ theorem functionality_typing_unit_intro :
         · apply hsS
 
 theorem functionality_typing_pi_intro :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)},
-  (Γ ⬝ A ⊢ b ∶ B) →
-   ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-         (eqM : n + 1 = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                 eqM ▸ b = t → eqM ▸ B = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-     (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {b B : Tm (n + 1)},
+    (Γ ⬝ A ⊢ b ∶ B)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ b = t
+        → eqM ▸ B = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
          (eqM : n = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                 (eqM ▸ λA; b) = t →
-                   (eqM ▸ ΠA;B) = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → (eqM ▸ λA; b) = t
+        → (eqM ▸ ΠA;B) = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A b B hbB ihbB
     apply And.intro
@@ -367,65 +389,73 @@ theorem functionality_typing_pi_intro :
         · rfl
 
 theorem functionality_typing_sigma_intro :
-   ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B : Tm (n + 1)},
-  (Γ ⊢ a ∶ A) →
-    (Γ ⊢ b ∶ B⌈a⌉₀) →
-      Γ ⬝ A ⊢ B type →
-        ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-              (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-              (eqM : n = m + 1),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                      eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-          ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                (Γ_1 ⊢ s ≡ s' ∶ S) →
-                  (Γ_1 ⊢ s ∶ S) →
-                    (Γ_1 ⊢ s' ∶ S) →
-                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-              ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-                (eqM : n = m + 1),
-                (Γ_1 ⊢ s ≡ s' ∶ S) →
-                  (Γ_1 ⊢ s ∶ S) →
-                    (Γ_1 ⊢ s' ∶ S) →
-                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                        eqM ▸ b = t →
-                          eqM ▸ B⌈a⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-            ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                  (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                          Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-                  (eqM : n + 1 = m + 1),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                          eqM ▸ B = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-              (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                  (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                  (t T : Tm (m + 1)) (eqM : n = m + 1),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                          eqM ▸ a&b = t →
-                            (eqM ▸ ΣA;B) = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {a A b : Tm n} {B : Tm (n + 1)},
+    (Γ ⊢ a ∶ A)
+    → (Γ ⊢ b ∶ B⌈a⌉₀)
+    → Γ ⬝ A ⊢ B type
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ b = t
+        → eqM ▸ B⌈a⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ B = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a&b = t
+        → (eqM ▸ ΣA;B) = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' a A b B haA hbB hB ihaA ihbB ihB
     apply And.intro
@@ -468,26 +498,30 @@ theorem functionality_typing_sigma_intro :
 
 theorem functionality_typing_nat_zero_intro :
     ∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx →
-    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+    Γ ctx
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
         (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-        (Γ_1 ⊢ s ≡ s' ∶ S) →
-          (Γ_1 ⊢ s ∶ S) →
-            (Γ_1 ⊢ s' ∶ S) →
-              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
           (eqM : n = m + 1),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                  eqM ▸ 𝓏 = t → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ 𝓏 = t
+        → eqM ▸ 𝒩 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC
     apply And.intro
@@ -519,33 +553,39 @@ theorem functionality_typing_nat_zero_intro :
 
 theorem functionality_typing_nat_succ_intro :
     ∀ {n : Nat} {Γ : Ctx n} {x : Tm n},
-    (Γ ⊢ x ∶ 𝒩) →
-    ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+    (Γ ⊢ x ∶ 𝒩)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
           (eqM : n = m + 1),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                  eqM ▸ x = t → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ x = t
+        → eqM ▸ 𝒩 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
           (eqM : n = m + 1),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                  eqM ▸ 𝓈(x) = t → eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ 𝓈(x) = t
+        → eqM ▸ 𝒩 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' x hxNat ihxNat
     apply And.intro
@@ -576,48 +616,56 @@ theorem functionality_typing_nat_succ_intro :
       repeat' rfl
 
 theorem functionality_typing_iden_intro :
-  ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
-  Γ ⊢ A type →
-    (Γ ⊢ a ∶ A) →
-      ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-            (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-            (Γ_1 ⊢ s ≡ s' ∶ S) →
-              (Γ_1 ⊢ s ∶ S) →
-                (Γ_1 ⊢ s' ∶ S) →
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-          ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-            (eqM : n = m + 1),
-            (Γ_1 ⊢ s ≡ s' ∶ S) →
-              (Γ_1 ⊢ s ∶ S) →
-                (Γ_1 ⊢ s' ∶ S) →
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-        ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-              (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-              (eqM : n = m + 1),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                      eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-          (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-              (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-              (eqM : n = m + 1),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                      eqM ▸ A.refl a = t →
-                        (eqM ▸ a ≃[A] a) = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+    Γ ⊢ A type
+    → (Γ ⊢ a ∶ A)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A.refl a = t
+        → (eqM ▸ a ≃[A] a) = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A a hA haA ihA ihaA
     apply And.intro
@@ -652,27 +700,31 @@ theorem functionality_typing_iden_intro :
         repeat' rfl
 
 theorem functionality_typing_univ_unit :
-  ∀ {n : Nat} {Γ : Ctx n},
-  Γ ctx →
-   (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-       (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-       (Γ_1 ⊢ s ≡ s' ∶ S) →
-         (Γ_1 ⊢ s ∶ S) →
-           (Γ_1 ⊢ s' ∶ S) →
-             eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-     (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-         (eqM : n = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                 eqM ▸ 𝟙 = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ 𝟙 = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC
     apply And.intro
@@ -699,27 +751,31 @@ theorem functionality_typing_univ_unit :
       · apply hsS
 
 theorem functionality_typing_univ_empty :
-  ∀ {n : Nat} {Γ : Ctx n},
-  Γ ctx →
-   (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-       (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-       (Γ_1 ⊢ s ≡ s' ∶ S) →
-         (Γ_1 ⊢ s ∶ S) →
-           (Γ_1 ⊢ s' ∶ S) →
-             eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-     (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-         (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-       ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-         (eqM : n = m + 1),
-         (Γ_1 ⊢ s ≡ s' ∶ S) →
-           (Γ_1 ⊢ s ∶ S) →
-             (Γ_1 ⊢ s' ∶ S) →
-               eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                 eqM ▸ 𝟘 = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n},
+    Γ ctx
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ 𝟘 = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC
     apply And.intro
@@ -746,48 +802,57 @@ theorem functionality_typing_univ_empty :
       · apply hsS
 
 theorem functionality_typing_univ_pi :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
-  (Γ ⊢ A ∶ 𝒰) →
-   (Γ ⬝ A ⊢ B ∶ 𝒰) →
-     ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-         ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-           (eqM : n = m + 1),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ A = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n + 1 = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ B = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-         (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     (eqM ▸ ΠA;B) = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
+    (Γ ⊢ A ∶ 𝒰)
+    → (Γ ⬝ A ⊢ B ∶ 𝒰)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ B = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → (eqM ▸ ΠA;B) = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A B hAU hBU ihAU ihBU
     apply And.intro
@@ -827,48 +892,57 @@ theorem functionality_typing_univ_pi :
         repeat' rfl
 
 theorem functionality_typing_univ_sigma :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
-  (Γ ⊢ A ∶ 𝒰) →
-   (Γ ⬝ A ⊢ B ∶ 𝒰) →
-     ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-         ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-           (eqM : n = m + 1),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ A = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n + 1 = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ B = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-         (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     (eqM ▸ ΣA;B) = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)},
+    (Γ ⊢ A ∶ 𝒰)
+    → (Γ ⬝ A ⊢ B ∶ 𝒰)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ B = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → (eqM ▸ ΣA;B) = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A B hAU hBU ihAU ihBU
     apply And.intro
@@ -909,26 +983,30 @@ theorem functionality_typing_univ_sigma :
 
 theorem functionality_typing_univ_nat :
     ∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx →
-    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+    Γ ctx
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
         (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-        (Γ_1 ⊢ s ≡ s' ∶ S) →
-          (Γ_1 ⊢ s ∶ S) →
-            (Γ_1 ⊢ s' ∶ S) →
-              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-      (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-          (eqM : n = m + 1),
-          (Γ_1 ⊢ s ≡ s' ∶ S) →
-            (Γ_1 ⊢ s ∶ S) →
-              (Γ_1 ⊢ s' ∶ S) →
-                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                  eqM ▸ 𝒩 = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+        (eqM : n = m + 1),
+      (Γ_1 ⊢ s ≡ s' ∶ S)
+      → (Γ_1 ⊢ s ∶ S)
+      → (Γ_1 ⊢ s' ∶ S)
+      → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+      → eqM ▸ 𝒩 = t
+      → eqM ▸ 𝒰 = T
+      → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' hiC ihiC
     apply And.intro
@@ -956,64 +1034,74 @@ theorem functionality_typing_univ_nat :
       · apply hsS
 
 theorem functionality_typing_univ_iden :
-  ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
-  (Γ ⊢ A ∶ 𝒰) →
-   (Γ ⊢ a ∶ A) →
-     (Γ ⊢ a' ∶ A) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ A = t → eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-         ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-               (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-               (Γ_1 ⊢ s ≡ s' ∶ S) →
-                 (Γ_1 ⊢ s ∶ S) →
-                   (Γ_1 ⊢ s' ∶ S) →
-                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-             ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-               (eqM : n = m + 1),
-               (Γ_1 ⊢ s ≡ s' ∶ S) →
-                 (Γ_1 ⊢ s ∶ S) →
-                   (Γ_1 ⊢ s' ∶ S) →
-                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                       eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-           ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                 (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-               ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                 (t T : Tm (m + 1)) (eqM : n = m + 1),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                         eqM ▸ a' = t →
-                           eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-             (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                 (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-               ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                 (t T : Tm (m + 1)) (eqM : n = m + 1),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                         (eqM ▸ a ≃[A] a') = t →
-                           eqM ▸ 𝒰 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
+    (Γ ⊢ A ∶ 𝒰)
+    → (Γ ⊢ a ∶ A)
+    → (Γ ⊢ a' ∶ A)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a' = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) 
+    ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → (eqM ▸ a ≃[A] a') = t
+        → eqM ▸ 𝒰 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A a a' hAU haA haA' ihAU ihaA ihaA'
     apply And.intro
@@ -1054,65 +1142,73 @@ theorem functionality_typing_univ_iden :
         repeat' rfl
 
 theorem functionality_typing_unit_elim :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {a b : Tm n},
-  Γ ⬝ 𝟙 ⊢ A type →
-   (Γ ⊢ a ∶ A⌈⋆⌉₀) →
-     (Γ ⊢ b ∶ 𝟙) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ 𝟙 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-             (eqM : n + 1 = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ ⬝ 𝟙 = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-         ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-               (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-               (Γ_1 ⊢ s ≡ s' ∶ S) →
-                 (Γ_1 ⊢ s ∶ S) →
-                   (Γ_1 ⊢ s' ∶ S) →
-                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-             ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-               (eqM : n = m + 1),
-               (Γ_1 ⊢ s ≡ s' ∶ S) →
-                 (Γ_1 ⊢ s ∶ S) →
-                   (Γ_1 ⊢ s' ∶ S) →
-                     eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                       eqM ▸ a = t →
-                         eqM ▸ A⌈⋆⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-           ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                 (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-               ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                 (t T : Tm (m + 1)) (eqM : n = m + 1),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                         eqM ▸ b = t →
-                           eqM ▸ 𝟙 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-             (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                 (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-               ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                 (t T : Tm (m + 1)) (eqM : n = m + 1),
-                 (Γ_1 ⊢ s ≡ s' ∶ S) →
-                   (Γ_1 ⊢ s ∶ S) →
-                     (Γ_1 ⊢ s' ∶ S) →
-                       eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                         eqM ▸ A.indUnit b a = t →
-                           eqM ▸ A⌈b⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {a b : Tm n},
+    Γ ⬝ 𝟙 ⊢ A type
+    → (Γ ⊢ a ∶ A⌈⋆⌉₀)
+    → (Γ ⊢ b ∶ 𝟙)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝟙 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝟙 = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A⌈⋆⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ b = t
+        → eqM ▸ 𝟙 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A.indUnit b a = t
+        → eqM ▸ A⌈b⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A a b hA haA hb1 ihA ihaA ihb1
     apply And.intro
@@ -1160,49 +1256,56 @@ theorem functionality_typing_unit_elim :
         repeat' rfl
 
 theorem functionality_typing_empty_elim :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {b : Tm n},
-  Γ ⬝ 𝟘 ⊢ A type →
-   (Γ ⊢ b ∶ 𝟘) →
-     ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-           (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ ⬝ 𝟘 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-         ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-           (eqM : n + 1 = m + 1),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ ⬝ 𝟘 = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ b = t → eqM ▸ 𝟘 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-         (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ A.indEmpty b = t →
-                       eqM ▸ A⌈b⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm (n + 1)} {b : Tm n},
+    Γ ⬝ 𝟘 ⊢ A type
+    → (Γ ⊢ b ∶ 𝟘)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝟘 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝟘 = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ b = t
+        → eqM ▸ 𝟘 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A.indEmpty b = t
+        → eqM ▸ A⌈b⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A b hA hb0 ihA ihb0
     apply And.intro
@@ -1242,50 +1345,57 @@ theorem functionality_typing_empty_elim :
         repeat' rfl
 
 theorem functionality_typing_pi_elim :
-  ∀ {n : Nat} {Γ : Ctx n} {f A : Tm n} {B : Tm (n + 1)} {a : Tm n},
-  (Γ ⊢ f ∶ ΠA;B) →
-   (Γ ⊢ a ∶ A) →
-     ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-           (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-         ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-           (eqM : n = m + 1),
-           (Γ_1 ⊢ s ≡ s' ∶ S) →
-             (Γ_1 ⊢ s ∶ S) →
-               (Γ_1 ⊢ s' ∶ S) →
-                 eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                   eqM ▸ f = t →
-                     (eqM ▸ ΠA;B) = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-       ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-         (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-             (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-           ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-             (eqM : n = m + 1),
-             (Γ_1 ⊢ s ≡ s' ∶ S) →
-               (Γ_1 ⊢ s ∶ S) →
-                 (Γ_1 ⊢ s' ∶ S) →
-                   eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                     eqM ▸ f◃a = t →
-                       eqM ▸ B⌈a⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {f A : Tm n} {B : Tm (n + 1)} {a : Tm n},
+    (Γ ⊢ f ∶ ΠA;B)
+    → (Γ ⊢ a ∶ A)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ f = t
+        → (eqM ▸ ΠA;B) = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ f◃a = t
+        → eqM ▸ B⌈a⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' f A B a hfPi haA ihfPi ihaA
     apply And.intro
@@ -1321,68 +1431,73 @@ theorem functionality_typing_pi_elim :
         repeat' rfl
 
 theorem functionality_typing_sigma_elim :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
-  (Γ ⬝ ΣA;B) ⊢ C type →
-    (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-      (Γ ⊢ p ∶ ΣA;B) →
-        ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-              (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                      Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-              (eqM : n + 1 = m + 1),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ →
-                      eqM ▸ C = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-          ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                (eqM : n + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                (Γ_1 ⊢ s ≡ s' ∶ S) →
-                  (Γ_1 ⊢ s ∶ S) →
-                    (Γ_1 ⊢ s' ∶ S) →
-                      eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                        Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-              ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-                (eqM : n + 1 + 1 = m + 1),
-                (Γ_1 ⊢ s ≡ s' ∶ S) →
-                  (Γ_1 ⊢ s ∶ S) →
-                    (Γ_1 ⊢ s' ∶ S) →
-                      eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ →
-                        eqM ▸ c = t →
-                          eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = T →
-                            Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-            ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                  (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                  (t T : Tm (m + 1)) (eqM : n = m + 1),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                          eqM ▸ p = t →
-                            (eqM ▸ ΣA;B) = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-              (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                  (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                  (t T : Tm (m + 1)) (eqM : n = m + 1),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                          eqM ▸ A.indSigma B C c p = t →
-                            eqM ▸ C⌈p⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {p : Tm n} {C : Tm (n + 1)} {c : Tm (n + 1 + 1)},
+    (Γ ⬝ ΣA;B) ⊢ C type
+    → (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉)
+    → (Γ ⊢ p ∶ ΣA;B)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → (eqM ▸ Γ ⬝ ΣA;B) = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ C = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n + 1 + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A ⬝ B = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ c = t
+        → eqM ▸ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ p = t
+        → (eqM ▸ ΣA;B) = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A.indSigma B C c p = t
+        → eqM ▸ C⌈p⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A B p C c hC hcC hpSi ihC ihcC ihpSi
     apply And.intro
@@ -1456,84 +1571,89 @@ theorem functionality_typing_sigma_elim :
 
 theorem functionality_typing_nat_elim :
     ∀ {n : Nat} {Γ : Ctx n} {z x : Tm n} {A : Tm (n + 1)} {s : Tm (n + 2)},
-    Γ ⬝ 𝒩 ⊢ A type →
-      (Γ ⊢ z ∶ A⌈𝓏⌉₀) →
-        (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋) →
-          (Γ ⊢ x ∶ 𝒩) →
-            ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                  (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
-                  (eqM : n + 1 = m + 1),
-                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                    (Γ_1 ⊢ s ∶ S) →
-                      (Γ_1 ⊢ s' ∶ S) →
-                        eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ →
-                          eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-              ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                    (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                    (Γ_1 ⊢ s ≡ s' ∶ S) →
-                      (Γ_1 ⊢ s ∶ S) →
-                        (Γ_1 ⊢ s' ∶ S) →
-                          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                  ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                    (t T : Tm (m + 1)) (eqM : n = m + 1),
-                    (Γ_1 ⊢ s ≡ s' ∶ S) →
-                      (Γ_1 ⊢ s ∶ S) →
-                        (Γ_1 ⊢ s' ∶ S) →
-                          eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                            eqM ▸ z = t →
-                              eqM ▸ A⌈𝓏⌉₀ = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-                ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                      (eqM : n + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                      (Γ_1 ⊢ s ≡ s' ∶ S) →
-                        (Γ_1 ⊢ s ∶ S) →
-                          (Γ_1 ⊢ s' ∶ S) →
-                            eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                              Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                    ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s_1 s' S : Tm l)
-                      (t T : Tm (m + 1)) (eqM : n + 1 + 1 = m + 1),
-                      (Γ_1 ⊢ s_1 ≡ s' ∶ S) →
-                        (Γ_1 ⊢ s_1 ∶ S) →
-                          (Γ_1 ⊢ s' ∶ S) →
-                            eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                              eqM ▸ s = t →
-                                eqM ▸ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = T →
-                                  Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ t⌈s_1/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s_1/ₙleq⌉) →
-                  ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                        (Γ_1 ⊢ s ≡ s' ∶ S) →
-                          (Γ_1 ⊢ s ∶ S) →
-                            (Γ_1 ⊢ s' ∶ S) →
-                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                        (t T : Tm (m + 1)) (eqM : n = m + 1),
-                        (Γ_1 ⊢ s ≡ s' ∶ S) →
-                          (Γ_1 ⊢ s ∶ S) →
-                            (Γ_1 ⊢ s' ∶ S) →
-                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                eqM ▸ x = t →
-                                  eqM ▸ 𝒩 = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-                    (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                        (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                        (Γ_1 ⊢ s ≡ s' ∶ S) →
-                          (Γ_1 ⊢ s ∶ S) →
-                            (Γ_1 ⊢ s' ∶ S) →
-                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s_1 s' S : Tm l)
-                        (t T : Tm (m + 1)) (eqM : n = m + 1),
-                        (Γ_1 ⊢ s_1 ≡ s' ∶ S) →
-                          (Γ_1 ⊢ s_1 ∶ S) →
-                            (Γ_1 ⊢ s' ∶ S) →
-                              eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                eqM ▸ A.indNat z s x = t →
-                                  eqM ▸ A⌈x⌉₀ = T →
-                                    Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ t⌈s_1/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s_1/ₙleq⌉ :=
+    Γ ⬝ 𝒩 ⊢ A type
+    → (Γ ⊢ z ∶ A⌈𝓏⌉₀)
+    → (Γ ⬝ 𝒩 ⬝ A ⊢ s ∶ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋)
+    → (Γ ⊢ x ∶ 𝒩)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (T : Tm (m + 1))
+          (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝒩 = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ z = t
+        → eqM ▸ A⌈𝓏⌉₀ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s_1 s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n + 1 + 1 = m + 1),
+        (Γ_1 ⊢ s_1 ≡ s' ∶ S)
+        → (Γ_1 ⊢ s_1 ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ 𝒩 ⬝ A = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ s = t
+        → eqM ▸ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ = T
+        → Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ t⌈s_1/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s_1/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM :n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ x = t
+        → eqM ▸ 𝒩 = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s_1 s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s_1 ≡ s' ∶ S)
+        → (Γ_1 ⊢ s_1 ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A.indNat z s x = t
+        → eqM ▸ A⌈x⌉₀ = T
+        → Γ_1 ⊗ ⌈s_1⌉(Δ w/Nat.le_refl l) ⊢ t⌈s_1/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s_1/ₙleq⌉ :=
   by
     intro n Γ' z x A s hA hzA hsA hxNat ihA ihzA ihsA ihxNat
     apply And.intro
@@ -1592,104 +1712,107 @@ theorem functionality_typing_nat_elim :
         repeat' rfl
 
 theorem functionality_typing_iden_elim :
-  ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
-  (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type →
-    (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉) →
-      (Γ ⊢ a ∶ A) →
-        (Γ ⊢ a' ∶ A) →
-          (Γ ⊢ p ∶ a ≃[A] a') →
-                ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-                      (eqM : n + 1 + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                      (Γ_1 ⊢ s ≡ s' ∶ S) →
-                        (Γ_1 ⊢ s ∶ S) →
-                          (Γ_1 ⊢ s' ∶ S) →
-                            (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                              Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                    ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                      (T : Tm (m + 1)) (eqM : n + 1 + 1 + 1 = m + 1),
-                      (Γ_1 ⊢ s ≡ s' ∶ S) →
-                        (Γ_1 ⊢ s ∶ S) →
-                          (Γ_1 ⊢ s' ∶ S) →
-                            (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ →
-                              eqM ▸ B = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) →
-                  ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
-                        (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                        (Γ_1 ⊢ s ≡ s' ∶ S) →
-                          (Γ_1 ⊢ s ∶ S) →
-                            (Γ_1 ⊢ s' ∶ S) →
-                              eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                      ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                        (t T : Tm (m + 1)) (eqM : n + 1 = m + 1),
-                        (Γ_1 ⊢ s ≡ s' ∶ S) →
-                          (Γ_1 ⊢ s ∶ S) →
-                            (Γ_1 ⊢ s' ∶ S) →
-                              eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ →
-                                eqM ▸ b = t →
-                                  eqM ▸ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ = T →
-                                    Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-                    ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
-                          (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                          (Γ_1 ⊢ s ≡ s' ∶ S) →
-                            (Γ_1 ⊢ s ∶ S) →
-                              (Γ_1 ⊢ s' ∶ S) →
-                                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                  Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                        ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                          (t T : Tm (m + 1)) (eqM : n = m + 1),
-                          (Γ_1 ⊢ s ≡ s' ∶ S) →
-                            (Γ_1 ⊢ s ∶ S) →
-                              (Γ_1 ⊢ s' ∶ S) →
-                                eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                  eqM ▸ a = t →
-                                    eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-                      ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
-                            (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                            (Γ_1 ⊢ s ≡ s' ∶ S) →
-                              (Γ_1 ⊢ s ∶ S) →
-                                (Γ_1 ⊢ s' ∶ S) →
-                                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                    Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                          ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                            (t T : Tm (m + 1)) (eqM : n = m + 1),
-                            (Γ_1 ⊢ s ≡ s' ∶ S) →
-                              (Γ_1 ⊢ s ∶ S) →
-                                (Γ_1 ⊢ s' ∶ S) →
-                                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                    eqM ▸ a' = t →
-                                      eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-                        ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
-                              (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                                (Γ_1 ⊢ s ∶ S) →
-                                  (Γ_1 ⊢ s' ∶ S) →
-                                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                      Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                              (t T : Tm (m + 1)) (eqM : n = m + 1),
-                              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                                (Γ_1 ⊢ s ∶ S) →
-                                  (Γ_1 ⊢ s' ∶ S) →
-                                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                      eqM ▸ p = t →
-                                        (eqM ▸ a ≃[A] a') = T →
-                                          Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-                              (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
-                                  (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-                                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                                    (Γ_1 ⊢ s ∶ S) →
-                                      (Γ_1 ⊢ s' ∶ S) →
-                                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ →
-                                          Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-                                ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
-                                  (t T : Tm (m + 1)) (eqM : n = m + 1),
-                                  (Γ_1 ⊢ s ≡ s' ∶ S) →
-                                    (Γ_1 ⊢ s ∶ S) →
-                                      (Γ_1 ⊢ s' ∶ S) →
-                                        eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                                          eqM ▸ A.j B b a a' p = t →
-                                            eqM ▸ B⌈(ₛidₚ)⋄ a⋄ a'⋄ p⌉ = T →
-                                              Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1 + 1 + 1)} {b : Tm (n + 1)} {a a' p : Tm n},
+    (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type
+    → (Γ ⬝ A ⊢ b ∶ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉)
+    → (Γ ⊢ a ∶ A)
+    → (Γ ⊢ a' ∶ A)
+    → (Γ ⊢ p ∶ a ≃[A] a')
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n + 1 + 1 + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (T : Tm (m + 1)) (eqM : n + 1 + 1 + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → (eqM ▸ Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ B = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
+          (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n + 1 = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n + 1 = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ ⬝ A = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ b = t
+        → eqM ▸ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
+          (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
+          (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a' = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
+          (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ p = t
+        → (eqM ▸ a ≃[A] a') = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1))
+          (Ξ : CtxGen (m + 2) (k + 1)) (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l)
+          (t T : Tm (m + 1)) (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A.j B b a a' p = t
+        → eqM ▸ B⌈(ₛidₚ)⋄ a⋄ a'⋄ p⌉ = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' A B b a a' p hB hbB haA haA' hpId ihB ihbB ihaA ihaA' ihpId
     apply And.intro
@@ -1778,36 +1901,42 @@ theorem functionality_typing_iden_elim :
         repeat' rfl
 
 theorem functionality_typing_ty_conv :
-  ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n},
-  (Γ ⊢ a ∶ A) →
-    Γ ⊢ A ≡ B type →
-      ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-            (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-            (Γ_1 ⊢ s ≡ s' ∶ S) →
-              (Γ_1 ⊢ s ∶ S) →
-                (Γ_1 ⊢ s' ∶ S) →
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-          ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-            (eqM : n = m + 1),
-            (Γ_1 ⊢ s ≡ s' ∶ S) →
-              (Γ_1 ⊢ s ∶ S) →
-                (Γ_1 ⊢ s' ∶ S) →
-                  eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                    eqM ▸ a = t → eqM ▸ A = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉) →
-        Γ ⊢ A ≡ B type →
-          (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
-              (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type) ∧
-            ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
-              (eqM : n = m + 1),
-              (Γ_1 ⊢ s ≡ s' ∶ S) →
-                (Γ_1 ⊢ s ∶ S) →
-                  (Γ_1 ⊢ s' ∶ S) →
-                    eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                      eqM ▸ a = t → eqM ▸ B = T → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
+    ∀ {n : Nat} {Γ : Ctx n} {a A B : Tm n},
+    (Γ ⊢ a ∶ A)
+    → Γ ⊢ A ≡ B type
+    → ((∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ A = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉)
+    → Γ ⊢ A ≡ B type
+    → (∀ (m l k : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (Ξ : CtxGen (m + 2) (k + 1))
+          (eqM : n = k + 1) (s s' S : Tm l) (T : Tm (m + 1)),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ ⊙ T ⊗ Ξ
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ T⌈s/ₙleq⌉ ≡ T⌈s'/ₙleq⌉ type)
+      ∧ ∀ (m l : Nat) {leq : l ≤ m} (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) (m + 1)) (s s' S : Tm l) (t T : Tm (m + 1))
+          (eqM : n = m + 1),
+        (Γ_1 ⊢ s ≡ s' ∶ S)
+        → (Γ_1 ⊢ s ∶ S)
+        → (Γ_1 ⊢ s' ∶ S)
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = t
+        → eqM ▸ B = T
+        → Γ_1 ⊗ ⌈s⌉(Δ w/Nat.le_refl l) ⊢ t⌈s/ₙleq⌉ ≡ t⌈s'/ₙleq⌉ ∶ T⌈s/ₙleq⌉ :=
   by
     intro n Γ' a A B haA hAB ihaA ihAB
     apply And.intro

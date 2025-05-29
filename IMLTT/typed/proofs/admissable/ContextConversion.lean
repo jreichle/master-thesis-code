@@ -18,52 +18,81 @@ import aesop
 
 theorem context_conversion :
   (∀ {n : Nat} {Γ : Ctx n},
-    Γ ctx → Γ ctx) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {A : Tm n} {S S' : Tm l},
-    (Γ ⬝ S ⊗ Δ) ⊢ A type → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-    → (Γ ⬝ S' ⊗ Δ) ⊢ A type) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {a A : Tm n} {S S' : Tm l},
-    ((Γ ⬝ S ⊗ Δ) ⊢ a ∶ A) → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-    → (Γ ⬝ S' ⊗ Δ) ⊢ a ∶ A) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {A A' : Tm n} {S S' : Tm l},
-    (Γ ⬝ S ⊗ Δ) ⊢ A ≡ A' type → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-    → (Γ ⬝ S' ⊗ Δ) ⊢ A ≡ A' type) ∧
-  (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {a a' A : Tm n} {S S' : Tm l},
-    ((Γ ⬝ S ⊗ Δ) ⊢ a ≡ a' ∶ A) → Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
+    Γ ctx → Γ ctx)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {A : Tm n} {S S' : Tm l},
+    (Γ ⬝ S ⊗ Δ) ⊢ A type
+    → Γ ⊢ S ≡ S' type
+    → Γ ⊢ S type
+    → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ A type)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {a A : Tm n} {S S' : Tm l},
+    ((Γ ⬝ S ⊗ Δ) ⊢ a ∶ A)
+    → Γ ⊢ S ≡ S' type
+    → Γ ⊢ S type
+    → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ a ∶ A)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {A A' : Tm n} {S S' : Tm l},
+    (Γ ⬝ S ⊗ Δ) ⊢ A ≡ A' type
+    → Γ ⊢ S ≡ S' type
+    → Γ ⊢ S type
+    → Γ ⊢ S' type
+    → (Γ ⬝ S' ⊗ Δ) ⊢ A ≡ A' type)
+  ∧ (∀ {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {a a' A : Tm n} {S S' : Tm l},
+    ((Γ ⬝ S ⊗ Δ) ⊢ a ≡ a' ∶ A)
+    → Γ ⊢ S ≡ S' type
+    → Γ ⊢ S type
+    → Γ ⊢ S' type
     → (Γ ⬝ S' ⊗ Δ) ⊢ a ≡ a' ∶ A) :=
   by
     suffices h :
       (∀ {n : Nat} {Γ : Ctx n},
-      Γ ctx →
-        ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l},
-          Γ_1 ⊢ S ≡ S' type → Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = (Γ_1 ⬝ S ⊗ Δ) → (Γ_1 ⬝ S' ⊗ Δ) ctx) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
-        Γ ⊢ A type →
-          ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A_1 : Tm m),
-            Γ_1 ⊢ S ≡ S' type →
-              Γ_1 ⊢ S type → Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type) ∧
-      (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
-          (Γ ⊢ a ∶ A) →
-            ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_1 A_1 : Tm m),
-              Γ_1 ⊢ S ≡ S' type →
-                Γ_1 ⊢ S type →
-                  Γ_1 ⊢ S' type → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ a = a_1 → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_1 ∶ A_1) ∧
-        (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
-            Γ ⊢ A ≡ A' type →
-              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (A_1 A'_1 : Tm m),
-                Γ_1 ⊢ S ≡ S' type →
-                  Γ_1 ⊢ S type →
-                    Γ_1 ⊢ S' type →
-                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ → eqM ▸ A = A_1 → eqM ▸ A' = A'_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 ≡ A'_1 type) ∧
-          ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
-            (Γ ⊢ a ≡ a' ∶ A) →
-              ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_1 a'_1 A_1 : Tm m),
-                Γ_1 ⊢ S ≡ S' type →
-                  Γ_1 ⊢ S type →
-                    Γ_1 ⊢ S' type →
-                      eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ →
-                        eqM ▸ a = a_1 → eqM ▸ a' = a'_1 → eqM ▸ A = A_1 → Γ_1 ⬝ S' ⊗ Δ ⊢ a_1 ≡ a'_1 ∶ A_1
-
+        Γ ctx
+        → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l},
+        Γ_1 ⊢ S ≡ S' type
+        → Γ_1 ⊢ S type
+        → Γ_1 ⊢ S' type
+        → eqM ▸ Γ = (Γ_1 ⬝ S ⊗ Δ)
+        → (Γ_1 ⬝ S' ⊗ Δ) ctx)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+        Γ ⊢ A type
+        → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) {S S' : Tm l} (A_1 : Tm m),
+        Γ_1 ⊢ S ≡ S' type
+        → Γ_1 ⊢ S type
+        → Γ_1 ⊢ S' type
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = A_1
+        → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 type)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+        (Γ ⊢ a ∶ A)
+        → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_1 A_1 : Tm m),
+        Γ_1 ⊢ S ≡ S' type
+        → Γ_1 ⊢ S type
+        → Γ_1 ⊢ S' type
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = a_1
+        → eqM ▸ A = A_1
+        → Γ_1 ⬝ S' ⊗ Δ ⊢ a_1 ∶ A_1)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n},
+        Γ ⊢ A ≡ A' type
+        → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (A_1 A'_1 : Tm m),
+        Γ_1 ⊢ S ≡ S' type
+        → Γ_1 ⊢ S type
+        → Γ_1 ⊢ S' type
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ A = A_1
+        → eqM ▸ A' = A'_1
+        → Γ_1 ⬝ S' ⊗ Δ ⊢ A_1 ≡ A'_1 type)
+      ∧ ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n},
+        (Γ ⊢ a ≡ a' ∶ A)
+        → ∀ (m l : Nat) (Γ_1 : Ctx l) (Δ : CtxGen (l + 1) m) (eqM : n = m) (S S' : Tm l) (a_1 a'_1 A_1 : Tm m),
+        Γ_1 ⊢ S ≡ S' type
+        → Γ_1 ⊢ S type
+        → Γ_1 ⊢ S' type
+        → eqM ▸ Γ = Γ_1 ⬝ S ⊗ Δ
+        → eqM ▸ a = a_1
+        → eqM ▸ a' = a'_1
+        → eqM ▸ A = A_1
+        → Γ_1 ⬝ S' ⊗ Δ ⊢ a_1 ≡ a'_1 ∶ A_1
       by
         repeat' apply And.intro
         · intro n Γ hiC
@@ -99,28 +128,46 @@ theorem context_conversion :
     apply judgment_recursor
       (motive_1 := fun {n} Γ' _hiC =>
         ∀ m l (Γ : Ctx l) (Δ : CtxGen (l + 1) (m)) (eqM : n = m) {S S' : Tm l},
-        Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
+        Γ ⊢ S ≡ S' type
+        → Γ ⊢ S type
+        → Γ ⊢ S' type
         → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ)
         → (Γ ⬝ S' ⊗ Δ) ctx)
       (motive_2 := fun {n} Γ' A' _hA =>
         ∀ m l (Γ : Ctx l) (Δ : CtxGen (l + 1) (m)) (eqM : n = m) {S S' : Tm l} A,
-        Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ) → eqM ▸ A' = A
+        Γ ⊢ S ≡ S' type
+        → Γ ⊢ S type
+        → Γ ⊢ S' type
+        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ)
+        → eqM ▸ A' = A
         → (Γ ⬝ S' ⊗ Δ) ⊢ A type)
       (motive_3 := fun {n} Γ' a' A' haA =>
         ∀ m l (Γ : Ctx l) (Δ : CtxGen (l + 1) (m)) (eqM : n = m) S S' a A,
-        Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ) → eqM ▸ a' = a → eqM ▸ A' = A
+        Γ ⊢ S ≡ S' type
+        → Γ ⊢ S type
+        → Γ ⊢ S' type
+        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ)
+        → eqM ▸ a' = a
+        → eqM ▸ A' = A
         → (Γ ⬝ S' ⊗ Δ) ⊢ a ∶ A)
       (motive_4 := fun {n} Γ' C C' _hCC =>
         ∀ m l (Γ : Ctx l) (Δ : CtxGen (l + 1) (m)) (eqM : n = m) S S' A A',
-        Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ) → eqM ▸ C = A → eqM ▸ C' = A'
+        Γ ⊢ S ≡ S' type
+        → Γ ⊢ S type
+        → Γ ⊢ S' type
+        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ)
+        → eqM ▸ C = A
+        → eqM ▸ C' = A'
         → (Γ ⬝ S' ⊗ Δ) ⊢ A ≡ A' type)
       (motive_5 := fun {n} Γ' c c' C _haaA =>
         ∀ m l (Γ : Ctx l) (Δ : CtxGen (l + 1) (m)) (eqM : n = m) S S' a a' A,
-        Γ ⊢ S ≡ S' type → Γ ⊢ S type → Γ ⊢ S' type
-        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ) → eqM ▸ c = a → eqM ▸ c' = a' → eqM ▸ C = A
+        Γ ⊢ S ≡ S' type
+        → Γ ⊢ S type
+        → Γ ⊢ S' type
+        → eqM ▸ Γ' = (Γ ⬝ S ⊗ Δ)
+        → eqM ▸ c = a
+        → eqM ▸ c' = a'
+        → eqM ▸ C = A
         → (Γ ⬝ S' ⊗ Δ) ⊢ a ≡ a' ∶ A)
     case IsCtxEmpty =>
       apply context_conversion_empty

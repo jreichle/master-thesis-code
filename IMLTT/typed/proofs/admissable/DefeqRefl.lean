@@ -20,26 +20,27 @@ theorem defeq_refl :
   :=
   by
     suffices h :
-    (∀ {n : Nat} {Γ : Ctx n},
-      Γ ctx →
-        ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-          eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-    (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
-        Γ ⊢ A type →
-          (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type) ∧
-            (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-              ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
-                eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type) ∧
-      (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
-          (Γ ⊢ a ∶ A) →
-            (∀ (eqM : n = 0) (a_1 A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ a = a_1 → eqM ▸ A = A_1 → ε ⊢ a_1 ≡ a_1 ∶ A_1) ∧
-              (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
-                  eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type) ∧
-                ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a_1 A_1 : Tm z) (B : Tm m),
-                  eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ a = a_1 → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a_1 ≡ a_1 ∶ A_1) ∧
-        (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) ∧
-          ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ≡ a' ∶ A
+      (∀ {n : Nat} {Γ : Ctx n},
+        Γ ctx
+        → ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+        eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ
+        → Γ_1 ⊢ B ≡ B type)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A : Tm n},
+        Γ ⊢ A type
+        → (∀ (eqM : n = 0) (A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ A = A_1 → ε ⊢ A_1 ≡ A_1 type)
+          ∧ (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type)
+          ∧ ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (A_1 : Tm z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ A_1 ≡ A_1 type)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A a : Tm n},
+        (Γ ⊢ a ∶ A)
+        → (∀ (eqM : n = 0) (a_1 A_1 : Tm 0), eqM ▸ Γ = ε → eqM ▸ a = a_1 → eqM ▸ A = A_1 → ε ⊢ a_1 ≡ a_1 ∶ A_1)
+          ∧ (∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → Γ_1 ⊢ B ≡ B type)
+          ∧ ∀ (m z : Nat) (Γ_1 : Ctx m) (Δ : CtxGen (m + 1) z) (eqM : n = z) (a_1 A_1 : Tm z) (B : Tm m),
+            eqM ▸ Γ = Γ_1 ⬝ B ⊗ Δ → eqM ▸ a = a_1 → eqM ▸ A = A_1 → Γ_1 ⬝ B ⊗ Δ ⊢ a_1 ≡ a_1 ∶ A_1)
+      ∧ (∀ {n : Nat} {Γ : Ctx n} {A A' : Tm n}, Γ ⊢ A ≡ A' type → Γ ⊢ A ≡ A' type) 
+      ∧ ∀ {n : Nat} {Γ : Ctx n} {A a a' : Tm n}, (Γ ⊢ a ≡ a' ∶ A) → Γ ⊢ a ≡ a' ∶ A
     by
       any_goals repeat' apply And.intro
       · intro n Γ hiC
