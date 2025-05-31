@@ -21,14 +21,7 @@ theorem weak_substitution_type :
     have hS : Γ ⊢ S type := ctx_extr (boundary_ctx_type hA)
     have hWeak : Γ ⬝ S ⬝ S⌊↑ₚidₚ⌋ ⊢ A⌊⇑ₚ↑ₚidₚ⌋ type := weakening_second_type hA hS
     have hSub := substitution_type hWeak hsS
-    rw [n_substitution_shift_zero]
-    have hSubEq : A⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = A⌈(ₛ↑ₚidₚ)⋄ s⌉ :=
-      by
-        rw [substitute_zero]
-        rw [substitution_comp_σρ]
-        simp []
-    rw [←hSubEq]
-    apply hSub
+    apply_subst_eq hSub
 
 theorem weak_substitution_term :
     ((Γ ⬝ S) ⊢ a ∶ A) → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)
@@ -38,15 +31,7 @@ theorem weak_substitution_term :
     have hS := ctx_extr (boundary_ctx_term haA)
     have hWeak := weakening_second_term haA hS
     have hSub := substitution_term hWeak hsS
-    rw [n_substitution_shift_zero]
-    have hSubEq : ∀t, t⌊⇑ₚ↑ₚidₚ⌋⌈s⌉₀ = t⌈(ₛ↑ₚidₚ)⋄ s⌉ :=
-      by
-        intro t
-        rw [substitute_zero]
-        rw [substitution_comp_σρ]
-        simp [comp_substitute_weaken]
-    simp [←hSubEq]
-    apply hSub
+    apply_subst_eq hSub
 
 theorem weak_substitution_general_ctx {n l : Nat} {Γ : Ctx l} {Δ : CtxGen (l + 1) n} {S : Tm l} {s : Tm (l + 1)} :
     (Γ ⬝ S ⊗ Δ) ctx → (Γ ⬝ S ⊢ s ∶ S⌊↑ₚidₚ⌋)

@@ -156,7 +156,8 @@ theorem boundary_nat_succ_comp :
     → Γ ⊢ A⌈𝓏⌉₀ type
     → Γ ⬝ 𝒩 ⬝ A ⊢ A⌈(ₛ↑ₚidₚ)⋄ 𝓈(v(0))⌉⌊↑ₚidₚ⌋ type
     → Γ ⊢ 𝒩 type
-    → (Γ ⊢ A.indNat z s 𝓈(x) ∶ A⌈𝓈(x)⌉₀) ∧ (Γ ⊢ s⌈(ₛidₚ)⋄ x⋄ A.indNat z s x⌉ ∶ A⌈𝓈(x)⌉₀)
+    → (Γ ⊢ A.indNat z s 𝓈(x) ∶ A⌈𝓈(x)⌉₀)
+      ∧ (Γ ⊢ s⌈(ₛidₚ)⋄ x⋄ A.indNat z s x⌉ ∶ A⌈𝓈(x)⌉₀)
       ∧ Γ ⊢ A⌈𝓈(x)⌉₀ type :=
   by
     intro n Γ z x A s hA hzA hsA hsNat ihA ihzA ihsA ihsNat
@@ -185,8 +186,9 @@ theorem boundary_iden_comp :
     → (Γ ⬝ A ⬝ A⌊↑ₚidₚ⌋ ⬝ v(1) ≃[A⌊↑ₚ↑ₚidₚ⌋] v(0)) ⊢ B type
     → Γ ⬝ A ⊢ B⌈(ₛidₚ)⋄ v(0)⋄ (A⌊↑ₚidₚ⌋.refl v(0))⌉ type
     → Γ ⊢ A type
-    → (Γ ⊢ A.j B b a a (A.refl a) ∶ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉) ∧
-      (Γ ⊢ b⌈a⌉₀ ∶ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉) ∧ Γ ⊢ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉ type
+    → (Γ ⊢ A.j B b a a (A.refl a) ∶ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉)
+      ∧ (Γ ⊢ b⌈a⌉₀ ∶ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉)
+      ∧ Γ ⊢ B⌈(ₛidₚ)⋄ a⋄ a⋄ A.refl a⌉ type
  :=
   by
     intro n Γ A B b a hB hbB haA ihB ihbB ihaA
@@ -375,19 +377,19 @@ theorem boundary_sigma_intro_eq :
 
 theorem boundary_sigma_elim_eq :
     ∀ {n : Nat} {Γ : Ctx n} {A : Tm n} {B : Tm (n + 1)} {A' : Tm n} {B' : Tm (n + 1)} {p p' : Tm n} {C C' : Tm (n + 1)}
-  {c c' : Tm (n + 1 + 1)},
-  (Γ ⬝ ΣA;B) ⊢ C ≡ C' type →
-    (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) →
-      Γ ⊢ A ≡ A' type →
-        Γ ⬝ A ⊢ B ≡ B' type →
-          (Γ ⊢ p ≡ p' ∶ ΣA;B) →
-            (Γ ⬝ ΣA;B) ⊢ C type ∧ (Γ ⬝ ΣA;B) ⊢ C' type →
-              (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧
-                  (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type →
-                Γ ⊢ A type ∧ Γ ⊢ A' type →
-                  Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type →
-                    (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type →
-                      (Γ ⊢ A.indSigma B C c p ∶ C⌈p⌉₀) ∧ (Γ ⊢ A'.indSigma B' C' c' p' ∶ C⌈p⌉₀) ∧ Γ ⊢ C⌈p⌉₀ type :=
+      {c c' : Tm (n + 1 + 1)},
+    (Γ ⬝ ΣA;B) ⊢ C ≡ C' type
+    → (Γ ⬝ A ⬝ B ⊢ c ≡ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉)
+    → Γ ⊢ A ≡ A' type
+    → Γ ⬝ A ⊢ B ≡ B' type
+    → (Γ ⊢ p ≡ p' ∶ ΣA;B)
+    → (Γ ⬝ ΣA;B) ⊢ C type ∧ (Γ ⬝ ΣA;B) ⊢ C' type
+    → (Γ ⬝ A ⬝ B ⊢ c ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) 
+      ∧ (Γ ⬝ A ⬝ B ⊢ c' ∶ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉) ∧ Γ ⬝ A ⬝ B ⊢ C⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(1)&v(0)⌉ type
+    → Γ ⊢ A type ∧ Γ ⊢ A' type
+    → Γ ⬝ A ⊢ B type ∧ Γ ⬝ A ⊢ B' type
+    → (Γ ⊢ p ∶ ΣA;B) ∧ (Γ ⊢ p' ∶ ΣA;B) ∧ Γ ⊢ ΣA;B type
+    → (Γ ⊢ A.indSigma B C c p ∶ C⌈p⌉₀) ∧ (Γ ⊢ A'.indSigma B' C' c' p' ∶ C⌈p⌉₀) ∧ Γ ⊢ C⌈p⌉₀ type :=
   by
     intro n Γ A B A' B' p p' C C' c c' hCC hccC hAA hBB hppSi ihCC ihccC ihAA ihBB ihppSi
     repeat' apply And.intro
@@ -458,7 +460,7 @@ theorem boundary_sigma_elim_eq :
 
 theorem boundary_nat_zero_intro_eq :
     ∀ {n : Nat} {Γ : Ctx n}, 
- Γ ctx
+    Γ ctx
     → Γ ctx
     → (Γ ⊢ 𝓏 ∶ 𝒩) ∧ (Γ ⊢ 𝓏 ∶ 𝒩) ∧ Γ ⊢ 𝒩 type :=
   by

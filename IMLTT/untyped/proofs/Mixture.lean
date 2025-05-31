@@ -18,6 +18,11 @@ theorem substitution_zero_weak :
   by
     substitution_norm
 
+theorem substitution_zero_shift :
+    t⌈(ₛidₚ)⋄ a⌉⌊↑ₚidₚ⌋ = t⌊↑ₚidₚ⌋⌈⇑ₛ((ₛidₚ)⋄ a)⌉ :=
+  by
+    substitution_norm
+
 @[simp]
 theorem substitution_zero_weak_simp :
     t⌊⇑ₚρ⌋⌈(ₛidₚ)⋄ (a⌊ρ⌋)⌉ = t⌈(ₛidₚ)⋄ a⌉⌊ρ⌋ :=
@@ -142,6 +147,11 @@ theorem substitution_weak_id_shift :
   by
     substitution_norm
 
+theorem substitution_nat_succ_apart :
+    t⌈(ₛidₚ)⋄ 𝓈(a)⌉ = t⌈(ₛ↑ₚidₚ)⋄  𝓈(v(0))⌉⌈(ₛidₚ)⋄ a⌉ :=
+  by
+    substitution_norm
+
 theorem weak_substitution_eq_weakening_substitution {l m : Nat} {leq : (l + 1) ≤ m} {S : Tm m} {s : Tm (l + 1)}:
     S⌊↑₁m↬l⌋⌈s/ₙ(leq)⌉ = S⌈s↑/ₙ(leq)⌉ :=
   by
@@ -190,23 +200,3 @@ theorem weak_substitution_eq_weakening_substitution_gen_context {l n : Nat} {s :
       apply And.intro
       · apply ih
       · apply weak_substitution_eq_weakening_substitution
-
-
-
-theorem test_macro :
-    (v(0) ≃[A⌊↑ₚidₚ⌋] a⌊↑ₚidₚ⌋)⌈(ₛ↑ₚ↑ₚidₚ)⋄ v(0)⌉⌊↑ₚidₚ⌋⌊1ₙ⇑ₚ(↑ₚidₚ)⌋⌈1ₙ⇑ₛ((ₛidₚ)⋄ a⋄ a'⋄ p)⌉⌈A.refl a⌉₀
-    = a' ≃[A] a :=
-  by
-    try simp []
-    try substitution_to_composition
-    try substitution_nat_relation_lemmatas
-    try simp []
-    try substitution_eq_term_var
-    try substitution_from_composition
-    try simp []
-    try split_and_cases
-    try simp []
-    try repeat' apply And.intro
-    try any_goals rfl
-
-

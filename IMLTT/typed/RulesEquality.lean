@@ -13,10 +13,7 @@ open Lean.Elab.Tactic
 open Lean.TSyntax
 
 theorem replaceWithEq {goal repl : Prop} (eq : repl = goal) (prf : repl) :
-    goal :=
-  by
-    cases eq
-    refine prf
+    goal := by cases eq; refine prf
 
 elab "apply_replace_meta" tm:term : tactic =>
   withMainContext do
