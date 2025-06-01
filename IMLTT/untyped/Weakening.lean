@@ -6,19 +6,6 @@ inductive Weak : Nat → Nat → Type where
   | lift : Weak m n → Weak (m + 1) (n + 1)
 
 @[simp]
-def comp_weaken (ρ : Weak l m) (ρ' : Weak m n) : Weak l n :=
-  match ρ with
-  | .id => ρ'
-  | .shift γ => .shift (comp_weaken γ ρ')
-    -- X, Y, Z ⊢ Σv(2);v(1) type → (X, Y, Z) ⬝ B ⊢ ↑Σv(2);v(1) type
-    -- 
-  | .lift γ  =>
-    match ρ' with
-    | .id => .lift γ
-    | .shift γ' => .shift (comp_weaken γ γ')
-    | .lift γ' => .lift (comp_weaken γ γ')
-
-@[simp]
 def lift_weak_n (i : Nat) (ρ : Weak m n) : Weak (m + i) (n + i) :=
   match i with
   | 0 => ρ
@@ -78,7 +65,6 @@ notation:max "idₚ" => Weak.id
 prefix:97 "↑ₚ" => Weak.shift
 prefix:97 "⇑ₚ" => Weak.lift
 infixl:97 "ₙ⇑ₚ" => lift_weak_n
-infixl:96 "ₚ∘ₚ" => comp_weaken
 notation:97 "↑₁" n "↬" l => weaken_from n l
 -- notation:97 "⇑ₙ" n "⊖" l "↑₁"  => weaken_from n l
 notation:95 v "⌊" ρ "⌋ᵥ" => weaken_var ρ v

@@ -1,6 +1,7 @@
 import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
+import IMLTT.untyped.Composition
 import IMLTT.untyped.proofs.Weakening
 import IMLTT.untyped.proofs.Substitution
 import IMLTT.untyped.proofs.Conversion

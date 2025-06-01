@@ -12,10 +12,6 @@ import IMLTT.typed.proofs.admissable.Inversion
 import IMLTT.typed.proofs.admissable.FunctionalityTyping
 import IMLTT.typed.proofs.admissable.ContextConversion
 
--- import IMLTT.typed.proofs.boundary.BoundaryTypesTerms
-
--- FIXME: redo but use only simplified types, not abominations
-
 theorem sigma_elim_proj_first :
     Γ ⊢ ΣA;B type → (Γ ⊢ p ∶ ΣA;B) →  Γ ⊢ A.indSigma B (A⌊↑ₚidₚ⌋) (v(0)⌊↑ₚidₚ⌋) p  ∶ A :=
   by

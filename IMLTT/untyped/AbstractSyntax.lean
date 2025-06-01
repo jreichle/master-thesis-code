@@ -1,5 +1,3 @@
-import aesop
-
 inductive Tm : Nat → Type where
   -- 'types'
   | unit : Tm n

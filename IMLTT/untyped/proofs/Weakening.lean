@@ -2,6 +2,8 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
+import Aesop
+
 theorem weakening_conv_var :
     v(x)⌊ρ⌋ = x⌊ρ⌋ᵥ :=
   by
