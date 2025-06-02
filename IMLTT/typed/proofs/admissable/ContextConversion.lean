@@ -14,7 +14,7 @@ import IMLTT.typed.proofs.admissable.contextconversion.HasType
 import IMLTT.typed.proofs.admissable.contextconversion.IsEqualType
 import IMLTT.typed.proofs.admissable.contextconversion.IsEqualTerm
 
-import aesop
+import Aesop
 
 theorem context_conversion :
   (∀ {n : Nat} {Γ : Ctx n},

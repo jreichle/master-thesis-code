@@ -2,7 +2,7 @@ import IMLTT.untyped.AbstractSyntax
 import IMLTT.untyped.Weakening
 import IMLTT.untyped.Substitution
 
-import aesop
+import Aesop
 
 /- # Rules -/
 -- 5 judgments:

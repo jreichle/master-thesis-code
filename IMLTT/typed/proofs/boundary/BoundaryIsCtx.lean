@@ -5,7 +5,7 @@ import IMLTT.typed.JudgmentsAndRules
 
 import IMLTT.typed.proofs.Recursor
 
-import aesop
+import Aesop
 
 /- # helper -/
 

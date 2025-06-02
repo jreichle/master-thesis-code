@@ -5,7 +5,7 @@ import IMLTT.untyped.Contexts
 import IMLTT.untyped.proofs.Weakening
 import IMLTT.untyped.proofs.Substitution
 
-import aesop
+import Aesop
 
 @[simp]
 theorem empty_expand_context {n : Nat} {Γ : Ctx n} :
